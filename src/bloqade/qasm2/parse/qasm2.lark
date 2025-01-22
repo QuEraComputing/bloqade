@@ -1,0 +1,62 @@
+mainprogram: "OPENQASM" VERSION ";" [statement*]
+?statement: regdecl | gate | opaque | move | qop | ifstmt | barrier | include
+?regdecl: qreg | creg
+// stmts
+include: "include" STRING ";"
+ifstmt: "if" "(" expr "==" expr ")" ifbody
+ifbody: qop | "{" qop* "}" // allow multiple qops
+opaque: "opaque" IDENTIFIER ["(" [params] ")"] qubits ";"
+barrier: "barrier" qubits ";"
+move: "MOVE" bit "->" bit ";"
+qreg: "qreg" IDENTIFIER "[" INT "]" ";"
+creg: "creg" IDENTIFIER "[" INT "]" ";"
+gate: "gate" IDENTIFIER ["(" cparams? ")"] qparams "{" (uop | barrier)* "}"
+cparams: IDENTIFIER ("," IDENTIFIER)*
+qparams: IDENTIFIER ("," IDENTIFIER)*
+
+// quantum ops
+?qop: uop | measure | extension | reset
+reset: "reset" bit ";"
+measure: "measure" bit "->" bit ";"
+
+?uop: inst | ugate | cx_gate
+inst: IDENTIFIER ["(" [params] ")"] qubits ";"
+ugate: "U" "(" expr "," expr "," expr ")" bit ";"
+cx_gate: "CX" bit "," bit ";"
+params: expr ("," expr)*
+
+?extension: parallel
+?parallel: para_u_gate | para_rz_gate | para_cz_gate
+para_u_gate: "parallel_U" "(" expr "," expr "," expr ")" parallel_body
+para_rz_gate: "parallel_Rz" "(" expr ")" parallel_body
+para_cz_gate: "parallel_CZ" parallel_body
+parallel_body: "{" task_args* "}"
+task_args: bit ("," bit)* ";"
+
+?bit: IDENTIFIER ("[" INT "]")?
+qubits: bit ("," bit)*
+
+?expr: term ((PLUS|MINUS) term)*
+?term: factor ((TIMES|DIVIDE) factor)*
+?factor: (PLUS|MINUS) factor | power
+?power: molecule (POW factor)?
+?molecule: molecule "(" [arglist] ")" -> call
+         | atom
+?atom: "(" expr ")" | IDENTIFIER | NUMBER | PI
+arglist: argument ("," argument)*
+?argument: expr
+
+VERSION: "2.0"
+PI: "pi"
+PLUS: "+"
+MINUS: "-"
+TIMES: "*"
+DIVIDE: "/"
+POW: "^"
+%import common.INT
+%import common.FLOAT
+%import common.CNAME -> IDENTIFIER
+%import common.NUMBER
+%import common.ESCAPED_STRING -> STRING
+%import common.WS
+%ignore WS

@@ -14,6 +14,11 @@ dependencies = [
     "kirin-toolchain>=0.9.0",
 ]
 
+[project.optional-dependencies]
+qasm2 = [
+    "lark>=1.2.2",
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
