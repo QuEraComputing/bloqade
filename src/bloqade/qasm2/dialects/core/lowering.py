@@ -1,9 +1,9 @@
 import ast
 
 from kirin import types
-from bloqade.types import BitType, CRegType, QRegType, QubitType
 from kirin.lowering import Result, FromPythonAST, LoweringState
 from kirin.exceptions import DialectLoweringError
+from bloqade.qasm2.types import BitType, CRegType, QRegType, QubitType
 
 from . import stmts
 from ._dialect import dialect

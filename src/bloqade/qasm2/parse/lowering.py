@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
 from kirin import ir, lowering
-from bloqade.types import CRegType, QRegType
 from kirin.dialects import cf, func
 from kirin.lowering import LoweringState
 from kirin.exceptions import DialectLoweringError
+from bloqade.qasm2.types import CRegType, QRegType
 from bloqade.qasm2.dialects import uop, core, expr
 
 from . import ast
