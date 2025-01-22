@@ -1,10 +1,10 @@
 from .types import (
     Bit as Bit,
-    BitType as BitType,
     CReg as CReg,
-    CRegType as CRegType,
     QReg as QReg,
-    QRegType as QRegType,
     Qubit as Qubit,
+    BitType as BitType,
+    CRegType as CRegType,
+    QRegType as QRegType,
     QubitType as QubitType,
 )

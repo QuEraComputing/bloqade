@@ -2,11 +2,13 @@
 
 This dialect allows users to use QASM string as part of a `@qasm2.main` kernel.
 """
+
 import ast
 import textwrap
 from dataclasses import dataclass
+
 from kirin import ir, types, lowering
-from kirin.decl import statement, info
+from kirin.decl import info, statement
 from kirin.print import Printer
 from kirin.exceptions import DialectLoweringError
 
@@ -16,7 +18,9 @@ dialect = ir.Dialect("qasm2.inline")
 @dataclass(frozen=True)
 class InlineQASMLowering(ir.FromPythonCall):
 
-    def lower(self, stmt: type, state: lowering.LoweringState, node: ast.Call) -> lowering.Result:
+    def lower(
+        self, stmt: type, state: lowering.LoweringState, node: ast.Call
+    ) -> lowering.Result:
         from bloqade.qasm2.parse import loads
         from bloqade.qasm2.parse.lowering import LoweringQASM
 

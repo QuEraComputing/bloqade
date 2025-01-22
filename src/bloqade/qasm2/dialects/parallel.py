@@ -1,10 +1,11 @@
 from kirin import ir, interp
-from kirin.decl import statement, info
-from bloqade.qasm2.types import QubitType
+from kirin.decl import info, statement
 from bloqade.qasm2.parse import ast
-from bloqade.qasm2.emit.gate import EmitQASM2Frame, EmitQASM2Gate
+from bloqade.qasm2.types import QubitType
+from bloqade.qasm2.emit.gate import EmitQASM2Gate, EmitQASM2Frame
 
 dialect = ir.Dialect("qasm2.parallel")
+
 
 @statement(dialect=dialect)
 class CZ(ir.Statement):

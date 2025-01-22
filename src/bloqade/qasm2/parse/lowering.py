@@ -1,15 +1,13 @@
 from dataclasses import dataclass
 
-
 from kirin import ir, lowering
 from kirin.dialects import cf, func
-from kirin.exceptions import DialectLoweringError
 from kirin.lowering import LoweringState
+from kirin.exceptions import DialectLoweringError
+from bloqade.qasm2.types import CRegType, QRegType
+from bloqade.qasm2.dialects import uop, core, expr
 
-from bloqade.qasm2.dialects import core, uop, expr
-from bloqade.qasm2.types import QRegType, CRegType
 from . import ast
-
 from .visitor import Visitor
 
 
@@ -23,13 +21,17 @@ class LoweringQASM(Visitor[lowering.Result]):
         return lowering.Result()
 
     def visit_QReg(self, node: ast.QReg) -> lowering.Result:
-        reg = core.QRegNew(self.state.append_stmt(expr.ConstInt(value=node.size)).result)
+        reg = core.QRegNew(
+            self.state.append_stmt(expr.ConstInt(value=node.size)).result
+        )
         self.state.append_stmt(reg)
         self.state.current_frame.defs[node.name] = reg.result
         return lowering.Result()
 
     def visit_CReg(self, node: ast.CReg) -> lowering.Result:
-        reg = core.CRegNew(self.state.append_stmt(expr.ConstInt(value=node.size)).result)
+        reg = core.CRegNew(
+            self.state.append_stmt(expr.ConstInt(value=node.size)).result
+        )
         self.state.append_stmt(reg)
         self.state.current_frame.defs[node.name] = reg.result
         return lowering.Result()
