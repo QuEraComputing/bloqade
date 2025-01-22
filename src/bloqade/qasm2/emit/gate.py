@@ -1,10 +1,10 @@
 from kirin import interp
+from bloqade.types import QubitType
 from kirin.dialects import func
 from kirin.exceptions import CodeGenError
 from kirin.ir.dialect import Dialect as Dialect
-
 from bloqade.qasm2.parse import ast
-from bloqade.qasm2.types import QubitType
+
 from .base import EmitQASM2Base, EmitQASM2Frame
 
 

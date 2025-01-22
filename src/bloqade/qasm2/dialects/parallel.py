@@ -1,7 +1,7 @@
 from kirin import ir, interp
 from kirin.decl import info, statement
+from bloqade.types import QubitType
 from bloqade.qasm2.parse import ast
-from bloqade.qasm2.types import QubitType
 from bloqade.qasm2.emit.gate import EmitQASM2Gate, EmitQASM2Frame
 
 dialect = ir.Dialect("qasm2.parallel")

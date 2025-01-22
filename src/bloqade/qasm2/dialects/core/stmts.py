@@ -1,6 +1,6 @@
 from kirin import ir, types
 from kirin.decl import info, statement
-from bloqade.qasm2.types import BitType, CRegType, QRegType, QubitType
+from bloqade.types import BitType, CRegType, QRegType, QubitType
 
 from ._dialect import dialect
 

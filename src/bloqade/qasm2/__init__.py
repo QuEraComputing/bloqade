@@ -1,4 +1,4 @@
-from .types import (
+from ..types import (
     Bit as Bit,
     CReg as CReg,
     QReg as QReg,
