@@ -71,8 +71,14 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
+pyqrack-cpu = [
+    { name = "pyqrack-cpu" },
+]
 qasm2 = [
     { name = "lark" },
+]
+qrack = [
+    { name = "pyqrack-cpu" },
 ]
 
 [package.dev-dependencies]
@@ -105,6 +111,8 @@ doc = [
 requires-dist = [
     { name = "kirin-toolchain", specifier = ">=0.9.0" },
     { name = "lark", marker = "extra == 'qasm2'", specifier = ">=1.2.2" },
+    { name = "pyqrack-cpu", marker = "extra == 'pyqrack-cpu'", specifier = ">=1.34.9" },
+    { name = "pyqrack-cpu", marker = "extra == 'qrack'", specifier = ">=1.34.9" },
 ]
 
 [package.metadata.requires-dev]
@@ -1066,6 +1074,19 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/8b/1a/3544f4f299a47911c2ab3710f534e52fea62a633c96806995da5d25be4b2/pyparsing-3.2.1.tar.gz", hash = "sha256:61980854fd66de3a90028d679a954d5f2623e83144b5afe5ee86f43d762e5f0a", size = 1067694 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1c/a7/c8a2d361bf89c0d9577c934ebb7421b25dc84bf3a8e3ac0a40aed9acc547/pyparsing-3.2.1-py3-none-any.whl", hash = "sha256:506ff4f4386c4cec0590ec19e6302d3aedb992fdc02c761e90416f158dacf8e1", size = 107716 },
+]
+
+[[package]]
+name = "pyqrack-cpu"
+version = "1.34.9"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/0d/4b/4c74286af8cc8538f8cede83a68881adaad6d8363ef09f101b92721188e3/pyqrack_cpu-1.34.9.tar.gz", hash = "sha256:b3adec5c6bdaecb02cf961a3e5546c37182245e1668524f50d8b07c4de5696d5", size = 35241 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b0/9c/93b3884f07b72cfa712050ab9ccd4c1423656a1b9e34cabf7a9fd50650a8/pyqrack_cpu-1.34.9-py3-none-macosx_13_0_x86_64.whl", hash = "sha256:bd0bbf3b5431cf013a03487dfcd6f8b7766a6126c5a74eb1704ec44a5670c090", size = 1673755 },
+    { url = "https://files.pythonhosted.org/packages/95/fa/252b14a6ebe0a09c80e676f0e22ea2517a22925895572c348d5b810658cd/pyqrack_cpu-1.34.9-py3-none-manylinux_2_31_x86_64.whl", hash = "sha256:40c3410f3553ae9d7db741154e24654e51f56e4a67e2810c4f3be3485a42704b", size = 2122082 },
+    { url = "https://files.pythonhosted.org/packages/e5/65/87dde2d8fa036b1ef05bb595dbcb7d3876e7b9d1abc10eb9c456d156ae5a/pyqrack_cpu-1.34.9-py3-none-manylinux_2_35_x86_64.whl", hash = "sha256:364de9d78dd9aacfce286f6c279acf943ccddb8253b356331a13d4d5fd481b2f", size = 2194709 },
+    { url = "https://files.pythonhosted.org/packages/7a/5e/50038e0c778c3cb20e9754d4564e1bb89bece95e7c29d4b1a85793097371/pyqrack_cpu-1.34.9-py3-none-manylinux_2_39_x86_64.whl", hash = "sha256:5ac6d31c9b26d4e248c046287e0b838bcf8b052e6ba78b08579fcd16dba9b29c", size = 2202695 },
+    { url = "https://files.pythonhosted.org/packages/9d/b9/44979a9e1f4397331e416fe90e4a6350a6c61a4beeff949c627e8a3422e9/pyqrack_cpu-1.34.9-py3-none-win_amd64.whl", hash = "sha256:f8c25a55256491ef78ee5897e3e73632b094ffdc36bf87e5a3977e26a16aff53", size = 678206 },
 ]
 
 [[package]]
