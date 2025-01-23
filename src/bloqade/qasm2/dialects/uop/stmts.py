@@ -6,19 +6,17 @@ from ._dialect import dialect
 
 
 # trait
-@statement(dialect=dialect)
+@statement
 class SingleQubitGate(ir.Statement):
     """Base class for single qubit gates."""
 
-    name = "1q"
     traits = frozenset({ir.FromPythonCall()})
     qarg: ir.SSAValue = info.argument(QubitType)
     """qarg (Qubit): The qubit argument."""
 
 
-@statement(dialect=dialect)
+@statement
 class TwoQubitCtrlGate(ir.Statement):
-    name = "2q"
     traits = frozenset({ir.FromPythonCall()})
     ctrl: ir.SSAValue = info.argument(QubitType)
     """ctrl (Qubit): The control qubit."""
