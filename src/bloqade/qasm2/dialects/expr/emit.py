@@ -1,9 +1,8 @@
 from typing import Literal
 
 from kirin import interp
-
 from bloqade.qasm2.parse import ast
-from bloqade.qasm2.emit.gate import EmitQASM2Frame, EmitQASM2Gate
+from bloqade.qasm2.emit.gate import EmitQASM2Gate, EmitQASM2Frame
 
 from . import stmts
 from ._dialect import dialect

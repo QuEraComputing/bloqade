@@ -1,6 +1,5 @@
 from kirin import ir
 from kirin.analysis import CallGraph
-
 from bloqade.qasm2.parse import ast
 
 from .gate import EmitQASM2Gate

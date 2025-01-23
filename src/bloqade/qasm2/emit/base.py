@@ -1,10 +1,9 @@
-from dataclasses import dataclass, field
-from typing import Generic, Iterable, TypeVar, overload
+from typing import Generic, TypeVar, Iterable, overload
+from dataclasses import field, dataclass
 
-from kirin import idtable, interp, ir
+from kirin import ir, interp, idtable
 from kirin.emit import EmitABC, EmitFrame
 from kirin.exceptions import CodeGenError, InterpreterError
-
 from bloqade.qasm2.parse import ast
 
 StmtType = TypeVar("StmtType", bound=ast.Node)
