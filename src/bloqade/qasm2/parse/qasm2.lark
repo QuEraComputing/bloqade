@@ -1,5 +1,5 @@
 mainprogram: "OPENQASM" VERSION ";" [statement*]
-?statement: regdecl | gate | opaque | move | qop | ifstmt | barrier | include
+?statement: regdecl | gate | opaque | qop | ifstmt | barrier | include
 ?regdecl: qreg | creg
 // stmts
 include: "include" STRING ";"
@@ -7,7 +7,6 @@ ifstmt: "if" "(" expr "==" expr ")" ifbody
 ifbody: qop | "{" qop* "}" // allow multiple qops
 opaque: "opaque" IDENTIFIER ["(" [params] ")"] qubits ";"
 barrier: "barrier" qubits ";"
-move: "MOVE" bit "->" bit ";"
 qreg: "qreg" IDENTIFIER "[" INT "]" ";"
 creg: "creg" IDENTIFIER "[" INT "]" ";"
 gate: "gate" IDENTIFIER ["(" cparams? ")"] qparams "{" (uop | barrier)* "}"
@@ -27,9 +26,9 @@ params: expr ("," expr)*
 
 ?extension: parallel
 ?parallel: para_u_gate | para_rz_gate | para_cz_gate
-para_u_gate: "parallel_U" "(" expr "," expr "," expr ")" parallel_body
-para_rz_gate: "parallel_Rz" "(" expr ")" parallel_body
-para_cz_gate: "parallel_CZ" parallel_body
+para_u_gate: "parallel" "." "U" "(" expr "," expr "," expr ")" parallel_body
+para_rz_gate: "parallel" "." "RZ" "(" expr ")" parallel_body
+para_cz_gate: "parallel" "." "CZ" parallel_body
 parallel_body: "{" task_args* "}"
 task_args: bit ("," bit)* ";"
 
@@ -53,6 +52,9 @@ MINUS: "-"
 TIMES: "*"
 DIVIDE: "/"
 POW: "^"
+COMMENT: "//" /[^\n]*/ NEWLINE
+NEWLINE: "\n"
+
 %import common.INT
 %import common.FLOAT
 %import common.CNAME -> IDENTIFIER
@@ -60,3 +62,4 @@ POW: "^"
 %import common.ESCAPED_STRING -> STRING
 %import common.WS
 %ignore WS
+%ignore COMMENT

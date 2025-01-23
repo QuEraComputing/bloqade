@@ -61,7 +61,7 @@ class Parallel(interp.MethodTable):
         qargs = self._emit_parallel_qargs(emit, frame, stmt.qargs)
         theta = emit.assert_node(ast.Expr, frame.get(stmt.theta))
         frame.body.append(
-            ast.ParaRzGate(theta=theta, qargs=ast.ParallelQArgs(qargs=qargs))
+            ast.ParaRZGate(theta=theta, qargs=ast.ParallelQArgs(qargs=qargs))
         )
         return ()
 

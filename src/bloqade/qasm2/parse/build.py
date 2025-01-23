@@ -82,6 +82,12 @@ class Build:
             self.build_parallel_body(tree.children[0]),
         )
 
+    def build_para_rz_gate(self, tree: ParseTree) -> ast.ParaRZGate:
+        return ast.ParaRZGate(
+            self.build_expr(tree.children[0]),
+            self.build_parallel_body(tree.children[1]),
+        )
+
     def build_parallel_body(self, tree: ParseTree) -> ast.ParallelQArgs:
         return ast.ParallelQArgs([self.build_task_args(each) for each in tree.children])
 

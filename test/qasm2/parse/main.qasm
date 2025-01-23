@@ -10,7 +10,6 @@ rx(pi) q[0];
 barrier q;
 CX q[0], q[1];
 U(+sin(pi/2), pi, pi*3) q[1];
-MOVE q[0] -> q[1];
 
 gate foo a, b {
   h a;

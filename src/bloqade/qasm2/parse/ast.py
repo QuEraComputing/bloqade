@@ -124,7 +124,7 @@ class ParaU3Gate(Extension):
 
 
 @dataclass
-class ParaRzGate(Extension):
+class ParaRZGate(Extension):
     theta: Expr
     qargs: ParallelQArgs
 

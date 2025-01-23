@@ -25,7 +25,7 @@ from .ast import (
     Measure,
     UnaryOp,
     ParaCZGate,
-    ParaRzGate,
+    ParaRZGate,
     ParaU3Gate,
     Instruction,
     MainProgram,
@@ -147,20 +147,20 @@ class Printer(Visitor[None]):
         self.print_newline()
         for stmt in node.statements:
             self.visit(stmt)
-            if not isinstance(stmt, (Gate, IfStmt)):
-                self.plain_print(";")
             self.print_newline()
 
     def visit_Include(self, node: Include) -> None:
         self.plain_print("include", style=self.color.keyword)
         self.plain_print(" ")
         self.plain_print(node.filename, style=self.color.string)
+        self.plain_print(";")
 
     def visit_Barrier(self, node: Barrier) -> None:
         self.print_indent()
         self.plain_print("barrier", style=self.color.keyword)
         self.plain_print(" ")
         self.print_sequence(node.qargs)
+        self.plain_print(";")
 
     def visit_Instruction(self, node: Instruction) -> None:
         self.visit_Name(node.name)
@@ -168,14 +168,17 @@ class Printer(Visitor[None]):
         if node.params:
             self.print_sequence(node.params, sep=", ", start="(", end=") ")
         self.print_sequence(node.qargs)
+        self.plain_print(";")
 
     def visit_CReg(self, node: CReg) -> None:
         self.plain_print("creg", style=self.color.keyword)
         self.plain_print(f" {node.name}[{node.size}]")
+        self.plain_print(";")
 
     def visit_QReg(self, node: QReg) -> None:
         self.plain_print("qreg", style=self.color.keyword)
         self.plain_print(f" {node.name}[{node.size}]")
+        self.plain_print(";")
 
     def visit_CXGate(self, node: CXGate) -> None:
         self.plain_print("CX", style=self.color.keyword)
@@ -183,6 +186,7 @@ class Printer(Visitor[None]):
         self.visit(node.ctrl)
         self.plain_print(", ")
         self.visit(node.qarg)
+        self.plain_print(";")
 
     def visit_UGate(self, node: UGate) -> None:
         self.plain_print("U", style=self.color.keyword)
@@ -194,6 +198,7 @@ class Printer(Visitor[None]):
         self.visit(node.lam)
         self.plain_print(") ")
         self.visit(node.qarg)
+        self.plain_print(";")
 
     def visit_Measure(self, node: Measure) -> None:
         self.plain_print("measure", style=self.color.keyword)
@@ -201,10 +206,12 @@ class Printer(Visitor[None]):
         self.visit(node.qarg)
         self.plain_print(" -> ")
         self.visit(node.carg)
+        self.plain_print(";")
 
     def visit_Reset(self, node: Reset) -> None:
         self.plain_print("reset ")
         self.visit(node.qarg)
+        self.plain_print(";")
 
     def visit_Opaque(self, node: Opaque) -> None:
         self.plain_print("opaque ", style=self.color.keyword)
@@ -214,6 +221,7 @@ class Printer(Visitor[None]):
         if node.qparams:
             self.plain_print(" ")
             self.print_sequence(node.qparams, sep=", ")
+        self.plain_print(";")
 
     def visit_Gate(self, node: Gate) -> None:
         self.plain_print("gate ", style=self.color.keyword)
@@ -232,7 +240,6 @@ class Printer(Visitor[None]):
             self.print_newline()
             for idx, stmt in enumerate(node.body):
                 self.visit(stmt)
-                self.plain_print(";")
                 if idx < len(node.body) - 1:
                     self.print_newline()
         self.print_newline()
@@ -243,14 +250,12 @@ class Printer(Visitor[None]):
         self.visit(node.cond)
         if len(node.body) == 1:  # inline if
             self.visit(node.body[0])
-            self.plain_print(";")
         else:
             self.plain_print("{")
             with self.indent():
                 self.print_newline()
                 for idx, stmt in enumerate(node.body):
                     self.visit(stmt)
-                    self.plain_print(";")
                     if idx < len(node.body) - 1:
                         self.print_newline()
             self.print_newline()
@@ -268,9 +273,11 @@ class Printer(Visitor[None]):
         self.print_sequence(node.args, sep=", ", start="(", end=")")
 
     def visit_BinOp(self, node: BinOp) -> None:
+        self.plain_print("(")
         self.visit(node.lhs)
         self.plain_print(f" {node.op} ", style=self.color.keyword)
         self.visit(node.rhs)
+        self.plain_print(")")
 
     def visit_UnaryOp(self, node: UnaryOp) -> None:
         self.plain_print(f"{node.op}", style=self.color.keyword)
@@ -303,7 +310,7 @@ class Printer(Visitor[None]):
         self.plain_print("}")
 
     def visit_ParaU3Gate(self, node: ParaU3Gate) -> None:
-        self.plain_print("parallel.u3", style=self.color.keyword)
+        self.plain_print("parallel.U", style=self.color.keyword)
         self.plain_print("(")
         self.visit(node.theta)
         self.plain_print(", ")
@@ -314,11 +321,11 @@ class Printer(Visitor[None]):
         self.visit_ParallelQArgs(node.qargs)
 
     def visit_ParaCZGate(self, node: ParaCZGate) -> None:
-        self.plain_print("parallel.cz", style=self.color.keyword)
+        self.plain_print("parallel.CZ ", style=self.color.keyword)
         self.visit_ParallelQArgs(node.qargs)
 
-    def visit_ParaRzGate(self, node: ParaRzGate) -> None:
-        self.plain_print("parallel.rz", style=self.color.keyword)
+    def visit_ParaRZGate(self, node: ParaRZGate) -> None:
+        self.plain_print("parallel.RZ", style=self.color.keyword)
         self.plain_print("(")
         self.visit(node.theta)
         self.plain_print(") ")
