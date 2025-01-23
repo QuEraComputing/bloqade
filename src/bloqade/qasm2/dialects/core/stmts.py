@@ -57,9 +57,9 @@ class CRegEq(ir.Statement):
 
     name = "eq"
     traits = frozenset({ir.Pure(), ir.FromPythonCall()})
-    lhs: ir.SSAValue = info.argument(CRegType | BitType)
+    lhs: ir.SSAValue = info.argument(types.Int | CRegType | BitType)
     """lhs (CReg): The first register."""
-    rhs: ir.SSAValue = info.argument(types.Int)
+    rhs: ir.SSAValue = info.argument(types.Int | CRegType | BitType)
     """rhs (CReg): The second register."""
     result: ir.ResultValue = info.result(types.Bool)
     """result (bool): True if the registers are equal, False otherwise."""

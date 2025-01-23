@@ -1,7 +1,6 @@
 from kirin import ir, passes
 from kirin.dialects import cf, func, ilist
-
-from bloqade.qasm2.dialects import core, parallel, uop, inline, expr
+from bloqade.qasm2.dialects import uop, core, expr, inline, parallel
 
 
 @ir.dialect_group([uop, parallel, func, ilist, expr])
@@ -13,21 +12,17 @@ def gate(self):
     def run_pass(
         method: ir.Method,
         *,
-        verify: bool = True,
-        typeinfer: bool = False,
         fold: bool = True,
     ):
-        if verify:
-            method.verify()
-
+        method.verify()
         ilist_desugar(method)
         # TODO make special Function rewrite
 
         if fold:
             fold_pass(method)
 
-        if typeinfer:
-            typeinfer_pass(method)
+        typeinfer_pass(method)
+        method.code.typecheck()
 
     return run_pass
 
@@ -41,20 +36,16 @@ def main(self):
     def run_pass(
         method: ir.Method,
         *,
-        verify: bool = True,
-        typeinfer: bool = False,
         fold: bool = True,
     ):
-        if verify:
-            method.verify()
-
+        method.verify()
         ilist_desugar(method)
         # TODO make special Function rewrite
 
         if fold:
             fold_pass(method)
 
-        if typeinfer:
-            typeinfer_pass(method)
+        typeinfer_pass(method)
+        method.code.typecheck()
 
     return run_pass

@@ -48,12 +48,6 @@ class Build:
     def build_barrier(self, tree: ParseTree) -> ast.Barrier:
         return ast.Barrier(qargs=self.build(tree.children[0]))
 
-    def build_move(self, tree: ParseTree) -> ast.Move:
-        return ast.Move(
-            lhs=self.build_bit(tree.children[0]),
-            rhs=self.build_bit(tree.children[1]),
-        )
-
     def build_inst(self, tree: ParseTree) -> ast.Instruction:
         if tree.children[1] is None:
             params = []

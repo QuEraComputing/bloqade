@@ -55,12 +55,9 @@ class AddressAnalysis(Forward[Address]):
             )
         raise InterpreterError(f"Expected constant value <type = {typ}>, got {value}")
 
-    def eval_stmt(
+    def run_stmt_fallback(
         self, frame: ForwardFrame[Address, None], stmt: ir.Statement
-    ) -> interp.StatementResult[Address]:
-        method = self.lookup_registry(frame, stmt)
-        if method is not None:
-            return method(self, frame, stmt)
+    ) -> tuple[Address, ...] | interp.SpecialResult[Address]:
         return tuple(
             (
                 self.lattice.top()

@@ -4,37 +4,9 @@ qubit.address method table for a few builtin dialects.
 
 from kirin import interp
 from kirin.dialects import cf, py, func, ilist
-from bloqade.qasm2.dialects import core
 
-from .lattice import Address, NotQubit, AddressReg, AddressQubit, AddressTuple
+from .lattice import NotQubit, AddressReg, AddressQubit, AddressTuple
 from .analysis import AddressAnalysis
-
-
-@core.dialect.register(key="qubit.address")
-class AddressMethodTable(interp.MethodTable):
-
-    @interp.impl(core.QRegNew)
-    def new(
-        self,
-        interp: AddressAnalysis,
-        frame: interp.Frame[Address],
-        stmt: core.QRegNew,
-    ):
-        n_qubits = interp.get_const_value(int, stmt.n_qubits)
-        addr = AddressReg(range(interp.next_address, interp.next_address + n_qubits))
-        interp.next_address += n_qubits
-        return (addr,)
-
-    @interp.impl(core.QRegGet)
-    def get(
-        self, interp: AddressAnalysis, frame: interp.Frame[Address], stmt: core.QRegGet
-    ):
-        addr = frame.get(stmt.reg)
-        pos = interp.get_const_value(int, stmt.idx)
-        if isinstance(addr, AddressReg):
-            return (AddressQubit(addr.data[pos]),)
-        else:  # this is not reachable
-            return (NotQubit(),)
 
 
 @py.binop.dialect.register(key="qubit.address")
@@ -49,13 +21,6 @@ class PyBinOp(interp.MethodTable):
             return (AddressTuple(data=lhs.data + rhs.data),)
         else:
             return (NotQubit(),)
-
-
-@py.constant.dialect.register(key="qubit.address")
-class PyConstant(interp.MethodTable):
-    @interp.impl(py.Constant)
-    def constant(self, interp: AddressAnalysis, frame: interp.Frame, stmt: py.Constant):
-        return (NotQubit(),)
 
 
 @py.tuple.dialect.register(key="qubit.address")

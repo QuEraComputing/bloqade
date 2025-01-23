@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+from typing import Union, Literal
 from dataclasses import dataclass
-from typing import Literal, Union
 
 
 @dataclass
@@ -45,12 +45,6 @@ class Opaque(Statement):
     name: str
     cparams: list[Expr]
     qparams: list[Bit]
-
-
-@dataclass
-class Move(Statement):
-    lhs: Bit | Name
-    rhs: Bit | Name
 
 
 @dataclass

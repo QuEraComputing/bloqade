@@ -2,7 +2,6 @@ from kirin import ir, types
 from kirin.decl import info, statement
 from kirin.print.printer import Printer
 
-
 from ._dialect import dialect
 
 

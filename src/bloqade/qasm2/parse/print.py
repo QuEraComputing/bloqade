@@ -1,38 +1,36 @@
-from contextlib import contextmanager
-from dataclasses import dataclass, field
 from typing import IO, Any, Callable
+from contextlib import contextmanager
+from dataclasses import field, dataclass
 
 from rich.console import Console
 
 from .ast import (
-    Barrier,
-    BinOp,
-    Bit,
-    Call,
-    Cmp,
-    CReg,
-    CXGate,
-    Gate,
-    IfStmt,
-    Include,
-    Instruction,
-    MainProgram,
-    Measure,
-    Move,
-    Name,
-    Number,
-    Opaque,
-    ParaCZGate,
-    ParallelQArgs,
-    ParaRzGate,
-    ParaU3Gate,
     Pi,
+    Bit,
+    Cmp,
+    Call,
+    CReg,
+    Gate,
+    Name,
     QReg,
+    BinOp,
     Reset,
     UGate,
+    CXGate,
+    IfStmt,
+    Number,
+    Opaque,
+    Barrier,
+    Include,
+    Measure,
     UnaryOp,
+    ParaCZGate,
+    ParaRzGate,
+    ParaU3Gate,
+    Instruction,
+    MainProgram,
+    ParallelQArgs,
 )
-
 from .visitor import Visitor
 
 
@@ -216,12 +214,6 @@ class Printer(Visitor[None]):
         if node.qparams:
             self.plain_print(" ")
             self.print_sequence(node.qparams, sep=", ")
-
-    def visit_Move(self, node: Move) -> None:
-        self.plain_print("MOVE ", style=self.color.keyword)
-        self.visit(node.lhs)
-        self.plain_print(" -> ")
-        self.visit(node.rhs)
 
     def visit_Gate(self, node: Gate) -> None:
         self.plain_print("gate ", style=self.color.keyword)
