@@ -3,6 +3,7 @@ from contextlib import contextmanager
 from dataclasses import field, dataclass
 
 from rich.console import Console
+from bloqade.qasm2.parse.ast import Version
 
 from .ast import (
     Pi,
@@ -143,11 +144,16 @@ class Printer(Visitor[None]):
 
     def visit_MainProgram(self, node: MainProgram) -> None:
         self.print_indent()
-        self.plain_print("OPENQASM 2.0;", style=self.color.comment)
+        self.visit_Version(node.version)
         self.print_newline()
         for stmt in node.statements:
             self.visit(stmt)
             self.print_newline()
+
+    def visit_Version(self, node: Version) -> None:
+        self.plain_print("OPENQASM {node.major}.{node.minor}", style=self.color.comment)
+        if node.ext:
+            self.plain_print("-", node.ext, style=self.color.comment)
 
     def visit_Include(self, node: Include) -> None:
         self.plain_print("include", style=self.color.keyword)

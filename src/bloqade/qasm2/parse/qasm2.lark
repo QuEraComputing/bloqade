@@ -1,4 +1,5 @@
-mainprogram: "OPENQASM" VERSION ";" [statement*]
+mainprogram: "OPENQASM" version ";" [statement*]
+version: INT "." INT ["-" IDENTIFIER]
 ?statement: regdecl | gate | opaque | qop | ifstmt | barrier | include
 ?regdecl: qreg | creg
 // stmts

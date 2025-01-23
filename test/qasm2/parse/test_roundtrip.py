@@ -1,5 +1,6 @@
 import io
 import os
+import pathlib
 
 from bloqade.qasm2.parse import loads, pprint, loadfile
 
@@ -9,10 +10,10 @@ def roundtrip(file):
     buf = io.StringIO()
     pprint(ast1, buf)
     ast2 = loads(buf.getvalue())
-    assert ast1 == ast2
+    return ast1 == ast2
 
 
 def test_roundtrip():
-    roundtrip("main.qasm")
-    roundtrip("para.qasm")
-    roundtrip("qelib1.inc")
+    path = pathlib.Path(__file__).parent / "programs"
+    for file in path.glob("*.qasm"):
+        assert roundtrip(file.name), f"Failed roundtrip for {file}"

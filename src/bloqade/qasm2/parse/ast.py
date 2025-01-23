@@ -11,8 +11,15 @@ class Node:
 
 @dataclass
 class MainProgram(Node):
-    version: str
+    version: Version
     statements: list[Statement]
+
+
+@dataclass
+class Version(Node):
+    major: int
+    minor: int
+    ext: str | None = None
 
 
 @dataclass
@@ -44,7 +51,7 @@ class Gate(Statement):
 class Opaque(Statement):
     name: str
     cparams: list[Expr]
-    qparams: list[Bit]
+    qparams: list[Bit | Name]
 
 
 @dataclass
@@ -113,6 +120,9 @@ class Extension(UOp):
 @dataclass
 class ParallelQArgs(Extension):
     qargs: list[tuple[Bit | Name, ...]]
+
+    def __iter__(self):
+        return iter(self.qargs)
 
 
 @dataclass

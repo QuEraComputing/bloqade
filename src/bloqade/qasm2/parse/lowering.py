@@ -5,7 +5,7 @@ from kirin.dialects import cf, func
 from kirin.lowering import LoweringState
 from kirin.exceptions import DialectLoweringError
 from bloqade.qasm2.types import CRegType, QRegType
-from bloqade.qasm2.dialects import uop, core, expr
+from bloqade.qasm2.dialects import uop, core, expr, parallel
 
 from . import ast
 from .visitor import Visitor
@@ -14,8 +14,11 @@ from .visitor import Visitor
 @dataclass
 class LoweringQASM(Visitor[lowering.Result]):
     state: LoweringState
+    extension: str | None = None
 
     def visit_MainProgram(self, node: ast.MainProgram) -> lowering.Result:
+        if node.version.ext:
+            self.extension = node.version.ext
         for stmt in node.statements:
             self.visit(stmt)
         return lowering.Result()
@@ -245,3 +248,62 @@ class LoweringQASM(Visitor[lowering.Result]):
         if (value := self.state.current_frame.get_local(node.id)) is not None:
             return lowering.Result(value)
         raise ValueError(f"name {node.id} not found")
+
+    def visit_ParaCZGate(self, node: ast.ParaCZGate) -> lowering.Result:
+        if self.extension != "atom":
+            raise NotImplementedError(
+                "CZ gate is only support in atom extension of QASM2"
+            )
+
+        ctrls: list[ir.SSAValue] = []
+        qargs: list[ir.SSAValue] = []
+        for pair in node.qargs:
+            if len(pair) != 2:
+                raise ValueError("CZ gate requires exactly two qargs")
+            ctrl, qarg = pair
+            ctrls.append(self.visit(ctrl).expect_one())
+            qargs.append(self.visit(qarg).expect_one())
+        self.state.append_stmt(parallel.CZ(tuple(ctrls), tuple(qargs)))
+        return lowering.Result()
+
+    def visit_ParaRzGate(self, node: ast.ParaRZGate) -> lowering.Result:
+        if self.extension != "atom":
+            raise NotImplementedError(
+                "Rz gate is only support in atom extension of QASM2"
+            )
+
+        qargs: list[ir.SSAValue] = []
+        for pair in node.qargs:
+            if len(pair) != 1:
+                raise ValueError("Rz gate requires exactly one qarg")
+            qargs.append(self.visit(pair[0]).expect_one())
+
+        self.state.append_stmt(
+            parallel.RZ(
+                theta=self.visit(node.theta).expect_one(),
+                qargs=tuple(qargs),
+            )
+        )
+        return lowering.Result()
+
+    def visit_ParaU3Gate(self, node: ast.ParaU3Gate) -> lowering.Result:
+        if self.extension != "atom":
+            raise NotImplementedError(
+                "U3 gate is only support in atom extension of QASM2"
+            )
+
+        qargs: list[ir.SSAValue] = []
+        for pair in node.qargs:
+            if len(pair) != 1:
+                raise ValueError("U3 gate requires exactly one qarg")
+            qargs.append(self.visit(pair[0]).expect_one())
+
+        self.state.append_stmt(
+            parallel.UGate(
+                theta=self.visit(node.theta).expect_one(),
+                phi=self.visit(node.phi).expect_one(),
+                lam=self.visit(node.lam).expect_one(),
+                qargs=tuple(qargs),
+            )
+        )
+        return lowering.Result()
