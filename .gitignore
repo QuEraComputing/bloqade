@@ -185,3 +185,4 @@ main.py
 .ruff_cache
 .python-version
 !package.json
+!src/**/**/main.py
