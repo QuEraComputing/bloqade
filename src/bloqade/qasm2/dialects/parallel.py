@@ -19,18 +19,18 @@ class CZ(ir.Statement):
 class UGate(ir.Statement):
     name = "u"
     traits = frozenset({ir.FromPythonCall()})
+    qargs: tuple[ir.SSAValue, ...] = info.argument(QubitType)
     theta: ir.SSAValue = info.argument(ir.types.Float)
     phi: ir.SSAValue = info.argument(ir.types.Float)
     lam: ir.SSAValue = info.argument(ir.types.Float)
-    qargs: tuple[ir.SSAValue, ...] = info.argument(QubitType)
 
 
 @statement(dialect=dialect)
 class RZ(ir.Statement):
     name = "rz"
     traits = frozenset({ir.FromPythonCall()})
-    theta: ir.SSAValue = info.argument(ir.types.Float)
     qargs: tuple[ir.SSAValue, ...] = info.argument(QubitType)
+    theta: ir.SSAValue = info.argument(ir.types.Float)
 
 
 @dialect.register(key="emit.qasm2.gate")

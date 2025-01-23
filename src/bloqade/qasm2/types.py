@@ -17,13 +17,15 @@ class Bit:
 class QReg:
     """Runtime representation of a quantum register."""
 
-    pass
+    def __getitem__(self, index) -> Qubit:
+        raise NotImplementedError("cannot call __getitem__ outside of a kernel")
 
 
 class CReg:
     """Runtime representation of a classical register."""
 
-    pass
+    def __getitem__(self, index) -> Bit:
+        raise NotImplementedError("cannot call __getitem__ outside of a kernel")
 
 
 BitType = types.PyClass(Bit)
