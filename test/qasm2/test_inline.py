@@ -14,7 +14,7 @@ def test_inline():
 
     h q[0];
     CX q[0], q[1];
-    barrier q;
+    barrier q[0], q[1];
     CX q[0], q[1];
     rx(pi/2) q[0];
     """

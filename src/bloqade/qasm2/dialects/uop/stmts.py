@@ -1,6 +1,7 @@
-from kirin import ir, types
+from kirin import ir
 from kirin.decl import info, statement
 from bloqade.qasm2.types import QubitType
+from bloqade.qasm2.dialects.expr.stmts import PyNum
 
 from ._dialect import dialect
 
@@ -36,11 +37,11 @@ class UGate(SingleQubitGate):
     """Apply A general single qubit unitary gate."""
 
     name = "U"
-    theta: ir.SSAValue = info.argument(types.Float)
+    theta: ir.SSAValue = info.argument(PyNum)
     """theta (float): The theta parameter."""
-    phi: ir.SSAValue = info.argument(types.Float)
+    phi: ir.SSAValue = info.argument(PyNum)
     """phi (float): The phi parameter."""
-    lam: ir.SSAValue = info.argument(types.Float)
+    lam: ir.SSAValue = info.argument(PyNum)
     """lam (float): The lambda parameter."""
 
 
@@ -116,7 +117,7 @@ class RX(SingleQubitGate):
     """Apply the RX gate."""
 
     name = "rx"
-    theta: ir.SSAValue = info.argument(types.Float)
+    theta: ir.SSAValue = info.argument(PyNum)
     """theta (float): The angle of rotation around x axis."""
 
 
@@ -125,7 +126,7 @@ class RY(SingleQubitGate):
     """Apply the RY gate."""
 
     name = "ry"
-    theta: ir.SSAValue = info.argument(types.Float)
+    theta: ir.SSAValue = info.argument(PyNum)
     """theta (float): The angle of rotation around y axis."""
 
 
@@ -134,7 +135,7 @@ class RZ(SingleQubitGate):
     """Apply the RZ gate."""
 
     name = "rz"
-    theta: ir.SSAValue = info.argument(types.Float)
+    theta: ir.SSAValue = info.argument(PyNum)
     """theta (float): the angle of rotation around Z axis."""
 
 
@@ -143,7 +144,7 @@ class U1(SingleQubitGate):
     """Apply the U1 gate."""
 
     name = "u1"
-    lam: ir.SSAValue = info.argument(types.Float)
+    lam: ir.SSAValue = info.argument(PyNum)
     """lam (float): The lambda parameter."""
 
 
@@ -152,9 +153,9 @@ class U2(SingleQubitGate):
     """Apply the U2 gate."""
 
     name = "u2"
-    phi: ir.SSAValue = info.argument(types.Float)
+    phi: ir.SSAValue = info.argument(PyNum)
     """phi (float): The phi parameter."""
-    lam: ir.SSAValue = info.argument(types.Float)
+    lam: ir.SSAValue = info.argument(PyNum)
     """lam (float): The lambda parameter."""
 
 
@@ -198,7 +199,7 @@ class CRX(TwoQubitCtrlGate):
     """Apply the Controlled-RX gate."""
 
     name = "crx"
-    theta: ir.SSAValue = info.argument(types.Float)
+    theta: ir.SSAValue = info.argument(PyNum)
     """theta (float): The angle to rotate around the X axis."""
 
 
@@ -207,7 +208,7 @@ class CU1(TwoQubitCtrlGate):
     """Apply the Controlled-U1 gate."""
 
     name = "cu1"
-    lam: ir.SSAValue = info.argument(types.Float)
+    lam: ir.SSAValue = info.argument(PyNum)
     """lam (float): The lambda parameter."""
 
 
@@ -216,8 +217,8 @@ class CU3(TwoQubitCtrlGate):
     """Apply the Controlled-U3 gate."""
 
     name = "cu3"
-    theta: ir.SSAValue = info.argument(types.Float)
-    phi: ir.SSAValue = info.argument(types.Float)
+    theta: ir.SSAValue = info.argument(PyNum)
+    phi: ir.SSAValue = info.argument(PyNum)
     """phi (float): The phi parameter."""
-    lam: ir.SSAValue = info.argument(types.Float)
+    lam: ir.SSAValue = info.argument(PyNum)
     """lam (float): The lambda parameter."""
