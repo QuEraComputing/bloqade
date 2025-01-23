@@ -151,14 +151,17 @@ class Printer(Visitor[None]):
             self.print_newline()
 
     def visit_Version(self, node: Version) -> None:
-        self.plain_print("OPENQASM {node.major}.{node.minor}", style=self.color.comment)
+        self.plain_print(
+            f"OPENQASM {node.major}.{node.minor}", style=self.color.comment
+        )
         if node.ext:
             self.plain_print("-", node.ext, style=self.color.comment)
+        self.plain_print(";")
 
     def visit_Include(self, node: Include) -> None:
         self.plain_print("include", style=self.color.keyword)
         self.plain_print(" ")
-        self.plain_print(node.filename, style=self.color.string)
+        self.plain_print('"', node.filename, '"', style=self.color.string)
         self.plain_print(";")
 
     def visit_Barrier(self, node: Barrier) -> None:
