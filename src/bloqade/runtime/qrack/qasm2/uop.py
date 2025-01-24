@@ -2,9 +2,9 @@ import math
 
 from kirin import interp
 from pyqrack import QrackSimulator
+from bloqade.runtime.qrack import gate
 from bloqade.qasm2.dialects import uop
-from bloqade.qasm2.runtime.qrack import gate
-from bloqade.qasm2.runtime.qrack.reg import SimQubitRef
+from bloqade.runtime.qrack.reg import SimQubitRef
 
 
 @uop.dialect.register(key="pyqrack")

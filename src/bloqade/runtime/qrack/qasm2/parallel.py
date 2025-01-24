@@ -1,8 +1,8 @@
 from kirin import interp
 from pyqrack import QrackSimulator
 from bloqade.qasm2.dialects import parallel
-from bloqade.qasm2.runtime.qrack.reg import SimQubitRef
-from bloqade.qasm2.runtime.qrack.base import PyQrackInterpreter
+from bloqade.runtime.qrack.reg import SimQubitRef
+from bloqade.runtime.qrack.base import PyQrackInterpreter
 
 
 @parallel.dialect.register(key="pyqrack")
