@@ -1,10 +1,12 @@
 import math
+from typing import TYPE_CHECKING
 
 from kirin import interp
-from pyqrack import QrackSimulator
 from bloqade.qasm2.dialects import uop
-from bloqade.qasm2.runtime.qrack import gate
 from bloqade.qasm2.runtime.qrack.reg import SimQubitRef
+
+if TYPE_CHECKING:
+    from pyqrack import QrackSimulator
 
 
 @uop.dialect.register(key="pyqrack")
@@ -17,9 +19,10 @@ class PyQrackMethods(interp.MethodTable):
         "s": "s",
         "t": "t",
         "cx": "mcx",
+        "CX": "mcx",
         "cz": "mcz",
         "cy": "mcy",
-        "ch": "mch",
+        "ch": "much",
         "sdag": "adjs",
         "tdag": "adjt",
     }
@@ -46,13 +49,13 @@ class PyQrackMethods(interp.MethodTable):
         frame: interp.Frame,
         stmt: uop.SingleQubitGate,
     ):
-        qarg: SimQubitRef[QrackSimulator] = frame.get(stmt.qarg)
+        qarg: SimQubitRef["QrackSimulator"] = frame.get(stmt.qarg)
         getattr(qarg.sim_reg, self.GATE_TO_METHOD[stmt.name])(qarg.addr)
         return ()
 
     @interp.impl(uop.UGate)
     def ugate(self, interp: interp.Interpreter, frame: interp.Frame, stmt: uop.UGate):
-        qarg: SimQubitRef[QrackSimulator] = frame.get(stmt.qarg)
+        qarg: SimQubitRef["QrackSimulator"] = frame.get(stmt.qarg)
         qarg.sim_reg.u(
             qarg.addr, frame.get(stmt.theta), frame.get(stmt.phi), frame.get(stmt.lam)
         )
@@ -68,17 +71,16 @@ class PyQrackMethods(interp.MethodTable):
         frame: interp.Frame,
         stmt: uop.CX | uop.CZ | uop.CY,
     ):
-        ctrl: SimQubitRef[QrackSimulator] = frame.get(stmt.ctrl)
-        qarg: SimQubitRef[QrackSimulator] = frame.get(stmt.qarg)
-        gate_obj = gate.Control(method_name=self.GATE_TO_METHOD[stmt.name])
-        gate_obj.apply(ctrl, qarg)
+        ctrl: SimQubitRef["QrackSimulator"] = frame.get(stmt.ctrl)
+        qarg: SimQubitRef["QrackSimulator"] = frame.get(stmt.qarg)
+        getattr(qarg.sim_reg, self.GATE_TO_METHOD[stmt.name])(ctrl.addr, qarg.addr)
         return ()
 
     @interp.impl(uop.CCX)
     def ccx(self, interp: interp.Interpreter, frame: interp.Frame, stmt: uop.CCX):
-        ctrl1: SimQubitRef[QrackSimulator] = frame.get(stmt.ctrl1)
-        ctrl2: SimQubitRef[QrackSimulator] = frame.get(stmt.ctrl2)
-        qarg: SimQubitRef[QrackSimulator] = frame.get(stmt.qarg)
+        ctrl1: SimQubitRef["QrackSimulator"] = frame.get(stmt.ctrl1)
+        ctrl2: SimQubitRef["QrackSimulator"] = frame.get(stmt.ctrl2)
+        qarg: SimQubitRef["QrackSimulator"] = frame.get(stmt.qarg)
         qarg.sim_reg.mcx((ctrl1.addr, ctrl2.addr), qarg.addr)
         return ()
 
@@ -91,40 +93,40 @@ class PyQrackMethods(interp.MethodTable):
         frame: interp.Frame,
         stmt: uop.RX | uop.RY | uop.RZ,
     ):
-        qarg: SimQubitRef[QrackSimulator] = frame.get(stmt.qarg)
+        qarg: SimQubitRef["QrackSimulator"] = frame.get(stmt.qarg)
         qarg.sim_reg.r(self.AXIS_MAP[stmt.name], frame.get(stmt.theta), qarg.addr)
         return ()
 
     @interp.impl(uop.U1)
     def u1(self, interp: interp.Interpreter, frame: interp.Frame, stmt: uop.U1):
-        qarg: SimQubitRef[QrackSimulator] = frame.get(stmt.qarg)
+        qarg: SimQubitRef["QrackSimulator"] = frame.get(stmt.qarg)
         qarg.sim_reg.u(qarg.addr, 0, 0, frame.get(stmt.lam))
         return ()
 
     @interp.impl(uop.U2)
     def u2(self, interp: interp.Interpreter, frame: interp.Frame, stmt: uop.U2):
-        qarg: SimQubitRef[QrackSimulator] = frame.get(stmt.qarg)
+        qarg: SimQubitRef["QrackSimulator"] = frame.get(stmt.qarg)
         qarg.sim_reg.u(qarg.addr, math.pi / 2, frame.get(stmt.phi), frame.get(stmt.lam))
         return ()
 
     @interp.impl(uop.CRX)
     def crx(self, interp: interp.Interpreter, frame: interp.Frame, stmt: uop.CRX):
-        ctrl: SimQubitRef[QrackSimulator] = frame.get(stmt.ctrl)
-        qarg: SimQubitRef[QrackSimulator] = frame.get(stmt.qarg)
+        ctrl: SimQubitRef["QrackSimulator"] = frame.get(stmt.ctrl)
+        qarg: SimQubitRef["QrackSimulator"] = frame.get(stmt.qarg)
         qarg.sim_reg.mcr(1, frame.get(stmt.theta), ctrl.addr, qarg.addr)
         return ()
 
     @interp.impl(uop.CU1)
     def cu1(self, interp: interp.Interpreter, frame: interp.Frame, stmt: uop.CU1):
-        ctrl: SimQubitRef[QrackSimulator] = frame.get(stmt.ctrl)
-        qarg: SimQubitRef[QrackSimulator] = frame.get(stmt.qarg)
+        ctrl: SimQubitRef["QrackSimulator"] = frame.get(stmt.ctrl)
+        qarg: SimQubitRef["QrackSimulator"] = frame.get(stmt.qarg)
         qarg.sim_reg.mcu(ctrl.addr, qarg.addr, 0, 0, frame.get(stmt.lam))
         return ()
 
     @interp.impl(uop.CU3)
     def cu3(self, interp: interp.Interpreter, frame: interp.Frame, stmt: uop.CU3):
-        ctrl: SimQubitRef[QrackSimulator] = frame.get(stmt.ctrl)
-        qarg: SimQubitRef[QrackSimulator] = frame.get(stmt.qarg)
+        ctrl: SimQubitRef["QrackSimulator"] = frame.get(stmt.ctrl)
+        qarg: SimQubitRef["QrackSimulator"] = frame.get(stmt.qarg)
         qarg.sim_reg.mcu(
             ctrl.addr,
             qarg.addr,

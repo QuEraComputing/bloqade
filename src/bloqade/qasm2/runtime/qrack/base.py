@@ -24,8 +24,8 @@ class PyQrackInterpreter(Interpreter):
 
     def __init__(
         self,
-        memory: Memory["QrackSimulator"],
         *args,
+        memory: Memory["QrackSimulator"],
         rng_state: Optional[np.random.Generator] = None,
         **kwargs,
     ):
