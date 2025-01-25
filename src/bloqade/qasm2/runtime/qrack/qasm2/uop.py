@@ -19,7 +19,7 @@ class PyQrackMethods(interp.MethodTable):
         "cx": "mcx",
         "cz": "mcz",
         "cy": "mcy",
-        "ch": "mch",
+        "ch": "much",
         "sdag": "adjs",
         "tdag": "adjt",
     }

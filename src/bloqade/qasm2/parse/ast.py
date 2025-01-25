@@ -31,6 +31,7 @@ class Statement(Node):
 class Comment(Statement):
     text: str
 
+
 @dataclass
 class QReg(Statement):
     name: str
@@ -202,6 +203,3 @@ class Name(Expr):
 class Bit(Expr):
     name: Name
     addr: int
-
-
-    

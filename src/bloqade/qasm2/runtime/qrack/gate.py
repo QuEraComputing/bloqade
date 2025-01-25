@@ -142,7 +142,7 @@ class PauliChannel(PauliChannelABC):
     """Generic Pauli channel with arbitrary number of qubits and arbitrary error probabilities.
 
     Probability of applying pauli errors to a qubit. The sum(p) must be less than or equal to 1.
-    The position inside the tuple of probabilties maps to the error type, for single qubit errors:
+    The position inside the tuple of probabilities maps to the error type, for single qubit errors:
 
     p[0]: X
     p[1]: Y
@@ -150,7 +150,7 @@ class PauliChannel(PauliChannelABC):
 
     for multi-qubit errors, the order is lexicographic, e.g. for 2 qubits:
     p[0]: IX
-    p[1]: IY
+    p[1]: IT
     p[2]: IZ
     p[3]: XI
     p[4]: XX
