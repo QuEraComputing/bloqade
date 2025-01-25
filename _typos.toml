@@ -11,3 +11,4 @@ AttributeIDSupressMenu = "AttributeIDSupressMenu"
 [default.extend-words]
 Braket = "Braket"
 mch = "mch"
+IY = "IY"
