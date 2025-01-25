@@ -12,7 +12,6 @@ authors = [
 requires-python = ">=3.10"
 dependencies = [
     "kirin-toolchain>=0.9.1",
-    "lark>=1.2.2",
 ]
 
 [project.optional-dependencies]
