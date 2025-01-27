@@ -1,7 +1,7 @@
 from kirin import interp
 from bloqade.qasm2.dialects import core
-from bloqade.qasm2.runtime.qrack.reg import SimQubitRef, SimQRegister
-from bloqade.qasm2.runtime.qrack.base import PyQrackInterpreter
+from bloqade.runtime.qrack.reg import SimQubitRef, SimQRegister
+from bloqade.runtime.qrack.base import PyQrackInterpreter
 
 
 @core.dialect.register(key="pyqrack")

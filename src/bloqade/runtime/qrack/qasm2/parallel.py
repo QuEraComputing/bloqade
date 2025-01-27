@@ -2,8 +2,8 @@ from typing import TYPE_CHECKING
 
 from kirin import interp
 from bloqade.qasm2.dialects import parallel
-from bloqade.qasm2.runtime.qrack.reg import SimQubitRef
-from bloqade.qasm2.runtime.qrack.base import PyQrackInterpreter
+from bloqade.runtime.qrack.reg import SimQubitRef
+from bloqade.runtime.qrack.base import PyQrackInterpreter
 
 if TYPE_CHECKING:
     from pyqrack import QrackSimulator

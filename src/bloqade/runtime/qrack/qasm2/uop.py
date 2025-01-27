@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 from kirin import interp
 from bloqade.qasm2.dialects import uop
-from bloqade.qasm2.runtime.qrack.reg import SimQubitRef
+from bloqade.runtime.qrack.reg import SimQubitRef
 
 if TYPE_CHECKING:
     from pyqrack import QrackSimulator
