@@ -35,7 +35,6 @@
             * [parser](bloqade/qasm2/parse/parser.md)
             * [print](bloqade/qasm2/parse/print.md)
             * [visitor](bloqade/qasm2/parse/visitor.md)
-        * [runtime](bloqade/qasm2/runtime/index.md)
         * [types](bloqade/qasm2/types.md)
     * runtime
         * [qrack](bloqade/runtime/qrack/index.md)
