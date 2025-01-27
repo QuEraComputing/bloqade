@@ -1,7 +1,7 @@
 from unittest.mock import Mock, call
 
 from bloqade import qasm2
-from bloqade.qasm2.runtime import qrack
+from bloqade.runtime import qrack
 
 
 @qasm2.main
