@@ -33,7 +33,7 @@ class EmitStimCollapseMethods(MethodTable):
         out = f"{self.meas_map[stmt.name]}({probability}) " + " ".join(targets)
         frame.body.append(out)
 
-        return (out,)
+        return ()
 
     reset_map: dict[str, str] = {
         stmts.RX.name: "RX",
@@ -51,4 +51,16 @@ class EmitStimCollapseMethods(MethodTable):
         out = f"{self.reset_map[stmt.name]} " + " ".join(targets)
         frame.body.append(out)
 
-        return (out,)
+        return ()
+
+    @impl(stmts.PPMeasurement)
+    def pp_measure(
+        self, emit: EmitStimMain, frame: EmitStimFrame, stmt: stmts.PPMeasurement
+    ):
+        probability: str = frame.get(stmt.p)
+        targets: tuple[str, ...] = frame.get_values(stmt.targets)
+
+        out = f"MPP({probability}) " + " ".join(targets)
+        frame.body.append(out)
+
+        return ()
