@@ -46,5 +46,5 @@
                 * [parallel](bloqade/runtime/qrack/qasm2/parallel.md)
                 * [uop](bloqade/runtime/qrack/qasm2/uop.md)
             * [reg](bloqade/runtime/qrack/reg.md)
-            * [run](bloqade/runtime/qrack/run.md)
+            * [target](bloqade/runtime/qrack/target.md)
     * [types](bloqade/types.md)
