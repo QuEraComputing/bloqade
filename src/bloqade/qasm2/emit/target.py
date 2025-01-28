@@ -20,7 +20,7 @@ class QASM2:
         self.custom_gate = custom_gate
 
     def emit(self, entry: ir.Method):
-        self.main.eval(
+        self.main.run(
             entry, tuple(ast.Name(name) for name in entry.arg_names[1:])
         ).expect()
         main = self.main.output
@@ -35,7 +35,7 @@ class QASM2:
                 if fn is entry:
                     continue
 
-                self.gate.eval(
+                self.gate.run(
                     fn, tuple(ast.Name(name) for name in fn.arg_names[1:])
                 ).expect()
                 assert self.gate.output is not None, f"failed to emit {fn.sym_name}"

@@ -1,9 +1,10 @@
-from typing import Generic, TypeVar, Iterable, overload
+from abc import ABC
+from typing import Generic, TypeVar, overload
 from dataclasses import field, dataclass
 
 from kirin import ir, interp, idtable
-from kirin.emit import EmitABC, EmitFrame
-from kirin.exceptions import CodeGenError, InterpreterError
+from kirin.emit import EmitABC, EmitError, EmitFrame
+from typing_extensions import Self
 from bloqade.qasm2.parse import ast
 
 StmtType = TypeVar("StmtType", bound=ast.Node)
@@ -15,50 +16,39 @@ class EmitQASM2Frame(EmitFrame[ast.Node | None], Generic[StmtType]):
     body: list[StmtType] = field(default_factory=list)
 
 
+@dataclass
 class EmitQASM2Base(
-    EmitABC[EmitQASM2Frame[StmtType], ast.Node | None], Generic[StmtType, EmitNode]
+    EmitABC[EmitQASM2Frame[StmtType], ast.Node | None], ABC, Generic[StmtType, EmitNode]
 ):
+    void = None
+    prefix: str = field(default="", kw_only=True)
+    prefix_if_none: str = field(default="var_", kw_only=True)
 
-    def __init__(
-        self,
-        dialects: ir.DialectGroup | Iterable[ir.Dialect],
-        *,
-        fuel: int | None = None,
-        max_depth: int = 128,
-        max_python_recursion_depth: int = 8192,
-        prefix: str = "",
-        prefix_if_none: str = "var_",
-    ):
-        super().__init__(
-            dialects,
-            bottom=None,
-            fuel=fuel,
-            max_depth=max_depth,
-            max_python_recursion_depth=max_python_recursion_depth,
-        )
+    output: EmitNode | None = field(init=False)
+    ssa_id: idtable.IdTable[ir.SSAValue] = field(init=False)
+
+    def initialize(self) -> Self:
+        super().initialize()
         self.output: EmitNode | None = None
         self.ssa_id = idtable.IdTable[ir.SSAValue](
-            prefix=prefix, prefix_if_none=prefix_if_none
+            prefix=self.prefix, prefix_if_none=self.prefix_if_none
         )
+        return self
 
     def new_frame(self, code: ir.Statement) -> EmitQASM2Frame:
         return EmitQASM2Frame.from_func_like(code)
 
     def run_method(
         self, method: ir.Method, args: tuple[ast.Node, ...]
-    ) -> interp.MethodResult[ast.Node | None]:
+    ) -> ast.Node | None:
         if len(self.state.frames) >= self.max_depth:
-            raise InterpreterError("maximum recursion depth exceeded")
+            raise interp.InterpreterError("maximum recursion depth exceeded")
         return self.run_callable(method.code, (ast.Name(method.sym_name),) + args)
 
-    def emit_block(
-        self, frame: EmitQASM2Frame, block: ir.Block
-    ) -> interp.MethodResult[ast.Node | None]:
+    def emit_block(self, frame: EmitQASM2Frame, block: ir.Block) -> ast.Node | None:
         for stmt in block.stmts:
-            result = self.run_stmt(frame, stmt)
-            if isinstance(result, interp.Err):
-                return result
-            elif isinstance(result, tuple):
+            result = self.eval_stmt(frame, stmt)
+            if isinstance(result, tuple):
                 frame.set_values(stmt.results, result)
         return None
 
@@ -79,5 +69,5 @@ class EmitQASM2Base(
         node: ast.Node | None,
     ) -> A | B:
         if not isinstance(node, typ):
-            raise CodeGenError(f"expected {typ}, got {type(node)}")
+            raise EmitError(f"expected {typ}, got {type(node)}")
         return node

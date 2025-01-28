@@ -1,4 +1,6 @@
-from kirin import interp
+from dataclasses import field, dataclass
+
+from kirin import ir, interp
 from kirin.dialects import cf, func
 from kirin.ir.dialect import Dialect as Dialect
 from bloqade.qasm2.parse import ast
@@ -7,28 +9,16 @@ from bloqade.qasm2.dialects import parallel
 from .base import EmitQASM2Base, EmitQASM2Frame
 
 
+def _default_dialect_group():
+    from bloqade.qasm2.groups import main
+
+    return main
+
+
+@dataclass
 class EmitQASM2Main(EmitQASM2Base[ast.Statement, ast.MainProgram]):
     keys = ["emit.qasm2.main", "emit.qasm2.gate"]
-
-    def __init__(
-        self,
-        *,
-        fuel: int | None = None,
-        max_depth: int = 128,
-        max_python_recursion_depth: int = 8192,
-        prefix: str = "",
-        prefix_if_none: str = "var_",
-    ):
-        from bloqade.qasm2.groups import main
-
-        super().__init__(
-            main,
-            fuel=fuel,
-            max_depth=max_depth,
-            max_python_recursion_depth=max_python_recursion_depth,
-            prefix=prefix,
-            prefix_if_none=prefix_if_none,
-        )
+    dialects: ir.DialectGroup = field(default_factory=_default_dialect_group)
 
 
 @func.dialect.register(key="emit.qasm2.main")
@@ -38,9 +28,7 @@ class Func(interp.MethodTable):
     def emit_func(
         self, emit: EmitQASM2Main, frame: EmitQASM2Frame, stmt: func.Function
     ):
-        result = emit.run_ssacfg_region(frame, stmt.body)
-        if isinstance(result, interp.Err):
-            return result
+        emit.run_ssacfg_region(frame, stmt.body)
         if parallel.dialect in emit.dialects.data:
             version = ast.Version(2, 0, "atom")
         else:

@@ -1,38 +1,33 @@
-import dataclasses
-from typing import TYPE_CHECKING, Generic, TypeVar, Optional
+from typing import Generic, TypeVar, Optional
+from dataclasses import field, dataclass
 
 import numpy as np
 from kirin.interp import Interpreter
-
-if TYPE_CHECKING:
-    from pyqrack.qrack_simulator import QrackSimulator
-
+from typing_extensions import Self
 
 SimRegType = TypeVar("SimRegType")
 
 
-@dataclasses.dataclass
+@dataclass
 class Memory(Generic[SimRegType]):
     total: int
     allocated: int
     sim_reg: SimRegType
 
 
-class PyQrackInterpreter(Interpreter):
+@dataclass
+class PyQrackInterpreter(Interpreter, Generic[SimRegType]):
     keys = ["pyqrack", "main"]
-    memory: Memory["QrackSimulator"]
+    memory: Memory[SimRegType] = field(kw_only=True)
+    rng_state: Optional[np.random.Generator] = field(default=None, kw_only=True)
 
-    def __init__(
-        self,
-        *args,
-        memory: Memory["QrackSimulator"],
-        rng_state: Optional[np.random.Generator] = None,
-        **kwargs,
-    ):
-        super().__init__(*args, **kwargs)
-        self.rng_state = np.random.default_rng() if rng_state is None else rng_state
-        self.memory = memory
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        self.rng_state = (
+            np.random.default_rng() if self.rng_state is None else self.rng_state
+        )
 
-    def eval(self, mt, args=(), kwargs={}):
+    def initialize(self) -> Self:
+        super().initialize()
         self.memory.allocated = 0  # reset allocated qubits
-        return super().eval(mt=mt, args=args, kwargs=kwargs)
+        return self

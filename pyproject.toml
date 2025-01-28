@@ -99,3 +99,6 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.coverage.run]
 include = ["src/bloqade/*"]
+
+[tool.uv.sources]
+kirin-toolchain = { path = "../kirin-workspace/kirin", editable = true }

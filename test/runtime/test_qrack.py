@@ -39,7 +39,7 @@ def test_all_gates():
 
     memory = qrack.Memory(3, 0, Mock())
     interp = qrack.PyQrackInterpreter(qasm2.main, memory=memory)
-    interp.eval(all_gates)
+    interp.run(all_gates, ())
 
     memory.sim_reg.calls = [
         call.h(0),
