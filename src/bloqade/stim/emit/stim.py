@@ -1,27 +1,31 @@
-from dataclasses import dataclass, field
+from dataclasses import field, dataclass
 
-from kirin import interp, ir
-from kirin.dialects import func
+from kirin import ir, interp
 from kirin.emit import EmitABC, EmitFrame
+from kirin.dialects import func
+
 
 @dataclass
 class EmitStimFrame(EmitFrame[str]):
     body: list[str] = field(default_factory=list)
 
+
 def _default_dialect_group() -> ir.DialectGroup:
     from ..prelude import main
+
     return main
 
+
 @dataclass
-class EmitStimMain(EmitABC[EmitStimFrame, str|None]):
+class EmitStimMain(EmitABC[EmitStimFrame, str | None]):
     void = ""
     keys = ["emit.stim"]
-    output: str = field(default="") 
+    output: str = field(default="")
     dialects: ir.DialectGroup = field(default_factory=_default_dialect_group)
 
     def initialize(self):
         super().initialize()
-        self.output=""
+        self.output = ""
         return self
 
     def eval_stmt_fallback(
@@ -32,15 +36,11 @@ class EmitStimMain(EmitABC[EmitStimFrame, str|None]):
     def new_frame(self, code: ir.Statement) -> EmitStimFrame:
         return EmitStimFrame.from_func_like(code)
 
-    def run_method(
-        self, method: ir.Method, args: tuple[str, ...]
-    ) -> str | None:
+    def run_method(self, method: ir.Method, args: tuple[str, ...]) -> str | None:
 
         return self.run_callable(method.code, (method.sym_name,) + args)
 
-    def emit_block(
-        self, frame: EmitStimFrame, block: ir.Block
-    ) -> str | None:
+    def emit_block(self, frame: EmitStimFrame, block: ir.Block) -> str | None:
         for stmt in block.stmts:
             result = self.eval_stmt(frame, stmt)
             if isinstance(result, tuple):

@@ -1,7 +1,7 @@
 from kirin.decl import statement
 
-from .._dialect import dialect
 from .base import TwoQubitGate
+from .._dialect import dialect
 
 
 # Two Qubit Clifford Gates

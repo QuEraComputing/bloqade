@@ -1,6 +1,5 @@
 from kirin.interp import MethodTable, impl
-
-from bloqade.stim.emit.stim import EmitStimFrame, EmitStimMain
+from bloqade.stim.emit.stim import EmitStimMain, EmitStimFrame
 
 from . import stmts
 from ._dialect import dialect
@@ -26,11 +25,19 @@ class EmitStimAuxMethods(MethodTable):
         return (out,)
 
     @impl(stmts.ConstBool)
-    def const_bool(self, emit: EmitStimMain, frame: EmitStimFrame, stmt: stmts.ConstBool):
-        
+    def const_bool(
+        self, emit: EmitStimMain, frame: EmitStimFrame, stmt: stmts.ConstBool
+    ):
         out: str = "!" if stmt.value else ""
 
         return (out,)
+
+    @impl(stmts.ConstStr)
+    def const_str(
+        self, emit: EmitStimMain, frame: EmitStimFrame, stmt: stmts.ConstBool
+    ):
+
+        return (stmt.value,)
 
     @impl(stmts.Neg)
     def neg(self, emit: EmitStimMain, frame: EmitStimFrame, stmt: stmts.Neg):
@@ -83,11 +90,13 @@ class EmitStimAuxMethods(MethodTable):
     def new_paulistr(
         self, emit: EmitStimMain, frame: EmitStimFrame, stmt: stmts.NewPauliString
     ):
-        
+
         string: tuple[str, ...] = frame.get_values(stmt.string)
         flipped: tuple[str, ...] = frame.get_values(stmt.flipped)
         targets: tuple[str, ...] = frame.get_values(stmt.targets)
 
-        out = "*".join(f"{flp}{base}{tgt}" for flp, base, tgt in zip(flipped, string, targets))
+        out = "*".join(
+            f"{flp}{base}{tgt}" for flp, base, tgt in zip(flipped, string, targets)
+        )
 
-        return (out, )
+        return (out,)

@@ -1,10 +1,9 @@
 from kirin.interp import MethodTable, impl
-
-from bloqade.stim.emit.stim import EmitStimFrame, EmitStimMain
+from bloqade.stim.emit.stim import EmitStimMain, EmitStimFrame
 
 from . import stmts
 from ._dialect import dialect
-from .stmts.base import ControlledTwoQubitGate, SingleQubitGate
+from .stmts.base import SingleQubitGate, ControlledTwoQubitGate
 
 
 @dialect.register(key="emit.stim")
@@ -32,7 +31,7 @@ class EmitStimGateMethods(MethodTable):
     def single_qubit_gate(
         self, emit: EmitStimMain, frame: EmitStimFrame, stmt: SingleQubitGate
     ):
-        
+
         targets: tuple[str, ...] = frame.get_values(stmt.targets)
         res = f"{self.gate_1q_map[stmt.name][int(stmt.dagger)]} " + " ".join(targets)
         frame.body.append(res)
@@ -61,4 +60,16 @@ class EmitStimGateMethods(MethodTable):
         )
         frame.body.append(res)
 
+        return ()
+
+
+    @impl(stmts.SPP)
+    def spp(
+        self, emit: EmitStimMain, frame: EmitStimFrame, stmt: stmts.SPP
+    ):
+
+        targets: tuple[str, ...] = frame.get_values(stmt.targets)
+        res = f"SPP " + " ".join(targets)
+        frame.body.append(res)
+        
         return ()

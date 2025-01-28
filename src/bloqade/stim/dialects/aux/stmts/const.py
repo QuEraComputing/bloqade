@@ -1,6 +1,6 @@
 from kirin import ir
-from kirin.decl import info, statement
 from kirin.ir import types
+from kirin.decl import info, statement
 from kirin.print import Printer
 
 from .._dialect import dialect as dialect
@@ -45,6 +45,7 @@ class ConstFloat(ir.Statement):
             printer.plain_print(" : ")
             printer.print(self.result.type)
 
+
 @statement(dialect=dialect)
 class ConstBool(ir.Statement):
     """IR Statement representing a constant float value."""
@@ -55,6 +56,25 @@ class ConstBool(ir.Statement):
     """value (float): The constant float value."""
     result: ir.ResultValue = info.result(types.Bool)
     """result (Float): The result value."""
+
+    def print_impl(self, printer: Printer) -> None:
+        printer.print_name(self)
+        printer.plain_print(" ")
+        printer.plain_print(repr(self.value))
+        with printer.rich(style=printer.color.comment):
+            printer.plain_print(" : ")
+            printer.print(self.result.type)
+
+@statement(dialect=dialect)
+class ConstStr(ir.Statement):
+    """IR Statement representing a constant str value."""
+
+    name = "constant.str"
+    traits = frozenset({ir.Pure(), ir.ConstantLike(), ir.FromPythonCall()})
+    value: str = info.attribute(types.String, property=True)
+    """value (str): The constant str value."""
+    result: ir.ResultValue = info.result(types.String)
+    """result (str): The result value."""
 
     def print_impl(self, printer: Printer) -> None:
         printer.print_name(self)

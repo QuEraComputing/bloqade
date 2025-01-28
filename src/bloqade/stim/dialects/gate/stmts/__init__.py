@@ -1,13 +1,14 @@
+from .control_2q import CX as CX, CY as CY, CZ as CZ
 from .clifford_1q import (
     H as H,
-    Identity as Identity,
     S as S,
-    SqrtX as SqrtX,
-    SqrtY as SqrtY,
-    SqrtZ as SqrtZ,
     X as X,
     Y as Y,
     Z as Z,
+    SqrtX as SqrtX,
+    SqrtY as SqrtY,
+    SqrtZ as SqrtZ,
+    Identity as Identity,
 )
 from .clifford_2q import Swap as Swap
-from .control_2q import CX as CX, CY as CY, CZ as CZ
+from .pp import SPP as SPP

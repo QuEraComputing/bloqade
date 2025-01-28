@@ -1,5 +1,4 @@
 from kirin import ir
-
 from bloqade import stim
 from bloqade.stim.emit.stim import EmitStimMain
 
@@ -11,8 +10,6 @@ def codegen(mt: ir.Method):
     emit.initialize()
     emit.run(mt=mt, args=())
     return emit.output
-
-
 
 
 def test_obs_inc():

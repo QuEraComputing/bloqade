@@ -1,5 +1,4 @@
 from kirin import ir
-
 from bloqade import stim
 from bloqade.stim.emit import EmitStimMain
 
@@ -29,6 +28,8 @@ def test_x():
         stim.X(targets=(0, 1, 2, 3), dagger=True)
 
     out = codegen(test_x_dag)
-    
+
     assert out == "X 0 1 2 3"
+
+
 test_x()

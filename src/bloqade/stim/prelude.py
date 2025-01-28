@@ -1,8 +1,9 @@
 from kirin import ir
 from kirin.passes import TypeInfer
 from kirin.dialects import func
-from .dialects import noise, gate, aux, collapse
+
 from .passes import Simplify
+from .dialects import aux, gate, noise, collapse
 
 stim_no_opt = ir.dialect_group([noise, gate, aux, collapse, func])
 

@@ -1,7 +1,6 @@
 from kirin import ir
-from kirin.decl import info, statement
 from kirin.ir import types
-
+from kirin.decl import info, statement
 from bloqade.stim.dialects.aux import RecordType
 
 

@@ -1,2 +1,5 @@
-from .stim import FuncEmit as FuncEmit
-from .stim import EmitStimFrame as EmitStimFrame, EmitStimMain as EmitStimMain
+from .stim import (
+    FuncEmit as FuncEmit,
+    EmitStimMain as EmitStimMain,
+    EmitStimFrame as EmitStimFrame,
+)

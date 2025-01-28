@@ -1,7 +1,7 @@
 import ast
 
+from kirin.lowering import Result, FromPythonAST, LoweringState
 from kirin.exceptions import DialectLoweringError
-from kirin.lowering import FromPythonAST, LoweringState, Result
 
 from . import stmts
 from ._dialect import dialect
@@ -11,12 +11,18 @@ from ._dialect import dialect
 class StimAuxLowering(FromPythonAST):
 
     def _const_stmt(
-        self, state: LoweringState, value: int | float
-    ) -> stmts.ConstInt | stmts.ConstFloat:
-        if isinstance(value, int):
+        self, state: LoweringState, value: int | float | str | bool
+    ) -> stmts.ConstInt | stmts.ConstFloat | stmts.ConstStr | stmts.ConstBool:
+
+
+        if isinstance(value, bool):
+            return stmts.ConstBool(value=value)
+        elif isinstance(value, int):
             return stmts.ConstInt(value=value)
         elif isinstance(value, float):
             return stmts.ConstFloat(value=value)
+        elif isinstance(value, str):
+            return stmts.ConstStr(value=value)
         else:
             raise DialectLoweringError(f"unsupported Stim constant type {type(value)}")
 

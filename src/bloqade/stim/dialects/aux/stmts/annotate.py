@@ -1,9 +1,9 @@
 from kirin import ir
-from kirin.decl import info, statement
 from kirin.ir import types
+from kirin.decl import info, statement
 
-from .._dialect import dialect
 from ..types import RecordType, PauliStringType
+from .._dialect import dialect
 
 PyNum = types.Union(types.Int, types.Float)
 
@@ -35,6 +35,7 @@ class ObservableInclude(ir.Statement):
 @statement(dialect=dialect)
 class Tick(ir.Statement):
     name = "tick"
+
 
 @statement(dialect=dialect)
 class NewPauliString(ir.Statement):

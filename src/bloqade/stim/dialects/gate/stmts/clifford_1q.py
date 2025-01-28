@@ -1,7 +1,7 @@
 from kirin.decl import statement
 
-from .._dialect import dialect
 from .base import SingleQubitGate
+from .._dialect import dialect
 
 
 # Pauli Gates

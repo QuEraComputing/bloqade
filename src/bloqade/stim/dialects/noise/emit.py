@@ -1,6 +1,5 @@
 from kirin.interp import MethodTable, impl
-
-from bloqade.stim.emit.stim import EmitStimFrame, EmitStimMain
+from bloqade.stim.emit.stim import EmitStimMain, EmitStimFrame
 
 from . import stmts
 from ._dialect import dialect
