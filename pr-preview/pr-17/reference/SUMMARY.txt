@@ -68,6 +68,7 @@
                     * [clifford_1q](bloqade/stim/dialects/gate/stmts/clifford_1q.md)
                     * [clifford_2q](bloqade/stim/dialects/gate/stmts/clifford_2q.md)
                     * [control_2q](bloqade/stim/dialects/gate/stmts/control_2q.md)
+                    * [pp](bloqade/stim/dialects/gate/stmts/pp.md)
             * [noise](bloqade/stim/dialects/noise/index.md)
                 * [emit](bloqade/stim/dialects/noise/emit.md)
                 * [stmts](bloqade/stim/dialects/noise/stmts.md)
