@@ -1,35 +1,24 @@
-from kirin import interp
+from dataclasses import field, dataclass
+
+from kirin import ir, interp
 from bloqade.types import QubitType
 from kirin.dialects import func
-from kirin.exceptions import CodeGenError
 from kirin.ir.dialect import Dialect as Dialect
 from bloqade.qasm2.parse import ast
 
-from .base import EmitQASM2Base, EmitQASM2Frame
+from .base import EmitError, EmitQASM2Base, EmitQASM2Frame
 
 
+def _default_dialect_group():
+    from bloqade.qasm2.groups import gate
+
+    return gate
+
+
+@dataclass
 class EmitQASM2Gate(EmitQASM2Base[ast.UOp | ast.Barrier, ast.Gate]):
     keys = ["emit.qasm2.gate"]
-
-    def __init__(
-        self,
-        *,
-        fuel: int | None = None,
-        max_depth: int = 128,
-        max_python_recursion_depth: int = 8192,
-        prefix: str = "",
-        prefix_if_none: str = "var_",
-    ):
-        from bloqade.qasm2.groups import gate
-
-        super().__init__(
-            gate,
-            fuel=fuel,
-            max_depth=max_depth,
-            max_python_recursion_depth=max_python_recursion_depth,
-            prefix=prefix,
-            prefix_if_none=prefix_if_none,
-        )
+    dialects: ir.DialectGroup = field(default_factory=_default_dialect_group)
 
 
 @func.dialect.register(key="emit.qasm2.gate")
@@ -43,14 +32,12 @@ class Func(interp.MethodTable):
         for arg in stmt.body.blocks[0].args[1:]:
             name = frame.get(arg)
             if not isinstance(name, ast.Name):
-                raise CodeGenError("expected ast.Name")
+                raise EmitError("expected ast.Name")
             if arg.type.is_subseteq(QubitType):
                 qparams.append(name.id)
             else:
                 cparams.append(name.id)
-        result = emit.run_ssacfg_region(frame, stmt.body)
-        if isinstance(result, interp.Err):
-            return result
+        emit.run_ssacfg_region(frame, stmt.body)
         emit.output = ast.Gate(
             name=stmt.sym_name,
             cparams=cparams,
@@ -61,7 +48,7 @@ class Func(interp.MethodTable):
 
     @interp.impl(func.Call)
     def emit_call(self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: func.Call):
-        return interp.Err(CodeGenError("cannot emit dynamic call"), emit.state.frames)
+        raise EmitError("cannot emit dynamic call")
 
     @interp.impl(func.Invoke)
     def emit_invoke(
@@ -86,10 +73,7 @@ class Func(interp.MethodTable):
     @interp.impl(func.Lambda)
     @interp.impl(func.GetField)
     def emit_err(self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt):
-        return interp.Err(
-            CodeGenError(f"illegal statement {stmt.name} for QASM2 gate routine"),
-            emit.state.frames,
-        )
+        raise EmitError(f"illegal statement {stmt.name} for QASM2 gate routine")
 
     @interp.impl(func.Return)
     @interp.impl(func.ConstantNone)

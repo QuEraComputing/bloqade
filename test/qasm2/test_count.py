@@ -1,6 +1,5 @@
-from kirin import ir
+from kirin import passes
 from bloqade import qasm2
-from kirin.analysis import const
 from kirin.dialects import py
 from bloqade.analysis.address import (
     NotQubit,
@@ -11,22 +10,8 @@ from bloqade.analysis.address import (
     AddressAnalysis,
 )
 
-constprop = const.Propagate(qasm2.main.add(py.tuple), save_all_ssa=True)
-address = AddressAnalysis(qasm2.main.add(py.tuple), save_all_ssa=True)
-
-
-def constprop_results(mt: ir.Method):
-    constprop.results.clear()
-    constprop.eval(mt, tuple(const.JointResult.top() for _ in mt.args))
-    return constprop.results
-
-
-def address_results(mt: ir.Method):
-    address.clear()
-    const_results = constprop_results(mt)
-    # fixed_count.print(analysis=const_results)
-    address.constprop_results = const_results
-    return address.eval(mt, tuple(AddressTuple.top() for _ in mt.args)).expect()
+address = AddressAnalysis(qasm2.main.add(py.tuple))
+fold = passes.Fold(qasm2.main.add(py.tuple))
 
 
 def test_fixed_count():
@@ -40,10 +25,11 @@ def test_fixed_count():
         qasm2.X(q3)
         return q3
 
-    result = address_results(fixed_count)
+    fold(fixed_count)
+    results, ret = address.run_analysis(fixed_count)
     # fixed_count.print(analysis=address.results)
-    assert isinstance(result, AddressQubit)
-    assert result.data == range(3, 7)[1]
+    assert isinstance(ret, AddressQubit)
+    assert ret.data == range(3, 7)[1]
     assert address.qubit_count == 7
 
 
@@ -56,11 +42,12 @@ def test_multiple_return_only_reg():
         return ra, rb
 
     # tuple_count.dce()
-    result = address_results(tuple_count)
-    tuple_count.code.print(analysis=address.results)
-    assert isinstance(result, AddressTuple)
-    assert isinstance(result.data[0], AddressReg) and result.data[0].data == range(0, 3)
-    assert isinstance(result.data[1], AddressReg) and result.data[1].data == range(3, 7)
+    fold(tuple_count)
+    results, ret = address.run_analysis(tuple_count)
+    tuple_count.code.print(analysis=results)
+    assert isinstance(ret, AddressTuple)
+    assert isinstance(ret.data[0], AddressReg) and ret.data[0].data == range(0, 3)
+    assert isinstance(ret.data[1], AddressReg) and ret.data[1].data == range(3, 7)
 
 
 def test_dynamic_address():
@@ -77,7 +64,8 @@ def test_dynamic_address():
             return rb
 
     # dynamic_address.code.print()
-    result = address_results(dynamic_address)
+    fold(dynamic_address)
+    _, result = address.run_analysis(dynamic_address)
     assert isinstance(result, AnyAddress)
 
 
@@ -105,7 +93,8 @@ def test_multi_return():
         return ra, 3.0, rb
 
     multi_return_cnt.code.print()
-    result = address_results(multi_return_cnt)
+    fold(multi_return_cnt)
+    _, result = address.run_analysis(multi_return_cnt)
     print(result)
     assert isinstance(result, AddressTuple)
     assert isinstance(result.data[0], AddressReg)
@@ -122,12 +111,12 @@ def test_list():
         return f
 
     list_count_analy.code.print()
-    result = address_results(list_count_analy)
-    print(result)
-    assert isinstance(result, AddressTuple)
-    assert isinstance(result.data[0], AddressQubit) and result.data[0].data == 0
-    assert isinstance(result.data[1], AddressQubit) and result.data[1].data == 1
-    assert isinstance(result.data[2], AddressQubit) and result.data[2].data == 3
+    _, ret = address.run_analysis(list_count_analy)
+    print(ret)
+    assert isinstance(ret, AddressTuple)
+    assert isinstance(ret.data[0], AddressQubit) and ret.data[0].data == 0
+    assert isinstance(ret.data[1], AddressQubit) and ret.data[1].data == 1
+    assert isinstance(ret.data[2], AddressQubit) and ret.data[2].data == 3
 
 
 def test_tuple_qubits():
@@ -140,11 +129,11 @@ def test_tuple_qubits():
         return f
 
     list_count_analy2.code.print()
-    result = address_results(list_count_analy2)
-    assert isinstance(result, AddressTuple)
-    assert isinstance(result.data[0], AddressQubit) and result.data[0].data == 0
-    assert isinstance(result.data[1], AddressQubit) and result.data[1].data == 1
-    assert isinstance(result.data[2], AddressQubit) and result.data[2].data == 3
+    _, ret = address.run_analysis(list_count_analy2)
+    assert isinstance(ret, AddressTuple)
+    assert isinstance(ret.data[0], AddressQubit) and ret.data[0].data == 0
+    assert isinstance(ret.data[1], AddressQubit) and ret.data[1].data == 1
+    assert isinstance(ret.data[2], AddressQubit) and ret.data[2].data == 3
 
 
 # NOTE: invalid QASM2 program, use this test for future
@@ -183,6 +172,7 @@ def test_alias():
         return h
 
     test_alias.code.print()
-    result = address_results(test_alias)
-    assert isinstance(result, AddressQubit)
-    assert result.data == 0
+    fold(test_alias)
+    _, ret = address.run_analysis(test_alias)
+    assert isinstance(ret, AddressQubit)
+    assert ret.data == 0

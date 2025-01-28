@@ -64,7 +64,7 @@ wheels = [
 
 [[package]]
 name = "bloqade"
-version = "0.1.0"
+version = "0.16.0"
 source = { editable = "." }
 dependencies = [
     { name = "kirin-toolchain" },
@@ -72,6 +72,7 @@ dependencies = [
 
 [package.optional-dependencies]
 pyqrack-cpu = [
+    { name = "pyqrack" },
     { name = "pyqrack-cpu" },
 ]
 qasm2 = [
@@ -106,9 +107,10 @@ doc = [
 
 [package.metadata]
 requires-dist = [
-    { name = "kirin-toolchain", specifier = ">=0.9.1" },
+    { name = "kirin-toolchain", specifier = "~=0.10.0" },
     { name = "lark", marker = "extra == 'qasm2'", specifier = ">=1.2.2" },
-    { name = "pyqrack-cpu", marker = "extra == 'pyqrack-cpu'", specifier = ">=1.34.9" },
+    { name = "pyqrack", marker = "extra == 'pyqrack-cpu'", specifier = "~=1.35.0" },
+    { name = "pyqrack-cpu", marker = "extra == 'pyqrack-cpu'", specifier = "~=1.34.9" },
 ]
 
 [package.metadata.requires-dev]
@@ -463,11 +465,11 @@ wheels = [
 
 [[package]]
 name = "isort"
-version = "5.13.2"
+version = "6.0.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/87/f9/c1eb8635a24e87ade2efce21e3ce8cd6b8630bb685ddc9cdaca1349b2eb5/isort-5.13.2.tar.gz", hash = "sha256:48fdfcb9face5d58a4f6dde2e72a1fb8dcaf8ab26f95ab49fab84c2ddefb0109", size = 175303 }
+sdist = { url = "https://files.pythonhosted.org/packages/1c/28/b382d1656ac0ee4cef4bf579b13f9c6c813bff8a5cb5996669592c8c75fa/isort-6.0.0.tar.gz", hash = "sha256:75d9d8a1438a9432a7d7b54f2d3b45cad9a4a0fdba43617d9873379704a8bdf1", size = 828356 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d1/b3/8def84f539e7d2289a02f0524b944b15d7c75dab7628bedf1c4f0992029c/isort-5.13.2-py3-none-any.whl", hash = "sha256:8ca5e72a8d85860d5a3fa69b8745237f2939afe12dbf656afbcb47fe72d947a6", size = 92310 },
+    { url = "https://files.pythonhosted.org/packages/76/c7/d6017f09ae5b1206fbe531f7af3b6dac1f67aedcbd2e79f3b386c27955d6/isort-6.0.0-py3-none-any.whl", hash = "sha256:567954102bb47bb12e0fae62606570faacddd441e45683968c8d1734fb1af892", size = 94053 },
 ]
 
 [[package]]
@@ -502,16 +504,16 @@ sdist = { url = "https://files.pythonhosted.org/packages/5e/73/e01e4c5e11ad0494f
 
 [[package]]
 name = "kirin-toolchain"
-version = "0.9.2"
+version = "0.10.0"
 source = { registry = "https://quera.jfrog.io/artifactory/api/pypi/kirin/simple" }
 dependencies = [
     { name = "beartype" },
     { name = "rich" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://quera.jfrog.io/artifactory/api/pypi/kirin/kirin-toolchain/0.9.2/kirin_toolchain-0.9.2.tar.gz", hash = "sha256:8746355d0ca40e2546a5cdc0937d9435d36e5a948266f5b5a5b08b03c9ced343" }
+sdist = { url = "https://quera.jfrog.io/artifactory/api/pypi/kirin/kirin-toolchain/0.10.0/kirin_toolchain-0.10.0.tar.gz", hash = "sha256:76136b3bdb36d63f4819a7a7d960ada8893f090476e9786748dcf028156d92d0" }
 wheels = [
-    { url = "https://quera.jfrog.io/artifactory/api/pypi/kirin/kirin-toolchain/0.9.2/kirin_toolchain-0.9.2-py3-none-any.whl", hash = "sha256:3b5b5ccb1e6e8eaf403f82d87bd542192925b1ffecccbf5ebe8a2d23cd339327" },
+    { url = "https://quera.jfrog.io/artifactory/api/pypi/kirin/kirin-toolchain/0.10.0/kirin_toolchain-0.10.0-py3-none-any.whl", hash = "sha256:9cee236552e06e60b77272cc57bf770ffd2f16556f75b68ec544846e23f013eb" },
 ]
 
 [[package]]
@@ -1070,6 +1072,21 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/8b/1a/3544f4f299a47911c2ab3710f534e52fea62a633c96806995da5d25be4b2/pyparsing-3.2.1.tar.gz", hash = "sha256:61980854fd66de3a90028d679a954d5f2623e83144b5afe5ee86f43d762e5f0a", size = 1067694 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1c/a7/c8a2d361bf89c0d9577c934ebb7421b25dc84bf3a8e3ac0a40aed9acc547/pyparsing-3.2.1-py3-none-any.whl", hash = "sha256:506ff4f4386c4cec0590ec19e6302d3aedb992fdc02c761e90416f158dacf8e1", size = 107716 },
+]
+
+[[package]]
+name = "pyqrack"
+version = "1.35.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/94/68/17e6589885bf1c768233353ec867e79622879beee70945e8ca3845fabdae/pyqrack-1.35.0.tar.gz", hash = "sha256:500b5f39ce89f7746b0bf6f72e78e9ad8ad30749459cd7700feeca68ea83a79b", size = 35126 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f4/4d/0e9f02d8eb88f124781c06ecd8551572a75a5034bc8f04ea56e538c17ba7/pyqrack-1.35.0-py3-none-macosx_13_0_x86_64.whl", hash = "sha256:9e59d3d9bf57c8e8347af61116582d2119fb1bbb85004f7789b2efe425eae453", size = 2150572 },
+    { url = "https://files.pythonhosted.org/packages/7d/e7/112797359f75d0289b229c72b55a78df96efccd6d440bab9f398ab769428/pyqrack-1.35.0-py3-none-macosx_14_0_arm64.whl", hash = "sha256:74fa13f1c6d1b1c4f5b6fd3bb325bf208cd5ef2a60c7cc453b86d6c1b283d169", size = 1515491 },
+    { url = "https://files.pythonhosted.org/packages/f4/2c/525686786035698a0cfd1c6db0ee29f5de0e11e36d188f75bf9319759987/pyqrack-1.35.0-py3-none-macosx_15_0_arm64.whl", hash = "sha256:d795a555365e6c8d19d3c664f28e8c15b55176ccfd901ddb45ffd345913988a8", size = 1530776 },
+    { url = "https://files.pythonhosted.org/packages/af/b2/1d85cf14a18f21d41d11f538ad3ba128638b2e7d07fb48e534ba1ff6c434/pyqrack-1.35.0-py3-none-manylinux_2_31_x86_64.whl", hash = "sha256:b66f7bcc6f6c777fca2423b6d9ddf02fc74013a247c8556b8dc04d76afc596f0", size = 2669951 },
+    { url = "https://files.pythonhosted.org/packages/c2/92/48cb6d8055d16fba892ffcd6178b030887865ffe5d1219b019e623287f87/pyqrack-1.35.0-py3-none-manylinux_2_35_x86_64.whl", hash = "sha256:2cfb5d84fd81d248a390cbf6b9bc93161b071556446152317dd86232beb3bc57", size = 2761778 },
+    { url = "https://files.pythonhosted.org/packages/6d/7d/fb809468b5793282cc1cb5085aaae28a36420703841b6969abfe6199f70f/pyqrack-1.35.0-py3-none-manylinux_2_39_x86_64.whl", hash = "sha256:4153e1a144d25ba9be1fbf53604bf9af26099d305373e2a332b7c55110440199", size = 2765741 },
+    { url = "https://files.pythonhosted.org/packages/27/28/b26a4ec65e379ff1bc542126bd48dc0d613e926109a0bab0fc5c37e1cfa1/pyqrack-1.35.0-py3-none-win_amd64.whl", hash = "sha256:91f040dc8af3d531570561a5fd98a6c8eaf0757885dc3b7a45afa96b90e77459", size = 858991 },
 ]
 
 [[package]]
