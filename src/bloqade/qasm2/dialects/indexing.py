@@ -1,12 +1,19 @@
+"""This dialect provides the indexing syntax in Python lowering
+for QASM2 dialects. The dialect itself does not contain new statements.
+
+Using this dialect will be conflict with Python semantics provided by
+`kirin.dialects.py.binop` and `kirin.dialects.py.indexing` dialects.
+"""
+
 import ast
 
-from kirin import types
+from kirin import ir, types
 from kirin.lowering import Result, FromPythonAST, LoweringState
 from kirin.exceptions import DialectLoweringError
 from bloqade.qasm2.types import BitType, CRegType, QRegType, QubitType
+from bloqade.qasm2.dialects import core
 
-from . import stmts
-from ._dialect import dialect
+dialect = ir.Dialect("qasm2.indexing")
 
 
 @dialect.register
@@ -19,7 +26,7 @@ class QASMCoreLowering(FromPythonAST):
             )
         rhs = state.visit(node.comparators[0]).expect_one()
         if isinstance(node.ops[0], ast.Eq):
-            stmt = stmts.CRegEq(lhs, rhs)
+            stmt = core.CRegEq(lhs, rhs)
         else:
             raise DialectLoweringError(
                 f"unsupported comparison operator {node.ops[0]} only Eq is supported."
@@ -44,10 +51,10 @@ class QASMCoreLowering(FromPythonAST):
             )
 
         if value.type.is_subseteq(QRegType):
-            stmt = stmts.QRegGet(reg=value, idx=index)
+            stmt = core.QRegGet(reg=value, idx=index)
             stmt.result.type = QubitType
         elif value.type.is_subseteq(CRegType):
-            stmt = stmts.CRegGet(reg=value, idx=index)
+            stmt = core.CRegGet(reg=value, idx=index)
             stmt.result.type = BitType
         else:
             raise DialectLoweringError(

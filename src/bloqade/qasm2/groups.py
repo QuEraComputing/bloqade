@@ -1,6 +1,6 @@
 from kirin import ir, passes
 from kirin.dialects import cf, func, ilist
-from bloqade.qasm2.dialects import uop, core, expr, inline, parallel
+from bloqade.qasm2.dialects import uop, core, expr, inline, indexing, parallel
 
 
 @ir.dialect_group([uop, parallel, func, ilist, expr])
@@ -27,7 +27,7 @@ def gate(self):
     return run_pass
 
 
-@ir.dialect_group([inline, uop, expr, parallel, core, cf, ilist, func])
+@ir.dialect_group([inline, uop, expr, parallel, core, indexing, cf, ilist, func])
 def main(self):
     ilist_desugar = ilist.IListDesugar(self)
     fold_pass = passes.Fold(self)
