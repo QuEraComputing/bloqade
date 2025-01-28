@@ -7,5 +7,12 @@ from kirin.ir import types
 class RecordResult:
     value: int
 
+@dataclass
+class PauliString:
+    string: tuple[str,...]
+    flipped: tuple[bool,...]
+    targets: tuple[int,...]
+
 
 RecordType = types.PyClass(RecordResult)
+PauliStringType = types.PyClass(PauliString)

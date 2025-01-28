@@ -35,3 +35,4 @@ class StimAuxMethods(interp.MethodTable):
         stmt: stmts.GetRecord,
     ):
         return (RecordResult(value=frame.get(stmt.id)),)
+

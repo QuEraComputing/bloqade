@@ -12,7 +12,6 @@ def _default_dialect_group() -> ir.DialectGroup:
     from ..prelude import main
     return main
 
-
 @dataclass
 class EmitStimMain(EmitABC[EmitStimFrame, str|None]):
     void = ""
@@ -25,7 +24,7 @@ class EmitStimMain(EmitABC[EmitStimFrame, str|None]):
         self.output=""
         return self
 
-    def run_stmt_fallback(
+    def eval_stmt_fallback(
         self, frame: EmitStimFrame, stmt: ir.Statement
     ) -> tuple[str, ...]:
         return (stmt.name,)

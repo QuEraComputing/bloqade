@@ -3,7 +3,7 @@ from kirin.decl import info, statement
 from kirin.ir import types
 
 from .._dialect import dialect
-from ..types import RecordType
+from ..types import RecordType, PauliStringType
 
 PyNum = types.Union(types.Int, types.Float)
 
@@ -35,3 +35,12 @@ class ObservableInclude(ir.Statement):
 @statement(dialect=dialect)
 class Tick(ir.Statement):
     name = "tick"
+
+@statement(dialect=dialect)
+class NewPauliString(ir.Statement):
+    name = "new_pauli_string"
+    traits = frozenset({ir.FromPythonCall()})
+    string: tuple[ir.SSAValue, ...] = info.argument(types.String)
+    flipped: tuple[ir.SSAValue, ...] = info.argument(types.Bool)
+    targets: tuple[ir.SSAValue, ...] = info.argument(types.Int)
+    result: ir.ResultValue = info.result(type=PauliStringType)

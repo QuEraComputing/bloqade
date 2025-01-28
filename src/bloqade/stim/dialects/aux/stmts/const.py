@@ -45,6 +45,24 @@ class ConstFloat(ir.Statement):
             printer.plain_print(" : ")
             printer.print(self.result.type)
 
+@statement(dialect=dialect)
+class ConstBool(ir.Statement):
+    """IR Statement representing a constant float value."""
+
+    name = "constant.bool"
+    traits = frozenset({ir.Pure(), ir.ConstantLike(), ir.FromPythonCall()})
+    value: bool = info.attribute(types.Bool, property=True)
+    """value (float): The constant float value."""
+    result: ir.ResultValue = info.result(types.Bool)
+    """result (Float): The result value."""
+
+    def print_impl(self, printer: Printer) -> None:
+        printer.print_name(self)
+        printer.plain_print(" ")
+        printer.plain_print(repr(self.value))
+        with printer.rich(style=printer.color.comment):
+            printer.plain_print(" : ")
+            printer.print(self.result.type)
 
 @statement(dialect=dialect)
 class Neg(ir.Statement):

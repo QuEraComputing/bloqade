@@ -25,6 +25,13 @@ class EmitStimAuxMethods(MethodTable):
 
         return (out,)
 
+    @impl(stmts.ConstBool)
+    def const_bool(self, emit: EmitStimMain, frame: EmitStimFrame, stmt: stmts.ConstBool):
+        
+        out: str = "!" if stmt.value else ""
+
+        return (out,)
+
     @impl(stmts.Neg)
     def neg(self, emit: EmitStimMain, frame: EmitStimFrame, stmt: stmts.Neg):
 
@@ -71,3 +78,16 @@ class EmitStimAuxMethods(MethodTable):
         frame.body.append(f"OBSERVABLE_INCLUDE({idx}) {target_str}")
 
         return ()
+
+    @impl(stmts.NewPauliString)
+    def new_paulistr(
+        self, emit: EmitStimMain, frame: EmitStimFrame, stmt: stmts.NewPauliString
+    ):
+        
+        string: tuple[str, ...] = frame.get_values(stmt.string)
+        flipped: tuple[str, ...] = frame.get_values(stmt.flipped)
+        targets: tuple[str, ...] = frame.get_values(stmt.targets)
+
+        out = "*".join(f"{flp}{base}{tgt}" for flp, base, tgt in zip(flipped, string, targets))
+
+        return (out, )
