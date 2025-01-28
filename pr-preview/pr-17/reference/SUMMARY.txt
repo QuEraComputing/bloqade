@@ -78,5 +78,4 @@
         * [passes](bloqade/stim/passes/index.md)
             * [simplify](bloqade/stim/passes/simplify.md)
         * [prelude](bloqade/stim/prelude.md)
-        * [rewrite](bloqade/stim/rewrite/index.md)
     * [types](bloqade/types.md)
