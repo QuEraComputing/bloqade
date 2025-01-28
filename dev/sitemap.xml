@@ -113,6 +113,10 @@
          <lastmod>2025-01-28</lastmod>
     </url>
     <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/dev/reference/bloqade/qasm2/dialects/indexing/</loc>
+         <lastmod>2025-01-28</lastmod>
+    </url>
+    <url>
          <loc>https://special-engine-kg8jlr7.pages.github.io/dev/reference/bloqade/qasm2/dialects/inline/</loc>
          <lastmod>2025-01-28</lastmod>
     </url>
@@ -130,10 +134,6 @@
     </url>
     <url>
          <loc>https://special-engine-kg8jlr7.pages.github.io/dev/reference/bloqade/qasm2/dialects/core/emit/</loc>
-         <lastmod>2025-01-28</lastmod>
-    </url>
-    <url>
-         <loc>https://special-engine-kg8jlr7.pages.github.io/dev/reference/bloqade/qasm2/dialects/core/lowering/</loc>
          <lastmod>2025-01-28</lastmod>
     </url>
     <url>
