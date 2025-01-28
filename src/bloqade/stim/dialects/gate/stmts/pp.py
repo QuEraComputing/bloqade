@@ -1,7 +1,9 @@
 from kirin import ir
-from kirin.decl import statement, info
+from kirin.decl import info, statement
+
 from .._dialect import dialect
 from ...aux.types import PauliStringType
+
 
 # Generalized Pauli-product gates
 # ---------------------------------------
@@ -9,5 +11,5 @@ from ...aux.types import PauliStringType
 class SPP(ir.Statement):
     name = "SPP"
     traits = frozenset({ir.FromPythonCall()})
-    dagger: bool = info.attribute(ir.types.Bool, property=True)    
+    dagger: bool = info.attribute(ir.types.Bool, property=True)
     targets: tuple[ir.SSAValue, ...] = info.argument(PauliStringType)

@@ -62,14 +62,11 @@ class EmitStimGateMethods(MethodTable):
 
         return ()
 
-
     @impl(stmts.SPP)
-    def spp(
-        self, emit: EmitStimMain, frame: EmitStimFrame, stmt: stmts.SPP
-    ):
+    def spp(self, emit: EmitStimMain, frame: EmitStimFrame, stmt: stmts.SPP):
 
         targets: tuple[str, ...] = frame.get_values(stmt.targets)
         res = f"SPP " + " ".join(targets)
         frame.body.append(res)
-        
+
         return ()

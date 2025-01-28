@@ -65,6 +65,7 @@ class ConstBool(ir.Statement):
             printer.plain_print(" : ")
             printer.print(self.result.type)
 
+
 @statement(dialect=dialect)
 class ConstStr(ir.Statement):
     """IR Statement representing a constant str value."""
@@ -83,6 +84,7 @@ class ConstStr(ir.Statement):
         with printer.rich(style=printer.color.comment):
             printer.plain_print(" : ")
             printer.print(self.result.type)
+
 
 @statement(dialect=dialect)
 class Neg(ir.Statement):

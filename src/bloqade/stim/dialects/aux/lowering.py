@@ -14,7 +14,6 @@ class StimAuxLowering(FromPythonAST):
         self, state: LoweringState, value: int | float | str | bool
     ) -> stmts.ConstInt | stmts.ConstFloat | stmts.ConstStr | stmts.ConstBool:
 
-
         if isinstance(value, bool):
             return stmts.ConstBool(value=value)
         elif isinstance(value, int):

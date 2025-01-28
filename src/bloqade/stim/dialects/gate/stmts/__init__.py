@@ -1,3 +1,4 @@
+from .pp import SPP as SPP
 from .control_2q import CX as CX, CY as CY, CZ as CZ
 from .clifford_1q import (
     H as H,
@@ -11,4 +12,3 @@ from .clifford_1q import (
     Identity as Identity,
 )
 from .clifford_2q import Swap as Swap
-from .pp import SPP as SPP
