@@ -3,8 +3,7 @@
     <span class=n>args</span><span class=p>:</span> <span class=n>Tuple</span><span class=p>[</span><span class=n>Any</span><span class=p>,</span> <span class=o>...</span><span class=p>],</span>
     <span class=n>kwargs</span><span class=p>:</span> <span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=n>Any</span><span class=p>],</span>
 <span class=p>)</span>
-</code></pre></div> <div class="doc doc-contents "> <p>Run the given program on the device.</p> <details class=quote> <summary>Source code in <code>src/bloqade/runtime/qrack/run.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal> 8</span>
-<span class=normal> 9</span>
+</code></pre></div> <div class="doc doc-contents "> <p>Run the given program on the device.</p> <details class=quote> <summary>Source code in <code>src/bloqade/runtime/qrack/run.py</code></summary> <div class=highlight><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal> 9</span>
 <span class=normal>10</span>
 <span class=normal>11</span>
 <span class=normal>12</span>
@@ -16,7 +15,12 @@
 <span class=normal>18</span>
 <span class=normal>19</span>
 <span class=normal>20</span>
-<span class=normal>21</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span><span class=w> </span><span class=nf>pyqrack_execute</span><span class=p>(</span><span class=n>mt</span><span class=p>:</span> <span class=n>ir</span><span class=o>.</span><span class=n>Method</span><span class=p>,</span> <span class=n>args</span><span class=p>:</span> <span class=n>Tuple</span><span class=p>[</span><span class=n>Any</span><span class=p>,</span> <span class=o>...</span><span class=p>],</span> <span class=n>kwargs</span><span class=p>:</span> <span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=n>Any</span><span class=p>]):</span>
+<span class=normal>21</span>
+<span class=normal>22</span>
+<span class=normal>23</span>
+<span class=normal>24</span>
+<span class=normal>25</span>
+<span class=normal>26</span></pre></div></td><td class=code><div><pre><span></span><code><span class=k>def</span><span class=w> </span><span class=nf>pyqrack_execute</span><span class=p>(</span><span class=n>mt</span><span class=p>:</span> <span class=n>ir</span><span class=o>.</span><span class=n>Method</span><span class=p>,</span> <span class=n>args</span><span class=p>:</span> <span class=n>Tuple</span><span class=p>[</span><span class=n>Any</span><span class=p>,</span> <span class=o>...</span><span class=p>],</span> <span class=n>kwargs</span><span class=p>:</span> <span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=n>Any</span><span class=p>]):</span>
 <span class=w>    </span><span class=sd>&quot;&quot;&quot;Run the given program on the device.&quot;&quot;&quot;</span>
     <span class=n>register_pass</span> <span class=o>=</span> <span class=n>AddressAnalysis</span><span class=p>(</span><span class=n>mt</span><span class=o>.</span><span class=n>dialects</span><span class=p>)</span>
     <span class=n>_</span> <span class=o>=</span> <span class=n>register_pass</span><span class=o>.</span><span class=n>eval</span><span class=p>(</span><span class=n>mt</span><span class=o>=</span><span class=n>mt</span><span class=p>,</span> <span class=n>args</span><span class=o>=</span><span class=n>args</span><span class=p>,</span> <span class=n>kwargs</span><span class=o>=</span><span class=n>kwargs</span><span class=p>)</span><span class=o>.</span><span class=n>expect</span><span class=p>()</span>
@@ -26,7 +30,11 @@
 
     <span class=n>num_qubits</span> <span class=o>=</span> <span class=n>register_pass</span><span class=o>.</span><span class=n>next_address</span>
 
-    <span class=n>memory</span> <span class=o>=</span> <span class=n>Memory</span><span class=p>(</span><span class=n>num_qubits</span><span class=p>,</span> <span class=n>allocated</span><span class=o>=</span><span class=mi>0</span><span class=p>,</span> <span class=n>sim_reg</span><span class=o>=</span><span class=n>QrackSimulator</span><span class=p>(</span><span class=n>qubitCount</span><span class=o>=</span><span class=n>num_qubits</span><span class=p>,</span> <span class=n>isTensorNetwork</span><span class=o>=</span><span class=kc>False</span><span class=p>))</span>
+    <span class=n>memory</span> <span class=o>=</span> <span class=n>Memory</span><span class=p>(</span>
+        <span class=n>num_qubits</span><span class=p>,</span>
+        <span class=n>allocated</span><span class=o>=</span><span class=mi>0</span><span class=p>,</span>
+        <span class=n>sim_reg</span><span class=o>=</span><span class=n>QrackSimulator</span><span class=p>(</span><span class=n>qubitCount</span><span class=o>=</span><span class=n>num_qubits</span><span class=p>,</span> <span class=n>isTensorNetwork</span><span class=o>=</span><span class=kc>False</span><span class=p>),</span>
+    <span class=p>)</span>
     <span class=n>interpreter</span> <span class=o>=</span> <span class=n>PyQrackInterpreter</span><span class=p>(</span><span class=n>mt</span><span class=o>.</span><span class=n>dialects</span><span class=p>,</span> <span class=n>memory</span><span class=o>=</span><span class=n>memory</span><span class=p>)</span>
 
     <span class=k>return</span> <span class=n>interpreter</span><span class=o>.</span><span class=n>eval</span><span class=p>(</span><span class=n>mt</span><span class=o>=</span><span class=n>mt</span><span class=p>,</span> <span class=n>args</span><span class=o>=</span><span class=n>args</span><span class=p>,</span> <span class=n>kwargs</span><span class=o>=</span><span class=n>kwargs</span><span class=p>)</span><span class=o>.</span><span class=n>expect</span><span class=p>()</span>
