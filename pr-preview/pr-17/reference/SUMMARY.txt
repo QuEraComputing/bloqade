@@ -60,6 +60,7 @@
                 * [emit](bloqade/stim/dialects/collapse/emit.md)
                 * [stmts](bloqade/stim/dialects/collapse/stmts/index.md)
                     * [measure](bloqade/stim/dialects/collapse/stmts/measure.md)
+                    * [pp_measure](bloqade/stim/dialects/collapse/stmts/pp_measure.md)
                     * [reset](bloqade/stim/dialects/collapse/stmts/reset.md)
             * [gate](bloqade/stim/dialects/gate/index.md)
                 * [emit](bloqade/stim/dialects/gate/emit.md)
