@@ -46,6 +46,7 @@
                 * [parallel](bloqade/runtime/qrack/qasm2/parallel.md)
                 * [uop](bloqade/runtime/qrack/qasm2/uop.md)
             * [reg](bloqade/runtime/qrack/reg.md)
+            * [target](bloqade/runtime/qrack/target.md)
     * [stim](bloqade/stim/index.md)
         * [dialects](bloqade/stim/dialects/index.md)
             * [aux](bloqade/stim/dialects/aux/index.md)
