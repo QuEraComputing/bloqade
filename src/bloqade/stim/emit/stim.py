@@ -20,10 +20,10 @@ def _default_dialect_group() -> ir.DialectGroup:
 
 
 @dataclass
-class EmitStimMain(EmitStr[IO_t]):
+class EmitStimMain(EmitStr):
     keys = ["emit.stim"]
     dialects: ir.DialectGroup = field(default_factory=_default_dialect_group)
-    file: IO_t = field(init=False)
+    file: StringIO = field(init=False)
 
     def __post_init__(self) -> None:
         super().__post_init__()
