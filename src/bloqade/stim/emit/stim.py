@@ -19,12 +19,7 @@ def _default_dialect_group() -> ir.DialectGroup:
 class EmitStimMain(EmitStr):
     keys = ["emit.stim"]
     dialects: ir.DialectGroup = field(default_factory=_default_dialect_group)
-    file: StringIO = field(init=False)
-
-    def __post_init__(self) -> None:
-        super().__post_init__()
-        self.output = ""
-        self.file = StringIO(self.output)
+    file: StringIO = field(default_factory=StringIO)
 
     def initialize(self):
         super().initialize()
