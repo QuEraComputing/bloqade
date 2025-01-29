@@ -5,10 +5,8 @@ from kirin.dialects import func
 from .passes import Simplify
 from .dialects import aux, gate, noise, collapse
 
-stim_no_opt = ir.dialect_group([noise, gate, aux, collapse, func])
 
-
-@stim_no_opt
+@ir.dialect_group([noise, gate, aux, collapse, func])
 def main(self):
     typeinfer_pass = TypeInfer(self)
     simplify_pass = Simplify(self)
