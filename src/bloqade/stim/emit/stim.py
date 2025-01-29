@@ -6,10 +6,6 @@ from kirin import ir, interp
 from kirin.emit import EmitStr, EmitStrFrame
 from kirin.dialects import func
 
-# @dataclass
-# class EmitStimFrame(EmitFrame[str]):
-#     body: list[str] = field(default_factory=list)
-
 IO_t = TypeVar("IO_t", bound=IO)
 
 
