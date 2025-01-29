@@ -30,7 +30,9 @@ class PyQrack:
         memory = Memory(
             num_qubits,
             allocated=0,
-            sim_reg=QrackSimulator(qubitCount=num_qubits, isTensorNetwork=False),
+            sim_reg=QrackSimulator(
+                qubitCount=num_qubits, isTensorNetwork=False, isOpenCL=False
+            ),
         )
         interpreter = PyQrackInterpreter(mt.dialects, memory=memory)
         return interpreter.run(mt, args, kwargs).expect()
