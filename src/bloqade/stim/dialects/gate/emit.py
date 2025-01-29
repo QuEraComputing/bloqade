@@ -1,5 +1,6 @@
+from kirin.emit import EmitStrFrame
 from kirin.interp import MethodTable, impl
-from bloqade.stim.emit.stim import EmitStimMain, EmitStimFrame
+from bloqade.stim.emit.stim import EmitStimMain
 
 from . import stmts
 from ._dialect import dialect
@@ -29,12 +30,11 @@ class EmitStimGateMethods(MethodTable):
     @impl(stmts.SqrtY)
     @impl(stmts.SqrtZ)
     def single_qubit_gate(
-        self, emit: EmitStimMain, frame: EmitStimFrame, stmt: SingleQubitGate
+        self, emit: EmitStimMain, frame: EmitStrFrame, stmt: SingleQubitGate
     ):
-
         targets: tuple[str, ...] = frame.get_values(stmt.targets)
         res = f"{self.gate_1q_map[stmt.name][int(stmt.dagger)]} " + " ".join(targets)
-        frame.body.append(res)
+        emit.writeln(frame, res)
 
         return ()
 
@@ -50,7 +50,7 @@ class EmitStimGateMethods(MethodTable):
     @impl(stmts.CZ)
     @impl(stmts.Swap)
     def two_qubit_gate(
-        self, emit: EmitStimMain, frame: EmitStimFrame, stmt: ControlledTwoQubitGate
+        self, emit: EmitStimMain, frame: EmitStrFrame, stmt: ControlledTwoQubitGate
     ):
 
         controls: tuple[str, ...] = frame.get_values(stmt.controls)
@@ -58,15 +58,15 @@ class EmitStimGateMethods(MethodTable):
         res = f"{self.gate_ctrl_2q_map[stmt.name][int(stmt.dagger)]} " + " ".join(
             f"{ctrl} {tgt}" for ctrl, tgt in zip(controls, targets)
         )
-        frame.body.append(res)
+        emit.writeln(frame, res)
 
         return ()
 
     @impl(stmts.SPP)
-    def spp(self, emit: EmitStimMain, frame: EmitStimFrame, stmt: stmts.SPP):
+    def spp(self, emit: EmitStimMain, frame: EmitStrFrame, stmt: stmts.SPP):
 
         targets: tuple[str, ...] = frame.get_values(stmt.targets)
         res = "SPP " + " ".join(targets)
-        frame.body.append(res)
+        emit.writeln(frame, res)
 
         return ()

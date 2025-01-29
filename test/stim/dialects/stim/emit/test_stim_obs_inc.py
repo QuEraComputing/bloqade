@@ -1,15 +1,6 @@
-from kirin import ir
 from bloqade import stim
-from bloqade.stim.emit.stim import EmitStimMain
 
-emit = EmitStimMain()
-
-
-def codegen(mt: ir.Method):
-    # method should not have any arguments!
-    emit.initialize()
-    emit.run(mt=mt, args=())
-    return emit.output
+from .base import codegen
 
 
 def test_obs_inc():
@@ -20,4 +11,4 @@ def test_obs_inc():
 
     out = codegen(test_simple_obs_inc)
 
-    assert out == "OBSERVABLE_INCLUDE(3) rec[-3] rec[-1]"
+    assert out.strip() == "OBSERVABLE_INCLUDE(3) rec[-3] rec[-1]"

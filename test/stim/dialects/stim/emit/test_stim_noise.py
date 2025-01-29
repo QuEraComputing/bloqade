@@ -1,15 +1,6 @@
-from kirin import ir
 from bloqade import stim
-from bloqade.stim.emit.stim import EmitStimMain
 
-emit = EmitStimMain()
-
-
-def codegen(mt: ir.Method):
-    # method should not have any arguments!
-    emit.initialize()
-    emit.run(mt=mt, args=())
-    return emit.output
+from .base import codegen
 
 
 def test_noise():
@@ -36,8 +27,10 @@ def test_noise():
         )
 
     out = codegen(test_pauli2)
-    print(out)
-    # assert out == "PAULI_CHANNEL_2(0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000) 0 3 4 5"
+    assert (
+        out.strip()
+        == "PAULI_CHANNEL_2(0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000, 0.10000000) 0 3 4 5"
+    )
 
 
 test_noise()

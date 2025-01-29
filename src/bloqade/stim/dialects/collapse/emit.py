@@ -1,5 +1,6 @@
+from kirin.emit import EmitStrFrame
 from kirin.interp import MethodTable, impl
-from bloqade.stim.emit.stim import EmitStimMain, EmitStimFrame
+from bloqade.stim.emit.stim import EmitStimMain
 
 from . import stmts
 from ._dialect import dialect
@@ -25,13 +26,13 @@ class EmitStimCollapseMethods(MethodTable):
     @impl(stmts.MXX)
     @impl(stmts.MYY)
     @impl(stmts.MZZ)
-    def get_measure(self, emit: EmitStimMain, frame: EmitStimFrame, stmt: Measurement):
+    def get_measure(self, emit: EmitStimMain, frame: EmitStrFrame, stmt: Measurement):
 
         probability: str = frame.get(stmt.p)
         targets: tuple[str, ...] = frame.get_values(stmt.targets)
 
         out = f"{self.meas_map[stmt.name]}({probability}) " + " ".join(targets)
-        frame.body.append(out)
+        emit.writeln(frame, out)
 
         return ()
 
@@ -44,23 +45,23 @@ class EmitStimCollapseMethods(MethodTable):
     @impl(stmts.RX)
     @impl(stmts.RY)
     @impl(stmts.RZ)
-    def get_reset(self, emit: EmitStimMain, frame: EmitStimFrame, stmt: Reset):
+    def get_reset(self, emit: EmitStimMain, frame: EmitStrFrame, stmt: Reset):
 
         targets: tuple[str, ...] = frame.get_values(stmt.targets)
 
         out = f"{self.reset_map[stmt.name]} " + " ".join(targets)
-        frame.body.append(out)
+        emit.writeln(frame, out)
 
         return ()
 
     @impl(stmts.PPMeasurement)
     def pp_measure(
-        self, emit: EmitStimMain, frame: EmitStimFrame, stmt: stmts.PPMeasurement
+        self, emit: EmitStimMain, frame: EmitStrFrame, stmt: stmts.PPMeasurement
     ):
         probability: str = frame.get(stmt.p)
         targets: tuple[str, ...] = frame.get_values(stmt.targets)
 
         out = f"MPP({probability}) " + " ".join(targets)
-        frame.body.append(out)
+        emit.writeln(frame, out)
 
         return ()

@@ -1,15 +1,6 @@
-from kirin import ir
 from bloqade import stim
-from bloqade.stim.emit import EmitStimMain
 
-emit = EmitStimMain()
-
-
-def codegen(mt: ir.Method):
-    # method should not have any arguments!
-    emit.initialize()
-    emit.run(mt=mt, args=()).expect()
-    return emit.output
+from .base import codegen
 
 
 def test_mpp():
@@ -35,7 +26,7 @@ def test_mpp():
     test_mpp_main.print()
     out = codegen(test_mpp_main)
 
-    assert out == "MPP(0.30000000) !X0*X1*Z2 Y3*X4*!Y5"
+    assert out.strip() == "MPP(0.30000000) !X0*X1*Z2 Y3*X4*!Y5"
 
 
 test_mpp()

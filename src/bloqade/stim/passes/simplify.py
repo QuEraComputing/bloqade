@@ -15,7 +15,7 @@ class Simplify(Pass):
 
     def unsafe_run(self, mt: ir.Method) -> None:
         constprop = Propagate(self.dialects)
-        results, expect = constprop.run_analysis(
+        results, _ = constprop.run_analysis(
             mt, tuple(const.JointResult.top() for _ in mt.args)
         )
         Fixpoint(
