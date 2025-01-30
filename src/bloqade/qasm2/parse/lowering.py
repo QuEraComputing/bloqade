@@ -271,7 +271,7 @@ class LoweringQASM(Visitor[lowering.Result]):
         self.state.append_stmt(parallel.CZ(tuple(ctrls), tuple(qargs)))
         return lowering.Result()
 
-    def visit_ParaRzGate(self, node: ast.ParaRZGate) -> lowering.Result:
+    def visit_ParaRZGate(self, node: ast.ParaRZGate) -> lowering.Result:
         qargs: list[ir.SSAValue] = []
         for pair in node.qargs:
             if len(pair) != 1:
