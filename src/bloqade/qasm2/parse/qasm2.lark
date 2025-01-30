@@ -25,7 +25,11 @@ ugate: "U" "(" expr "," expr "," expr ")" bit ";"
 cx_gate: "CX" bit "," bit ";"
 params: expr ("," expr)*
 
-?extension: parallel
+?extension: parallel | glob | noise
+?glob: glob_u_gate
+glob_u_gate: "glob" "." "U" "(" expr "," expr "," expr ")" ";"
+?noise: noise_pauli1
+noise_pauli1: "noise" "." "PAULI1" "(" expr "," expr "," expr ")" bit ";"
 ?parallel: para_u_gate | para_rz_gate | para_cz_gate
 para_u_gate: "parallel" "." "U" "(" expr "," expr "," expr ")" parallel_body
 para_rz_gate: "parallel" "." "RZ" "(" expr ")" parallel_body

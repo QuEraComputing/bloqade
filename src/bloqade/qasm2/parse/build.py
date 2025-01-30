@@ -88,6 +88,23 @@ class Build:
             body=[self.build(stmt) for stmt in tree.children[3:]],
         )
 
+    def build_noise_pauli1(self, tree: ParseTree) -> ast.NoisePAULI1:
+        return ast.NoisePAULI1(
+            px=self.build_expr(tree.children[0]),
+            py=self.build_expr(tree.children[1]),
+            pz=self.build_expr(tree.children[2]),
+            qarg=self.build_bit(tree.children[3]),
+        )
+
+    def build_glob_u_gate(self, tree: ParseTree) -> ast.GlobUGate:
+        if self.extension != "atom":
+            raise BuildError("glob_u_gate is only supported in OPENQASM 2.0-atom")
+        return ast.GlobUGate(
+            self.build_expr(tree.children[0]),
+            self.build_expr(tree.children[1]),
+            self.build_expr(tree.children[2]),
+        )
+
     def build_para_u_gate(self, tree: ParseTree) -> ast.ParaU3Gate:
         if self.extension != "atom":
             raise BuildError("para_u_gate is only supported in OPENQASM 2.0-atom")

@@ -5,7 +5,7 @@ from kirin.dialects import cf, func
 from kirin.lowering import LoweringState
 from kirin.exceptions import DialectLoweringError
 from bloqade.qasm2.types import CRegType, QRegType
-from bloqade.qasm2.dialects import uop, core, expr, parallel
+from bloqade.qasm2.dialects import uop, core, expr, glob, noise, parallel
 
 from . import ast
 from .visitor import Visitor
@@ -304,6 +304,35 @@ class LoweringQASM(Visitor[lowering.Result]):
                 phi=self.visit(node.phi).expect_one(),
                 lam=self.visit(node.lam).expect_one(),
                 qargs=tuple(qargs),
+            )
+        )
+        return lowering.Result()
+
+    def visit_GlobUGate(self, node: ast.GlobUGate) -> lowering.Result:
+        if self.extension != "atom":
+            raise NotImplementedError(
+                "GlobUGate gate is only support in atom extension of QASM2"
+            )
+        self.state.append_stmt(
+            glob.UGate(
+                theta=self.visit(node.theta).expect_one(),
+                phi=self.visit(node.phi).expect_one(),
+                lam=self.visit(node.lam).expect_one(),
+            )
+        )
+        return lowering.Result()
+
+    def visit_NoisePAULI1(self, node: ast.NoisePAULI1) -> lowering.Result:
+        if self.extension != "atom":
+            raise NotImplementedError(
+                "NoisePAULI1 gate is only support in atom extension of QASM2"
+            )
+        self.state.append_stmt(
+            noise.Pauli1(
+                px=self.visit(node.px).expect_one(),
+                py=self.visit(node.py).expect_one(),
+                pz=self.visit(node.pz).expect_one(),
+                qarg=self.visit(node.qarg).expect_one(),
             )
         )
         return lowering.Result()

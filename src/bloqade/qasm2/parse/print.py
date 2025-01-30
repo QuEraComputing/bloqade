@@ -3,7 +3,7 @@ from contextlib import contextmanager
 from dataclasses import field, dataclass
 
 from rich.console import Console
-from bloqade.qasm2.parse.ast import Version
+from bloqade.qasm2.parse.ast import Version, GlobUGate, NoisePAULI1
 
 from .ast import (
     Pi,
@@ -343,3 +343,25 @@ class Printer(Visitor[None]):
         self.visit(node.theta)
         self.plain_print(") ")
         self.visit_ParallelQArgs(node.qargs)
+
+    def visit_GlobUGate(self, node: GlobUGate) -> None:
+        self.plain_print("glob.U", style=self.color.keyword)
+        self.plain_print("(")
+        self.visit(node.theta)
+        self.plain_print(", ")
+        self.visit(node.phi)
+        self.plain_print(", ")
+        self.visit(node.lam)
+        self.plain_print(");")
+
+    def visit_NoisePAULI1(self, node: NoisePAULI1) -> None:
+        self.plain_print("noise.PAULI1", style=self.color.keyword)
+        self.plain_print("(")
+        self.visit(node.px)
+        self.plain_print(", ")
+        self.visit(node.py)
+        self.plain_print(", ")
+        self.visit(node.pz)
+        self.plain_print(") ")
+        self.visit(node.qarg)
+        self.plain_print(";")

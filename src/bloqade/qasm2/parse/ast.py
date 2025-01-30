@@ -131,6 +131,21 @@ class ParallelQArgs(Extension):
 
 
 @dataclass
+class GlobUGate(Extension):
+    theta: Expr
+    phi: Expr
+    lam: Expr
+
+
+@dataclass
+class NoisePAULI1(Extension):
+    px: Expr
+    py: Expr
+    pz: Expr
+    qarg: Bit | Name
+
+
+@dataclass
 class ParaU3Gate(Extension):
     theta: Expr
     phi: Expr
