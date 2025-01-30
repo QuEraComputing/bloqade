@@ -1,4 +1,4 @@
-OPENQASM 2.0-atom;
+KIRIN {qasm2.uop, qasm2.noise, qasm2.parallel};
 include "qelib1.inc";
 qreg q[2];
 

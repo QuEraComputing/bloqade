@@ -11,9 +11,6 @@ class BuildError(Exception):
 
 class Build:
 
-    def __init__(self) -> None:
-        self.extension = None
-
     def build(self, tree: ParseTree) -> ast.Node:
         return getattr(self, f"build_{tree.data}", self.build_generic)(tree)
 
@@ -21,18 +18,25 @@ class Build:
         raise NotImplementedError(f"No build_{tree.data} method")
 
     def build_mainprogram(self, tree: ParseTree) -> ast.MainProgram:
-        version = self.build_version(tree.children[0])
-        self.extension = version.ext
+        header = self.build(tree.children[0])
         return ast.MainProgram(
-            version=version,
+            header=header,
             statements=[self.build(stmt) for stmt in tree.children[1:]],
         )
+
+    def build_openqasm(self, tree: ParseTree) -> ast.OPENQASM:
+        return ast.OPENQASM(version=self.build(tree.children[0]))
+
+    def build_kirin(self, tree: ParseTree) -> ast.Kirin:
+        return ast.Kirin(dialects=[self.build_dialect(each) for each in tree.children])
+
+    def build_dialect(self, tree: ParseTree) -> str:
+        return ".".join(each.value for each in tree.children)
 
     def build_version(self, tree: ParseTree) -> ast.Version:
         return ast.Version(
             int(tree.children[0].value),
             int(tree.children[1].value),
-            tree.children[2] and tree.children[2].value,
         )
 
     def build_include(self, tree: ParseTree) -> ast.Include:
@@ -97,8 +101,6 @@ class Build:
         )
 
     def build_glob_u_gate(self, tree: ParseTree) -> ast.GlobUGate:
-        if self.extension != "atom":
-            raise BuildError("glob_u_gate is only supported in OPENQASM 2.0-atom")
         return ast.GlobUGate(
             self.build_expr(tree.children[0]),
             self.build_expr(tree.children[1]),
@@ -106,8 +108,6 @@ class Build:
         )
 
     def build_para_u_gate(self, tree: ParseTree) -> ast.ParaU3Gate:
-        if self.extension != "atom":
-            raise BuildError("para_u_gate is only supported in OPENQASM 2.0-atom")
         return ast.ParaU3Gate(
             self.build_expr(tree.children[0]),
             self.build_expr(tree.children[1]),
@@ -116,15 +116,11 @@ class Build:
         )
 
     def build_para_cz_gate(self, tree: ParseTree) -> ast.ParaCZGate:
-        if self.extension != "atom":
-            raise BuildError("para_cz_gate is only supported in OPENQASM 2.0-atom")
         return ast.ParaCZGate(
             self.build_parallel_body(tree.children[0]),
         )
 
     def build_para_rz_gate(self, tree: ParseTree) -> ast.ParaRZGate:
-        if self.extension != "atom":
-            raise BuildError("para_rz_gate is only supported in OPENQASM 2.0-atom")
         return ast.ParaRZGate(
             self.build_expr(tree.children[0]),
             self.build_parallel_body(tree.children[1]),

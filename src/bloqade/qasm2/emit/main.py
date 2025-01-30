@@ -4,7 +4,6 @@ from kirin import ir, interp
 from kirin.dialects import cf, func
 from kirin.ir.dialect import Dialect as Dialect
 from bloqade.qasm2.parse import ast
-from bloqade.qasm2.dialects import parallel
 
 from .base import EmitQASM2Base, EmitQASM2Frame
 
@@ -28,12 +27,15 @@ class Func(interp.MethodTable):
     def emit_func(
         self, emit: EmitQASM2Main, frame: EmitQASM2Frame, stmt: func.Function
     ):
+        from bloqade.qasm2.dialects import uop, core, expr
+
         emit.run_ssacfg_region(frame, stmt.body)
-        if parallel.dialect in emit.dialects.data:
-            version = ast.Version(2, 0, "atom")
+        # TODO: support difference in DialectGroup
+        if not emit.dialects.data.difference({core.dialect, uop.dialect, expr.dialect}):
+            header = ast.OPENQASM(ast.Version(2, 0))
         else:
-            version = ast.Version(2, 0)
-        emit.output = ast.MainProgram(version=version, statements=frame.body)
+            header = ast.Kirin([dialect.name for dialect in emit.dialects])
+        emit.output = ast.MainProgram(header=header, statements=frame.body)
         return ()
 
 

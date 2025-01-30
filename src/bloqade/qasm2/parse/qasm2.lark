@@ -1,5 +1,9 @@
-mainprogram: "OPENQASM" version ";" [statement*]
-version: INT "." INT ["-" IDENTIFIER]
+mainprogram: header ";" [statement*]
+?header: openqasm | kirin
+openqasm: "OPENQASM" version
+kirin: "KIRIN" "{" dialect ("," dialect)* "}"
+dialect: IDENTIFIER ("." IDENTIFIER)*
+version: INT "." INT
 ?statement: regdecl | gate | opaque | qop | ifstmt | barrier | include
 ?regdecl: qreg | creg
 // stmts

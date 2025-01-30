@@ -10,7 +10,7 @@ from .visitor import Visitor as Visitor
 
 def loads(txt: str):
     raw = lark_parser.parse(txt)
-    return Build().build(raw)
+    return Build().build_mainprogram(raw)
 
 
 def loadfile(file: str | pathlib.Path):

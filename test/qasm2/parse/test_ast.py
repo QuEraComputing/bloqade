@@ -1,8 +1,8 @@
 import textwrap
 
-import pytest
 from bloqade.qasm2.parse import ast, loads
-from bloqade.qasm2.parse.build import BuildError
+
+OPENQASM2 = ast.OPENQASM(version=ast.Version(2, 0))
 
 
 def test_mainprogram():
@@ -15,22 +15,21 @@ def test_mainprogram():
     """
             )
         )
-        == ast.MainProgram(
-            version=ast.Version(2, 0), statements=[ast.Include("qelib1.inc")]
-        )
+        == ast.MainProgram(header=OPENQASM2, statements=[ast.Include("qelib1.inc")])
     )
 
     assert (
         loads(
             textwrap.dedent(
                 """
-    OPENQASM 2.0-atom;
+    KIRIN {qasm2.uop, qasm2.expr};
     include "qelib1.inc";
     """
             )
         )
         == ast.MainProgram(
-            version=ast.Version(2, 0, "atom"), statements=[ast.Include("qelib1.inc")]
+            header=ast.Kirin(["qasm2.uop", "qasm2.expr"]),
+            statements=[ast.Include("qelib1.inc")],
         )
     )
 
@@ -45,7 +44,7 @@ def test_reg():
     """
             )
         )
-        == ast.MainProgram(version=ast.Version(2, 0), statements=[ast.QReg("q", 5)])
+        == ast.MainProgram(header=OPENQASM2, statements=[ast.QReg("q", 5)])
     )
 
     assert (
@@ -57,7 +56,7 @@ def test_reg():
                 """
             )
         )
-        == ast.MainProgram(version=ast.Version(2, 0), statements=[ast.CReg("c", 5)])
+        == ast.MainProgram(header=OPENQASM2, statements=[ast.CReg("c", 5)])
     )
 
 
@@ -72,7 +71,7 @@ def test_gate():
             )
         )
         == ast.MainProgram(
-            version=ast.Version(2, 0),
+            header=OPENQASM2,
             statements=[
                 ast.Gate(
                     name="cx",
@@ -96,7 +95,7 @@ def test_opaque():
             )
         )
         == ast.MainProgram(
-            version=ast.Version(2, 0),
+            header=OPENQASM2,
             statements=[
                 ast.Opaque(
                     name="cx",
@@ -119,7 +118,7 @@ def test_if():
             )
         )
         == ast.MainProgram(
-            version=ast.Version(2, 0),
+            header=OPENQASM2,
             statements=[
                 ast.IfStmt(
                     cond=ast.Cmp(ast.Name("c"), ast.Number(0)),
@@ -145,7 +144,7 @@ def test_barrier():
             )
         )
         == ast.MainProgram(
-            version=ast.Version(2, 0), statements=[ast.Barrier(qargs=[ast.Name("q")])]
+            header=OPENQASM2, statements=[ast.Barrier(qargs=[ast.Name("q")])]
         )
     )
 
@@ -161,7 +160,7 @@ def measure():
             )
         )
         == ast.MainProgram(
-            version=ast.Version(2, 0),
+            header=OPENQASM2,
             statements=[ast.Measure(ast.Name("q"), ast.Name("c"))],
         )
     )
@@ -177,9 +176,7 @@ def test_reset():
                 """
             )
         )
-        == ast.MainProgram(
-            version=ast.Version(2, 0), statements=[ast.Reset(ast.Name("q"))]
-        )
+        == ast.MainProgram(header=OPENQASM2, statements=[ast.Reset(ast.Name("q"))])
     )
 
 
@@ -195,7 +192,7 @@ def test_uop():
             )
         )
         == ast.MainProgram(
-            version=ast.Version(2, 0),
+            header=OPENQASM2,
             statements=[
                 ast.UGate(
                     ast.Number(0.1), ast.Number(0.2), ast.Number(0.3), ast.Name("q")
@@ -211,13 +208,13 @@ def test_parallel_ugate():
         loads(
             textwrap.dedent(
                 """
-                OPENQASM 2.0-atom;
+                KIRIN {qasm2.uop, qasm2.parallel};
                 parallel.U(theta, phi, lam) {q[0]; q[1]; q[2];}
                 """
             )
         )
         == ast.MainProgram(
-            version=ast.Version(2, 0, "atom"),
+            header=ast.Kirin(["qasm2.uop", "qasm2.parallel"]),
             statements=[
                 ast.ParaU3Gate(
                     theta=ast.Name("theta"),
@@ -235,29 +232,19 @@ def test_parallel_ugate():
         )
     )
 
-    with pytest.raises(BuildError):
-        loads(
-            textwrap.dedent(
-                """
-                OPENQASM 2.0;
-                parallel.U(theta, phi, lam) {q[0]; q[1]; q[2];}
-                """
-            )
-        )
-
 
 def test_parallel_czgate():
     assert (
         loads(
             textwrap.dedent(
                 """
-                OPENQASM 2.0-atom;
+                KIRIN {qasm2.uop, qasm2.parallel};
                 parallel.CZ {q[0]; q[1]; q[2];}
                 """
             )
         )
         == ast.MainProgram(
-            version=ast.Version(2, 0, "atom"),
+            header=ast.Kirin(["qasm2.uop", "qasm2.parallel"]),
             statements=[
                 ast.ParaCZGate(
                     qargs=ast.ParallelQArgs(
@@ -272,32 +259,19 @@ def test_parallel_czgate():
         )
     )
 
-    with pytest.raises(BuildError):
-        loads(
-            textwrap.dedent(
-                """
-                OPENQASM 2.0;
-                parallel.CZ {
-                q[0], q[1];
-                q[2], q[3];
-                }
-                """
-            )
-        )
-
 
 def test_parallel_rz_gate():
     assert (
         loads(
             textwrap.dedent(
                 """
-                OPENQASM 2.0-atom;
+                KIRIN {qasm2.uop, qasm2.parallel};
                 parallel.RZ(theta) {q[0]; q[1];}
                 """
             )
         )
         == ast.MainProgram(
-            version=ast.Version(2, 0, "atom"),
+            header=ast.Kirin(["qasm2.uop", "qasm2.parallel"]),
             statements=[
                 ast.ParaRZGate(
                     theta=ast.Name("theta"),
@@ -312,16 +286,6 @@ def test_parallel_rz_gate():
         )
     )
 
-    with pytest.raises(BuildError):
-        loads(
-            textwrap.dedent(
-                """
-                OPENQASM 2.0;
-                parallel.RZ(theta) {q[0]; q[1]; q[2];}
-                """
-            )
-        )
-
 
 def test_expr():
     assert (
@@ -334,7 +298,7 @@ def test_expr():
             )
         )
         == ast.MainProgram(
-            version=ast.Version(2, 0),
+            header=OPENQASM2,
             statements=[
                 ast.UGate(
                     ast.BinOp("+", ast.Number(1), ast.Number(1)),

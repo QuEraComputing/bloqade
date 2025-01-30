@@ -10,8 +10,23 @@ class Node:
 
 
 @dataclass
-class MainProgram(Node):
+class Header(Node):
+    pass
+
+
+@dataclass
+class Kirin(Header):
+    dialects: list[str]
+
+
+@dataclass
+class OPENQASM(Header):
     version: Version
+
+
+@dataclass
+class MainProgram(Node):
+    header: Kirin | OPENQASM
     statements: list[Statement]
 
 
@@ -19,7 +34,6 @@ class MainProgram(Node):
 class Version(Node):
     major: int
     minor: int
-    ext: str | None = None
 
 
 @dataclass

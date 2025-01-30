@@ -17,8 +17,18 @@ class LoweringQASM(Visitor[lowering.Result]):
     extension: str | None = None
 
     def visit_MainProgram(self, node: ast.MainProgram) -> lowering.Result:
-        if node.version.ext:
-            self.extension = node.version.ext
+        allowed = {dialect.name for dialect in self.state.dialects}
+        if isinstance(node.header, ast.OPENQASM) and node.header.version.major == 2:
+            dialects = ["qasm2.core", "qasm2.uop", "qasm2.expr"]
+        elif isinstance(node.header, ast.Kirin):
+            dialects = node.header.dialects
+
+        for dialect in dialects:
+            if dialect not in allowed:
+                raise DialectLoweringError(
+                    f"Dialect {dialect} not found, allowed: {', '.join(allowed)}"
+                )
+
         for stmt in node.statements:
             self.visit(stmt)
         return lowering.Result()
@@ -250,11 +260,6 @@ class LoweringQASM(Visitor[lowering.Result]):
         raise ValueError(f"name {node.id} not found")
 
     def visit_ParaCZGate(self, node: ast.ParaCZGate) -> lowering.Result:
-        if self.extension != "atom":
-            raise NotImplementedError(
-                "CZ gate is only support in atom extension of QASM2"
-            )
-
         ctrls: list[ir.SSAValue] = []
         qargs: list[ir.SSAValue] = []
         for pair in node.qargs:
@@ -267,11 +272,6 @@ class LoweringQASM(Visitor[lowering.Result]):
         return lowering.Result()
 
     def visit_ParaRzGate(self, node: ast.ParaRZGate) -> lowering.Result:
-        if self.extension != "atom":
-            raise NotImplementedError(
-                "Rz gate is only support in atom extension of QASM2"
-            )
-
         qargs: list[ir.SSAValue] = []
         for pair in node.qargs:
             if len(pair) != 1:
@@ -287,11 +287,6 @@ class LoweringQASM(Visitor[lowering.Result]):
         return lowering.Result()
 
     def visit_ParaU3Gate(self, node: ast.ParaU3Gate) -> lowering.Result:
-        if self.extension != "atom":
-            raise NotImplementedError(
-                "U3 gate is only support in atom extension of QASM2"
-            )
-
         qargs: list[ir.SSAValue] = []
         for pair in node.qargs:
             if len(pair) != 1:
@@ -309,10 +304,6 @@ class LoweringQASM(Visitor[lowering.Result]):
         return lowering.Result()
 
     def visit_GlobUGate(self, node: ast.GlobUGate) -> lowering.Result:
-        if self.extension != "atom":
-            raise NotImplementedError(
-                "GlobUGate gate is only support in atom extension of QASM2"
-            )
         self.state.append_stmt(
             glob.UGate(
                 theta=self.visit(node.theta).expect_one(),
@@ -323,10 +314,6 @@ class LoweringQASM(Visitor[lowering.Result]):
         return lowering.Result()
 
     def visit_NoisePAULI1(self, node: ast.NoisePAULI1) -> lowering.Result:
-        if self.extension != "atom":
-            raise NotImplementedError(
-                "NoisePAULI1 gate is only support in atom extension of QASM2"
-            )
         self.state.append_stmt(
             noise.Pauli1(
                 px=self.visit(node.px).expect_one(),

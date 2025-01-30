@@ -3,9 +3,9 @@ from contextlib import contextmanager
 from dataclasses import field, dataclass
 
 from rich.console import Console
-from bloqade.qasm2.parse.ast import Version, GlobUGate, NoisePAULI1
 
 from .ast import (
+    OPENQASM,
     Pi,
     Bit,
     Cmp,
@@ -15,6 +15,7 @@ from .ast import (
     Name,
     QReg,
     BinOp,
+    Kirin,
     Reset,
     UGate,
     CXGate,
@@ -26,11 +27,13 @@ from .ast import (
     Include,
     Measure,
     UnaryOp,
+    GlobUGate,
     ParaCZGate,
     ParaRZGate,
     ParaU3Gate,
     Instruction,
     MainProgram,
+    NoisePAULI1,
     ParallelQArgs,
 )
 from .visitor import Visitor
@@ -145,18 +148,23 @@ class Printer(Visitor[None]):
 
     def visit_MainProgram(self, node: MainProgram) -> None:
         self.print_indent()
-        self.visit_Version(node.version)
+        self.visit(node.header)
         self.print_newline()
         for stmt in node.statements:
             self.visit(stmt)
             self.print_newline()
 
-    def visit_Version(self, node: Version) -> None:
+    def visit_OPENQASM(self, node: OPENQASM) -> None:
         self.plain_print(
-            f"OPENQASM {node.major}.{node.minor}", style=self.color.comment
+            f"OPENQASM {node.version.major}.{node.version.minor}",
+            style=self.color.comment,
         )
-        if node.ext:
-            self.plain_print("-", node.ext, style=self.color.comment)
+        self.plain_print(";")
+
+    def visit_Kirin(self, node: Kirin) -> None:
+        self.plain_print(
+            "KIRIN " + "{" + ",".join(node.dialects) + "}", style=self.color.comment
+        )
         self.plain_print(";")
 
     def visit_Include(self, node: Include) -> None:
