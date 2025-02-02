@@ -21,7 +21,7 @@ class ConstInt(ir.Statement):
         printer.print_name(self)
         printer.plain_print(" ")
         printer.plain_print(repr(self.value))
-        with printer.rich(style=printer.color.comment):
+        with printer.rich(style="comment"):
             printer.plain_print(" : ")
             printer.print(self.result.type)
 
@@ -41,7 +41,7 @@ class ConstFloat(ir.Statement):
         printer.print_name(self)
         printer.plain_print(" ")
         printer.plain_print(repr(self.value))
-        with printer.rich(style=printer.color.comment):
+        with printer.rich(style="comment"):
             printer.plain_print(" : ")
             printer.print(self.result.type)
 
@@ -61,7 +61,7 @@ class ConstBool(ir.Statement):
         printer.print_name(self)
         printer.plain_print(" ")
         printer.plain_print(repr(self.value))
-        with printer.rich(style=printer.color.comment):
+        with printer.rich(style="comment"):
             printer.plain_print(" : ")
             printer.print(self.result.type)
 
@@ -81,7 +81,7 @@ class ConstStr(ir.Statement):
         printer.print_name(self)
         printer.plain_print(" ")
         printer.plain_print(repr(self.value))
-        with printer.rich(style=printer.color.comment):
+        with printer.rich(style="comment"):
             printer.plain_print(" : ")
             printer.print(self.result.type)
 

@@ -1,5 +1,6 @@
 import pathlib
-from typing import IO
+
+from rich.console import Console
 
 from . import ast as ast
 from .build import Build
@@ -18,5 +19,19 @@ def loadfile(file: str | pathlib.Path):
         return loads(f.read())
 
 
-def pprint(node: ast.Node, file: IO | None = None):
-    Printer(file=file).visit(node)
+def pprint(node: ast.Node, *, console: Console | None = None):
+    if console:
+        return Printer(console).visit(node)
+    else:
+        Printer().visit(node)
+
+
+def spprint(node: ast.Node, *, console: Console | None = None):
+    if console:
+        printer = Printer(console)
+    else:
+        printer = Printer()
+
+    with printer.string_io() as stream:
+        printer.visit(node)
+        return stream.getvalue()

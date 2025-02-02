@@ -12,6 +12,7 @@ authors = [
 requires-python = ">=3.10"
 dependencies = [
     "kirin-toolchain~=0.10.0",
+    "rich>=13.9.4",
 ]
 
 [project.optional-dependencies]
