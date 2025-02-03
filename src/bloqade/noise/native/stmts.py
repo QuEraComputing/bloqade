@@ -6,7 +6,11 @@ from ._dialect import dialect
 
 
 @statement(dialect=dialect)
-class SingleQubitErrorChannel(ir.Statement):
+class PauliChannel(ir.Statement):
+    name = "native.pauli_channel"
+
+    traits = frozenset({ir.FromPythonCall()})
+
     px: ir.SSAValue = info.argument(type=types.Float)
     py: ir.SSAValue = info.argument(type=types.Float)
     pz: ir.SSAValue = info.argument(type=types.Float)
@@ -14,7 +18,11 @@ class SingleQubitErrorChannel(ir.Statement):
 
 
 @statement(dialect=dialect)
-class CZPauliUnpaired(ir.Statement):
+class CZUnpairedPauliChannel(ir.Statement):
+    name = "native.pauli_channel.cz_unpaired"
+
+    traits = frozenset({ir.FromPythonCall()})
+
     px: ir.SSAValue = info.argument(type=types.Float)
     py: ir.SSAValue = info.argument(type=types.Float)
     pz: ir.SSAValue = info.argument(type=types.Float)
@@ -23,7 +31,10 @@ class CZPauliUnpaired(ir.Statement):
 
 
 @statement(dialect=dialect)
-class CZErrorPaired(ir.Statement):
+class CZPairedPauliChannel(ir.Statement):
+    name = "native.pauli_channel.cz_unpaired"
+
+    traits = frozenset({ir.FromPythonCall()})
     px: ir.SSAValue = info.argument(type=types.Float)
     py: ir.SSAValue = info.argument(type=types.Float)
     pz: ir.SSAValue = info.argument(type=types.Float)
@@ -33,5 +44,9 @@ class CZErrorPaired(ir.Statement):
 
 @statement(dialect=dialect)
 class AtomLossChannel(ir.Statement):
+    name = "native.atom_loss_channel"
+
+    traits = frozenset({ir.FromPythonCall()})
+
     prob: ir.SSAValue = info.argument(type=types.Float)
     qarg: ir.SSAValue = info.argument(type=QubitType)

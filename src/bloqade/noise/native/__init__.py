@@ -1,7 +1,7 @@
 from .stmts import (
-    CZErrorPaired as CZErrorPaired,
+    PauliChannel as PauliChannel,
     AtomLossChannel as AtomLossChannel,
-    CZPauliUnpaired as CZPauliUnpaired,
-    SingleQubitErrorChannel as SingleQubitErrorChannel,
+    CZPairedPauliChannel as CZPairedPauliChannel,
+    CZUnpairedPauliChannel as CZUnpairedPauliChannel,
 )
 from ._dialect import dialect as dialect

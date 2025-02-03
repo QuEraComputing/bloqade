@@ -25,12 +25,12 @@ class PyQrackMethods(interp.MethodTable):
 
         getattr(qarg.sim_reg, which)(qarg.addr)
 
-    @interp.impl(native.SingleQubitErrorChannel)
+    @interp.impl(native.PauliChannel)
     def single_qubit_error_channel(
         self,
         interp: PyQrackInterpreter,
         frame: interp.Frame,
-        stmt: native.SingleQubitErrorChannel,
+        stmt: native.PauliChannel,
     ):
         px: float = frame.get(stmt.px)
         py: float = frame.get(stmt.py)
@@ -42,12 +42,12 @@ class PyQrackMethods(interp.MethodTable):
 
         return ()
 
-    @interp.impl(native.CZPauliUnpaired)
+    @interp.impl(native.CZUnpairedPauliChannel)
     def cz_pauli_unpaired(
         self,
         interp: PyQrackInterpreter,
         frame: interp.Frame,
-        stmt: native.CZPauliUnpaired,
+        stmt: native.CZUnpairedPauliChannel,
     ):
         px: float = frame.get(stmt.px)
         py: float = frame.get(stmt.py)
@@ -69,12 +69,12 @@ class PyQrackMethods(interp.MethodTable):
 
         return ()
 
-    @interp.impl(native.CZErrorPaired)
+    @interp.impl(native.CZPairedPauliChannel)
     def cz_pauli_paired(
         self,
         interp: PyQrackInterpreter,
         frame: interp.Frame,
-        stmt: native.CZPauliUnpaired,
+        stmt: native.CZUnpairedPauliChannel,
     ):
         px: float = frame.get(stmt.px)
         py: float = frame.get(stmt.py)
