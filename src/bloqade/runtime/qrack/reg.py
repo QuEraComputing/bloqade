@@ -1,5 +1,11 @@
-from typing import Generic, TypeVar
+import enum
+from typing import List, Generic, TypeVar
 from dataclasses import dataclass
+
+
+class QubitState(enum.Enum):
+    Active = enum.auto()
+    Lost = enum.auto()
 
 
 @dataclass(frozen=True)
@@ -31,6 +37,11 @@ SimRegType = TypeVar("SimRegType")
 class SimQRegister(QRegister, Generic[SimRegType]):
     sim_reg: SimRegType
     addrs: tuple[int, ...]
+    qubit_state: List[QubitState]
+
+    def drop(self, pos: int):
+        assert self.qubit_state[pos] is QubitState.Active, "Qubit already lost"
+        self.qubit_state[pos] = QubitState.Lost
 
 
 @dataclass(frozen=True)
@@ -45,3 +56,9 @@ class SimQubitRef(QubitRef, Generic[SimRegType]):
     @property
     def addr(self) -> int:
         return self.ref.addrs[self.pos]
+
+    def is_active(self) -> bool:
+        return self.ref.qubit_state[self.pos] is QubitState.Active
+
+    def drop(self):
+        self.ref.drop(self.pos)

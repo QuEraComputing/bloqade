@@ -1,6 +1,6 @@
 from kirin import interp
 from bloqade.qasm2.dialects import core
-from bloqade.runtime.qrack.reg import SimQubitRef, SimQRegister
+from bloqade.runtime.qrack.reg import QubitState, SimQubitRef, SimQRegister
 from bloqade.runtime.qrack.base import PyQrackInterpreter
 
 
@@ -23,6 +23,7 @@ class PyQrackMethods(interp.MethodTable):
                 size=n_qubits,
                 sim_reg=interp.memory.sim_reg,
                 addrs=tuple(range(curr_allocated, curr_allocated + n_qubits)),
+                qubit_state=[QubitState.Active] * n_qubits,
             ),
         )
 

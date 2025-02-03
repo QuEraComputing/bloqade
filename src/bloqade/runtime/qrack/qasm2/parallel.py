@@ -17,7 +17,8 @@ class PyQrackMethods(interp.MethodTable):
         qargs: tuple[SimQubitRef["QrackSimulator"], ...] = frame.get_values(stmt.qargs)
         ctrls: tuple[SimQubitRef["QrackSimulator"], ...] = frame.get_values(stmt.ctrls)
         for qarg, ctrl in zip(qargs, ctrls):
-            interp.memory.sim_reg.mcz(qarg, ctrl)
+            if qarg.is_active() and ctrl.is_active():
+                interp.memory.sim_reg.mcz(qarg, ctrl)
         return ()
 
     @interp.impl(parallel.UGate)
@@ -31,7 +32,8 @@ class PyQrackMethods(interp.MethodTable):
             frame.get(stmt.lam),
         )
         for qarg in qargs:
-            interp.memory.sim_reg.u(qarg, theta, phi, lam)
+            if qarg.is_active():
+                interp.memory.sim_reg.u(qarg, theta, phi, lam)
         return ()
 
     @interp.impl(parallel.RZ)
@@ -39,5 +41,6 @@ class PyQrackMethods(interp.MethodTable):
         qargs: tuple[SimQubitRef["QrackSimulator"], ...] = frame.get_values(stmt.qargs)
         phi = frame.get(stmt.theta)
         for qarg in qargs:
-            interp.memory.sim_reg.r(3, phi, qarg)
+            if qarg.is_active():
+                interp.memory.sim_reg.r(3, phi, qarg)
         return ()

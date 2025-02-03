@@ -1,5 +1,4 @@
-"""QASM2 extension for parallel execution of gates.
-"""
+"""QASM2 extension for parallel execution of gates."""
 
 from kirin.lowering import wraps
 

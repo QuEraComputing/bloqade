@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar, Optional
+from typing import Generic, TypeVar
 from dataclasses import field, dataclass
 
 import numpy as np
@@ -19,13 +19,9 @@ class Memory(Generic[SimRegType]):
 class PyQrackInterpreter(Interpreter, Generic[SimRegType]):
     keys = ["pyqrack", "main"]
     memory: Memory[SimRegType] = field(kw_only=True)
-    rng_state: Optional[np.random.Generator] = field(default=None, kw_only=True)
-
-    def __post_init__(self) -> None:
-        super().__post_init__()
-        self.rng_state = (
-            np.random.default_rng() if self.rng_state is None else self.rng_state
-        )
+    rng_state: np.random.Generator = field(
+        default_factory=np.random.default_rng, kw_only=True
+    )
 
     def initialize(self) -> Self:
         super().initialize()
