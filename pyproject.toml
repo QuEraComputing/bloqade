@@ -11,8 +11,12 @@ authors = [
 ]
 requires-python = ">=3.10"
 dependencies = [
+    "numpy>=1.26.4",
+    "scipy>=1.13.1",
     "kirin-toolchain~=0.10.0",
     "rich>=13.9.4",
+    "pydantic>=1.3.0",
+
 ]
 
 [project.optional-dependencies]
@@ -21,6 +25,12 @@ qasm2 = [
 ]
 pyqrack-cpu = [
     "pyqrack-cpu>=1.34.9",
+]
+vis = [
+    "tqdm>=4.66.5",
+    "matplotlib>=3.9.2",
+    "pyqt5>=5.15.11",
+    "ffmpeg>=1.4",
 ]
 
 [build-system]
