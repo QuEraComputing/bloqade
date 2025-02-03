@@ -1,7 +1,8 @@
-from typing import Dict, Any
-import numpy as np
-import base64
 import zlib
+import base64
+from typing import Any, Dict
+
+import numpy as np
 
 
 def bytes_to_str(byte_array: bytes) -> str:

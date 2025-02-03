@@ -1,12 +1,13 @@
-import dataclasses
-from typing import Callable, Optional, Dict, List, Any, Tuple
 import itertools
-from .gate_event import GateEvent
+import dataclasses
 from abc import abstractmethod
 from enum import Enum
+from typing import Any, Dict, List, Tuple, Callable, Optional
+
 import matplotlib.patches as mpatches
 import matplotlib.collections as mcollections
 
+from .gate_event import GateEvent
 
 _gate_color_code = {
     "GlobalCZGate": "tab:red",

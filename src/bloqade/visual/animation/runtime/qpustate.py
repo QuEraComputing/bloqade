@@ -1,12 +1,13 @@
-from abc import ABC, abstractmethod
 import dataclasses
-from typing import Any, List, Tuple, Dict
+from abc import ABC, abstractmethod
+from typing import Any, Dict, List, Tuple
+
 import numpy as np
 
-from ..gate_event import GateEvent
-from .atoms import AtomTrajectory
 from .aod import AODMoveEvent
 from ..base import FieldOfView
+from .atoms import AtomTrajectory
+from ..gate_event import GateEvent
 
 
 @dataclasses.dataclass

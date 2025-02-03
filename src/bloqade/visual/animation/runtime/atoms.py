@@ -1,7 +1,9 @@
 import dataclasses
-import numpy as np
 from typing import List, Tuple
 from functools import cached_property
+
+import numpy as np
+
 from .ppoly import PPoly
 
 

@@ -1,5 +1,6 @@
 import dataclasses
-from typing import Any, Tuple, Dict
+from typing import Any, Dict, Tuple
+
 from .ppoly import PPoly
 
 

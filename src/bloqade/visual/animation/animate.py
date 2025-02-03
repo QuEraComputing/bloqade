@@ -1,13 +1,14 @@
-from matplotlib.animation import FuncAnimation
-import matplotlib.pyplot as plt
-import numpy as np
-import functools
 import bisect
+import functools
 from typing import Optional
 
-from .runtime.qpustate import QPUStateABC
-from .base import FieldOfView, GatePainter, quera_color_code
 import tqdm
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+
+from .base import FieldOfView, GatePainter, quera_color_code
+from .runtime.qpustate import QPUStateABC
 
 
 def animate_qpu_state(
@@ -171,11 +172,11 @@ def animate_qpu_state(
     fig.tight_layout()
     fig.subplots_adjust(wspace=0.1)
 
-    def _update_annote(loc, idx, annote_artist):
+    def _update_annotate(loc, idx, annotate_artist):
         new_loc = (loc[0], loc[1] - 0.06)
-        annote_artist.set_position(new_loc)
+        annotate_artist.set_position(new_loc)
         txt = f"{idx}"
-        annote_artist.set_text(txt)
+        annotate_artist.set_text(txt)
         return loc
 
     def update(frame: int, state: QPUStateABC, times: np.ndarray, blk_t_end: np.array):
@@ -191,7 +192,7 @@ def animate_qpu_state(
         # update atoms location and annotation
         post = np.array(
             [
-                _update_annote(
+                _update_annotate(
                     atom_position,
                     i,
                     reg_annot_list[i],

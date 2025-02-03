@@ -1,8 +1,10 @@
-from typing import Any, Dict
-import numpy as np
 import dataclasses
-import scipy.interpolate as interp
+from typing import Any, Dict
 from functools import cached_property
+
+import numpy as np
+import scipy.interpolate as interp
+
 from .utils import array_to_json, json_to_array
 
 

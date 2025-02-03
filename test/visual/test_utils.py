@@ -1,7 +1,8 @@
-from bloqade.visual.animation.runtime import utils
 import json
+
 import numpy as np
 import pytest
+from bloqade.visual.animation.runtime import utils
 
 
 def test_json_numpy():
