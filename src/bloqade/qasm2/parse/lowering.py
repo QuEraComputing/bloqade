@@ -5,7 +5,7 @@ from kirin.dialects import cf, func
 from kirin.lowering import LoweringState
 from kirin.exceptions import DialectLoweringError
 from bloqade.qasm2.types import CRegType, QRegType
-from bloqade.qasm2.dialects import uop, core, expr, glob, noise, parallel
+from bloqade.qasm2.dialects import uop, core, expr, glob, noise, measure, parallel
 
 from . import ast
 from .visitor import Visitor
@@ -68,7 +68,7 @@ class LoweringQASM(Visitor[lowering.Result]):
 
     def visit_Measure(self, node: ast.Measure) -> lowering.Result:
         self.state.append_stmt(
-            core.Measure(
+            measure.Measure(
                 qarg=self.visit(node.qarg).expect_one(),
                 carg=self.visit(node.carg).expect_one(),
             )

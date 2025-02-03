@@ -40,18 +40,6 @@ class Reset(ir.Statement):
 
 
 @statement(dialect=dialect)
-class Measure(ir.Statement):
-    """Measure a qubit and store the result in a bit."""
-
-    name = "measure"
-    traits = frozenset({ir.FromPythonCall()})
-    qarg: ir.SSAValue = info.argument(QubitType)
-    """qarg (Qubit): The qubit to measure."""
-    carg: ir.SSAValue = info.argument(BitType)
-    """carg (Bit): The bit to store the result in."""
-
-
-@statement(dialect=dialect)
 class CRegEq(ir.Statement):
     """Check if two classical registers are equal."""
 

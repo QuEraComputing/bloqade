@@ -1,7 +1,7 @@
 from kirin.lowering import wraps
 
 from .types import Bit, CReg, QReg, Qubit
-from .dialects import uop, core, expr, inline as inline_
+from .dialects import uop, core, expr, inline as inline_, measure as measure_
 
 
 @wraps(inline_.InlineQASM)
@@ -20,7 +20,7 @@ def creg(n_bits: int) -> CReg: ...
 def reset(qarg: Qubit) -> None: ...
 
 
-@wraps(core.Measure)
+@wraps(measure_.Measure)
 def measure(qarg: Qubit, cbit: Bit) -> None: ...
 
 
