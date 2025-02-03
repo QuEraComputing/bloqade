@@ -7,6 +7,7 @@ from bloqade.qasm2.dialects import (
     glob,
     noise,
     inline,
+    measure,
     indexing,
     parallel,
 )
@@ -37,7 +38,7 @@ def gate(self):
 
 
 @ir.dialect_group(
-    [inline, uop, glob, noise, expr, parallel, core, indexing, cf, ilist, func]
+    [inline, uop, glob, noise, expr, parallel, core, measure, indexing, cf, ilist, func]
 )
 def main(self):
     ilist_desugar = ilist.IListDesugar(self)
