@@ -93,22 +93,6 @@
          <lastmod>2025-02-04</lastmod>
     </url>
     <url>
-         <loc>https://special-engine-kg8jlr7.pages.github.io/reference/bloqade/plugins/</loc>
-         <lastmod>2025-02-04</lastmod>
-    </url>
-    <url>
-         <loc>https://special-engine-kg8jlr7.pages.github.io/reference/bloqade/plugins/qbraid/</loc>
-         <lastmod>2025-02-04</lastmod>
-    </url>
-    <url>
-         <loc>https://special-engine-kg8jlr7.pages.github.io/reference/bloqade/plugins/qbraid/schema/</loc>
-         <lastmod>2025-02-04</lastmod>
-    </url>
-    <url>
-         <loc>https://special-engine-kg8jlr7.pages.github.io/reference/bloqade/plugins/qbraid/simulation_result/</loc>
-         <lastmod>2025-02-04</lastmod>
-    </url>
-    <url>
          <loc>https://special-engine-kg8jlr7.pages.github.io/reference/bloqade/qasm2/</loc>
          <lastmod>2025-02-04</lastmod>
     </url>
@@ -242,6 +226,18 @@
     </url>
     <url>
          <loc>https://special-engine-kg8jlr7.pages.github.io/reference/bloqade/qasm2/parse/visitor/</loc>
+         <lastmod>2025-02-04</lastmod>
+    </url>
+    <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/reference/bloqade/qbraid/</loc>
+         <lastmod>2025-02-04</lastmod>
+    </url>
+    <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/reference/bloqade/qbraid/schema/</loc>
+         <lastmod>2025-02-04</lastmod>
+    </url>
+    <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/reference/bloqade/qbraid/simulation_result/</loc>
          <lastmod>2025-02-04</lastmod>
     </url>
     <url>
