@@ -18,23 +18,12 @@ class PauliChannel(ir.Statement):
 
 
 @statement(dialect=dialect)
-class CZUnpairedPauliChannel(ir.Statement):
+class CZPauliChannel(ir.Statement):
     name = "native.pauli_channel.cz_unpaired"
 
     traits = frozenset({ir.FromPythonCall()})
 
-    px: ir.SSAValue = info.argument(type=types.Float)
-    py: ir.SSAValue = info.argument(type=types.Float)
-    pz: ir.SSAValue = info.argument(type=types.Float)
-    qarg1: ir.SSAValue = info.argument(type=QubitType)
-    qarg2: ir.SSAValue = info.argument(type=QubitType)
-
-
-@statement(dialect=dialect)
-class CZPairedPauliChannel(ir.Statement):
-    name = "native.pauli_channel.cz_unpaired"
-
-    traits = frozenset({ir.FromPythonCall()})
+    paired: ir.PyAttr[bool] = info.attribute(type=types.Bool, property=True)
     px: ir.SSAValue = info.argument(type=types.Float)
     py: ir.SSAValue = info.argument(type=types.Float)
     pz: ir.SSAValue = info.argument(type=types.Float)

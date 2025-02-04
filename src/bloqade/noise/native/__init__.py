@@ -1,7 +1,6 @@
 from .stmts import (
     PauliChannel as PauliChannel,
+    CZPauliChannel as CZPauliChannel,
     AtomLossChannel as AtomLossChannel,
-    CZPairedPauliChannel as CZPairedPauliChannel,
-    CZUnpairedPauliChannel as CZUnpairedPauliChannel,
 )
 from ._dialect import dialect as dialect
