@@ -94,7 +94,6 @@ dependencies = [
     { name = "numpy" },
     { name = "pandas" },
     { name = "pydantic" },
-    { name = "qbraid" },
     { name = "rich" },
     { name = "scipy" },
 ]
@@ -105,6 +104,9 @@ pyqrack-cpu = [
 ]
 qasm2 = [
     { name = "lark" },
+]
+qbraid = [
+    { name = "qbraid" },
 ]
 vis = [
     { name = "ffmpeg" },
@@ -150,7 +152,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=1.3.0" },
     { name = "pyqrack-cpu", marker = "extra == 'pyqrack-cpu'", specifier = ">=1.34.9" },
     { name = "pyqt5", marker = "extra == 'vis'", specifier = ">=5.15.11" },
-    { name = "qbraid", specifier = ">=0.9.3" },
+    { name = "qbraid", marker = "extra == 'qbraid'", specifier = ">=0.9.3" },
     { name = "rich", specifier = ">=13.9.4" },
     { name = "scipy", specifier = ">=1.13.1" },
     { name = "tqdm", marker = "extra == 'vis'", specifier = ">=4.66.5" },

@@ -1,6 +1,6 @@
 import json
 
-from bloqade.plugins.qbraid import schema
+from bloqade.qbraid import schema
 
 
 def get_noise_model():
