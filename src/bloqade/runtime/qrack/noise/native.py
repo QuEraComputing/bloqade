@@ -54,16 +54,15 @@ class PyQrackMethods(interp.MethodTable):
         pz: float = frame.get(stmt.pz)
         qarg1: reg.SimQubitRef = frame.get(stmt.qarg1)
         qarg2: reg.SimQubitRef = frame.get(stmt.qarg2)
-        paired = stmt.paired.data
 
         is_active_1 = qarg1.is_active()
         is_active_2 = qarg2.is_active()
         is_both_active = is_active_1 and is_active_2
 
-        if paired and is_both_active:
+        if stmt.paired and is_both_active:
             self.apply_pauli_error(interp, qarg1, px, py, pz)
             self.apply_pauli_error(interp, qarg2, px, py, pz)
-        elif not paired:
+        elif not stmt.paired:
             if is_both_active:
                 return ()
             elif is_active_1:
