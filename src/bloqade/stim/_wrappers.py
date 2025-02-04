@@ -6,6 +6,7 @@ from .dialects import aux, gate
 
 
 # dialect:: gate
+## 1q
 @wraps(gate.X)
 def x(targets: tuple[int, ...], dagger: bool = False) -> None: ...
 
@@ -42,6 +43,37 @@ def sqrt_y(targets: tuple[int, ...], dagger: bool = False) -> None: ...
 def sqrt_z(targets: tuple[int, ...], dagger: bool = False) -> None: ...
 
 
+## clif 2q
+@wraps(gate.Swap)
+def swap(
+    controls: tuple[int, ...], targets: tuple[int, ...], dagger: bool = False
+) -> None: ...
+
+
+## ctrl 2q
+@wraps(gate.CX)
+def cx(
+    controls: tuple[int, ...], targets: tuple[int, ...], dagger: bool = False
+) -> None: ...
+
+
+@wraps(gate.CY)
+def cy(
+    controls: tuple[int, ...], targets: tuple[int, ...], dagger: bool = False
+) -> None: ...
+
+
+@wraps(gate.CZ)
+def cz(
+    controls: tuple[int, ...], targets: tuple[int, ...], dagger: bool = False
+) -> None: ...
+
+
+## pp
+@wraps(gate.SPP)
+def spp(targets: tuple[aux.PauliString, ...], dagger=False) -> None: ...
+
+
 # dialect:: aux
 @wraps(aux.GetRecord)
 def rec(id: int) -> aux.RecordResult: ...
@@ -54,7 +86,7 @@ def detector(
 
 
 @wraps(aux.ObservableInclude)
-def obs_include(idx: int, targets: tuple[aux.RecordResult, ...]) -> None: ...
+def observable_include(idx: int, targets: tuple[aux.RecordResult, ...]) -> None: ...
 
 
 @wraps(aux.Tick)
