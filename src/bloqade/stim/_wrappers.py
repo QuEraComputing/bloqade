@@ -7,15 +7,39 @@ from .dialects import aux, gate
 
 # dialect:: gate
 @wraps(gate.X)
-def x(targets: tuple[int, ...], dagger: bool) -> None: ...
+def x(targets: tuple[int, ...], dagger: bool = False) -> None: ...
 
 
 @wraps(gate.Y)
-def y(targets: tuple[int, ...], dagger: bool) -> None: ...
+def y(targets: tuple[int, ...], dagger: bool = False) -> None: ...
 
 
 @wraps(gate.Z)
-def z(targets: tuple[int, ...], dagger: bool) -> None: ...
+def z(targets: tuple[int, ...], dagger: bool = False) -> None: ...
+
+
+@wraps(gate.Identity)
+def identity(targets: tuple[int, ...], dagger: bool = False) -> None: ...
+
+
+@wraps(gate.H)
+def h(targets: tuple[int, ...], dagger: bool = False) -> None: ...
+
+
+@wraps(gate.S)
+def s(targets: tuple[int, ...], dagger: bool = False) -> None: ...
+
+
+@wraps(gate.SqrtX)
+def sqrt_x(targets: tuple[int, ...], dagger: bool = False) -> None: ...
+
+
+@wraps(gate.SqrtY)
+def sqrt_y(targets: tuple[int, ...], dagger: bool = False) -> None: ...
+
+
+@wraps(gate.SqrtZ)
+def sqrt_z(targets: tuple[int, ...], dagger: bool = False) -> None: ...
 
 
 # dialect:: aux
