@@ -6,8 +6,8 @@ from bloqade.visual.animation.gate_event import GateEvent
 from bloqade.visual.animation.runtime.aod import AODMoveEvent
 from bloqade.visual.animation.runtime.atoms import AtomTrajectory
 from bloqade.visual.animation.runtime.ppoly import PPoly
+from bloqade.plugins.qbraid.simulation_result import QuEraSimulationResult
 from bloqade.visual.animation.runtime.qpustate import AnimateQPUState
-from bloqade.simulation.qbraid.simulation_result import QuEraSimulationResult
 
 from .sample.test_noise_model import get_noise_model
 
