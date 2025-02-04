@@ -23,6 +23,21 @@ def animate_qpu_state(
     start_block: int = 0,
     n_blocks: int | None = None,
 ):
+    """Generate an animation from the QPU state
+
+    Args:
+        state (QPUStateABC): The QPU state to animate
+        display_fov (Optional[FieldOfView], optional): The field of view to display. Defaults to None. If None, it will use the QPU's field of view.
+        dilation_rate (float, optional): The rate at which to dilate the time. Defaults to 0.05.
+        fps (int, optional): The frames per second. Defaults to 30.
+        gate_display_dilation (float, optional): The rate at which to dilate the gate display. Defaults to 1.0.
+        fig_args (dict, optional): The arguments to pass to the matplotlib.pyplot.figure. Defaults to {}.
+        save_mpeg (bool, optional): Whether to save the animation as an mpeg. Defaults to False.
+        filename (str, optional): The filename to save the mpeg as. Defaults to "vqpu_animation".
+        start_block (int, optional): The block to start the animation at. Defaults to 0.
+        n_blocks (int | None, optional): The number of blocks to animate. Defaults to None. If None, it will animate all blocks after `start_block`.
+
+    """
     qpu_fov = state.qpu_fov
 
     if display_fov is None:
