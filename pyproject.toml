@@ -32,6 +32,9 @@ vis = [
     "pyqt5>=5.15.11",
     "ffmpeg>=1.4",
 ]
+qbraid = [
+    "qbraid>=0.9.3",
+]
 
 [build-system]
 requires = ["hatchling"]
