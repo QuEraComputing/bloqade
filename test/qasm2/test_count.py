@@ -21,8 +21,8 @@ def test_fixed_count():
         rb = qasm2.qreg(4)
         q0 = ra[0]
         q3 = rb[1]
-        qasm2.X(q0)
-        qasm2.X(q3)
+        qasm2.x(q0)
+        qasm2.x(q3)
         return q3
 
     fold(fixed_count)
