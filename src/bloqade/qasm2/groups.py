@@ -1,5 +1,6 @@
 from kirin import ir, passes
-from kirin.dialects import cf, func, ilist
+from kirin.prelude import basic
+from kirin.dialects import scf, func, ilist
 from bloqade.qasm2.dialects import (
     uop,
     core,
@@ -37,7 +38,19 @@ def gate(self):
 
 
 @ir.dialect_group(
-    [inline, uop, glob, noise, expr, parallel, core, indexing, cf, ilist, func]
+    [
+        inline,
+        uop,
+        glob,
+        noise,
+        expr,
+        parallel,
+        core,
+        scf,
+        indexing,
+        ilist,
+        func,
+    ]
 )
 def main(self):
     ilist_desugar = ilist.IListDesugar(self)
@@ -58,5 +71,26 @@ def main(self):
 
         typeinfer_pass(method)
         method.code.typecheck()
+
+    return run_pass
+
+
+@ir.dialect_group(
+    basic.union(
+        [
+            inline,
+            uop,
+            glob,
+            noise,
+            parallel,
+            core,
+        ]
+    )
+)
+def kernel(self):
+    def run_pass(
+        method: ir.Method,
+    ):
+        method.verify()
 
     return run_pass
