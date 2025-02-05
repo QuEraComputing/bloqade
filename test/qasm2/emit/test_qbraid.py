@@ -1,8 +1,11 @@
+from typing import Optional
+
 from bloqade import qasm2
 from bloqade.qasm2.emit import qBraid
 
 
 def test_qBraid_emit():
+
     @qasm2.main
     def main():
         qreg = qasm2.qreg(4)
@@ -11,19 +14,35 @@ def test_qBraid_emit():
         qasm2.parallel.cz(ctrls=(qreg[0], qreg[1]), qargs=(qreg[2], qreg[3]))
 
     class MockQBraidJob:
-        pass
+
+        def __init__(
+            self, qasm: str, shots: Optional[int], tags: Optional[dict[str, str]]
+        ):
+            self.qasm = qasm
+            self.shots = shots
+            self.tags = tags
 
     class MockDevice:
 
-        def run(self, *args, **kwargs):
-            return MockQBraidJob()
+        def run(self, qasm: str, shots: Optional[int], tags: Optional[dict[str, str]]):
+            print(qasm)
+            return MockQBraidJob(qasm, shots, tags)
 
     class MockQBraidProvider:
 
-        def get_device(self, *args):
+        def get_device(self, api_key: str):
+            self.api_key = api_key
+
             return MockDevice()
 
-    qBraid_emitter = qBraid(provider=MockQBraidProvider())
-    qBraid_job = qBraid_emitter.emit(method=main)
+    mock_provider = MockQBraidProvider()
+    mock_qBraid_emitter = qBraid(provider=mock_provider)
+    mock_qBraid_job = mock_qBraid_emitter.emit(method=main)
 
-    assert isinstance(qBraid_job, MockQBraidJob)
+    assert mock_provider.api_key == "quera_qasm_simulator"
+    assert (
+        mock_qBraid_job.qasm
+        == 'KIRIN {cf,func,py.ilist,qasm2.core,qasm2.expr,qasm2.glob,qasm2.indexing,qasm2.inline,qasm2.noise,qasm2.parallel,qasm2.uop};\ninclude "qelib1.inc";\nqreg qreg[4];\nCX qreg[0], qreg[1];\nreset qreg[0];\nparallel.CZ {\n  qreg[0], qreg[2];\n  qreg[1], qreg[3];\n}\n'
+    )
+    assert mock_qBraid_job.shots is None
+    assert mock_qBraid_job.tags is None
