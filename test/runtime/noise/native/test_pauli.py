@@ -78,3 +78,9 @@ def test_cz_pauli_channel_true():
     sim_reg = run_mock(2, test_atom_loss, rng_state)
 
     sim_reg.assert_has_calls([call.y(0), call.x(1), call.mcz([0], 1)])
+
+
+if __name__ == "__main__":
+    test_pauli_channel()
+    test_cz_pauli_channel_false()
+    test_cz_pauli_channel_true()

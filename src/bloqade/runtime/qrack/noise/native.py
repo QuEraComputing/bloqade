@@ -16,7 +16,6 @@ class PyQrackMethods(interp.MethodTable):
         p = [1 - (px + py + pz), px, py, pz]
 
         assert all(0 <= x <= 1 for x in p), "Invalid Pauli error probabilities"
-        assert sum(p) == 1.0, "Invalid Pauli error probabilities"
 
         which = interp.rng_state.choice(["i", "x", "y", "z"], p=p)
 
