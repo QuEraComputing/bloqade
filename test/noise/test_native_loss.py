@@ -29,7 +29,3 @@ def test_atom_loss():
 
     assert result.qubit_state[0] is reg.QubitState.Lost
     assert result.qubit_state[1] is reg.QubitState.Active
-
-
-if __name__ == "__main__":
-    test_atom_loss()
