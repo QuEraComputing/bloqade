@@ -7,8 +7,6 @@ from bloqade import noise, qasm2
 from bloqade.qbraid import schema
 from kirin.dialects import func
 
-simulator_group = ir.DialectGroup([noise.native, qasm2.core, qasm2.uop, qasm2.expr])
-
 
 @dataclasses.dataclass
 class Lowering:
