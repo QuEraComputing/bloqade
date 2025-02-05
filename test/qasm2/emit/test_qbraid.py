@@ -6,9 +6,9 @@ def test_qBraid_emit():
     @qasm2.main
     def main():
         qreg = qasm2.qreg(4)
-        qasm2.CX(qreg[0], qreg[1])
+        qasm2.cx(qreg[0], qreg[1])
         qasm2.reset(qreg[0])
-        qasm2.parallel.CZ(ctrls=(qreg[0], qreg[1]), qargs=(qreg[2], qreg[3]))
+        qasm2.parallel.cz(ctrls=(qreg[0], qreg[1]), qargs=(qreg[2], qreg[3]))
 
     class MockQBraidJob:
         pass
