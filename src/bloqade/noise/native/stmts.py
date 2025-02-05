@@ -19,7 +19,7 @@ class PauliChannel(ir.Statement):
 
 @statement(dialect=dialect)
 class CZPauliChannel(ir.Statement):
-    name = "native.pauli_channel.cz_pauli"
+    name = "native.pauli_channel.cz_pauli_channel"
 
     traits = frozenset({ir.FromPythonCall()})
 
