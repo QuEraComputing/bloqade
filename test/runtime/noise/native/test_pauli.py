@@ -38,7 +38,9 @@ def test_cz_pauli_channel_false():
         q = qasm2.qreg(2)
         native.atom_loss_channel(0.7, q[0])
         native.atom_loss_channel(0.7, q[1])
-        native.cz_pauli_channel(0.1, 0.4, 0.3, 0.2, 0.2, 0.2, q[0], q[1], paired=False) # no noise here
+        native.cz_pauli_channel(
+            0.1, 0.4, 0.3, 0.2, 0.2, 0.2, q[0], q[1], paired=False
+        )  # no noise here
         qasm2.cz(q[0], q[1])
         native.atom_loss_channel(0.4, q[0])
         native.atom_loss_channel(0.7, q[1])
@@ -50,7 +52,7 @@ def test_cz_pauli_channel_false():
     rng_state.choice.side_effect = ["y"]
     rng_state.uniform.return_value = 0.5
     sim_reg = run_mock(2, test_atom_loss, rng_state)
-    
+
     sim_reg.assert_has_calls([call.mcz([0], 1), call.y(1)])
 
 
@@ -60,7 +62,9 @@ def test_cz_pauli_channel_true():
         q = qasm2.qreg(2)
         native.atom_loss_channel(0.7, q[0])
         native.atom_loss_channel(0.7, q[1])
-        native.cz_pauli_channel(0.1, 0.4, 0.3, 0.2, 0.2, 0.2, q[0], q[1], paired=True) # no noise here
+        native.cz_pauli_channel(
+            0.1, 0.4, 0.3, 0.2, 0.2, 0.2, q[0], q[1], paired=True
+        )  # no noise here
         qasm2.cz(q[0], q[1])
         native.atom_loss_channel(0.4, q[0])
         native.atom_loss_channel(0.7, q[1])
@@ -74,5 +78,3 @@ def test_cz_pauli_channel_true():
     sim_reg = run_mock(2, test_atom_loss, rng_state)
 
     sim_reg.assert_has_calls([call.y(0), call.x(1), call.mcz([0], 1)])
-
-
