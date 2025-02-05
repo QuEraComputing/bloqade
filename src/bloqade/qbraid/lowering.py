@@ -1,6 +1,6 @@
-import dataclasses
 from math import pi
 from typing import Dict, List, Tuple, Sequence
+from dataclasses import field, dataclass
 
 from kirin import ir
 from bloqade import noise, qasm2
@@ -8,13 +8,11 @@ from bloqade.qbraid import schema
 from kirin.dialects import func
 
 
-@dataclasses.dataclass
+@dataclass
 class Lowering:
-    qubit_list: List[ir.SSAValue] = dataclasses.field(init=False, default_factory=list)
-    qubit_id_map: Dict[int, ir.SSAValue] = dataclasses.field(
-        init=False, default_factory=dict
-    )
-    block_list: List[ir.Statement] = dataclasses.field(init=False, default_factory=list)
+    qubit_list: List[ir.SSAValue] = field(init=False, default_factory=list)
+    qubit_id_map: Dict[int, ir.SSAValue] = field(init=False, default_factory=dict)
+    block_list: List[ir.Statement] = field(init=False, default_factory=list)
 
     def lower(self, sym_name: str, noise_model: schema.NoiseModel):
         self.process_noise_model(noise_model)

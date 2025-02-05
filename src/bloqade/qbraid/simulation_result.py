@@ -1,9 +1,9 @@
 # Copyright (c) 2024, QuEra Computing Inc.
 # All rights reserved.
 
-import dataclasses
 from io import StringIO
 from typing import Any, Dict, Optional
+from dataclasses import dataclass
 
 import pandas as pd
 from kirin import ir
@@ -15,7 +15,7 @@ from .schema import NoiseModel
 from .lowering import Lowering
 
 
-@dataclasses.dataclass
+@dataclass
 class QuEraSimulationResult:
     """Results of the QuEra hardware model simulation.
 
