@@ -1,9 +1,9 @@
 import io
 
-import rich
 from kirin import ir
+from rich.console import Console
 from kirin.analysis import CallGraph
-from bloqade.qasm2.parse import ast
+from bloqade.qasm2.parse import ast, pprint
 
 from .gate import EmitQASM2Gate
 from .main import EmitQASM2Main
@@ -46,9 +46,7 @@ class QASM2:
         return main
 
     def emit_str(self, entry: ir.Method) -> str:
-        from bloqade.qasm2.parse import pprint
-
-        console = rich.console.Console(
+        console = Console(
             file=io.StringIO(),
             force_terminal=False,
             force_interactive=False,

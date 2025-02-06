@@ -10,11 +10,11 @@ def test_atom_loss():
 
     @simulation
     def test_atom_loss():
-        reg = qasm2.qreg(2)
-        native.atom_loss_channel(0.5, reg[0])
-        native.atom_loss_channel(0.8, reg[1])
+        q = qasm2.qreg(2)
+        native.atom_loss_channel(0.5, q[0])
+        native.atom_loss_channel(0.8, q[1])
 
-        return reg
+        return q
 
     rng_state = Mock()
     rng_state.uniform.return_value = 0.7
