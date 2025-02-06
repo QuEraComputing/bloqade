@@ -27,14 +27,17 @@ class Func(interp.MethodTable):
     def emit_func(
         self, emit: EmitQASM2Main, frame: EmitQASM2Frame, stmt: func.Function
     ):
-        from bloqade.qasm2.dialects import uop, core, expr
+        from bloqade.qasm2.dialects import glob, noise, parallel
 
         emit.run_ssacfg_region(frame, stmt.body)
-        # TODO: support difference in DialectGroup
-        if not emit.dialects.data.difference({core.dialect, uop.dialect, expr.dialect}):
-            header = ast.OPENQASM(ast.Version(2, 0))
-        else:
+        if any(
+            dialect in emit.dialects.data
+            for dialect in (parallel.dialect, glob.dialect, noise.dialect)
+        ):
             header = ast.Kirin([dialect.name for dialect in emit.dialects])
+        else:
+            header = ast.OPENQASM(ast.Version(2, 0))
+
         emit.output = ast.MainProgram(header=header, statements=frame.body)
         return ()
 
