@@ -76,7 +76,7 @@ class Printer(print.Printer, Visitor[None]):
 
     def visit_Kirin(self, node: Kirin) -> None:
         self.plain_print(
-            "KIRIN " + "{" + ",".join(node.dialects) + "}", style="comment"
+            "KIRIN " + "{" + ",".join(sorted(node.dialects)) + "}", style="comment"
         )
         self.plain_print(";")
 
