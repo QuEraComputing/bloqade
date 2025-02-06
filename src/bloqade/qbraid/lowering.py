@@ -12,6 +12,7 @@ from kirin.dialects import func
 class Lowering:
     qubit_list: List[ir.SSAValue] = field(init=False, default_factory=list)
     qubit_id_map: Dict[int, ir.SSAValue] = field(init=False, default_factory=dict)
+    bit_id_map: Dict[int, ir.SSAValue] = field(init=False, default_factory=dict)
     block_list: List[ir.Statement] = field(init=False, default_factory=list)
 
     def lower(self, sym_name: str, noise_model: schema.NoiseModel):
@@ -47,20 +48,23 @@ class Lowering:
         num_qubits = self.lower_number(noise_model.num_qubits)
 
         reg = qasm2.core.QRegNew(num_qubits)
+        creg = qasm2.core.CRegNew(num_qubits)
         self.block_list.append(reg)
 
         for idx_value, qubit in enumerate(noise_model.all_qubits):
             idx = self.lower_number(idx_value)
             qubit_stmt = qasm2.core.QRegGet(reg.result, idx)
+            bit_stmt =  qasm2.core.CRegGet(creg.result, idx)
 
             self.block_list.append(qubit_stmt)
             self.qubit_id_map[qubit] = qubit_stmt.result
+            self.bit_id_map[qubit] = bit_stmt.result
             self.qubit_list.append(qubit_stmt.result)
 
         for gate_event in noise_model.gate_events:
             self.process_gate_event(gate_event)
 
-        self.block_list.append(func.Return(reg.result))
+        self.block_list.append(func.Return(creg.result))
 
     def process_gate_event(self, node: schema.GateEvent):
         self.lower_atom_loss(node.error.survival_prob)
@@ -81,8 +85,8 @@ class Lowering:
             operation = node.operation
             assert isinstance(
                 operation,
-                (schema.GlobalW, schema.LocalW, schema.GlobalRz, schema.LocalRz),
-            ), "Only W and Rz gates are supported"
+                (schema.GlobalW, schema.LocalW, schema.GlobalRz, schema.LocalRz, schema.Measurement),
+            ), f"Only W and Rz gates are supported, found {type(operation)}.__name__"
 
             if isinstance(operation, schema.GlobalW):
                 self.lower_w_gates(
@@ -96,6 +100,8 @@ class Lowering:
                 self.lower_rz_gates(tuple(self.qubit_id_map.keys()), operation.phi)
             elif isinstance(operation, schema.LocalRz):
                 self.lower_rz_gates(operation.participants, operation.phi)
+            elif isinstance(operation, schema.Measurement):
+                self.lower_measurement(operation)
 
     def process_cz_pauli_error(
         self,
@@ -204,6 +210,12 @@ class Lowering:
             self.block_list.append(
                 noise.native.PauliChannel(px=px_val, py=py_val, pz=pz_val, qarg=qubit)
             )
+
+    def lower_measurement(self, operation: schema.Measurement):
+        for participant in operation.participants:
+            qubit = self.qubit_id_map[participant]
+            bit = self.bit_id_map[participant]
+            self.block_list.append(qasm2.core.Measure(qarg=qubit, carg=bit))
 
     def lower_atom_loss(self, survival_probs: Tuple[float, ...]):
         for survival_prob, qubit in zip(survival_probs, self.qubit_list):
