@@ -1,8 +1,15 @@
+from typing import TYPE_CHECKING
+
 from kirin import interp
 from bloqade.qasm2.dialects import core
-from bloqade.runtime.qrack.reg import QubitState, SimQubitRef, SimQRegister, CRegister, CBitRef
+from bloqade.runtime.qrack.reg import (
+    CBitRef,
+    CRegister,
+    QubitState,
+    SimQubitRef,
+    SimQRegister,
+)
 from bloqade.runtime.qrack.base import PyQrackInterpreter
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from pyqrack import QrackSimulator
@@ -44,7 +51,7 @@ class PyQrackMethods(interp.MethodTable):
         creg: CRegister = frame.get(stmt.reg)
         pos: int = frame.get(stmt.idx)
         return (CBitRef(creg, pos),)
-    
+
     @interp.impl(core.Measure)
     def measure(
         self, interp: PyQrackInterpreter, frame: interp.Frame, stmt: core.Measure
@@ -52,9 +59,9 @@ class PyQrackMethods(interp.MethodTable):
         qarg: SimQubitRef["QrackSimulator"] = frame.get(stmt.qarg)
         carg: CBitRef = frame.get(stmt.carg)
         carg.set_value(bool(qarg.ref.sim_reg.m(qarg.addr)))
-        
+
         return ()
-    
+
     @interp.impl(core.CRegEq)
     def creg_eq(
         self, interp: PyQrackInterpreter, frame: interp.Frame, stmt: core.CRegEq

@@ -34,14 +34,14 @@ class CRegister(list[bool]):
 class CBitRef:
     ref: CRegister
     pos: int
-    
-    
+
     def set_value(self, value: bool):
         self.ref[self.pos] = value
 
     def get_value(self):
         return self.ref[self.pos]
-    
+
+
 SimRegType = TypeVar("SimRegType")
 
 

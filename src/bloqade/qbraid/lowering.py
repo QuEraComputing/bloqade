@@ -54,7 +54,7 @@ class Lowering:
         for idx_value, qubit in enumerate(noise_model.all_qubits):
             idx = self.lower_number(idx_value)
             qubit_stmt = qasm2.core.QRegGet(reg.result, idx)
-            bit_stmt =  qasm2.core.CRegGet(creg.result, idx)
+            bit_stmt = qasm2.core.CRegGet(creg.result, idx)
 
             self.block_list.append(qubit_stmt)
             self.qubit_id_map[qubit] = qubit_stmt.result
@@ -85,7 +85,13 @@ class Lowering:
             operation = node.operation
             assert isinstance(
                 operation,
-                (schema.GlobalW, schema.LocalW, schema.GlobalRz, schema.LocalRz, schema.Measurement),
+                (
+                    schema.GlobalW,
+                    schema.LocalW,
+                    schema.GlobalRz,
+                    schema.LocalRz,
+                    schema.Measurement,
+                ),
             ), f"Only W and Rz gates are supported, found {type(operation)}.__name__"
 
             if isinstance(operation, schema.GlobalW):
