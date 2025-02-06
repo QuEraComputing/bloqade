@@ -229,4 +229,20 @@ class NoiseModel(BaseModel, Generic[ErrorModelType], extra="forbid"):
         """
         from bloqade.qbraid.lowering import Lowering
 
-        return Lowering().lower(sym_name, self.noise_model)
+        return Lowering().lower(sym_name, self)
+
+    def decompiled_circuit(self) -> str:
+        """Clean the circuit of noise.
+
+        Returns:
+            str: The decompiled circuit from hardware execution.
+
+        """
+        from bloqade.noise import native
+        from bloqade.qasm2.emit import QASM2
+
+        mt = self.lower_noise_model("method")
+
+        native.RemoveNoisePass(mt.dialects)(mt)
+
+        return QASM2(qelib1=True).emit_str(mt)

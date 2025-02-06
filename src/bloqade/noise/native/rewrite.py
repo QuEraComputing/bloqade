@@ -5,6 +5,7 @@ from kirin.rewrite import abc, dce, walk, result, fixpoint
 from kirin.passes.abc import Pass
 
 from .stmts import PauliChannel, CZPauliChannel, AtomLossChannel
+from ._dialect import dialect
 
 
 class RemoveNoiseRewrite(abc.RewriteRule):
@@ -24,5 +25,11 @@ class RemoveNoisePass(Pass):
         delete_walk = walk.Walk(RemoveNoiseRewrite())
         dce_walk = fixpoint.Fixpoint(walk.Walk(dce.DeadCodeElimination()))
 
-        delete_walk.rewrite(mt.code)
-        return dce_walk.rewrite(mt.code)
+        result = delete_walk.rewrite(mt.code)
+
+        mt.dialects = ir.DialectGroup(mt.dialects.data.symmetric_difference([dialect]))
+
+        if result.has_done_something:
+            result = dce_walk.rewrite(mt.code)
+
+        return result
