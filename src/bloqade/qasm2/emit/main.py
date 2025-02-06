@@ -1,4 +1,4 @@
-from dataclasses import field, dataclass
+from dataclasses import dataclass
 
 from kirin import ir, interp
 from kirin.dialects import cf, func
@@ -8,16 +8,10 @@ from bloqade.qasm2.parse import ast
 from .base import EmitQASM2Base, EmitQASM2Frame
 
 
-def _default_dialect_group():
-    from bloqade.qasm2.groups import main
-
-    return main
-
-
 @dataclass
 class EmitQASM2Main(EmitQASM2Base[ast.Statement, ast.MainProgram]):
     keys = ["emit.qasm2.main", "emit.qasm2.gate"]
-    dialects: ir.DialectGroup = field(default_factory=_default_dialect_group)
+    dialects: ir.DialectGroup
 
 
 @func.dialect.register(key="emit.qasm2.main")
@@ -30,9 +24,8 @@ class Func(interp.MethodTable):
         from bloqade.qasm2.dialects import glob, noise, parallel
 
         emit.run_ssacfg_region(frame, stmt.body)
-        if any(
-            dialect in emit.dialects.data
-            for dialect in (parallel.dialect, glob.dialect, noise.dialect)
+        if emit.dialects.data.intersection(
+            (parallel.dialect, glob.dialect, noise.dialect)
         ):
             header = ast.Kirin([dialect.name for dialect in emit.dialects])
         else:

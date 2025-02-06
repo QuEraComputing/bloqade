@@ -1,3 +1,6 @@
+import io
+
+import rich
 from kirin import ir
 from kirin.analysis import CallGraph
 from bloqade.qasm2.parse import ast
@@ -41,3 +44,16 @@ class QASM2:
 
         main.statements = extra + main.statements
         return main
+
+    def emit_str(self, entry: ir.Method) -> str:
+        from bloqade.qasm2.parse import pprint
+
+        console = rich.console.Console(
+            file=io.StringIO(),
+            force_terminal=False,
+            force_interactive=False,
+            force_jupyter=False,
+            record=True,
+        )
+        pprint(QASM2(custom_gate=False, qelib1=True).emit(entry), console=console)
+        return console.export_text()

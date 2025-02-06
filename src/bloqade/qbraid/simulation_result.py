@@ -6,13 +6,10 @@ from typing import Any, Dict, Optional
 from dataclasses import dataclass
 
 import pandas as pd
-from kirin import ir
 from pandas import DataFrame
-from bloqade import noise, qasm2
 from bloqade.visual.animation.runtime import qpustate as vis_qpustate
 
 from .schema import NoiseModel
-from .lowering import Lowering
 
 
 @dataclass
@@ -33,27 +30,6 @@ class QuEraSimulationResult:
     logs: DataFrame
     atom_animation_state: vis_qpustate.AnimateQPUState
     noise_model: NoiseModel
-
-    def lower_noise_model(self, name: str):
-        """Lower the noise model to a method.
-
-        Args:
-            name (str): The name of the method to generate.
-
-        Returns:
-            Method: The generated kirin method.
-
-        """
-        func_stmt = Lowering().lower(name, self.noise_model)
-        dialects = ir.DialectGroup([qasm2.core, qasm2.uop, qasm2.expr, noise.native])
-        return ir.Method(
-            mod=None,
-            py_func=None,
-            sym_name=name,
-            dialects=dialects,
-            code=func_stmt,
-            arg_names=[],
-        )
 
     @classmethod
     def from_json(cls, json: dict) -> "QuEraSimulationResult":

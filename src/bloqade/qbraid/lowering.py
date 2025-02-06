@@ -15,12 +15,32 @@ class Lowering:
     block_list: List[ir.Statement] = field(init=False, default_factory=list)
 
     def lower(self, sym_name: str, noise_model: schema.NoiseModel):
+        """Lower the noise model to a method.
+
+        Args:
+            name (str): The name of the method to generate.
+
+        Returns:
+            Method: The generated kirin method.
+
+        """
         self.process_noise_model(noise_model)
         region = ir.Region(blocks=[ir.Block(stmts=self.block_list)])
-        return func.Function(
+        func_stmt = func.Function(
             sym_name=sym_name,
             signature=func.Signature(inputs=(), output=qasm2.types.QRegType),
             body=region,
+        )
+        dialects = ir.DialectGroup(
+            [func, qasm2.core, qasm2.uop, qasm2.expr, noise.native]
+        )
+        return ir.Method(
+            mod=None,
+            py_func=None,
+            sym_name=sym_name,
+            dialects=dialects,
+            code=func_stmt,
+            arg_names=[],
         )
 
     def process_noise_model(self, noise_model: schema.NoiseModel):

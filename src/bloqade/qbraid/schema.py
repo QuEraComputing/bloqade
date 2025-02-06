@@ -217,86 +217,16 @@ class NoiseModel(BaseModel, Generic[ErrorModelType], extra="forbid"):
             gate_events=self.gate_events + other.gate_events,
         )
 
-    def get_sampler(self, circuit_backend: str, *args, **kwargs):
-        """Return a sampler object that can run the circuit on a given backend.
+    def lower_noise_model(self, sym_name: str):
+        """Lower the noise model to a method.
 
         Args:
-            circuit_backend (str): Which circuit backend to use. See description
-                below for more details on how to create a new backend.
+            sym_name (str): The name of the method to generate.
 
         Returns:
-            sampler: AtomLossCircuitSampler
+            Method: The generated kirin method.
 
-        ## How to implement a new backend:
-
-        * `join`: Combine multiple circuits into a single circuit.
-        * `remove_lost_qubits`: Remove qubits that are lost from a given circuit.
-        * `apply_measurement_loss_flips`: Apply a reset + X-gate to simulate the effect of atom loss on a measurement.
-        * `run`: Run a circuit and return the measurement results.
-
-        ## Methods to register with the circuit dispatcher to emit specific circuits:
-
-        * `schema.CZ`: construct a set of CZ gates given a list of participants.
-        * `schema.GlobalRz`: construct a local z rotation gate on all qubits.
-        * `schema.LocalRz`: construct a global z rotation gate on list of qubits.
-        * `schema.globalW`: construct a global W gate on all qubits.
-        * `schema.localW`: construct a local W gate on list of qubits.
-        * `schema.Measurement`: construct a measurement gate.
-        * `schema.PauliErrorModel`: construct a Pauli error channel with `(px, py, pz)`.
-
-
-        ### Example: Cirq backend
-
-        Define the base class and inherit from `constructor.CircuitConstructorABC` and
-        define your own `CircuitDispatcher` class.
-
-        ```python
-        from flair_visual.simulation import constructor
-
-        class CirqCircuitDispatcher(constructor.CircuitDispatcher[cirq.Circuit]):
-            pass
-
-
-        @constructor.CircuitBackendRegistry.register("cirq")
-        class CirqCircuitConstructor(constructor.CircuitConstructorABC[cirq.Circuit]):
-
-            CIRCUIT_DISPATCHER = CirqCircuitDispatcher
-
-        ```
-
-        Currently we're using a Puali noise channel as the error model. In cirq we use a
-        custom mixed unitary gate to implement this kind of error. As such we add PAULI unitaries
-        as a class variable.
-
-        ```python
-        @constructor.CircuitBackendRegistry.register("cirq")
-        class CirqCircuitConstructor(constructor.CircuitConstructorABC[cirq.Circuit]):
-
-            CIRCUIT_DISPATCHER = CirqCircuitDispatcher
-            PAULI = tuple(map(cirq.unitary, [cirq.I, cirq.X, cirq.Y, cirq.Z]))
-
-        ```
-
-        We need to define the abstract methods that satisfy the `CircuitConstructorABC` interface and
-        also need to register methods with the `CircuitDispatcher` class using the `@CircuitDispatcher.register`
-
-        ```python
-        @CirqCircuitDispatcher.register(schema.CZ)
-        def emit_cz(self, operation: schema.CZ) -> cirq.Circuit:
-            ...
-
-        @CirqCircuitDispatcher.register(schema.GlobalRz)
-        def emit_global_rz(self, operation: schema.GlobalRz) -> cirq.Circuit:
-            ...
-
-        ...
-        ```
         """
-        from flair_visual.simulation.sample import AtomLossCircuitSampler
-        from flair_visual.simulation.constructor import CircuitBackendRegistry
+        from bloqade.qbraid.lowering import Lowering
 
-        backend_type = CircuitBackendRegistry().get(circuit_backend, *args, **kwargs)
-        return AtomLossCircuitSampler(
-            circuit=self,
-            circuit_generator=backend_type(self.all_qubits, *args, **kwargs),
-        )
+        return Lowering().lower(sym_name, self.noise_model)

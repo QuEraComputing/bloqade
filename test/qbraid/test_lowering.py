@@ -160,8 +160,8 @@ def test_lowering_cz():
         body=ir.Region(ir.Block(expected)),
     )
 
+    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model).code
     try:
-        func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model)
         assert expected_func_stmt.is_structurally_equal(func_stmt)
     except AssertionError as e:
         func_stmt.print()
@@ -222,7 +222,7 @@ def test_lowering_global_w():
         body=ir.Region(ir.Block(expected)),
     )
 
-    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model)
+    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model).code
     try:
         assert expected_func_stmt.is_structurally_equal(func_stmt)
     except AssertionError as e:
@@ -297,7 +297,7 @@ def test_lowering_local_w():
         body=ir.Region(ir.Block(expected)),
     )
 
-    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model)
+    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model).code
     try:
         assert expected_func_stmt.is_structurally_equal(func_stmt)
     except AssertionError as e:
@@ -354,7 +354,7 @@ def test_lowering_global_rz():
         body=ir.Region(ir.Block(expected)),
     )
 
-    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model)
+    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model).code
     try:
         assert expected_func_stmt.is_structurally_equal(func_stmt)
     except AssertionError as e:
@@ -424,7 +424,7 @@ def test_lowering_local_rz():
         body=ir.Region(ir.Block(expected)),
     )
 
-    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model)
+    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model).code
     try:
         assert expected_func_stmt.is_structurally_equal(func_stmt)
     except AssertionError as e:
