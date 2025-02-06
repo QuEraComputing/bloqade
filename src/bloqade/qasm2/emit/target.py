@@ -1,3 +1,4 @@
+import io
 from typing import Union, Optional
 
 from kirin import ir
@@ -74,10 +75,15 @@ class qBraid:
         qasm2_emitter = QASM2(qelib1=self.qelib1, custom_gate=self.custom_gate)
         qasm_ast = qasm2_emitter.emit(method)
 
-        console = Console()
-        with console.capture() as capture:
-            pprint(qasm_ast, console=console)
-        qasm_str = capture.get()
+        console = Console(
+            record=True,
+            file=io.StringIO(),  # prevent printing to stdout
+            force_terminal=False,
+            force_interactive=False,
+            force_jupyter=False,
+        )
+        pprint(qasm_ast, console=console)
+        qasm_str = console.export_text()
 
         # Submit the QASM2 string to the qBraid simulator
         quera_qasm_simulator = self.provider.get_device("quera_qasm_simulator")
