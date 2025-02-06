@@ -46,6 +46,7 @@
         * [lowering](bloqade/qbraid/lowering.md)
         * [schema](bloqade/qbraid/schema.md)
         * [simulation_result](bloqade/qbraid/simulation_result.md)
+        * [target](bloqade/qbraid/target.md)
     * runtime
         * [qrack](bloqade/runtime/qrack/index.md)
             * [base](bloqade/runtime/qrack/base.md)
