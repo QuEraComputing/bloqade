@@ -1,8 +1,11 @@
-from typing import Union, Optional
+from typing import TYPE_CHECKING, Union, Optional
 
 from kirin import ir
-from qbraid import QbraidProvider
-from qbraid.runtime import QbraidJob
+
+if TYPE_CHECKING:
+    from qbraid import QbraidProvider
+    from qbraid.runtime import QbraidJob
+
 from bloqade.qasm2.emit import QASM2
 
 
@@ -11,7 +14,7 @@ class qBraid:
     def __init__(
         self,
         *,
-        provider: QbraidProvider,  # inject externally for easier mocking
+        provider: "QbraidProvider",  # inject externally for easier mocking
         qelib1: bool = True,
         custom_gate: bool = True,
     ) -> None:
@@ -24,7 +27,7 @@ class qBraid:
         method: ir.Method,
         shots: Optional[int] = None,
         tags: Optional[dict[str, str]] = None,
-    ) -> Union[QbraidJob, list[QbraidJob]]:
+    ) -> Union["QbraidJob", list["QbraidJob"]]:
 
         # Convert method to QASM2 string
         qasm2_emitter = QASM2(qelib1=self.qelib1, custom_gate=self.custom_gate)

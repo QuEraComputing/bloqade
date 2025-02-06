@@ -238,11 +238,15 @@ class NoiseModel(BaseModel, Generic[ErrorModelType], extra="forbid"):
             str: The decompiled circuit from hardware execution.
 
         """
+        from kirin import ir
         from bloqade.noise import native
         from bloqade.qasm2.emit import QASM2
 
         mt = self.lower_noise_model("method")
 
         native.RemoveNoisePass(mt.dialects)(mt)
+        mt.dialects = ir.DialectGroup(
+            mt.dialects.data.symmetric_difference([native.dialect])
+        )
 
         return QASM2(qelib1=True).emit_str(mt)
