@@ -6,6 +6,7 @@
             * [lattice](bloqade/analysis/address/lattice.md)
     * [noise](bloqade/noise/index.md)
         * [native](bloqade/noise/native/index.md)
+            * [rewrite](bloqade/noise/native/rewrite.md)
             * [stmts](bloqade/noise/native/stmts.md)
     * [qasm2](bloqade/qasm2/index.md)
         * [dialects](bloqade/qasm2/dialects/index.md)
@@ -45,6 +46,7 @@
         * [lowering](bloqade/qbraid/lowering.md)
         * [schema](bloqade/qbraid/schema.md)
         * [simulation_result](bloqade/qbraid/simulation_result.md)
+        * [target](bloqade/qbraid/target.md)
     * runtime
         * [qrack](bloqade/runtime/qrack/index.md)
             * [base](bloqade/runtime/qrack/base.md)
