@@ -16,6 +16,37 @@ def as_float(value: float):
     return qasm2.expr.ConstFloat(value=value)
 
 
+def run_assert(noise_model: schema.NoiseModel, expected_stmts: List[ir.Statement]):
+
+    expected_func_stmt = func.Function(
+        sym_name="test",
+        signature=func.Signature(
+            inputs=(),
+            output=qasm2.types.CRegType,
+        ),
+        body=ir.Region(ir.Block(expected_stmts)),
+    )
+
+    expected_mt = ir.Method(
+        mod=None,
+        py_func=None,
+        dialects=lowering.qbraid_noise,
+        sym_name="test",
+        arg_names=[],
+        code=expected_func_stmt,
+    )
+
+    lowering.qbraid_noise.run_pass(expected_mt)
+
+    mt = noise_model.lower_noise_model("test")
+    try:
+        assert expected_mt.code.is_structurally_equal(mt.code)
+    except AssertionError as e:
+        mt.print()
+        expected_mt.print()
+        raise e
+
+
 def test_lowering_cz():
 
     survival_prob_0_value = 0.9
@@ -156,22 +187,7 @@ def test_lowering_cz():
         func.Return(creg.result),
     ]
 
-    expected_func_stmt = func.Function(
-        sym_name="test",
-        signature=func.Signature(
-            inputs=(),
-            output=qasm2.types.CRegType,
-        ),
-        body=ir.Region(ir.Block(expected)),
-    )
-
-    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model).code
-    try:
-        assert expected_func_stmt.is_structurally_equal(func_stmt)
-    except AssertionError as e:
-        func_stmt.print()
-        expected_func_stmt.print()
-        raise e
+    run_assert(noise_model, expected)
 
 
 def test_lowering_global_w():
@@ -220,22 +236,7 @@ def test_lowering_global_w():
         func.Return(creg.result),
     ]
 
-    expected_func_stmt = func.Function(
-        sym_name="test",
-        signature=func.Signature(
-            inputs=(),
-            output=qasm2.types.CRegType,
-        ),
-        body=ir.Region(ir.Block(expected)),
-    )
-
-    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model).code
-    try:
-        assert expected_func_stmt.is_structurally_equal(func_stmt)
-    except AssertionError as e:
-        func_stmt.print()
-        expected_func_stmt.print()
-        raise e
+    run_assert(noise_model, expected)
 
 
 def test_lowering_local_w():
@@ -298,22 +299,7 @@ def test_lowering_local_w():
         func.Return(creg.result),
     ]
 
-    expected_func_stmt = func.Function(
-        sym_name="test",
-        signature=func.Signature(
-            inputs=(),
-            output=qasm2.types.CRegType,
-        ),
-        body=ir.Region(ir.Block(expected)),
-    )
-
-    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model).code
-    try:
-        assert expected_func_stmt.is_structurally_equal(func_stmt)
-    except AssertionError as e:
-        func_stmt.print()
-        expected_func_stmt.print()
-        raise e
+    run_assert(noise_model, expected)
 
 
 def test_lowering_global_rz():
@@ -357,22 +343,7 @@ def test_lowering_global_rz():
         func.Return(creg.result),
     ]
 
-    expected_func_stmt = func.Function(
-        sym_name="test",
-        signature=func.Signature(
-            inputs=(),
-            output=qasm2.types.CRegType,
-        ),
-        body=ir.Region(ir.Block(expected)),
-    )
-
-    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model).code
-    try:
-        assert expected_func_stmt.is_structurally_equal(func_stmt)
-    except AssertionError as e:
-        func_stmt.print()
-        expected_func_stmt.print()
-        raise e
+    run_assert(noise_model, expected)
 
 
 def test_lowering_local_rz():
@@ -430,22 +401,7 @@ def test_lowering_local_rz():
         func.Return(creg.result),
     ]
 
-    expected_func_stmt = func.Function(
-        sym_name="test",
-        signature=func.Signature(
-            inputs=(),
-            output=qasm2.types.CRegType,
-        ),
-        body=ir.Region(ir.Block(expected)),
-    )
-
-    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model).code
-    try:
-        assert expected_func_stmt.is_structurally_equal(func_stmt)
-    except AssertionError as e:
-        func_stmt.print()
-        expected_func_stmt.print()
-        raise e
+    run_assert(noise_model, expected)
 
 
 if __name__ == "__main__":

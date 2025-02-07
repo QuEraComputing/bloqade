@@ -2,10 +2,33 @@ from math import pi
 from typing import Dict, List, Tuple, Sequence
 from dataclasses import field, dataclass
 
-from kirin import ir
+from kirin import ir, passes
 from bloqade import noise, qasm2
 from bloqade.qbraid import schema
 from kirin.dialects import func
+
+
+@ir.dialect_group([func, qasm2.core, qasm2.uop, qasm2.expr, noise.native])
+def qbraid_noise(
+    self,
+):
+    fold_pass = passes.Fold(self)
+    typeinfer_pass = passes.TypeInfer(self)
+
+    def run_pass(
+        method: ir.Method,
+        *,
+        fold: bool = True,
+    ):
+        method.verify()
+
+        if fold:
+            fold_pass(method)
+
+        typeinfer_pass(method)
+        method.code.typecheck()
+
+    return run_pass
 
 
 @dataclass
@@ -32,17 +55,19 @@ class Lowering:
             signature=func.Signature(inputs=(), output=qasm2.types.CRegType),
             body=region,
         )
-        dialects = ir.DialectGroup(
-            [func, qasm2.core, qasm2.uop, qasm2.expr, noise.native]
-        )
-        return ir.Method(
+
+        mt = ir.Method(
             mod=None,
             py_func=None,
             sym_name=sym_name,
-            dialects=dialects,
+            dialects=qbraid_noise,
             code=func_stmt,
             arg_names=[],
         )
+
+        qbraid_noise.run_pass(mt)
+
+        return mt
 
     def process_noise_model(self, noise_model: schema.NoiseModel):
         num_qubits = self.lower_number(noise_model.num_qubits)
