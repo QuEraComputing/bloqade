@@ -38,6 +38,13 @@ class PyQrackMethods(interp.MethodTable):
             ),
         )
 
+    @interp.impl(core.CRegNew)
+    def creg_new(
+        self, interp: PyQrackInterpreter, frame: interp.Frame, stmt: core.CRegNew
+    ):
+        n_bits: int = frame.get(stmt.n_bits)
+        return (CRegister(size=n_bits),)
+
     @interp.impl(core.QRegGet)
     def qreg_get(
         self, interp: PyQrackInterpreter, frame: interp.Frame, stmt: core.QRegGet

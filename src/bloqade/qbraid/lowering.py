@@ -1,4 +1,3 @@
-from math import pi
 from typing import Dict, List, Tuple, Sequence
 from dataclasses import field, dataclass
 
@@ -214,9 +213,9 @@ class Lowering:
         for participant in participants:
             self.block_list.append(
                 qasm2.uop.UGate(
-                    theta=self.lower_number(theta / 2),
-                    phi=self.lower_number(phi - 0.5 * pi),
-                    lam=self.lower_number(0.5 * pi - phi),
+                    theta=self.lower_full_turns(theta),
+                    phi=self.lower_full_turns(phi + 0.5),
+                    lam=self.lower_full_turns(-(0.5 + phi)),
                     qarg=self.qubit_id_map[participant],
                 )
             )
@@ -225,7 +224,7 @@ class Lowering:
         for participant in participants:
             self.block_list.append(
                 qasm2.uop.RZ(
-                    theta=self.lower_number(phi),
+                    theta=self.lower_full_turns(phi),
                     qarg=self.qubit_id_map[participant],
                 )
             )
@@ -292,3 +291,11 @@ class Lowering:
 
         self.block_list.append(stmt)
         return stmt.result
+
+    def lower_full_turns(self, value: float) -> ir.SSAValue:
+        turns = self.lower_number(2 * value)
+        const_pi = qasm2.expr.ConstPI()
+        self.block_list.append(const_pi)
+        mul = qasm2.expr.Mul(lhs=turns, rhs=const_pi.result)
+        self.block_list.append(mul)
+        return mul.result
