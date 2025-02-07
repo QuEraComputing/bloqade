@@ -417,11 +417,3 @@ def test_lowering_local_rz():
     ]
 
     run_assert(noise_model, expected)
-
-
-if __name__ == "__main__":
-    test_lowering_cz()
-    test_lowering_global_w()
-    test_lowering_local_w()
-    test_lowering_global_rz()
-    test_lowering_local_rz()
