@@ -25,7 +25,7 @@ class PyQrackMethods(interp.MethodTable):
         n_qubits: int = frame.get(stmt.n_qubits)
         curr_allocated = interp.memory.allocated
         interp.memory.allocated += n_qubits
-        print(interp.memory.allocated, interp.memory.total)
+
         if interp.memory.allocated > interp.memory.total:
             raise ValueError("qubit allocation exceeds memory")
 
