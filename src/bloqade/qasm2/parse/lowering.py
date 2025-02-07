@@ -249,7 +249,10 @@ class LoweringQASM(Visitor[lowering.Result]):
         return lowering.Result(self.state.append_stmt(expr.ConstPI()).result)
 
     def visit_Include(self, node: ast.Include) -> lowering.Result:
-        raise NotImplementedError("Include lowering not supported")
+        if node.filename not in ["qelib1.inc"]:
+            raise DialectLoweringError(f"Include {node.filename} not found")
+
+        return lowering.Result()
 
     def visit_Gate(self, node: ast.Gate) -> lowering.Result:
         raise NotImplementedError("Gate lowering not supported")
