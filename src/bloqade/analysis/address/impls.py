@@ -3,9 +3,9 @@ qubit.address method table for a few builtin dialects.
 """
 
 from kirin import interp
-from kirin.dialects import cf, py, func, ilist
-
-from .lattice import NotQubit, AddressReg, AddressQubit, AddressTuple
+from kirin.dialects import cf, scf, py, func, ilist
+from kirin.analysis import ForwardFrame
+from .lattice import Address, NotQubit, AddressReg, AddressQubit, AddressTuple
 from .analysis import AddressAnalysis
 
 
@@ -86,9 +86,37 @@ class Func(interp.MethodTable):
     def return_(self, _: AddressAnalysis, frame: interp.Frame, stmt: func.Return):
         return interp.ReturnValue(frame.get(stmt.value))
 
+    # TODO: replace with the generic implementation
+    @interp.impl(func.Invoke)
+    def invoke(self, interp_: AddressAnalysis, frame: interp.Frame, stmt: func.Invoke):
+        return (
+            interp_.run_method(
+                stmt.callee,
+                interp_.permute_values(
+                    stmt.callee.arg_names, frame.get_values(stmt.inputs), stmt.kwargs
+                ),
+            ),
+        )
+
+    # TODO: support lambda?
+
 
 @cf.dialect.register(key="qubit.address")
 class Cf(cf.typeinfer.TypeInfer):
     # NOTE: cf just re-use the type infer method table
     # it's the same process as type infer.
     pass
+
+
+@scf.dialect.register(key="qubit.address")
+class Scf(scf.typeinfer.TypeInfer):
+    @interp.impl(scf.IfElse)
+    def ifelse(
+        self,
+        interp_: AddressAnalysis,
+        frame: ForwardFrame[Address, None],
+        stmt: scf.IfElse,
+    ):
+        then_results = interp_.run_ssacfg_region(frame, stmt.then_body)
+        else_results = interp_.run_ssacfg_region(frame, stmt.else_body)
+        return interp_.join_results(then_results, else_results)

@@ -50,25 +50,25 @@ class AddressAnalysis(Forward[Address]):
             for result in stmt.results
         )
 
-    def should_exec_stmt(self, stmt: ir.Statement):
-        return (
-            stmt.has_trait(ir.ConstantLike)
-            or stmt.dialect in self.dialects.data
-            or isinstance(
-                stmt,
-                (
-                    func.Return,
-                    func.Invoke,
-                    py.tuple.New,
-                    ilist.New,
-                    py.GetItem,
-                    py.Alias,
-                    py.Add,
-                    cf.Branch,
-                    cf.ConditionalBranch,
-                ),
-            )
-        )
+    # def should_exec_stmt(self, stmt: ir.Statement):
+    #     return (
+    #         stmt.has_trait(ir.ConstantLike)
+    #         or stmt.dialect in self.dialects.data
+    #         or isinstance(
+    #             stmt,
+    #             (
+    #                 func.Return,
+    #                 func.Invoke,
+    #                 py.tuple.New,
+    #                 ilist.New,
+    #                 py.GetItem,
+    #                 py.Alias,
+    #                 py.Add,
+    #                 cf.Branch,
+    #                 cf.ConditionalBranch,
+    #             ),
+    #         )
+    #     )
 
     def run_method(self, method: ir.Method, args: tuple[Address, ...]) -> Address:
         # NOTE: we do not support dynamic calls here, thus no need to propagate method object
