@@ -97,11 +97,11 @@ class LoweringQASM(Visitor[lowering.Result]):
         )
         cond = self.state.append_stmt(cond_stmt).result
         frame = self.state.current_frame
-        before_block = frame.current_block
-        if frame.next_block is None:
+        before_block = frame.curr_block
+        if frame.exit_block is None:
             raise DialectLoweringError("code block is not exiting")
         else:
-            before_block_next = frame.next_block
+            before_block_next = frame.exit_block
         if_block = self.state.current_frame.append_block()
         for stmt in node.body:
             self.visit(stmt)
@@ -121,7 +121,7 @@ class LoweringQASM(Visitor[lowering.Result]):
                 else_successor=before_block_next,
             )
         )
-        frame.current_block = before_block_next
+        frame.curr_block = before_block_next
         return lowering.Result()
 
     def visit_BinOp(self, node: ast.BinOp) -> lowering.Result:
