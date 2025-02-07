@@ -71,7 +71,3 @@ def test_cz_rewrite():
         print("Actual:")
         main.print()
         raise e
-
-
-if __name__ == "__main__":
-    test_cz_rewrite()
