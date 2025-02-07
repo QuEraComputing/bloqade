@@ -10,12 +10,16 @@ from .dialects import parallel
 
 
 @wraps(parallel.CZ)
-def cz(ctrls: ilist.IList[Qubit, Any], qargs: ilist.IList[Qubit, Any]) -> None: ...
+def cz(
+    ctrls: ilist.IList[Qubit, Any] | list, qargs: ilist.IList[Qubit, Any] | list
+) -> None: ...
 
 
 @wraps(parallel.UGate)
-def u(qargs: ilist.IList[Qubit, Any], theta: float, phi: float, lam: float) -> None: ...
+def u(
+    qargs: ilist.IList[Qubit, Any] | list, theta: float, phi: float, lam: float
+) -> None: ...
 
 
 @wraps(parallel.RZ)
-def rz(qargs: ilist.IList[Qubit, Any], theta: float) -> None: ...
+def rz(qargs: ilist.IList[Qubit, Any] | list, theta: float) -> None: ...
