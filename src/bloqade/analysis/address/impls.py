@@ -3,8 +3,9 @@ qubit.address method table for a few builtin dialects.
 """
 
 from kirin import interp
-from kirin.dialects import cf, scf, py, func, ilist
 from kirin.analysis import ForwardFrame
+from kirin.dialects import cf, py, scf, func, ilist
+
 from .lattice import Address, NotQubit, AddressReg, AddressQubit, AddressTuple
 from .analysis import AddressAnalysis
 
