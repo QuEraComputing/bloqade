@@ -81,6 +81,7 @@ def ghz_half_simd(n_qubits: int):
 
 
 # Note:
-# Since qasm2 does not allow main program with kernel, so we need to put the program in a closure.
+# Since qasm2 does not allow main program with arguments, so we need to put the program in a closure.
 # our kirin compiler toolchain can capture the global variable inside the closure.
-# In this case, the n_qubits will be captured upon calling the `ghz_half_simd(n_qubits)` python function.
+# In this case, the n_qubits will be captured upon calling the `ghz_half_simd(n_qubits)` python function,
+# As a result, the return qasm2 program will not have any arguments.
