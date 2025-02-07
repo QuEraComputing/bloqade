@@ -70,7 +70,7 @@ class QRegGet(ir.Statement):
     """Get a qubit from a quantum register."""
 
     name = "qreg.get"
-    traits = frozenset({ir.FromPythonCall()})
+    traits = frozenset({ir.FromPythonCall(), ir.Pure()})
     reg: ir.SSAValue = info.argument(QRegType)
     """reg (QReg): The quantum register."""
     idx: ir.SSAValue = info.argument(types.Int)
@@ -84,7 +84,7 @@ class CRegGet(ir.Statement):
     """Get a bit from a classical register."""
 
     name = "creg.get"
-    traits = frozenset({ir.FromPythonCall()})
+    traits = frozenset({ir.FromPythonCall(), ir.Pure()})
     reg: ir.SSAValue = info.argument(CRegType)
     """reg (CReg): The classical register."""
     idx: ir.SSAValue = info.argument(types.Int)
