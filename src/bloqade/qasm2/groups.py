@@ -95,7 +95,7 @@ def main(self):
     .discard(lowering.cf)
     .add(scf)
 )
-def kernel(self):
+def extended(self):
     def run_pass(
         method: ir.Method,
     ):

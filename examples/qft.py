@@ -1,11 +1,10 @@
 import math
 
 from bloqade import qasm2
-from kirin.dialects import scf, lowering
 from bloqade.runtime.qrack import PyQrack
 
 
-@qasm2.kernel.discard(lowering.cf).add(scf)
+@qasm2.extended
 def qft(qreg: qasm2.QReg, n: int):
     if n == 0:
         return qreg
@@ -17,7 +16,7 @@ def qft(qreg: qasm2.QReg, n: int):
     return qreg
 
 
-@qasm2.kernel.discard(lowering.cf).add(scf)
+@qasm2.extended
 def main():
     return qft(qasm2.qreg(3), 3)
 

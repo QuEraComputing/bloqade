@@ -9,5 +9,5 @@ from .types import (
     CRegType as CRegType,
     QRegType as QRegType,
 )
-from .groups import gate as gate, main as main, kernel as kernel
+from .groups import gate as gate, main as main, extended as extended
 from ._wrappers import *  # noqa: F403
