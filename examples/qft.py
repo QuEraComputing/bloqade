@@ -21,6 +21,7 @@ def qft(qreg: qasm2.QReg, n: int):
 def main():
     return qft(qasm2.qreg(3), 3)
 
+
 device = PyQrack()
 qreg = device.run(main)
 print(qreg)

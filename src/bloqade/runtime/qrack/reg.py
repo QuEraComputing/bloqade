@@ -49,6 +49,7 @@ class SimQRegister(QRegister, Generic[SimRegType]):
     def __getitem__(self, pos: int):
         return SimQubitRef(self, pos)
 
+
 @dataclass(frozen=True)
 class SimQubitRef(QubitRef, Generic[SimRegType]):
     ref: SimQRegister[SimRegType]
