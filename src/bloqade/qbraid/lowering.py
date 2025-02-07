@@ -293,9 +293,9 @@ class Lowering:
         return stmt.result
 
     def lower_full_turns(self, value: float) -> ir.SSAValue:
-        turns = self.lower_number(2 * value)
         const_pi = qasm2.expr.ConstPI()
         self.block_list.append(const_pi)
-        mul = qasm2.expr.Mul(lhs=turns, rhs=const_pi.result)
+        turns = self.lower_number(2 * value)
+        mul = qasm2.expr.Mul(const_pi.result, turns)
         self.block_list.append(mul)
         return mul.result

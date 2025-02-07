@@ -1,4 +1,3 @@
-from math import pi
 from typing import List
 
 from kirin import ir
@@ -227,9 +226,15 @@ def test_lowering_global_w():
         native.PauliChannel(
             px_sing_0.result, py_sing_0.result, pz_sing_0.result, q0.result
         ),
-        (theta := as_float(theta_val / 2.0)),
-        (phi := as_float(phi_val - 0.5 * pi)),
-        (lam := as_float(0.5 * pi - phi_val)),
+        (pi_theta := qasm2.expr.ConstPI()),
+        (theta_num := as_float(2 * theta_val)),
+        (theta := qasm2.expr.Mul(pi_theta.result, theta_num.result)),
+        (pi_phi := qasm2.expr.ConstPI()),
+        (phi_num := as_float(2 * (phi_val + 0.5))),
+        (phi := qasm2.expr.Mul(pi_phi.result, phi_num.result)),
+        (pi_lam := qasm2.expr.ConstPI()),
+        (lam_num := as_float(2 * -(0.5 + phi_val))),
+        (lam := qasm2.expr.Mul(pi_lam.result, lam_num.result)),
         qasm2.uop.UGate(
             theta=theta.result, phi=phi.result, lam=lam.result, qarg=q0.result
         ),
@@ -290,9 +295,15 @@ def test_lowering_local_w():
         native.PauliChannel(
             px_sing_1.result, py_sing_1.result, pz_sing_1.result, q1.result
         ),
-        (theta := as_float(theta_val / 2.0)),
-        (phi := as_float(phi_val - 0.5 * pi)),
-        (lam := as_float(0.5 * pi - phi_val)),
+        (pi_theta := qasm2.expr.ConstPI()),
+        (theta_num := as_float(2 * theta_val)),
+        (theta := qasm2.expr.Mul(pi_theta.result, theta_num.result)),
+        (pi_phi := qasm2.expr.ConstPI()),
+        (phi_num := as_float(2 * (phi_val + 0.5))),
+        (phi := qasm2.expr.Mul(pi_phi.result, phi_num.result)),
+        (pi_lam := qasm2.expr.ConstPI()),
+        (lam_num := as_float(2 * -(0.5 + phi_val))),
+        (lam := qasm2.expr.Mul(pi_lam.result, lam_num.result)),
         qasm2.uop.UGate(
             theta=theta.result, phi=phi.result, lam=lam.result, qarg=q1.result
         ),
@@ -338,7 +349,9 @@ def test_lowering_global_rz():
         native.PauliChannel(
             px_sing_0.result, py_sing_0.result, pz_sing_0.result, q0.result
         ),
-        (theta := as_float(phi_val)),
+        (theta_pi := qasm2.expr.ConstPI()),
+        (theta_num := as_float(2 * phi_val)),
+        (theta := qasm2.expr.Mul(theta_pi.result, theta_num.result)),
         qasm2.uop.RZ(theta=theta.result, qarg=q0.result),
         func.Return(creg.result),
     ]
@@ -396,7 +409,9 @@ def test_lowering_local_rz():
         native.PauliChannel(
             px_sing_1.result, py_sing_1.result, pz_sing_1.result, q1.result
         ),
-        (theta := as_float(phi_val)),
+        (theta_pi := qasm2.expr.ConstPI()),
+        (theta_num := as_float(2 * phi_val)),
+        (theta := qasm2.expr.Mul(theta_pi.result, theta_num.result)),
         qasm2.uop.RZ(theta=theta.result, qarg=q1.result),
         func.Return(creg.result),
     ]
