@@ -26,7 +26,7 @@ class Ilist(interp.MethodTable):
 
     @interp.impl(ilist.New)
     def emit_ilist(self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: ilist.New):
-        return (ilist.IList(data=[frame.get(value) for value in stmt.values]),)
+        return (ilist.IList(data=frame.get_values(stmt.values)),)
 
 
 @func.dialect.register(key="emit.qasm2.gate")
