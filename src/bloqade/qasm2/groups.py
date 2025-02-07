@@ -1,6 +1,6 @@
 from kirin import ir, passes
 from kirin.prelude import basic
-from kirin.dialects import scf, func, ilist
+from kirin.dialects import scf, func, ilist, lowering
 from bloqade.qasm2.dialects import (
     uop,
     core,
@@ -13,7 +13,9 @@ from bloqade.qasm2.dialects import (
 )
 
 
-@ir.dialect_group([uop, parallel, func, ilist, expr, glob, noise])
+@ir.dialect_group(
+    [uop, parallel, func, ilist, expr, glob, noise, lowering.func, lowering.call]
+)
 def gate(self):
     ilist_desugar = ilist.IListDesugar(self)
     fold_pass = passes.Fold(self)
@@ -50,6 +52,8 @@ def gate(self):
         indexing,
         ilist,
         func,
+        lowering.func,
+        lowering.call,
     ]
 )
 def main(self):
@@ -84,8 +88,12 @@ def main(self):
             noise,
             parallel,
             core,
+            lowering.func,
+            lowering.call,
         ]
     )
+    .discard(lowering.cf)
+    .add(scf)
 )
 def kernel(self):
     def run_pass(
