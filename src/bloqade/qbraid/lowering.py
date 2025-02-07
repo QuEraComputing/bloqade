@@ -47,11 +47,12 @@ class Lowering:
             Method: The generated kirin method.
 
         """
-        self.process_noise_model(noise_model)
-        region = ir.Region(blocks=[ir.Block(stmts=self.block_list)])
+        block = ir.Block(stmts=self.block_list)
+        block.args.append_from(ir.types.PyClass(ir.Method), name=f"{sym_name}_self")
+        region = ir.Region(block)
         func_stmt = func.Function(
             sym_name=sym_name,
-            signature=func.Signature(inputs=(), output=qasm2.types.CRegType),
+            signature=func.Signature(inputs=(), output=qasm2.types.QRegType),
             body=region,
         )
 

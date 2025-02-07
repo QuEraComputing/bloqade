@@ -17,13 +17,13 @@ def as_float(value: float):
 
 def run_assert(noise_model: schema.NoiseModel, expected_stmts: List[ir.Statement]):
 
+    block = ir.Block(stmts=expected_stmts)
+    block.args.append_from(ir.types.PyClass(ir.Method), name="test_self")
+    region = ir.Region(block)
     expected_func_stmt = func.Function(
         sym_name="test",
-        signature=func.Signature(
-            inputs=(),
-            output=qasm2.types.CRegType,
-        ),
-        body=ir.Region(ir.Block(expected_stmts)),
+        signature=func.Signature(inputs=(), output=qasm2.types.QRegType),
+        body=region,
     )
 
     expected_mt = ir.Method(
