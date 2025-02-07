@@ -35,6 +35,9 @@ vis = [
 qbraid = [
     "qbraid>=0.9.3",
 ]
+pyqrack = [
+    "pyqrack>=1.35.4",
+]
 
 [build-system]
 requires = ["hatchling"]
