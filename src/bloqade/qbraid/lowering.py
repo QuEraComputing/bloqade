@@ -29,7 +29,7 @@ class Lowering:
         region = ir.Region(blocks=[ir.Block(stmts=self.block_list)])
         func_stmt = func.Function(
             sym_name=sym_name,
-            signature=func.Signature(inputs=(), output=qasm2.types.QRegType),
+            signature=func.Signature(inputs=(), output=qasm2.types.CRegType),
             body=region,
         )
         dialects = ir.DialectGroup(
@@ -50,6 +50,7 @@ class Lowering:
         reg = qasm2.core.QRegNew(num_qubits)
         creg = qasm2.core.CRegNew(num_qubits)
         self.block_list.append(reg)
+        self.block_list.append(creg)
 
         for idx_value, qubit in enumerate(noise_model.all_qubits):
             idx = self.lower_number(idx_value)
@@ -57,6 +58,7 @@ class Lowering:
             bit_stmt = qasm2.core.CRegGet(creg.result, idx)
 
             self.block_list.append(qubit_stmt)
+            self.block_list.append(bit_stmt)
             self.qubit_id_map[qubit] = qubit_stmt.result
             self.bit_id_map[qubit] = bit_stmt.result
             self.qubit_list.append(qubit_stmt.result)

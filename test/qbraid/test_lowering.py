@@ -85,14 +85,19 @@ def test_lowering_cz():
     expected: List[ir.Statement] = [
         (n_qubits := as_int(4)),
         (reg := qasm2.core.QRegNew(n_qubits=n_qubits.result)),
+        (creg := qasm2.core.CRegNew(n_bits=n_qubits.result)),
         (idx0 := as_int(0)),
         (q0 := qasm2.core.QRegGet(reg.result, idx=idx0.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx0.result)),
         (idx1 := as_int(1)),
         (q1 := qasm2.core.QRegGet(reg.result, idx=idx1.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx1.result)),
         (idx2 := as_int(2)),
         (q5 := qasm2.core.QRegGet(reg.result, idx=idx2.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx2.result)),
         (idx3 := as_int(3)),
         (q3 := qasm2.core.QRegGet(reg.result, idx=idx3.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx3.result)),
         (survival_prob_0 := as_float(survival_prob_0_value)),
         native.AtomLossChannel(survival_prob_0.result, q0.result),
         (survival_prob_1 := as_float(survival_prob_1_value)),
@@ -148,14 +153,14 @@ def test_lowering_cz():
             px_sing_3.result, py_sing_3.result, pz_sing_3.result, q3.result
         ),
         qasm2.uop.CZ(q0.result, q1.result),
-        func.Return(reg.result),
+        func.Return(creg.result),
     ]
 
     expected_func_stmt = func.Function(
         sym_name="test",
         signature=func.Signature(
             inputs=(),
-            output=qasm2.types.QRegType,
+            output=qasm2.types.CRegType,
         ),
         body=ir.Region(ir.Block(expected)),
     )
@@ -194,8 +199,10 @@ def test_lowering_global_w():
     expected: List[ir.Statement] = [
         (n_qubits := as_int(1)),
         (reg := qasm2.core.QRegNew(n_qubits=n_qubits.result)),
+        (creg := qasm2.core.CRegNew(n_bits=n_qubits.result)),
         (idx0 := as_int(0)),
         (q0 := qasm2.core.QRegGet(reg.result, idx=idx0.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx0.result)),
         (survival_prob_0 := as_float(0.9)),
         native.AtomLossChannel(survival_prob_0.result, q0.result),
         (px_sing_0 := as_float(0.1)),
@@ -210,14 +217,14 @@ def test_lowering_global_w():
         qasm2.uop.UGate(
             theta=theta.result, phi=phi.result, lam=lam.result, qarg=q0.result
         ),
-        func.Return(reg.result),
+        func.Return(creg.result),
     ]
 
     expected_func_stmt = func.Function(
         sym_name="test",
         signature=func.Signature(
             inputs=(),
-            output=qasm2.types.QRegType,
+            output=qasm2.types.CRegType,
         ),
         body=ir.Region(ir.Block(expected)),
     )
@@ -259,10 +266,13 @@ def test_lowering_local_w():
     expected: List[ir.Statement] = [
         (n_qubits := as_int(2)),
         (reg := qasm2.core.QRegNew(n_qubits=n_qubits.result)),
+        (creg := qasm2.core.CRegNew(n_bits=n_qubits.result)),
         (idx0 := as_int(0)),
         (q0 := qasm2.core.QRegGet(reg.result, idx=idx0.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx0.result)),
         (idx1 := as_int(1)),
         (q1 := qasm2.core.QRegGet(reg.result, idx=idx1.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx1.result)),
         (survival_prob_0 := as_float(0.9)),
         native.AtomLossChannel(survival_prob_0.result, q0.result),
         (survival_prob_1 := as_float(0.4)),
@@ -285,14 +295,14 @@ def test_lowering_local_w():
         qasm2.uop.UGate(
             theta=theta.result, phi=phi.result, lam=lam.result, qarg=q1.result
         ),
-        func.Return(reg.result),
+        func.Return(creg.result),
     ]
 
     expected_func_stmt = func.Function(
         sym_name="test",
         signature=func.Signature(
             inputs=(),
-            output=qasm2.types.QRegType,
+            output=qasm2.types.CRegType,
         ),
         body=ir.Region(ir.Block(expected)),
     )
@@ -330,8 +340,10 @@ def test_lowering_global_rz():
     expected: List[ir.Statement] = [
         (n_qubits := as_int(1)),
         (reg := qasm2.core.QRegNew(n_qubits=n_qubits.result)),
+        (creg := qasm2.core.CRegNew(n_bits=n_qubits.result)),
         (idx0 := as_int(0)),
         (q0 := qasm2.core.QRegGet(reg.result, idx=idx0.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx0.result)),
         (survival_prob_0 := as_float(0.9)),
         native.AtomLossChannel(survival_prob_0.result, q0.result),
         (px_sing_0 := as_float(0.1)),
@@ -342,14 +354,14 @@ def test_lowering_global_rz():
         ),
         (theta := as_float(phi_val)),
         qasm2.uop.RZ(theta=theta.result, qarg=q0.result),
-        func.Return(reg.result),
+        func.Return(creg.result),
     ]
 
     expected_func_stmt = func.Function(
         sym_name="test",
         signature=func.Signature(
             inputs=(),
-            output=qasm2.types.QRegType,
+            output=qasm2.types.CRegType,
         ),
         body=ir.Region(ir.Block(expected)),
     )
@@ -390,10 +402,13 @@ def test_lowering_local_rz():
     expected: List[ir.Statement] = [
         (n_qubits := as_int(2)),
         (reg := qasm2.core.QRegNew(n_qubits=n_qubits.result)),
+        (creg := qasm2.core.CRegNew(n_bits=n_qubits.result)),
         (idx0 := as_int(0)),
         (q0 := qasm2.core.QRegGet(reg.result, idx=idx0.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx0.result)),
         (idx1 := as_int(1)),
         (q1 := qasm2.core.QRegGet(reg.result, idx=idx1.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx1.result)),
         (survival_prob_0 := as_float(0.9)),
         native.AtomLossChannel(survival_prob_0.result, q0.result),
         (survival_prob_1 := as_float(0.4)),
@@ -412,14 +427,14 @@ def test_lowering_local_rz():
         ),
         (theta := as_float(phi_val)),
         qasm2.uop.RZ(theta=theta.result, qarg=q1.result),
-        func.Return(reg.result),
+        func.Return(creg.result),
     ]
 
     expected_func_stmt = func.Function(
         sym_name="test",
         signature=func.Signature(
             inputs=(),
-            output=qasm2.types.QRegType,
+            output=qasm2.types.CRegType,
         ),
         body=ir.Region(ir.Block(expected)),
     )
@@ -431,3 +446,11 @@ def test_lowering_local_rz():
         func_stmt.print()
         expected_func_stmt.print()
         raise e
+
+
+if __name__ == "__main__":
+    test_lowering_cz()
+    test_lowering_global_w()
+    test_lowering_local_w()
+    test_lowering_global_rz()
+    test_lowering_local_rz()
