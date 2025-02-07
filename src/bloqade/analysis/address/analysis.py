@@ -3,7 +3,6 @@ from typing import TypeVar
 from kirin import ir, types, interp
 from bloqade.types import QubitType
 from kirin.analysis import Forward, const
-from kirin.dialects import cf, py, func, ilist
 from kirin.analysis.forward import ForwardFrame
 
 from .lattice import Address

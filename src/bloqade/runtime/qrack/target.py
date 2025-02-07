@@ -1,9 +1,9 @@
 from typing import TypeVar, ParamSpec
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from kirin import ir
-from kirin.passes import Pass, Fold
 from pyqrack import QrackSimulator
+from kirin.passes import Fold
 from bloqade.analysis.address import AnyAddress, AddressAnalysis
 from bloqade.runtime.qrack.base import Memory, PyQrackInterpreter
 
@@ -14,6 +14,7 @@ RetType = TypeVar("RetType")
 @dataclass
 class PyQrack:
     """PyQrack target runtime for Bloqade."""
+
     min_qubits: int = 0
     """Minimum number of qubits required for the PyQrack simulator.
     Useful when address analysis fails to determine the number of qubits.
