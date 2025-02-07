@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from kirin import ir, lowering
-from kirin.dialects import cf, func
+from kirin.dialects import cf, func, ilist
 from kirin.lowering import LoweringState
 from kirin.exceptions import DialectLoweringError
 from bloqade.qasm2.types import CRegType, QRegType
@@ -268,7 +268,14 @@ class LoweringQASM(Visitor[lowering.Result]):
             ctrl, qarg = pair
             ctrls.append(self.visit(ctrl).expect_one())
             qargs.append(self.visit(qarg).expect_one())
-        self.state.append_stmt(parallel.CZ(tuple(ctrls), tuple(qargs)))
+
+        ctrls_stmt = ilist.New(values=ctrls)
+        qargs_stmt = ilist.New(values=qargs)
+        self.state.append_stmt(ctrls_stmt)
+        self.state.append_stmt(qargs_stmt)
+        self.state.append_stmt(
+            parallel.CZ(ctrls=ctrls_stmt.result, qargs=qargs_stmt.result)
+        )
         return lowering.Result()
 
     def visit_ParaRZGate(self, node: ast.ParaRZGate) -> lowering.Result:
@@ -278,10 +285,12 @@ class LoweringQASM(Visitor[lowering.Result]):
                 raise ValueError("Rz gate requires exactly one qarg")
             qargs.append(self.visit(pair[0]).expect_one())
 
+        qargs_stmt = ilist.New(values=qargs)
+        self.state.append_stmt(qargs_stmt)
         self.state.append_stmt(
             parallel.RZ(
                 theta=self.visit(node.theta).expect_one(),
-                qargs=tuple(qargs),
+                qargs=qargs_stmt.result,
             )
         )
         return lowering.Result()
@@ -293,12 +302,14 @@ class LoweringQASM(Visitor[lowering.Result]):
                 raise ValueError("U3 gate requires exactly one qarg")
             qargs.append(self.visit(pair[0]).expect_one())
 
+        qargs_stmt = ilist.New(values=qargs)
+        self.state.append_stmt(qargs_stmt)
         self.state.append_stmt(
             parallel.UGate(
                 theta=self.visit(node.theta).expect_one(),
                 phi=self.visit(node.phi).expect_one(),
                 lam=self.visit(node.lam).expect_one(),
-                qargs=tuple(qargs),
+                qargs=qargs_stmt.result,
             )
         )
         return lowering.Result()
