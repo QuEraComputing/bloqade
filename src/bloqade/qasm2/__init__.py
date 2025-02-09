@@ -1,6 +1,6 @@
 from bloqade.types import Qubit as Qubit, QubitType as QubitType
 
-from . import emit as emit, parse as parse, parallel as parallel
+from . import emit as emit, glob as glob, parse as parse, parallel as parallel
 from .types import (
     Bit as Bit,
     CReg as CReg,

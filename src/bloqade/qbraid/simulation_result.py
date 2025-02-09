@@ -1,9 +1,9 @@
 # Copyright (c) 2024, QuEra Computing Inc.
 # All rights reserved.
 
-import dataclasses
 from io import StringIO
-from typing import Any, Dict
+from typing import Any, Dict, Optional
+from dataclasses import dataclass
 
 import pandas as pd
 from pandas import DataFrame
@@ -12,7 +12,7 @@ from bloqade.visual.animation.runtime import qpustate as vis_qpustate
 from .schema import NoiseModel
 
 
-@dataclasses.dataclass
+@dataclass
 class QuEraSimulationResult:
     """Results of the QuEra hardware model simulation.
 
@@ -68,7 +68,7 @@ class QuEraSimulationResult:
         save_mpeg: bool = False,
         filename: str = "vqpu_animation",
         start_block: int = 0,
-        n_blocks: int = None,
+        n_blocks: Optional[int] = None,
     ):
         """animate the qpu state
 
@@ -83,7 +83,7 @@ class QuEraSimulationResult:
         Returns:
             ani: matplotlib animation object
         """
-        from flair_visual.animation.animate import animate_qpu_state
+        from bloqade.visual.animation.animate import animate_qpu_state
 
         ani = animate_qpu_state(
             state=self.atom_animation_state,

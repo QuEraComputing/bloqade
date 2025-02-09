@@ -1,4 +1,4 @@
-KIRIN {qasm2.uop, qasm2.noise};
+KIRIN {qasm2.noise, qasm2.uop};
 include "qelib1.inc";
 
 qreg q[2];
