@@ -2,7 +2,7 @@ from typing import Union
 
 from kirin.lowering import wraps
 
-from .dialects import aux, gate
+from .dialects import aux, gate, collapse
 
 
 # dialect:: gate
@@ -97,3 +97,44 @@ def tick() -> None: ...
 def pauli_string(
     string: tuple[str, ...], flipped: tuple[bool, ...], targets: tuple[int, ...]
 ) -> aux.PauliString: ...
+
+
+# dialect:: collapse
+@wraps(collapse.MZ)
+def mz(p: float, targets: tuple[int, ...]) -> None: ...
+
+
+@wraps(collapse.MY)
+def my(p: float, targets: tuple[int, ...]) -> None: ...
+
+
+@wraps(collapse.MX)
+def mx(p: float, targets: tuple[int, ...]) -> None: ...
+
+
+@wraps(collapse.MZZ)
+def mzz(p: float, targets: tuple[int, ...]) -> None: ...
+
+
+@wraps(collapse.MYY)
+def myy(p: float, targets: tuple[int, ...]) -> None: ...
+
+
+@wraps(collapse.MXX)
+def mxx(p: float, targets: tuple[int, ...]) -> None: ...
+
+
+@wraps(collapse.PPMeasurement)
+def mpp(p: float, targets: tuple[aux.PauliString, ...]) -> None: ...
+
+
+@wraps(collapse.RZ)
+def rz(targets: tuple[int, ...]) -> None: ...
+
+
+@wraps(collapse.RY)
+def ry(targets: tuple[int, ...]) -> None: ...
+
+
+@wraps(collapse.RX)
+def rx(targets: tuple[int, ...]) -> None: ...
