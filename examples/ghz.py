@@ -3,11 +3,14 @@ import math
 from bloqade import qasm2
 from kirin.dialects import ilist
 
+# In this example, we will consider the GHZ state preparation circuit with 2^n qubits
+
 
 # > Simple linear depth impl of ghz state prep
 # A simple GHZ state preparation circuit can be done with N CX gates and 1 H gate.
 # This gives circuit execution depth of N+1.
-def ghz_linear(n_qubits: int):
+def ghz_linear(n: int):
+    n_qubits = int(2**n)
 
     @qasm2.main
     def ghz_linear_program():
@@ -20,86 +23,79 @@ def ghz_linear(n_qubits: int):
     return ghz_linear_program
 
 
-# > 1/2 linear depth by re-arranging
+# > log depth impl of ghz state prep
 # Let's take a look how we can rewrite the circuit toward more QuEra's hardware friendly circuit.
-# If we put the first haradamard gate on the middle qubit, and fan out the CX gate,
-# we can effectively reduce the circuit depth to N/2 + 1. With each layer have two CX gates.
+# We can rewrite the GHZ state preparation circuit with log(N) depth by rearranging the CX gates
+# [citation](https://arxiv.org/abs/2101.08946 – Mooney, White, Hill, Hollenberg)
 
 
 # Note it is important to separate the concept of circuit depth and circuit execution depth.
-# For example, in the following implementation, the two CX gates instruction inside the for loop are executed in sequence.
+# For example, in the following implementation, each CX gate instruction inside the for loop are executed in sequence.
 # So even thought the circuit depth is N/2 + 1. The circuit execution depth is still N + 1.
-def ghz_half(n_qubits: int):
+def ghz_log_depth(n: int):
+    n_qubits = int(2**n)
+
     @qasm2.main
-    def ghz_half_program():
-        assert n_qubits % 2 == 0
+    def layer(i_layer: int, qreg: qasm2.QReg):
+        step = n_qubits // (2**i_layer)
+        for j in range(0, n_qubits, step):
+            qasm2.cx(ctrl=qreg[j], qarg=qreg[j + step // 2])
+
+    @qasm2.main
+    def ghz_log_depth_program():
 
         qreg = qasm2.qreg(n_qubits)
 
-        # acting H on the middle qubit
-        s = n_qubits // 2
-        qasm2.h(qreg[s])
+        qasm2.h(qreg[0])
+        for i in range(n):
+            layer(i_layer=i, qreg=qreg)
 
-        # fan out the CX gate:
-        qasm2.cx(qreg[s], qreg[s - 1])
-
-        for i in range(s - 1, 0, -1):
-            qasm2.cx(qreg[i], qreg[i - 1])
-            qasm2.cx(qreg[n_qubits - i - 1], qreg[n_qubits - i])
-
-    return ghz_half_program
+    return ghz_log_depth_program
 
 
-# > 1/2 linear depth by re-arranging, and using parallelism
-# Now lets see how we can ultilize QuEra's neutral atom's unique parallel feature to reduce the
-# actual execution time of the circuit.
-# It is important to know that on our digital quantum computer, by nature can execute native gate in parallel in an single instruction/ execution cycle.
+# > native gate set and parallelism
+# On our digital quantum computer, by nature can execute native gate in parallel in an single instruction/ execution cycle.
 # The concept is very similar to the SIMD (Single Instruction, Multiple Data) in classical computing.
 # On our hardware, the native gate set is arbitrary (parallel) rotations and (parallel) CZ gates.
 #
-# We know that:
-# 1. hadamard can be decomposed into a Ry(pi/2) rotation follow by a X gate.
-# 2. the CX gate can be decomposed into CZ gate with two hadamards acting on the target qubit.
-# 3. CZ gate commute with each other CZ gates.
-# Base on the above observation, one can rewrite the circuit with only CZ gates in the middle,
-# and some left-over parallel hadamard gates at the beginning and the end of the circuit
+# Let's try to rewrite the `layer` subroutinme.
+# We know that the CX gate can be decomposed into CZ gate with two single qubit gates Ry(-pi/2) and Ry(pi/2) acting on the target qubits.
+# After such decomposition, we can now using our parallel gate instructions `parallel.u` and `parallel.cz`.
+# With the following modification, we can further reduce the circuit execution depth to n (log of total qubit number N)
+def ghz_log_simd(n: int):
+    n_qubits = int(2**n)
 
-
-# We can now further rewrite the above circuit to using parallel gates.
-# using parallel gates, we can further reduce the circuit execution depth to 6 (constant and does not scale with N)
-def ghz_half_simd(n_qubits: int):
     @qasm2.main
-    def ghz_half_simd_program():
-        assert n_qubits % 2 == 0
-        s = n_qubits // 2
+    def layer(i_layer: int, qreg: qasm2.QReg):
+        step = n_qubits // (2**i_layer)
 
-        # create register
+        def get_qubit(x: int):
+            return qreg[x]
+
+        ctrl_qubits = ilist.Map(fn=get_qubit, collection=range(0, n_qubits, step))
+        targ_qubits = ilist.Map(
+            fn=get_qubit, collection=range(step // 2, n_qubits, step)
+        )
+
+        # Ry(-pi/2)
+        qasm2.parallel.u(qargs=targ_qubits, theta=-math.pi / 2, phi=0.0, lam=0.0)
+
+        # CZ gates
+        qasm2.parallel.cz(ctrls=ctrl_qubits, qargs=targ_qubits)
+
+        # Ry(pi/2)
+        qasm2.parallel.u(qargs=targ_qubits, theta=math.pi / 2, phi=0.0, lam=0.0)
+
+    @qasm2.main
+    def ghz_log_depth_program():
+
         qreg = qasm2.qreg(n_qubits)
 
-        def get_qubit(i: int):
-            return qreg[i]
+        qasm2.h(qreg[0])
+        for i in range(n):
+            layer(i_layer=i, qreg=qreg)
 
-        even_qubits = ilist.Map(fn=get_qubit, collection=range(0, n_qubits, 2))
-        odd_qubits = ilist.Map(fn=get_qubit, collection=range(1, n_qubits, 2))
-
-        # acting parallel H = XRy^{pi/2} on even qubits and middle qubit
-        initial_targets = even_qubits + [qreg[s]]
-        # Ry(pi/2)
-        qasm2.parallel.u(qargs=initial_targets, theta=math.pi / 2, phi=0.0, lam=0.0)
-        # X
-        qasm2.parallel.u(qargs=initial_targets, theta=math.pi, phi=0.0, lam=math.pi)
-
-        # two layer of parallel CZ gates
-        qasm2.parallel.cz(ctrls=even_qubits, qargs=odd_qubits)
-        qasm2.parallel.cz(ctrls=odd_qubits[:-1], qargs=even_qubits[1:])
-
-        # acting parallel H = Ry^{-pi/2}X on even qubits only:
-        # Ry(pi/2)
-        qasm2.parallel.u(qargs=even_qubits, theta=math.pi / 2, phi=0.0, lam=0.0)
-        # X
-        qasm2.parallel.u(qargs=even_qubits, theta=math.pi, phi=0.0, lam=math.pi)
-
-    return ghz_half_simd_program
+    return ghz_log_depth_program
 
 
 # Note on using closure to capture global variable:
