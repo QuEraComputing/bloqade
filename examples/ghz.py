@@ -56,7 +56,9 @@ def ghz_log_depth(n: int):
 # > native gate set and parallelism
 # On our digital quantum computer, by nature can execute native gate in parallel in an single instruction/ execution cycle.
 # The concept is very similar to the SIMD (Single Instruction, Multiple Data) in classical computing.
-# On our hardware, the native gate set is arbitrary (parallel) rotations and (parallel) CZ gates.
+# On our hardware, there are two important factor to be consider:
+# 1. the native gate set is arbitrary (parallel) rotations and (parallel) CZ gates.
+# 2. Our atom shuttling architecture allows arbitrary qubit connectivity. This means that our parallel instruction is not limited to certain hardware connectivity (for example nearest neighbor connectivity).
 #
 # Let's try to rewrite the `layer` subroutinme.
 # We know that the CX gate can be decomposed into CZ gate with two single qubit gates Ry(-pi/2) and Ry(pi/2) acting on the target qubits.
