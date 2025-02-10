@@ -73,6 +73,7 @@ doc = [
     "mkdocs-material>=9.5.44",
     "mkdocs-minify-plugin>=0.8.0",
     "mkdocstrings[python]>=0.27.0",
+    "mkdocs-jupyter>=0.25.1",
 ]
 
 [tool.isort]

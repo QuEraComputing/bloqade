@@ -18,6 +18,7 @@ nav:
       - Contributing: contrib.md
   - Digital:
     - digital/index.md
+    - GHZ: "digital/examples/ghz.py"
   - Analog: 'https://queracomputing.github.io/bloqade-python/latest/'
   - Blog:
     - blog/index.md
@@ -89,6 +90,9 @@ plugins:
   - minify:
       minify_html: true
   - blog
+  - mkdocs-jupyter:
+      #include: ["examples/ghz.py"]
+      #ignore: []
 
 extra_javascript:
   - javascripts/katex.js
