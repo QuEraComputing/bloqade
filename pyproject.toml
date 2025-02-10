@@ -13,7 +13,7 @@ requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.26.4",
     "scipy>=1.13.1",
-    "kirin-toolchain~=0.10.0",
+    "kirin-toolchain~=0.11.0",
     "rich>=13.9.4",
     "pydantic>=1.3.0",
     "pandas>=2.2.3",

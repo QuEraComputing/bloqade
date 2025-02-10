@@ -18,6 +18,9 @@ class QRegister:
     def __eq__(self, other):
         return self is other
 
+    def __getitem__(self, pos: int):
+        return QubitRef(self, pos)
+
 
 @dataclass(frozen=True)
 class QubitRef:
@@ -54,6 +57,9 @@ class SimQRegister(QRegister, Generic[SimRegType]):
     def drop(self, pos: int):
         assert self.qubit_state[pos] is QubitState.Active, "Qubit already lost"
         self.qubit_state[pos] = QubitState.Lost
+
+    def __getitem__(self, pos: int):
+        return SimQubitRef(self, pos)
 
 
 @dataclass(frozen=True)

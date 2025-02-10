@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from kirin import ir, lowering
-from kirin.dialects import cf, func
+from kirin.dialects import cf, func, ilist
 from kirin.lowering import LoweringState
 from kirin.exceptions import DialectLoweringError
 from bloqade.qasm2.types import CRegType, QRegType
@@ -97,11 +97,11 @@ class LoweringQASM(Visitor[lowering.Result]):
         )
         cond = self.state.append_stmt(cond_stmt).result
         frame = self.state.current_frame
-        before_block = frame.current_block
-        if frame.next_block is None:
+        before_block = frame.curr_block
+        if frame.exit_block is None:
             raise DialectLoweringError("code block is not exiting")
         else:
-            before_block_next = frame.next_block
+            before_block_next = frame.exit_block
         if_block = self.state.current_frame.append_block()
         for stmt in node.body:
             self.visit(stmt)
@@ -121,7 +121,7 @@ class LoweringQASM(Visitor[lowering.Result]):
                 else_successor=before_block_next,
             )
         )
-        frame.current_block = before_block_next
+        frame.curr_block = before_block_next
         return lowering.Result()
 
     def visit_BinOp(self, node: ast.BinOp) -> lowering.Result:
@@ -249,7 +249,10 @@ class LoweringQASM(Visitor[lowering.Result]):
         return lowering.Result(self.state.append_stmt(expr.ConstPI()).result)
 
     def visit_Include(self, node: ast.Include) -> lowering.Result:
-        raise NotImplementedError("Include lowering not supported")
+        if node.filename not in ["qelib1.inc"]:
+            raise DialectLoweringError(f"Include {node.filename} not found")
+
+        return lowering.Result()
 
     def visit_Gate(self, node: ast.Gate) -> lowering.Result:
         raise NotImplementedError("Gate lowering not supported")
@@ -268,7 +271,14 @@ class LoweringQASM(Visitor[lowering.Result]):
             ctrl, qarg = pair
             ctrls.append(self.visit(ctrl).expect_one())
             qargs.append(self.visit(qarg).expect_one())
-        self.state.append_stmt(parallel.CZ(tuple(ctrls), tuple(qargs)))
+
+        ctrls_stmt = ilist.New(values=ctrls)
+        qargs_stmt = ilist.New(values=qargs)
+        self.state.append_stmt(ctrls_stmt)
+        self.state.append_stmt(qargs_stmt)
+        self.state.append_stmt(
+            parallel.CZ(ctrls=ctrls_stmt.result, qargs=qargs_stmt.result)
+        )
         return lowering.Result()
 
     def visit_ParaRZGate(self, node: ast.ParaRZGate) -> lowering.Result:
@@ -278,10 +288,12 @@ class LoweringQASM(Visitor[lowering.Result]):
                 raise ValueError("Rz gate requires exactly one qarg")
             qargs.append(self.visit(pair[0]).expect_one())
 
+        qargs_stmt = ilist.New(values=qargs)
+        self.state.append_stmt(qargs_stmt)
         self.state.append_stmt(
             parallel.RZ(
                 theta=self.visit(node.theta).expect_one(),
-                qargs=tuple(qargs),
+                qargs=qargs_stmt.result,
             )
         )
         return lowering.Result()
@@ -293,12 +305,14 @@ class LoweringQASM(Visitor[lowering.Result]):
                 raise ValueError("U3 gate requires exactly one qarg")
             qargs.append(self.visit(pair[0]).expect_one())
 
+        qargs_stmt = ilist.New(values=qargs)
+        self.state.append_stmt(qargs_stmt)
         self.state.append_stmt(
             parallel.UGate(
                 theta=self.visit(node.theta).expect_one(),
                 phi=self.visit(node.phi).expect_one(),
                 lam=self.visit(node.lam).expect_one(),
-                qargs=tuple(qargs),
+                qargs=qargs_stmt.result,
             )
         )
         return lowering.Result()

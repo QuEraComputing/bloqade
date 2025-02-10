@@ -1,5 +1,8 @@
+from typing import Any
+
 from kirin import ir, interp
 from kirin.decl import info, statement
+from kirin.dialects import ilist
 from bloqade.qasm2.parse import ast
 from bloqade.qasm2.types import QubitType
 from bloqade.qasm2.emit.gate import EmitQASM2Gate, EmitQASM2Frame
@@ -11,15 +14,15 @@ dialect = ir.Dialect("qasm2.parallel")
 class CZ(ir.Statement):
     name = "cz"
     traits = frozenset({ir.FromPythonCall()})
-    ctrls: tuple[ir.SSAValue, ...] = info.argument(QubitType)
-    qargs: tuple[ir.SSAValue, ...] = info.argument(QubitType)
+    ctrls: ir.SSAValue = info.argument(ilist.IListType[QubitType])
+    qargs: ir.SSAValue = info.argument(ilist.IListType[QubitType])
 
 
 @statement(dialect=dialect)
 class UGate(ir.Statement):
     name = "u"
     traits = frozenset({ir.FromPythonCall()})
-    qargs: tuple[ir.SSAValue, ...] = info.argument(QubitType)
+    qargs: ir.SSAValue = info.argument(ilist.IListType[QubitType])
     theta: ir.SSAValue = info.argument(ir.types.Float)
     phi: ir.SSAValue = info.argument(ir.types.Float)
     lam: ir.SSAValue = info.argument(ir.types.Float)
@@ -29,7 +32,7 @@ class UGate(ir.Statement):
 class RZ(ir.Statement):
     name = "rz"
     traits = frozenset({ir.FromPythonCall()})
-    qargs: tuple[ir.SSAValue, ...] = info.argument(QubitType)
+    qargs: ir.SSAValue = info.argument(ilist.IListType[QubitType])
     theta: ir.SSAValue = info.argument(ir.types.Float)
 
 
@@ -37,11 +40,10 @@ class RZ(ir.Statement):
 class Parallel(interp.MethodTable):
 
     def _emit_parallel_qargs(
-        self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, qargs: tuple[ir.SSAValue, ...]
+        self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, qargs: ir.SSAValue
     ):
-        return [
-            (emit.assert_node((ast.Name, ast.Bit), frame.get(qarg)),) for qarg in qargs
-        ]
+        qargs: ilist.IList[ast.Node, Any] = frame.get(qargs)
+        return [(emit.assert_node((ast.Name, ast.Bit), qarg),) for qarg in qargs]
 
     @interp.impl(UGate)
     def ugate(self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: UGate):

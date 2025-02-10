@@ -11,7 +11,7 @@ def test_qBraid_emit():
         qreg = qasm2.qreg(4)
         qasm2.cx(qreg[0], qreg[1])
         qasm2.reset(qreg[0])
-        qasm2.parallel.cz(ctrls=(qreg[0], qreg[1]), qargs=(qreg[2], qreg[3]))
+        qasm2.parallel.cz(ctrls=[qreg[0], qreg[1]], qargs=[qreg[2], qreg[3]])
 
     class MockQBraidJob:
 
@@ -20,7 +20,7 @@ def test_qBraid_emit():
         ):
             assert (
                 qasm
-                == 'KIRIN {cf,func,py.ilist,qasm2.core,qasm2.expr,qasm2.glob,qasm2.indexing,qasm2.inline,qasm2.noise,qasm2.parallel,qasm2.uop};\ninclude "qelib1.inc";\nqreg qreg[4];\nCX qreg[0], qreg[1];\nreset qreg[0];\nparallel.CZ {\n  qreg[0], qreg[2];\n  qreg[1], qreg[3];\n}\n'
+                == 'KIRIN {func,lowering.call,lowering.func,py.ilist,qasm2.core,qasm2.expr,qasm2.glob,qasm2.indexing,qasm2.inline,qasm2.noise,qasm2.parallel,qasm2.uop,scf};\ninclude "qelib1.inc";\nqreg qreg[4];\nCX qreg[0], qreg[1];\nreset qreg[0];\nparallel.CZ {\n  qreg[0], qreg[2];\n  qreg[1], qreg[3];\n}\n'
             )
             assert shots is None
             assert tags is None

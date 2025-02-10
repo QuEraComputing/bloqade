@@ -27,7 +27,11 @@ class PyQrackMethods(interp.MethodTable):
         interp.memory.allocated += n_qubits
 
         if interp.memory.allocated > interp.memory.total:
-            raise ValueError("qubit allocation exceeds memory")
+            raise ValueError(
+                f"qubit allocation exceeds memory, "
+                f"{interp.memory.total} qubits, "
+                f"{interp.memory.allocated} allocated"
+            )
 
         return (
             SimQRegister(
