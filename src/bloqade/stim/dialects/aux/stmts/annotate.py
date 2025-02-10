@@ -35,6 +35,7 @@ class ObservableInclude(ir.Statement):
 @statement(dialect=dialect)
 class Tick(ir.Statement):
     name = "tick"
+    traits = frozenset({ir.FromPythonCall()})
 
 
 @statement(dialect=dialect)
