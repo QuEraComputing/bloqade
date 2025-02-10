@@ -22,7 +22,7 @@ def test_cz_rewrite():
     def main():
         q = qasm2.qreg(4)
 
-        qasm2.parallel.cz(ctrls=(q[0], q[2]), qargs=(q[1], q[3]))
+        qasm2.parallel.cz(ctrls=[q[0], q[2]], qargs=[q[1], q[3]])
 
     # Run rewrite
     ParallelToUOp(main.dialects)(main)
@@ -44,11 +44,34 @@ def test_cz_rewrite():
         (return_none := func.ConstantNone()),
         (func.Return(return_none)),
     ]
-
+    block = ir.Block(expected)
+    block.args.append_from(ir.types.PyClass(ir.Method), "main_self")
     expected_func_stmt = func.Function(
         sym_name="main",
-        signature=func.Signature(inputs=(), output=func.ConstantNone()),
-        body=ir.Region(ir.Block(expected)),
+        signature=func.Signature(inputs=(), output=ir.types.NoneType),
+        body=ir.Region(blocks=block),
     )
 
-    assert expected_func_stmt.is_structurally_equal(main.code)
+    expected_method = ir.Method(
+        mod=None,
+        py_func=None,
+        sym_name="main",
+        dialects=qasm2.main,
+        code=expected_func_stmt,
+        arg_names=[],
+    )
+
+    qasm2.main.run_pass(expected_method)
+
+    try:
+        assert expected_method.code.is_equal(main.code)
+    except AssertionError as e:
+        print("Expected:")
+        expected_method.print()
+        print("Actual:")
+        main.print()
+        raise e
+
+
+if __name__ == "__main__":
+    test_cz_rewrite()
