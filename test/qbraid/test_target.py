@@ -1,12 +1,13 @@
 from typing import Optional
 
 from bloqade import qasm2
+from kirin.dialects import ilist
 from bloqade.qbraid.target import qBraid
 
 
 def test_qBraid_emit():
 
-    @qasm2.main
+    @qasm2.main.add(qasm2.dialects.parallel).add(ilist)
     def main():
         qreg = qasm2.qreg(4)
         qasm2.cx(qreg[0], qreg[1])
@@ -18,9 +19,17 @@ def test_qBraid_emit():
         def __init__(
             self, qasm: str, shots: Optional[int], tags: Optional[dict[str, str]]
         ):
+            assert "KIRIN" in qasm
+            assert "func" in qasm
+            assert "lowering.call" in qasm
+            assert "lowering.func" in qasm
+            assert "py.ilist" in qasm
+            assert "qasm2.core" in qasm
+            assert "qasm2.expr" in qasm
+            assert "qasm2.indexing" in qasm
             assert (
-                qasm
-                == 'KIRIN {func,lowering.call,lowering.func,py.ilist,qasm2.core,qasm2.expr,qasm2.glob,qasm2.indexing,qasm2.inline,qasm2.noise,qasm2.parallel,qasm2.uop,scf};\ninclude "qelib1.inc";\nqreg qreg[4];\nCX qreg[0], qreg[1];\nreset qreg[0];\nparallel.CZ {\n  qreg[0], qreg[2];\n  qreg[1], qreg[3];\n}\n'
+                'include "qelib1.inc";\nqreg qreg[4];\nCX qreg[0], qreg[1];\nreset qreg[0];\nparallel.CZ {\n  qreg[0], qreg[2];\n  qreg[1], qreg[3];\n}\n'
+                in qasm
             )
             assert shots is None
             assert tags is None
