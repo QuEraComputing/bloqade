@@ -12,7 +12,7 @@ from kirin.dialects import ilist
 def ghz_linear(n: int):
     n_qubits = int(2**n)
 
-    @qasm2.main
+    @qasm2.extended
     def ghz_linear_program():
 
         qreg = qasm2.qreg(n_qubits)
@@ -35,13 +35,13 @@ def ghz_linear(n: int):
 def ghz_log_depth(n: int):
     n_qubits = int(2**n)
 
-    @qasm2.main
+    @qasm2.extended
     def layer(i_layer: int, qreg: qasm2.QReg):
         step = n_qubits // (2**i_layer)
         for j in range(0, n_qubits, step):
             qasm2.cx(ctrl=qreg[j], qarg=qreg[j + step // 2])
 
-    @qasm2.main
+    @qasm2.extended
     def ghz_log_depth_program():
 
         qreg = qasm2.qreg(n_qubits)
@@ -67,7 +67,7 @@ def ghz_log_depth(n: int):
 def ghz_log_simd(n: int):
     n_qubits = int(2**n)
 
-    @qasm2.main
+    @qasm2.extended
     def layer(i_layer: int, qreg: qasm2.QReg):
         step = n_qubits // (2**i_layer)
 
@@ -88,7 +88,7 @@ def ghz_log_simd(n: int):
         # Ry(pi/2)
         qasm2.parallel.u(qargs=targ_qubits, theta=math.pi / 2, phi=0.0, lam=0.0)
 
-    @qasm2.main
+    @qasm2.extended
     def ghz_log_depth_program():
 
         qreg = qasm2.qreg(n_qubits)
