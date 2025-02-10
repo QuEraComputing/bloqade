@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from kirin import ir, interp
-from kirin.dialects import cf, func
+from kirin.dialects import cf, scf, func
 from kirin.ir.dialect import Dialect as Dialect
 from bloqade.qasm2.parse import ast
 
@@ -64,5 +64,39 @@ class Cf(interp.MethodTable):
         )
         frame.worklist.append(
             interp.Successor(stmt.else_successor, frame.get_values(stmt.else_arguments))
+        )
+        return ()
+
+
+@scf.dialect.register(key="emit.qasm2.main")
+class Scf(interp.MethodTable):
+
+    @interp.impl(scf.Yield)
+    def emit_yield(self, emit: EmitQASM2Main, frame: EmitQASM2Frame, stmt: scf.Yield):
+        return frame.get_values(stmt.values)
+
+    @interp.impl(scf.IfElse)
+    def emit_if_else(
+        self, emit: EmitQASM2Main, frame: EmitQASM2Frame, stmt: scf.IfElse
+    ):
+        else_stmts = stmt.else_body.blocks[0].stmts
+        if not (
+            len(else_stmts) == 0
+            or len(else_stmts) == 1
+            and isinstance(else_stmts.at(0), scf.Yield)
+        ):
+            raise interp.InterpreterError(
+                "cannot lower if-else with non-empty else block"
+            )
+
+        cond = emit.assert_node(ast.Cmp, frame.get(stmt.cond))
+        then_frame = emit.new_frame(stmt)
+        then_frame.entries.update(frame.entries)
+        emit.emit_block(then_frame, stmt.then_body.blocks[0])
+        frame.body.append(
+            ast.IfStmt(
+                cond,
+                body=then_frame.body,  # type: ignore
+            )
         )
         return ()

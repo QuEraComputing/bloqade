@@ -1,4 +1,3 @@
-from math import pi
 from typing import List
 
 from kirin import ir
@@ -14,6 +13,39 @@ def as_int(value: int):
 
 def as_float(value: float):
     return qasm2.expr.ConstFloat(value=value)
+
+
+def run_assert(noise_model: schema.NoiseModel, expected_stmts: List[ir.Statement]):
+
+    block = ir.Block(stmts=expected_stmts)
+    block.args.append_from(ir.types.PyClass(ir.Method), name="test_self")
+    region = ir.Region(block)
+    expected_func_stmt = func.Function(
+        sym_name="test",
+        signature=func.Signature(inputs=(), output=qasm2.types.QRegType),
+        body=region,
+    )
+
+    expected_mt = ir.Method(
+        mod=None,
+        py_func=None,
+        dialects=lowering.qbraid_noise,
+        sym_name="test",
+        arg_names=[],
+        code=expected_func_stmt,
+    )
+
+    lowering.qbraid_noise.run_pass(expected_mt)
+
+    mt = noise_model.lower_noise_model("test")
+    try:
+        assert expected_mt.code.is_structurally_equal(mt.code)
+    except AssertionError as e:
+        print("Generated:")
+        mt.print()
+        print("Expected:")
+        expected_mt.print()
+        raise e
 
 
 def test_lowering_cz():
@@ -85,14 +117,19 @@ def test_lowering_cz():
     expected: List[ir.Statement] = [
         (n_qubits := as_int(4)),
         (reg := qasm2.core.QRegNew(n_qubits=n_qubits.result)),
+        (creg := qasm2.core.CRegNew(n_bits=n_qubits.result)),
         (idx0 := as_int(0)),
         (q0 := qasm2.core.QRegGet(reg.result, idx=idx0.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx0.result)),
         (idx1 := as_int(1)),
         (q1 := qasm2.core.QRegGet(reg.result, idx=idx1.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx1.result)),
         (idx2 := as_int(2)),
         (q5 := qasm2.core.QRegGet(reg.result, idx=idx2.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx2.result)),
         (idx3 := as_int(3)),
         (q3 := qasm2.core.QRegGet(reg.result, idx=idx3.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx3.result)),
         (survival_prob_0 := as_float(survival_prob_0_value)),
         native.AtomLossChannel(survival_prob_0.result, q0.result),
         (survival_prob_1 := as_float(survival_prob_1_value)),
@@ -148,25 +185,10 @@ def test_lowering_cz():
             px_sing_3.result, py_sing_3.result, pz_sing_3.result, q3.result
         ),
         qasm2.uop.CZ(q0.result, q1.result),
-        func.Return(reg.result),
+        func.Return(creg.result),
     ]
 
-    expected_func_stmt = func.Function(
-        sym_name="test",
-        signature=func.Signature(
-            inputs=(),
-            output=qasm2.types.QRegType,
-        ),
-        body=ir.Region(ir.Block(expected)),
-    )
-
-    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model).code
-    try:
-        assert expected_func_stmt.is_structurally_equal(func_stmt)
-    except AssertionError as e:
-        func_stmt.print()
-        expected_func_stmt.print()
-        raise e
+    run_assert(noise_model, expected)
 
 
 def test_lowering_global_w():
@@ -194,8 +216,10 @@ def test_lowering_global_w():
     expected: List[ir.Statement] = [
         (n_qubits := as_int(1)),
         (reg := qasm2.core.QRegNew(n_qubits=n_qubits.result)),
+        (creg := qasm2.core.CRegNew(n_bits=n_qubits.result)),
         (idx0 := as_int(0)),
         (q0 := qasm2.core.QRegGet(reg.result, idx=idx0.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx0.result)),
         (survival_prob_0 := as_float(0.9)),
         native.AtomLossChannel(survival_prob_0.result, q0.result),
         (px_sing_0 := as_float(0.1)),
@@ -204,31 +228,22 @@ def test_lowering_global_w():
         native.PauliChannel(
             px_sing_0.result, py_sing_0.result, pz_sing_0.result, q0.result
         ),
-        (theta := as_float(theta_val / 2.0)),
-        (phi := as_float(phi_val - 0.5 * pi)),
-        (lam := as_float(0.5 * pi - phi_val)),
+        (pi_theta := qasm2.expr.ConstPI()),
+        (theta_num := as_float(2 * theta_val)),
+        (theta := qasm2.expr.Mul(pi_theta.result, theta_num.result)),
+        (pi_phi := qasm2.expr.ConstPI()),
+        (phi_num := as_float(2 * (phi_val + 0.5))),
+        (phi := qasm2.expr.Mul(pi_phi.result, phi_num.result)),
+        (pi_lam := qasm2.expr.ConstPI()),
+        (lam_num := as_float(2 * -(0.5 + phi_val))),
+        (lam := qasm2.expr.Mul(pi_lam.result, lam_num.result)),
         qasm2.uop.UGate(
             theta=theta.result, phi=phi.result, lam=lam.result, qarg=q0.result
         ),
-        func.Return(reg.result),
+        func.Return(creg.result),
     ]
 
-    expected_func_stmt = func.Function(
-        sym_name="test",
-        signature=func.Signature(
-            inputs=(),
-            output=qasm2.types.QRegType,
-        ),
-        body=ir.Region(ir.Block(expected)),
-    )
-
-    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model).code
-    try:
-        assert expected_func_stmt.is_structurally_equal(func_stmt)
-    except AssertionError as e:
-        func_stmt.print()
-        expected_func_stmt.print()
-        raise e
+    run_assert(noise_model, expected)
 
 
 def test_lowering_local_w():
@@ -259,10 +274,13 @@ def test_lowering_local_w():
     expected: List[ir.Statement] = [
         (n_qubits := as_int(2)),
         (reg := qasm2.core.QRegNew(n_qubits=n_qubits.result)),
+        (creg := qasm2.core.CRegNew(n_bits=n_qubits.result)),
         (idx0 := as_int(0)),
         (q0 := qasm2.core.QRegGet(reg.result, idx=idx0.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx0.result)),
         (idx1 := as_int(1)),
         (q1 := qasm2.core.QRegGet(reg.result, idx=idx1.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx1.result)),
         (survival_prob_0 := as_float(0.9)),
         native.AtomLossChannel(survival_prob_0.result, q0.result),
         (survival_prob_1 := as_float(0.4)),
@@ -279,31 +297,22 @@ def test_lowering_local_w():
         native.PauliChannel(
             px_sing_1.result, py_sing_1.result, pz_sing_1.result, q1.result
         ),
-        (theta := as_float(theta_val / 2.0)),
-        (phi := as_float(phi_val - 0.5 * pi)),
-        (lam := as_float(0.5 * pi - phi_val)),
+        (pi_theta := qasm2.expr.ConstPI()),
+        (theta_num := as_float(2 * theta_val)),
+        (theta := qasm2.expr.Mul(pi_theta.result, theta_num.result)),
+        (pi_phi := qasm2.expr.ConstPI()),
+        (phi_num := as_float(2 * (phi_val + 0.5))),
+        (phi := qasm2.expr.Mul(pi_phi.result, phi_num.result)),
+        (pi_lam := qasm2.expr.ConstPI()),
+        (lam_num := as_float(2 * -(0.5 + phi_val))),
+        (lam := qasm2.expr.Mul(pi_lam.result, lam_num.result)),
         qasm2.uop.UGate(
             theta=theta.result, phi=phi.result, lam=lam.result, qarg=q1.result
         ),
-        func.Return(reg.result),
+        func.Return(creg.result),
     ]
 
-    expected_func_stmt = func.Function(
-        sym_name="test",
-        signature=func.Signature(
-            inputs=(),
-            output=qasm2.types.QRegType,
-        ),
-        body=ir.Region(ir.Block(expected)),
-    )
-
-    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model).code
-    try:
-        assert expected_func_stmt.is_structurally_equal(func_stmt)
-    except AssertionError as e:
-        func_stmt.print()
-        expected_func_stmt.print()
-        raise e
+    run_assert(noise_model, expected)
 
 
 def test_lowering_global_rz():
@@ -330,8 +339,10 @@ def test_lowering_global_rz():
     expected: List[ir.Statement] = [
         (n_qubits := as_int(1)),
         (reg := qasm2.core.QRegNew(n_qubits=n_qubits.result)),
+        (creg := qasm2.core.CRegNew(n_bits=n_qubits.result)),
         (idx0 := as_int(0)),
         (q0 := qasm2.core.QRegGet(reg.result, idx=idx0.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx0.result)),
         (survival_prob_0 := as_float(0.9)),
         native.AtomLossChannel(survival_prob_0.result, q0.result),
         (px_sing_0 := as_float(0.1)),
@@ -340,27 +351,14 @@ def test_lowering_global_rz():
         native.PauliChannel(
             px_sing_0.result, py_sing_0.result, pz_sing_0.result, q0.result
         ),
-        (theta := as_float(phi_val)),
+        (theta_pi := qasm2.expr.ConstPI()),
+        (theta_num := as_float(2 * phi_val)),
+        (theta := qasm2.expr.Mul(theta_pi.result, theta_num.result)),
         qasm2.uop.RZ(theta=theta.result, qarg=q0.result),
-        func.Return(reg.result),
+        func.Return(creg.result),
     ]
 
-    expected_func_stmt = func.Function(
-        sym_name="test",
-        signature=func.Signature(
-            inputs=(),
-            output=qasm2.types.QRegType,
-        ),
-        body=ir.Region(ir.Block(expected)),
-    )
-
-    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model).code
-    try:
-        assert expected_func_stmt.is_structurally_equal(func_stmt)
-    except AssertionError as e:
-        func_stmt.print()
-        expected_func_stmt.print()
-        raise e
+    run_assert(noise_model, expected)
 
 
 def test_lowering_local_rz():
@@ -390,10 +388,13 @@ def test_lowering_local_rz():
     expected: List[ir.Statement] = [
         (n_qubits := as_int(2)),
         (reg := qasm2.core.QRegNew(n_qubits=n_qubits.result)),
+        (creg := qasm2.core.CRegNew(n_bits=n_qubits.result)),
         (idx0 := as_int(0)),
         (q0 := qasm2.core.QRegGet(reg.result, idx=idx0.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx0.result)),
         (idx1 := as_int(1)),
         (q1 := qasm2.core.QRegGet(reg.result, idx=idx1.result)),
+        (_ := qasm2.core.CRegGet(creg.result, idx=idx1.result)),
         (survival_prob_0 := as_float(0.9)),
         native.AtomLossChannel(survival_prob_0.result, q0.result),
         (survival_prob_1 := as_float(0.4)),
@@ -410,24 +411,11 @@ def test_lowering_local_rz():
         native.PauliChannel(
             px_sing_1.result, py_sing_1.result, pz_sing_1.result, q1.result
         ),
-        (theta := as_float(phi_val)),
+        (theta_pi := qasm2.expr.ConstPI()),
+        (theta_num := as_float(2 * phi_val)),
+        (theta := qasm2.expr.Mul(theta_pi.result, theta_num.result)),
         qasm2.uop.RZ(theta=theta.result, qarg=q1.result),
-        func.Return(reg.result),
+        func.Return(creg.result),
     ]
 
-    expected_func_stmt = func.Function(
-        sym_name="test",
-        signature=func.Signature(
-            inputs=(),
-            output=qasm2.types.QRegType,
-        ),
-        body=ir.Region(ir.Block(expected)),
-    )
-
-    func_stmt = lowering.Lowering().lower(sym_name="test", noise_model=noise_model).code
-    try:
-        assert expected_func_stmt.is_structurally_equal(func_stmt)
-    except AssertionError as e:
-        func_stmt.print()
-        expected_func_stmt.print()
-        raise e
+    run_assert(noise_model, expected)

@@ -95,7 +95,7 @@ class S(SingleQubitGate):
 class Sdag(SingleQubitGate):
     """Apply the hermitian conj of S gate."""
 
-    name = "sdag"
+    name = "sdg"
 
 
 @statement(dialect=dialect)
@@ -109,7 +109,7 @@ class T(SingleQubitGate):
 class Tdag(SingleQubitGate):
     """Apply the hermitian conj of T gate."""
 
-    name = "tdag"
+    name = "tdg"
 
 
 @statement(dialect=dialect)

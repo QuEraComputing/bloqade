@@ -12,19 +12,13 @@ nav:
       - index.md
       - Installation: install.md
       - Background: background.md
-      - QASM2: qasm2.md
-      - Analog:
-        - analog/index.md
-        - Quickstart: analog/quick_start.md
-        - Geometry: analog/geometry.md
-        - Waveforms: analog/waveforms.md
-        - Visualization: analog/visualization.md
-        - Emulation: analog/emulation.md
-        - Submission: analog/submission.md
-        - Gotchas: analog/gotchas.md
+      - Quick Start:
+        - QASM2: qasm2.md
+        - Analog: analog.md
       - Contributing: contrib.md
-  - Cookbook:
-    - cookbook/index.md
+  - Digital:
+    - digital/index.md
+  - Analog: 'https://queracomputing.github.io/bloqade-python/latest/'
   - Blog:
     - blog/index.md
   - API Reference:
