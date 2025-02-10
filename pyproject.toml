@@ -23,9 +23,6 @@ dependencies = [
 qasm2 = [
     "lark>=1.2.2",
 ]
-pyqrack-cpu = [
-    "pyqrack-cpu>=1.34.9",
-]
 vis = [
     "tqdm>=4.66.5",
     "matplotlib>=3.9.2",
