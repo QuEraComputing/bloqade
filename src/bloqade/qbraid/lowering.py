@@ -41,7 +41,7 @@ class Lowering:
         self,
         sym_name: str,
         noise_model: schema.NoiseModel,
-        return_quantum_register: bool = False,
+        return_qreg: bool = False,
     ) -> ir.Method:
         """Lower the noise model to a method.
 
@@ -52,7 +52,7 @@ class Lowering:
             Method: The generated kirin method.
 
         """
-        self.process_noise_model(noise_model, return_quantum_register)
+        self.process_noise_model(noise_model, return_qreg)
         block = ir.Block(stmts=self.block_list)
         block.args.append_from(ir.types.PyClass(ir.Method), name=f"{sym_name}_self")
         region = ir.Region(block)
@@ -74,9 +74,7 @@ class Lowering:
 
         return mt
 
-    def process_noise_model(
-        self, noise_model: schema.NoiseModel, return_quantum_register: bool
-    ):
+    def process_noise_model(self, noise_model: schema.NoiseModel, return_qreg: bool):
         num_qubits = self.lower_number(noise_model.num_qubits)
 
         reg = qasm2.core.QRegNew(num_qubits)
@@ -98,7 +96,7 @@ class Lowering:
         for gate_event in noise_model.gate_events:
             self.process_gate_event(gate_event)
 
-        if return_quantum_register:
+        if return_qreg:
             self.block_list.append(func.Return(reg.result))
         else:
             self.block_list.append(func.Return(creg.result))
