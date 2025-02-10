@@ -47,6 +47,7 @@ class Lowering:
 
         Args:
             name (str): The name of the method to generate.
+            return_qreg (bool): Use the quantum register as the return value.
 
         Returns:
             Method: The generated kirin method.
