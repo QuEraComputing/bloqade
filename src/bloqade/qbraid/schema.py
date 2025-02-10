@@ -217,11 +217,13 @@ class NoiseModel(BaseModel, Generic[ErrorModelType], extra="forbid"):
             gate_events=self.gate_events + other.gate_events,
         )
 
-    def lower_noise_model(self, sym_name: str):
+    def lower_noise_model(self, sym_name: str, return_qreg: bool = False):
         """Lower the noise model to a method.
 
         Args:
             sym_name (str): The name of the method to generate.
+            return_qreg (bool): Whether to return the quantum register after the method
+                has completed execution. Useful for obtaining the full state vector.
 
         Returns:
             Method: The generated kirin method.
@@ -229,7 +231,7 @@ class NoiseModel(BaseModel, Generic[ErrorModelType], extra="forbid"):
         """
         from bloqade.qbraid.lowering import Lowering
 
-        return Lowering().lower(sym_name, self)
+        return Lowering().lower(sym_name, self, return_qreg)
 
     def decompiled_circuit(self) -> str:
         """Clean the circuit of noise.
