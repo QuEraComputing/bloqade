@@ -37,7 +37,12 @@ class Lowering:
     bit_id_map: Dict[int, ir.SSAValue] = field(init=False, default_factory=dict)
     block_list: List[ir.Statement] = field(init=False, default_factory=list)
 
-    def lower(self, sym_name: str, noise_model: schema.NoiseModel):
+    def lower(
+        self,
+        sym_name: str,
+        noise_model: schema.NoiseModel,
+        return_quantum_register: bool = False,
+    ) -> ir.Method:
         """Lower the noise model to a method.
 
         Args:
@@ -47,7 +52,7 @@ class Lowering:
             Method: The generated kirin method.
 
         """
-        self.process_noise_model(noise_model)
+        self.process_noise_model(noise_model, return_quantum_register)
         block = ir.Block(stmts=self.block_list)
         block.args.append_from(ir.types.PyClass(ir.Method), name=f"{sym_name}_self")
         region = ir.Region(block)
@@ -69,7 +74,9 @@ class Lowering:
 
         return mt
 
-    def process_noise_model(self, noise_model: schema.NoiseModel):
+    def process_noise_model(
+        self, noise_model: schema.NoiseModel, return_quantum_register: bool
+    ):
         num_qubits = self.lower_number(noise_model.num_qubits)
 
         reg = qasm2.core.QRegNew(num_qubits)
@@ -91,7 +98,10 @@ class Lowering:
         for gate_event in noise_model.gate_events:
             self.process_gate_event(gate_event)
 
-        self.block_list.append(func.Return(creg.result))
+        if return_quantum_register:
+            self.block_list.append(func.Return(reg.result))
+        else:
+            self.block_list.append(func.Return(creg.result))
 
     def process_gate_event(self, node: schema.GateEvent):
         self.lower_atom_loss(node.error.survival_prob)
