@@ -7,6 +7,7 @@ from kirin.passes.abc import Pass
 
 from ..rewrite.parallel_to_uop import ParallelToUOpRule
 
+
 @dataclass
 class ParallelToUOp(Pass):
 

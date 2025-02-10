@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 
-from kirin.ir.nodes.stmt import Statement
-from kirin.rewrite.abc import RewriteResult, RewriteRule
-
 from bloqade.qasm2 import uop
+from kirin.rewrite.abc import RewriteRule, RewriteResult
+from kirin.ir.nodes.stmt import Statement
 
 
 @dataclass
