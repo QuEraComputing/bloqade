@@ -217,8 +217,14 @@ class LoweringQASM(Visitor[lowering.Result]):
     def visit_instruction_s(self, node: ast.Instruction, params, qargs):
         return uop.S(qarg=qargs[0])
 
+    def visit_instruction_sdg(self, node: ast.Instruction, params, qargs):
+        return uop.Sdag(qarg=qargs[0])
+
     def visit_instruction_t(self, node: ast.Instruction, params, qargs):
         return uop.T(qarg=qargs[0])
+
+    def visit_instruction_tdg(self, node: ast.Instruction, params, qargs):
+        return uop.Tdag(qarg=qargs[0])
 
     def visit_instruction_rx(self, node: ast.Instruction, params, qargs):
         return uop.RX(theta=params[0], qarg=qargs[0])
@@ -232,11 +238,40 @@ class LoweringQASM(Visitor[lowering.Result]):
     def visit_instruction_u(self, node: ast.Instruction, params, qargs):
         return uop.UGate(theta=params[0], phi=params[1], lam=params[2], qarg=qargs[0])
 
+    def visit_instruction_u1(self, node: ast.Instruction, params, qargs):
+        return uop.U1(lam=params[0], qarg=qargs[0])
+
+    def visit_instruction_u2(self, node: ast.Instruction, params, qargs):
+        return uop.U2(phi=params[0], lam=params[1], qarg=qargs[0])
+
+    def visit_instruction_CX(self, node: ast.Instruction, params, qargs):
+        return uop.CX(ctrl=qargs[0], qarg=qargs[1])
+
     def visit_instruction_cx(self, node: ast.Instruction, params, qargs):
         return uop.CX(ctrl=qargs[0], qarg=qargs[1])
 
+    def visit_instruction_cy(self, node: ast.Instruction, params, qargs):
+        return uop.CY(ctrl=qargs[0], qarg=qargs[1])
+
+    def visit_instruction_cz(self, node: ast.Instruction, params, qargs):
+        return uop.CZ(ctrl=qargs[0], qarg=qargs[1])
+
+    def visit_instruction_ch(self, node: ast.Instruction, params, qargs):
+        return uop.CH(ctrl=qargs[0], qarg=qargs[1])
+
     def visit_instruction_ccx(self, node: ast.Instruction, params, qargs):
         return uop.CCX(ctrl1=qargs[0], ctrl2=qargs[1], qarg=qargs[2])
+
+    def visit_instruction_crx(self, node: ast.Instruction, params, qargs):
+        return uop.CRX(theta=params[0], ctrl=qargs[0], qarg=qargs[1])
+
+    def visit_instruction_cu1(self, node: ast.Instruction, params, qargs):
+        return uop.CU1(lam=params[0], ctrl=qargs[0], qarg=qargs[1])
+
+    def visit_instruction_cu3(self, node: ast.Instruction, params, qargs):
+        return uop.CU3(
+            theta=params[0], phi=params[1], lam=params[2], ctrl=qargs[0], qarg=qargs[1]
+        )
 
     def visit_Number(self, node: ast.Number) -> lowering.Result:
         if isinstance(node.value, int):
