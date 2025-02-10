@@ -1,7 +1,10 @@
+import math
+from typing import Any
+
 import networkx as nx
 from bloqade import qasm2
+from kirin.passes import aggressive
 from kirin.dialects import ilist
-import math
 
 # Define the problem instance as a MaxCut problem on a graph
 
@@ -10,54 +13,92 @@ G = nx.random_regular_graph(3, N, seed=42)
 
 
 def qaoa_sequential(G):
-    
-    @qasm2.main
-    def kernel(gamma:ilist.IList,delta:ilist.IList):
-        qreg = qasm2.qreg(N)
+
+    edges = list(G.edges)
+    nodes = list(G.nodes)
+
+    @qasm2.extended
+    def kernel(gamma: ilist.IList[float, Any], delta: ilist.IList[float, Any]):
+        qreg = qasm2.qreg(len(nodes))
         for i in range(N):
             qasm2.h(qreg[i])
+
         for i in range(len(gamma)):
-            for edge in G.edges:
+            for j in range(len(edges)):
+                edge = edges[j]
                 qasm2.cx(qreg[edge[0]], qreg[edge[1]])
                 qasm2.rz(qreg[edge[1]], gamma[i])
                 qasm2.cx(qreg[edge[0]], qreg[edge[1]])
+
             for j in range(N):
                 qasm2.rx(qreg[j], delta[i])
+
         return qreg
-    
+
     return kernel
 
 
 def qaoa_simd(G):
-    
-    @qasm2.main
-    def cz_phase(q1,q2, gamma):
-        qasm2.cx(q1,q2)
-        qasm2.rz(q2, gamma)
-        qasm2.cx(q1,q2)
-    
-    @qasm2.main
-    def kernel(gamma:ilist.IList[float],beta:ilist.IList[float]):
-        qreg = qasm2.qreg(len(G.nodes))
-        
+
+    left_ids = [edge[0] for edge in G.edges]
+    right_ids = [edge[1] for edge in G.edges]
+    nodes = list(G.nodes)
+
+    @qasm2.extended
+    def parallel_h(qargs: ilist.IList[qasm2.Qubit, Any]):
+        qasm2.parallel.u(qargs=qargs, theta=math.pi / 2, phi=0.0, lam=math.pi)
+
+    @qasm2.extended
+    def parallel_cx(
+        ctrls: ilist.IList[qasm2.Qubit, Any], qargs: ilist.IList[qasm2.Qubit, Any]
+    ):
+        parallel_h(qargs)
+        qasm2.parallel.cz(ctrls, qargs)
+        parallel_h(qargs)
+
+    @qasm2.extended
+    def parallel_cz_phase(
+        ctrls: ilist.IList[qasm2.Qubit, Any],
+        qargs: ilist.IList[qasm2.Qubit, Any],
+        gamma: float,
+    ):
+        parallel_cx(ctrls, qargs)
+        qasm2.parallel.rz(qargs, gamma)
+        parallel_cx(ctrls, qargs)
+
+    @qasm2.extended
+    def kernel(gamma: ilist.IList[float, Any], beta: ilist.IList[float, Any]):
+        qreg = qasm2.qreg(len(nodes))
+
         def get_qubit(x: int):
             return qreg[x]
-        
-        
-        
-        left = ilist.Map(fn=get_qubit, collection=[edge[0] for edge in G.edges])
-        right= ilist.Map(fn=get_qubit, collection=[edge[1] for edge in G.edges])
-        all = ilist.Map(fn=get_qubit, collection=range(N))
-        
-        qasm2.parallel.u(qargs=all, theta=math.pi/2, phi=math.pi/2, lam=0.0)
-        for gamma_,beta_ in zip(gamma,beta):
-            ilist.Map(fn=cz_phase, collection = ilist.Zip(left, right, [gamma_]*len(G.edges)))
-            qasm2.parallel.u(qargs=all, theta=beta_, phi=0.0, lam=0.0)
+
+        ctrls = ilist.Map(fn=get_qubit, collection=left_ids)
+        qargs = ilist.Map(fn=get_qubit, collection=right_ids)
+        all_qubits = ilist.Map(fn=get_qubit, collection=range(N))
+
+        def do_qaoa_layer(gamma: float, beta: float):
+            parallel_cz_phase(ctrls, qargs, gamma)
+            qasm2.parallel.u(all_qubits, beta, 0.0, 0.0)
+
+        parallel_h(all_qubits)
+        for i in range(len(gamma)):
+            do_qaoa_layer(beta[i], gamma[i])
+
         return qreg
+
     return kernel
 
-print("--- Sequential ---")
-qaoa_sequential(G).code.print()
+
+# print("--- Sequential ---")
+# qaoa_sequential(G).code.print()
 
 print("\n\n--- Simd ---")
-qaoa_simd(G).code.print()
+
+kernel = qaoa_simd(G)
+
+result = aggressive.Fold(kernel.dialects)(kernel)
+while result.has_done_something:
+    result = aggressive.Fold(kernel.dialects)(kernel)
+
+kernel.print()
