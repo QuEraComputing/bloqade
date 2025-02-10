@@ -47,6 +47,7 @@ class Lowering:
             Method: The generated kirin method.
 
         """
+        self.process_noise_model(noise_model)
         block = ir.Block(stmts=self.block_list)
         block.args.append_from(ir.types.PyClass(ir.Method), name=f"{sym_name}_self")
         region = ir.Region(block)
@@ -64,7 +65,6 @@ class Lowering:
             code=func_stmt,
             arg_names=[],
         )
-
         qbraid_noise.run_pass(mt)
 
         return mt

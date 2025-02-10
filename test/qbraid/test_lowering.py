@@ -41,7 +41,9 @@ def run_assert(noise_model: schema.NoiseModel, expected_stmts: List[ir.Statement
     try:
         assert expected_mt.code.is_structurally_equal(mt.code)
     except AssertionError as e:
+        print("Generated:")
         mt.print()
+        print("Expected:")
         expected_mt.print()
         raise e
 
