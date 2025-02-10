@@ -1,5 +1,6 @@
 from kirin import ir, passes
-from kirin.dialects import cf, func, ilist
+from kirin.prelude import basic
+from kirin.dialects import scf, func, ilist, lowering
 from bloqade.qasm2.dialects import (
     uop,
     core,
@@ -12,7 +13,9 @@ from bloqade.qasm2.dialects import (
 )
 
 
-@ir.dialect_group([uop, parallel, func, ilist, expr, glob, noise])
+@ir.dialect_group(
+    [uop, parallel, func, ilist, expr, glob, noise, lowering.func, lowering.call]
+)
 def gate(self):
     ilist_desugar = ilist.IListDesugar(self)
     fold_pass = passes.Fold(self)
@@ -37,7 +40,21 @@ def gate(self):
 
 
 @ir.dialect_group(
-    [inline, uop, glob, noise, expr, parallel, core, indexing, cf, ilist, func]
+    [
+        inline,
+        uop,
+        glob,
+        noise,
+        expr,
+        parallel,
+        core,
+        scf,
+        indexing,
+        ilist,
+        func,
+        lowering.func,
+        lowering.call,
+    ]
 )
 def main(self):
     ilist_desugar = ilist.IListDesugar(self)
@@ -58,5 +75,30 @@ def main(self):
 
         typeinfer_pass(method)
         method.code.typecheck()
+
+    return run_pass
+
+
+@ir.dialect_group(
+    basic.union(
+        [
+            inline,
+            uop,
+            glob,
+            noise,
+            parallel,
+            core,
+            lowering.func,
+            lowering.call,
+        ]
+    )
+    .discard(lowering.cf)
+    .add(scf)
+)
+def extended(self):
+    def run_pass(
+        method: ir.Method,
+    ):
+        method.verify()
 
     return run_pass
