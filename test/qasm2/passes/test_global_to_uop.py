@@ -73,10 +73,6 @@ if __name__ == "__main__":
 
         qasm2.glob.u(theta=1.0, phi=1.0, lam=1.0, registers=[q1, q2])
 
-        return q1
-
-    results, stuff = address.AddressAnalysis(main.dialects).run_analysis(main)
+    results, _ = address.AddressAnalysis(main.dialects).run_analysis(main)
 
     main.print(analysis=results)
-
-    print(stuff)
