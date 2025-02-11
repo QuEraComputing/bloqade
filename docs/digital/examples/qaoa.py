@@ -3,7 +3,6 @@ from typing import Any
 
 import networkx as nx
 from bloqade import qasm2
-from kirin.passes import aggressive
 from kirin.dialects import ilist
 
 # Define the problem instance as a MaxCut problem on a graph
@@ -40,8 +39,8 @@ def qaoa_sequential(G):
 
 def qaoa_simd(G):
 
-    left_ids = [edge[0] for edge in G.edges]
-    right_ids = [edge[1] for edge in G.edges]
+    left_ids = ilist.IList([edge[0] for edge in G.edges])
+    right_ids = ilist.IList([edge[1] for edge in G.edges])
     nodes = list(G.nodes)
 
     @qasm2.extended
@@ -77,13 +76,10 @@ def qaoa_simd(G):
         qargs = ilist.Map(fn=get_qubit, collection=right_ids)
         all_qubits = ilist.Map(fn=get_qubit, collection=range(N))
 
-        def do_qaoa_layer(gamma: float, beta: float):
-            parallel_cz_phase(ctrls, qargs, gamma)
-            qasm2.parallel.u(all_qubits, beta, 0.0, 0.0)
-
         parallel_h(all_qubits)
         for i in range(len(gamma)):
-            do_qaoa_layer(beta[i], gamma[i])
+            parallel_cz_phase(ctrls, qargs, gamma[i])
+            qasm2.parallel.u(all_qubits, beta[i], 0.0, 0.0)
 
         return qreg
 
@@ -93,12 +89,12 @@ def qaoa_simd(G):
 # print("--- Sequential ---")
 # qaoa_sequential(G).code.print()
 
-print("\n\n--- Simd ---")
 
 kernel = qaoa_simd(G)
 
-result = aggressive.Fold(kernel.dialects)(kernel)
-while result.has_done_something:
-    result = aggressive.Fold(kernel.dialects)(kernel)
+# result = aggressive_pass.Fold(dialects=kernel.dialects).unsafe_run(kernel)
+# while result.has_done_something:
+#     result = aggressive_pass.Fold(kernel.dialects)(kernel)
 
+print("\n\n--- Simd ---")
 kernel.print()
