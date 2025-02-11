@@ -92,9 +92,5 @@ def qaoa_simd(G):
 
 kernel = qaoa_simd(G)
 
-# result = aggressive_pass.Fold(dialects=kernel.dialects).unsafe_run(kernel)
-# while result.has_done_something:
-#     result = aggressive_pass.Fold(kernel.dialects)(kernel)
-
 print("\n\n--- Simd ---")
 kernel.print()
