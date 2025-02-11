@@ -11,5 +11,5 @@ from ...aux.types import PauliStringType
 class SPP(ir.Statement):
     name = "SPP"
     traits = frozenset({ir.FromPythonCall()})
-    dagger: bool = info.attribute(ir.types.Bool, property=True)
+    dagger: bool = info.attribute(ir.types.Bool, property=True, default=False)
     targets: tuple[ir.SSAValue, ...] = info.argument(PauliStringType)

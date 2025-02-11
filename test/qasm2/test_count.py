@@ -1,6 +1,6 @@
 from kirin import passes
 from bloqade import qasm2
-from kirin.dialects import py
+from kirin.dialects import py, ilist
 from bloqade.analysis.address import (
     NotQubit,
     AddressReg,
@@ -10,8 +10,8 @@ from bloqade.analysis.address import (
     AddressAnalysis,
 )
 
-address = AddressAnalysis(qasm2.main.add(py.tuple))
-fold = passes.Fold(qasm2.main.add(py.tuple))
+address = AddressAnalysis(qasm2.main.add(py.tuple).add(ilist))
+fold = passes.Fold(qasm2.main.add(py.tuple).add(ilist))
 
 
 def test_fixed_count():
@@ -103,7 +103,7 @@ def test_multi_return():
 
 
 def test_list():
-    @qasm2.main
+    @qasm2.main.add(ilist)
     def list_count_analy():
         ra = qasm2.qreg(3)
         rb = qasm2.qreg(4)

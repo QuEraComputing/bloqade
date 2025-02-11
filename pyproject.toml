@@ -33,7 +33,10 @@ qbraid = [
     "qbraid>=0.9.3",
 ]
 pyqrack = [
-    "pyqrack>=1.35.4",
+    "bloqade-runtime-pyqrack[pyqrack]>=0.1.0",
+]
+pyqrack-cpu = [
+    "bloqade-runtime-pyqrack[pyqrack-cpu]>=0.1.0",
 ]
 
 [build-system]
@@ -70,6 +73,7 @@ doc = [
     "mkdocs-material>=9.5.44",
     "mkdocs-minify-plugin>=0.8.0",
     "mkdocstrings[python]>=0.27.0",
+    "mkdocs-jupyter>=0.25.1",
 ]
 examples = [
     "networkx>=3.4.2",

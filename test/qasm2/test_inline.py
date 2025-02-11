@@ -1,6 +1,8 @@
 import textwrap
 
 from bloqade import qasm2
+from kirin.dialects import ilist
+from bloqade.qasm2.dialects import glob, noise, inline, parallel
 
 
 def test_inline():
@@ -20,7 +22,7 @@ def test_inline():
     """
     )
 
-    @qasm2.main
+    @qasm2.main.add(inline)
     def qasm2_inline_code():
         qasm2.inline(lines)
 
@@ -55,7 +57,7 @@ def test_inline_ext():
     """
     )
 
-    @qasm2.main
+    @qasm2.main.add(inline).add(parallel).add(glob).add(noise).add(ilist)
     def qasm2_inline_code():
         qasm2.inline(lines)
 
