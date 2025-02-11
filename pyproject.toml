@@ -1,6 +1,6 @@
 [project]
 name = "bloqade"
-version = "0.17.0"
+version = "0.18.0"
 description = "The software development toolkit for neutral atom arrays."
 readme = "README.md"
 authors = [
@@ -13,7 +13,7 @@ requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.26.4",
     "scipy>=1.13.1",
-    "kirin-toolchain~=0.10.0",
+    "kirin-toolchain~=0.11.0",
     "rich>=13.9.4",
     "pydantic>=1.3.0",
     "pandas>=2.2.3",
@@ -23,9 +23,6 @@ dependencies = [
 qasm2 = [
     "lark>=1.2.2",
 ]
-pyqrack-cpu = [
-    "pyqrack-cpu>=1.34.9",
-]
 vis = [
     "tqdm>=4.66.5",
     "matplotlib>=3.9.2",
@@ -34,6 +31,12 @@ vis = [
 ]
 qbraid = [
     "qbraid>=0.9.3",
+]
+pyqrack = [
+    "bloqade-runtime-pyqrack[pyqrack]>=0.1.0",
+]
+pyqrack-cpu = [
+    "bloqade-runtime-pyqrack[pyqrack-cpu]>=0.1.0",
 ]
 
 [build-system]
@@ -70,6 +73,7 @@ doc = [
     "mkdocs-material>=9.5.44",
     "mkdocs-minify-plugin>=0.8.0",
     "mkdocstrings[python]>=0.27.0",
+    "mkdocs-jupyter>=0.25.1",
 ]
 
 [tool.isort]

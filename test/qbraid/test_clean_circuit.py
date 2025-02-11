@@ -1,13 +1,22 @@
 from kirin import ir
 from bloqade import qasm2
 from bloqade.noise import native
-from kirin.dialects import func
+from kirin.dialects import func, lowering
 from bloqade.qasm2.emit import QASM2
 from bloqade.qasm2.dialects import indexing
 from bloqade.noise.native.rewrite import RemoveNoisePass
 
 simulation = ir.DialectGroup(
-    [func, indexing, qasm2.core, qasm2.uop, qasm2.expr, native]
+    [
+        func,
+        indexing,
+        qasm2.core,
+        qasm2.uop,
+        qasm2.expr,
+        native,
+        lowering.func,
+        lowering.call,
+    ]
 )
 
 

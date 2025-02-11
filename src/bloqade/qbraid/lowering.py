@@ -1,17 +1,40 @@
-from math import pi
 from typing import Dict, List, Tuple, Sequence
 from dataclasses import field, dataclass
 
-from kirin import ir
+from kirin import ir, passes
 from bloqade import noise, qasm2
 from bloqade.qbraid import schema
 from kirin.dialects import func
+
+
+@ir.dialect_group([func, qasm2.core, qasm2.uop, qasm2.expr, noise.native])
+def qbraid_noise(
+    self,
+):
+    fold_pass = passes.Fold(self)
+    typeinfer_pass = passes.TypeInfer(self)
+
+    def run_pass(
+        method: ir.Method,
+        *,
+        fold: bool = True,
+    ):
+        method.verify()
+
+        if fold:
+            fold_pass(method)
+
+        typeinfer_pass(method)
+        method.code.typecheck()
+
+    return run_pass
 
 
 @dataclass
 class Lowering:
     qubit_list: List[ir.SSAValue] = field(init=False, default_factory=list)
     qubit_id_map: Dict[int, ir.SSAValue] = field(init=False, default_factory=dict)
+    bit_id_map: Dict[int, ir.SSAValue] = field(init=False, default_factory=dict)
     block_list: List[ir.Statement] = field(init=False, default_factory=list)
 
     def lower(self, sym_name: str, noise_model: schema.NoiseModel):
@@ -25,42 +48,50 @@ class Lowering:
 
         """
         self.process_noise_model(noise_model)
-        region = ir.Region(blocks=[ir.Block(stmts=self.block_list)])
+        block = ir.Block(stmts=self.block_list)
+        block.args.append_from(ir.types.PyClass(ir.Method), name=f"{sym_name}_self")
+        region = ir.Region(block)
         func_stmt = func.Function(
             sym_name=sym_name,
             signature=func.Signature(inputs=(), output=qasm2.types.QRegType),
             body=region,
         )
-        dialects = ir.DialectGroup(
-            [func, qasm2.core, qasm2.uop, qasm2.expr, noise.native]
-        )
-        return ir.Method(
+
+        mt = ir.Method(
             mod=None,
             py_func=None,
             sym_name=sym_name,
-            dialects=dialects,
+            dialects=qbraid_noise,
             code=func_stmt,
             arg_names=[],
         )
+        qbraid_noise.run_pass(mt)
+
+        return mt
 
     def process_noise_model(self, noise_model: schema.NoiseModel):
         num_qubits = self.lower_number(noise_model.num_qubits)
 
         reg = qasm2.core.QRegNew(num_qubits)
+        creg = qasm2.core.CRegNew(num_qubits)
         self.block_list.append(reg)
+        self.block_list.append(creg)
 
         for idx_value, qubit in enumerate(noise_model.all_qubits):
             idx = self.lower_number(idx_value)
             qubit_stmt = qasm2.core.QRegGet(reg.result, idx)
+            bit_stmt = qasm2.core.CRegGet(creg.result, idx)
 
             self.block_list.append(qubit_stmt)
+            self.block_list.append(bit_stmt)
             self.qubit_id_map[qubit] = qubit_stmt.result
+            self.bit_id_map[qubit] = bit_stmt.result
             self.qubit_list.append(qubit_stmt.result)
 
         for gate_event in noise_model.gate_events:
             self.process_gate_event(gate_event)
 
-        self.block_list.append(func.Return(reg.result))
+        self.block_list.append(func.Return(creg.result))
 
     def process_gate_event(self, node: schema.GateEvent):
         self.lower_atom_loss(node.error.survival_prob)
@@ -81,8 +112,14 @@ class Lowering:
             operation = node.operation
             assert isinstance(
                 operation,
-                (schema.GlobalW, schema.LocalW, schema.GlobalRz, schema.LocalRz),
-            ), "Only W and Rz gates are supported"
+                (
+                    schema.GlobalW,
+                    schema.LocalW,
+                    schema.GlobalRz,
+                    schema.LocalRz,
+                    schema.Measurement,
+                ),
+            ), f"Only W and Rz gates are supported, found {type(operation)}.__name__"
 
             if isinstance(operation, schema.GlobalW):
                 self.lower_w_gates(
@@ -96,6 +133,8 @@ class Lowering:
                 self.lower_rz_gates(tuple(self.qubit_id_map.keys()), operation.phi)
             elif isinstance(operation, schema.LocalRz):
                 self.lower_rz_gates(operation.participants, operation.phi)
+            elif isinstance(operation, schema.Measurement):
+                self.lower_measurement(operation)
 
     def process_cz_pauli_error(
         self,
@@ -175,9 +214,9 @@ class Lowering:
         for participant in participants:
             self.block_list.append(
                 qasm2.uop.UGate(
-                    theta=self.lower_number(theta / 2),
-                    phi=self.lower_number(phi - 0.5 * pi),
-                    lam=self.lower_number(0.5 * pi - phi),
+                    theta=self.lower_full_turns(theta),
+                    phi=self.lower_full_turns(phi + 0.5),
+                    lam=self.lower_full_turns(-(0.5 + phi)),
                     qarg=self.qubit_id_map[participant],
                 )
             )
@@ -186,7 +225,7 @@ class Lowering:
         for participant in participants:
             self.block_list.append(
                 qasm2.uop.RZ(
-                    theta=self.lower_number(phi),
+                    theta=self.lower_full_turns(phi),
                     qarg=self.qubit_id_map[participant],
                 )
             )
@@ -204,6 +243,12 @@ class Lowering:
             self.block_list.append(
                 noise.native.PauliChannel(px=px_val, py=py_val, pz=pz_val, qarg=qubit)
             )
+
+    def lower_measurement(self, operation: schema.Measurement):
+        for participant in operation.participants:
+            qubit = self.qubit_id_map[participant]
+            bit = self.bit_id_map[participant]
+            self.block_list.append(qasm2.core.Measure(qarg=qubit, carg=bit))
 
     def lower_atom_loss(self, survival_probs: Tuple[float, ...]):
         for survival_prob, qubit in zip(survival_probs, self.qubit_list):
@@ -247,3 +292,11 @@ class Lowering:
 
         self.block_list.append(stmt)
         return stmt.result
+
+    def lower_full_turns(self, value: float) -> ir.SSAValue:
+        const_pi = qasm2.expr.ConstPI()
+        self.block_list.append(const_pi)
+        turns = self.lower_number(2 * value)
+        mul = qasm2.expr.Mul(const_pi.result, turns)
+        self.block_list.append(mul)
+        return mul.result

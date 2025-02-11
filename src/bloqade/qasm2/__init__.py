@@ -1,6 +1,12 @@
 from bloqade.types import Qubit as Qubit, QubitType as QubitType
 
-from . import emit as emit, glob as glob, parse as parse, parallel as parallel
+from . import (
+    emit as emit,
+    glob as glob,
+    parse as parse,
+    dialects as dialects,
+    parallel as parallel,
+)
 from .types import (
     Bit as Bit,
     CReg as CReg,
@@ -9,5 +15,5 @@ from .types import (
     CRegType as CRegType,
     QRegType as QRegType,
 )
-from .groups import gate as gate, main as main
+from .groups import gate as gate, main as main, extended as extended
 from ._wrappers import *  # noqa: F403
