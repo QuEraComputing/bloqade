@@ -34,11 +34,13 @@ def star_gadget_loop(
     """
     creg = qasm2.creg(1)
     converged = False
-    # loop can be unrolled
+
     for ctr in range(attempts):
         ancilla = prep_resource_state(theta * (2**ctr))
         qasm2.cx(ancilla[0], target)
         qasm2.measure(target, creg[0])
+
+        creg[0] == creg[0] or converged
         if creg[0] == 0:
             converged = True
             qasm2.x(ancilla[0])
