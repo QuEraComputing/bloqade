@@ -7,7 +7,7 @@ from kirin.dialects import ilist
 from bloqade.qasm2.parse import ast
 from bloqade.qasm2.types import QubitType
 from bloqade.qasm2.emit.gate import EmitQASM2Gate, EmitQASM2Frame
-from bloqade.analysis.schedule import GateSchedule, DagScheduleAnalysis
+from bloqade.analysis.schedule import DagScheduleAnalysis
 
 dialect = ir.Dialect("qasm2.parallel")
 
@@ -87,9 +87,7 @@ class Parallel(interp.MethodTable):
 class ParallelDag(interp.MethodTable):
 
     @interp.impl(CZ)
-    def parallel_cz(
-        self, interp: DagScheduleAnalysis, frame: ForwardFrame[GateSchedule], stmt: CZ
-    ):
+    def parallel_cz(self, interp: DagScheduleAnalysis, frame: ForwardFrame, stmt: CZ):
         ctrls_ssa = interp.get_ilist_ssa(stmt.ctrls)
         qargs_ssa = interp.get_ilist_ssa(stmt.qargs)
         interp.update_dag(stmt, ctrls_ssa + qargs_ssa)
@@ -99,7 +97,7 @@ class ParallelDag(interp.MethodTable):
     def parallel_ugate(
         self,
         interp: DagScheduleAnalysis,
-        frame: ForwardFrame[GateSchedule],
+        frame: ForwardFrame,
         stmt: UGate,
     ):
         qargs_ssa = interp.get_ilist_ssa(stmt.qargs)
@@ -107,9 +105,7 @@ class ParallelDag(interp.MethodTable):
         return ()
 
     @interp.impl(RZ)
-    def parallel_rz(
-        self, interp: DagScheduleAnalysis, frame: ForwardFrame[GateSchedule], stmt: RZ
-    ):
+    def parallel_rz(self, interp: DagScheduleAnalysis, frame: ForwardFrame, stmt: RZ):
         qargs_ssa = interp.get_ilist_ssa(stmt.qargs)
         interp.update_dag(stmt, qargs_ssa)
         return ()

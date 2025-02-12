@@ -1,4 +1,4 @@
-from typing import Any, Set, Dict, List, Iterable, Optional, final
+from typing import Any, Set, Dict, List, Callable, Iterable, Optional, final
 from itertools import chain
 from dataclasses import field, dataclass
 from collections.abc import Sequence
@@ -58,8 +58,8 @@ class StmtDag(graph.Graph[ir.Statement]):
         default_factory=lambda: idtable.IdTable()
     )
     stmts: Dict[str, ir.Statement] = field(default_factory=dict)
-    fwd_edges: Dict[str, Set[str]] = field(default_factory=dict)
-    bwd_edges: Dict[str, Set[str]] = field(default_factory=dict)
+    out_edges: Dict[str, Set[str]] = field(default_factory=dict)
+    inc_edges: Dict[str, Set[str]] = field(default_factory=dict)
 
     def add_node(self, node: ir.Statement):
         node_id = self.nodes.add(node)
@@ -70,19 +70,19 @@ class StmtDag(graph.Graph[ir.Statement]):
         src_id = self.add_node(src)
         dst_id = self.add_node(dst)
 
-        self.fwd_edges.setdefault(src_id, set()).add(dst_id)
-        self.bwd_edges.setdefault(dst_id, set()).add(src_id)
+        self.out_edges.setdefault(src_id, set()).add(dst_id)
+        self.inc_edges.setdefault(dst_id, set()).add(src_id)
 
     def get_parents(self, node: ir.Statement) -> Iterable[ir.Statement]:
         return (
             self.stmts[node_id]
-            for node_id in self.bwd_edges.get(self.nodes[node], set())
+            for node_id in self.inc_edges.get(self.nodes[node], set())
         )
 
     def get_children(self, node: ir.Statement) -> Iterable[ir.Statement]:
         return (
             self.stmts[node_id]
-            for node_id in self.fwd_edges.get(self.nodes[node], set())
+            for node_id in self.out_edges.get(self.nodes[node], set())
         )
 
     def get_neighbors(self, node: ir.Statement) -> graph.Iterable[ir.Statement]:
@@ -94,7 +94,7 @@ class StmtDag(graph.Graph[ir.Statement]):
     def get_edges(self) -> Iterable[tuple[ir.Statement, ir.Statement]]:
         return (
             (self.stmts[src], self.stmts[dst])
-            for src, dsts in self.fwd_edges.items()
+            for src, dsts in self.out_edges.items()
             for dst in dsts
         )
 
@@ -128,7 +128,7 @@ class DagScheduleAnalysis(Forward[GateSchedule]):
         self.stmt_dag = StmtDag()
         self.use_def = {}
 
-    def eval_stmt_fallback(self, frame: ForwardFrame[GateSchedule], stmt: ir.Statement):
+    def eval_stmt_fallback(self, frame: ForwardFrame, stmt: ir.Statement):
         if stmt.has_trait(ir.IsTerminator):
             self.push_current_dag()
 
@@ -170,3 +170,116 @@ class DagScheduleAnalysis(Forward[GateSchedule]):
 
         self.run(mt, args, kwargs).expect()
         return self.stmt_dags
+
+
+def get_topological_groups(dag: StmtDag):
+
+    groups: List[List[str]] = []
+    inc_edges = {k: set(v) for k, v in dag.inc_edges.items()}
+
+    while inc_edges:
+        # get edges with no dependencies
+        group = [node_id for node_id, inc_edges in inc_edges.items() if not inc_edges]
+
+        groups.append(group)
+        # remove nodes in group from inc_edges
+        for n in group:
+            inc_edges.pop(n)
+            for m in dag.out_edges[n]:
+                inc_edges[m].remove(n)
+
+    return groups
+
+
+def same_id_checker(ssa1: ir.SSAValue, ssa2: ir.SSAValue):
+    return ssa1 is ssa2
+
+
+@dataclass
+class CanMerge:
+    same_id_checker: Callable[[ir.SSAValue, ir.SSAValue], bool]
+
+    def check_equiv_args(
+        self,
+        args1: Iterable[ir.SSAValue],
+        args2: Iterable[ir.SSAValue],
+    ):
+        try:
+            return all(
+                self.same_id_checker(ssa1, ssa2)
+                for ssa1, ssa2 in zip(args1, args2, strict=True)
+            )
+        except ValueError:
+            return False
+
+    def __call__(self, stmt1: ir.Statement, stmt2: ir.Statement):
+        from bloqade.qasm2.dialects import uop, parallel
+
+        match stmt1, stmt2:
+            case (
+                (parallel.UGate(), parallel.UGate())
+                | (parallel.UGate(), uop.UGate())
+                | (uop.UGate(), parallel.UGate())
+                | (uop.UGate(), parallel.UGate())
+                | (uop.UGate(), parallel.UGate())
+                | (parallel.RZ(), parallel.RZ())
+            ):
+                return self.check_equiv_args(stmt1.args[1:], stmt2.args[1:])
+            case (
+                (parallel.CZ(), parallel.CZ())
+                | (parallel.CZ, uop.CZ)
+                | (uop.CZ, parallel.CZ)
+            ):
+                return True
+
+            case _:
+                return False
+
+
+@dataclass
+class GreedyMergeGates:
+    can_merge: Callable[[ir.Statement, ir.Statement], bool]
+
+    def __call__(
+        self,
+        gates: List[ir.Statement],
+    ) -> List[List[ir.Statement]]:
+
+        groups = []
+
+        for gate in gates:
+            grouped = False
+            for group in groups:
+                if any(self.can_merge(gate, group_gate) for group_gate in group):
+                    group.append(gate)
+                    grouped = True
+                    break
+
+            if not grouped:
+                groups.append([gate])
+
+        return groups
+
+
+def parallel_grouping(
+    dag: StmtDag,
+    merge_gates: Callable[
+        [List[ir.Statement]], List[List[ir.Statement]]
+    ] = GreedyMergeGates(CanMerge(same_id_checker)),
+):
+    topological_groups = get_topological_groups(dag)
+
+    merge_groups = []
+    group_numbers = {}
+
+    for topological_group in topological_groups:
+        stmts = [dag.stmts[node_id] for node_id in topological_group]
+        gate_groups = merge_gates(stmts)
+        for group in gate_groups:
+            if len(group) == 1:
+                continue
+
+            for gate in group:
+                group_numbers[gate] = len(merge_groups)
+
+            merge_groups.append(group)
