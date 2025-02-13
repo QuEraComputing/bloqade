@@ -43,8 +43,8 @@ def test_multiple_return_only_reg():
 
     # tuple_count.dce()
     fold(tuple_count)
-    results, ret = address.run_analysis(tuple_count)
-    tuple_count.code.print(analysis=results)
+    frame, ret = address.run_analysis(tuple_count)
+    # tuple_count.code.print(analysis=frame.entries)
     assert isinstance(ret, AddressTuple)
     assert isinstance(ret.data[0], AddressReg) and ret.data[0].data == range(0, 3)
     assert isinstance(ret.data[1], AddressReg) and ret.data[1].data == range(3, 7)
@@ -64,8 +64,9 @@ def test_dynamic_address():
             return rb
 
     # dynamic_address.code.print()
+    dynamic_address.print()
     fold(dynamic_address)
-    _, result = address.run_analysis(dynamic_address)
+    frame, result = address.run_analysis(dynamic_address)
     assert isinstance(result, AnyAddress)
 
 

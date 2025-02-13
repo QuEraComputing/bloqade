@@ -90,14 +90,13 @@ class Func(interp.MethodTable):
     # TODO: replace with the generic implementation
     @interp.impl(func.Invoke)
     def invoke(self, interp_: AddressAnalysis, frame: interp.Frame, stmt: func.Invoke):
-        return (
-            interp_.run_method(
-                stmt.callee,
-                interp_.permute_values(
-                    stmt.callee.arg_names, frame.get_values(stmt.inputs), stmt.kwargs
-                ),
+        _, ret = interp_.run_method(
+            stmt.callee,
+            interp_.permute_values(
+                stmt.callee.arg_names, frame.get_values(stmt.inputs), stmt.kwargs
             ),
         )
+        return (ret,)
 
     # TODO: support lambda?
 
@@ -115,7 +114,7 @@ class Scf(scf.typeinfer.TypeInfer):
     def ifelse(
         self,
         interp_: AddressAnalysis,
-        frame: ForwardFrame[Address, None],
+        frame: ForwardFrame[Address],
         stmt: scf.IfElse,
     ):
         then_results = interp_.run_ssacfg_region(frame, stmt.then_body)

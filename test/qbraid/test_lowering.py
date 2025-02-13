@@ -1,6 +1,6 @@
 from typing import List
 
-from kirin import ir
+from kirin import ir, types
 from bloqade import qasm2
 from bloqade.noise import native
 from bloqade.qbraid import schema, lowering
@@ -18,7 +18,7 @@ def as_float(value: float):
 def run_assert(noise_model: schema.NoiseModel, expected_stmts: List[ir.Statement]):
 
     block = ir.Block(stmts=expected_stmts)
-    block.args.append_from(ir.types.PyClass(ir.Method), name="test_self")
+    block.args.append_from(types.MethodType, name="test_self")
     region = ir.Region(block)
     expected_func_stmt = func.Function(
         sym_name="test",
@@ -35,6 +35,7 @@ def run_assert(noise_model: schema.NoiseModel, expected_stmts: List[ir.Statement
         code=expected_func_stmt,
     )
 
+    assert lowering.qbraid_noise.run_pass
     lowering.qbraid_noise.run_pass(expected_mt)
 
     mt = noise_model.lower_noise_model("test")

@@ -100,17 +100,10 @@ class Build:
             qarg=self.build_bit(tree.children[3]),
         )
 
-    def build_global_body(self, tree: ParseTree) -> ast.GlobURegisters:
-        return ast.GlobURegisters(
-            # global_body in the ParseTree just contains identifiers,
-            # we need to handle the "translation" for pointing back to SSA vals
-            # during lowering, can probablyl reuse the
-            [self.build_bit(each) for each in tree.children]
-        )
-
     def build_glob_u_gate(self, tree: ParseTree) -> ast.GlobUGate:
+        print(tree.children[3])
         return ast.GlobUGate(
-            self.build_global_body(tree.children[3]),
+            [self.build_bit(each) for each in tree.children[3].children],
             self.build_expr(tree.children[0]),
             self.build_expr(tree.children[1]),
             self.build_expr(tree.children[2]),

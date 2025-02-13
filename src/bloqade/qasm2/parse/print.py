@@ -277,7 +277,8 @@ class Printer(print.Printer, Visitor[None]):
         self.visit(node.phi)
         self.plain_print(", ")
         self.visit(node.lam)
-        self.plain_print(");")
+        self.plain_print(") ")
+        self.print_seq(node.registers, prefix="{", suffix="}", emit=self.visit)
 
     def visit_NoisePAULI1(self, node: NoisePAULI1) -> None:
         self.plain_print("noise.PAULI1", style="keyword")

@@ -23,7 +23,7 @@ class CZPauliChannel(ir.Statement):
 
     traits = frozenset({ir.FromPythonCall()})
 
-    paired: bool = info.attribute(property=True)
+    paired: bool = info.attribute()
     px_1: ir.SSAValue = info.argument(type=types.Float)
     py_1: ir.SSAValue = info.argument(type=types.Float)
     pz_1: ir.SSAValue = info.argument(type=types.Float)

@@ -1,5 +1,4 @@
-from kirin import ir
-from kirin.ir import types
+from kirin import ir, types
 from kirin.decl import info, statement
 
 from ..types import RecordType, PauliStringType

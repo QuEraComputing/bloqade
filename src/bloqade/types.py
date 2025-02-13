@@ -5,7 +5,7 @@ This module defines the basic types used in Bloqade eDSLs.
 
 from abc import ABC
 
-from kirin.ir import types
+from kirin import types
 
 
 class Qubit(ABC):
