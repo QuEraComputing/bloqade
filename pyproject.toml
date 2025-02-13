@@ -75,6 +75,9 @@ doc = [
     "mkdocstrings[python]>=0.27.0",
     "mkdocs-jupyter>=0.25.1",
 ]
+examples = [
+    "networkx>=3.4.2",
+]
 
 [tool.isort]
 profile = "black"
