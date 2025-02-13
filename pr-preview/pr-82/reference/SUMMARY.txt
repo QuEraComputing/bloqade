@@ -47,6 +47,7 @@
         * [passes](bloqade/qasm2/passes/index.md)
             * [parallel](bloqade/qasm2/passes/parallel.md)
         * [rewrite](bloqade/qasm2/rewrite/index.md)
+            * [parallel_to_uop](bloqade/qasm2/rewrite/parallel_to_uop.md)
             * [uop_to_parallel](bloqade/qasm2/rewrite/uop_to_parallel.md)
         * [types](bloqade/qasm2/types.md)
     * [qbraid](bloqade/qbraid/index.md)
