@@ -62,3 +62,27 @@ def test_inline_ext():
         qasm2.inline(lines)
 
     qasm2_inline_code.print()
+
+
+if __name__ == "__main__":
+    # test_inline()
+
+    lines = textwrap.dedent(
+        """
+    KIRIN {qasm2.glob, qasm2.uop};
+    include "qelib1.inc";
+
+    qreg q1[2];
+    qreg q2[3];
+
+    glob.U(1.0, 2.0, 3.0) {q1, q2}
+    """
+    )
+
+    print(lines)
+
+    @qasm2.extended.add(inline)
+    def qasm2_inline_code():
+        qasm2.inline(lines)
+
+    qasm2_inline_code.print()

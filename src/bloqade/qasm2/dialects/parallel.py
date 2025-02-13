@@ -2,10 +2,12 @@ from typing import Any
 
 from kirin import ir, types, interp
 from kirin.decl import info, statement
+from kirin.analysis import ForwardFrame
 from kirin.dialects import ilist
 from bloqade.qasm2.parse import ast
 from bloqade.qasm2.types import QubitType
 from bloqade.qasm2.emit.gate import EmitQASM2Gate, EmitQASM2Frame
+from bloqade.analysis.schedule import DagScheduleAnalysis
 
 dialect = ir.Dialect("qasm2.parallel")
 
@@ -78,4 +80,32 @@ class Parallel(interp.MethodTable):
                 )
             )
         )
+        return ()
+
+
+@dialect.register(key="qasm2.dag")
+class ParallelDag(interp.MethodTable):
+
+    @interp.impl(CZ)
+    def parallel_cz(self, interp: DagScheduleAnalysis, frame: ForwardFrame, stmt: CZ):
+        ctrls_ssa = interp.get_ilist_ssa(stmt.ctrls)
+        qargs_ssa = interp.get_ilist_ssa(stmt.qargs)
+        interp.update_dag(stmt, ctrls_ssa + qargs_ssa)
+        return ()
+
+    @interp.impl(UGate)
+    def parallel_ugate(
+        self,
+        interp: DagScheduleAnalysis,
+        frame: ForwardFrame,
+        stmt: UGate,
+    ):
+        qargs_ssa = interp.get_ilist_ssa(stmt.qargs)
+        interp.update_dag(stmt, qargs_ssa)
+        return ()
+
+    @interp.impl(RZ)
+    def parallel_rz(self, interp: DagScheduleAnalysis, frame: ForwardFrame, stmt: RZ):
+        qargs_ssa = interp.get_ilist_ssa(stmt.qargs)
+        interp.update_dag(stmt, qargs_ssa)
         return ()
