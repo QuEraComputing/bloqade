@@ -31,7 +31,8 @@ params: expr ("," expr)*
 
 ?extension: parallel | glob | noise
 ?glob: glob_u_gate
-glob_u_gate: "glob" "." "U" "(" expr "," expr "," expr ")" ";"
+glob_u_gate: "glob" "." "U" "(" expr "," expr "," expr ")" global_body
+global_body: "{" IDENTIFIER ("," IDENTIFIER)* "}"
 ?noise: noise_pauli1
 noise_pauli1: "noise" "." "PAULI1" "(" expr "," expr "," expr ")" bit ";"
 ?parallel: para_u_gate | para_rz_gate | para_cz_gate

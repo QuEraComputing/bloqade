@@ -1,0 +1,51 @@
+from bloqade import qasm2
+
+
+@qasm2.extended
+def prep_resource_state(theta: float) -> qasm2.types.QReg:
+    qreg = qasm2.qreg(1)
+    qasm2.rz(qreg[0], theta)
+    return qreg
+
+
+@qasm2.extended
+def star_gadget_recursive(target: qasm2.types.Qubit, theta: float) -> qasm2.types.QReg:
+    """
+    https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337 Fig. 7
+    """
+    ancilla = prep_resource_state(theta)
+    qasm2.cx(ancilla[0], target)
+    creg = qasm2.creg(1)
+    qasm2.measure(target, creg[0])
+    # qasm2.deallocate(target)
+    if creg[0] == 1:
+        return ancilla
+    else:
+        qasm2.x(ancilla[0])
+        return star_gadget_recursive(ancilla[0], 2 * theta)
+
+
+@qasm2.extended
+def star_gadget_loop(
+    target: qasm2.types.Qubit, theta: float, attempts: int = 100
+) -> qasm2.types.QReg:
+    """
+    https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337 Fig. 7
+    """
+    creg = qasm2.creg(1)
+    converged = False
+
+    for ctr in range(attempts):
+        ancilla = prep_resource_state(theta * (2**ctr))
+        qasm2.cx(ancilla[0], target)
+        qasm2.measure(target, creg[0])
+
+        creg[0] == creg[0] or converged
+        if creg[0] == 0:
+            converged = True
+            qasm2.x(ancilla[0])
+            target = ancilla[0]
+
+    assert converged, "Loop did not converge"
+
+    return ancilla
