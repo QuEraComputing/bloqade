@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from kirin.ir import types
+from kirin import types
 
 
 @dataclass

@@ -27,4 +27,4 @@ if __name__ == "__main__":
     print(parse_tree.pretty())
 
     ast = loads(qasm_str)
-    print(ast)
+    print(spprint(ast))

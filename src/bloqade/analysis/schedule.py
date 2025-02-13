@@ -136,9 +136,7 @@ class DagScheduleAnalysis(Forward[GateSchedule]):
         self.stmt_dag = StmtDag()
         self.use_def = {}
 
-    def run_method(
-        self, method: ir.Method, args: tuple[GateSchedule, ...]
-    ) -> GateSchedule:
+    def run_method(self, method: ir.Method, args: tuple[GateSchedule, ...]):
         # NOTE: we do not support dynamic calls here, thus no need to propagate method object
         return self.run_callable(method.code, (self.lattice.bottom(),) + args)
 

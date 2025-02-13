@@ -11,12 +11,12 @@ from bloqade.qasm2.rewrite import ParallelToUOpRule, UOpToParallelRule
 class ParallelToUOp(Pass):
 
     def generate_rule(self, mt: ir.Method) -> ParallelToUOpRule:
-        results, _ = address.AddressAnalysis(mt.dialects).run_analysis(mt)
+        frame, _ = address.AddressAnalysis(mt.dialects).run_analysis(mt)
 
         id_map = {}
 
         # GOAL: Get the ssa value for the first reference of each qubit.
-        for ssa, addr in results.items():
+        for ssa, addr in frame.entries.items():
             if not isinstance(addr, address.AddressQubit):
                 # skip any stmts that are not qubits
                 continue
@@ -31,7 +31,7 @@ class ParallelToUOp(Pass):
 
             id_map[qubit_id] = ssa
 
-        return ParallelToUOpRule(id_map=id_map, address_analysis=results)
+        return ParallelToUOpRule(id_map=id_map, address_analysis=frame.entries)
 
     def unsafe_run(self, mt: ir.Method) -> result.RewriteResult:
         return walk.Walk(self.generate_rule(mt)).rewrite(mt.code)
@@ -41,11 +41,11 @@ class ParallelToUOp(Pass):
 class UOpToParallel(Pass):
 
     def generate_rule(self, mt: ir.Method):
-        results, _ = address.AddressAnalysis(mt.dialects).run_analysis(mt)
+        frame, _ = address.AddressAnalysis(mt.dialects).run_analysis(mt)
         dags = schedule.DagScheduleAnalysis(
-            mt.dialects, address_analysis=results
+            mt.dialects, address_analysis=frame.entries
         ).get_dags(mt)
-        return UOpToParallelRule(dags=dags, address_analysis=results)
+        return UOpToParallelRule(dags=dags, address_analysis=frame.entries)
 
     def unsafe_run(self, mt: ir.Method) -> result.RewriteResult:
         return walk.Walk(self.generate_rule(mt)).rewrite(mt.code)

@@ -1,7 +1,7 @@
 from typing import Dict, List, Tuple, Sequence
 from dataclasses import field, dataclass
 
-from kirin import ir, passes
+from kirin import ir, types, passes
 from bloqade import noise, qasm2
 from bloqade.qbraid import schema
 from kirin.dialects import func
@@ -55,7 +55,8 @@ class Lowering:
         """
         self.process_noise_model(noise_model, return_qreg)
         block = ir.Block(stmts=self.block_list)
-        block.args.append_from(ir.types.PyClass(ir.Method), name=f"{sym_name}_self")
+        ret_type = qasm2.types.QRegType if return_qreg else qasm2.types.CRegType
+        block.args.append_from(types.MethodType[[], ret_type], name=f"{sym_name}_self")
         region = ir.Region(block)
         func_stmt = func.Function(
             sym_name=sym_name,
@@ -71,7 +72,7 @@ class Lowering:
             code=func_stmt,
             arg_names=[],
         )
-        qbraid_noise.run_pass(mt)
+        qbraid_noise.run_pass(mt)  # type: ignore
 
         return mt
 

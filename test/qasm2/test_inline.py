@@ -32,7 +32,7 @@ def test_inline():
 def test_inline_ext():
 
     lines = textwrap.dedent(
-        """
+        r"""
     KIRIN {qasm2.uop, qasm2.expr, qasm2.parallel, qasm2.glob, qasm2.noise};
 
     qreg q[3];
@@ -43,7 +43,7 @@ def test_inline_ext():
     barrier q[0], q[1];
     CX q[0], q[1];
     rx(pi/2) q[0];
-    glob.U(1.0, 2.0, 3.0);
+    glob.U(1.0, 2.0, 3.0) {q}
     noise.PAULI1(1.0, 2.0, 3.0) q[0];
     parallel.U(1.0, 2.0, 3.0) {q[0]; q[1]; q[2];}
     parallel.CZ {
@@ -56,6 +56,7 @@ def test_inline_ext():
     }
     """
     )
+    print(lines)
 
     @qasm2.main.add(inline).add(parallel).add(glob).add(noise).add(ilist)
     def qasm2_inline_code():
