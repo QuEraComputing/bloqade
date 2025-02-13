@@ -39,22 +39,27 @@ class GreedyParallelGrouping:
             return False
 
     def policy(self, stmt1: ir.Statement, stmt2: ir.Statement):
-        from bloqade.qasm2.dialects import uop, parallel
 
         match stmt1, stmt2:
             case (
-                (parallel.UGate(), parallel.UGate())
+                (uop.UGate(), uop.UGate())
+                | (uop.RZ(), uop.RZ())
+                | (parallel.UGate(), parallel.UGate())
                 | (parallel.UGate(), uop.UGate())
                 | (uop.UGate(), parallel.UGate())
                 | (uop.UGate(), parallel.UGate())
                 | (uop.UGate(), parallel.UGate())
                 | (parallel.RZ(), parallel.RZ())
+                | (uop.RZ(), parallel.RZ())
+                | (parallel.RZ(), uop.RZ())
             ):
+
                 return self.check_equiv_args(stmt1.args[1:], stmt2.args[1:])
             case (
                 (parallel.CZ(), parallel.CZ())
-                | (parallel.CZ, uop.CZ)
-                | (uop.CZ, parallel.CZ)
+                | (parallel.CZ(), uop.CZ())
+                | (uop.CZ(), parallel.CZ())
+                | (uop.CZ(), uop.CZ())
             ):
                 return True
 
@@ -67,6 +72,7 @@ class GreedyParallelGrouping:
         for gate in gate_stmts:
             grouped = False
             for group in groups:
+
                 if any(self.policy(gate, group_gate) for group_gate in group):
                     group.append(gate)
                     grouped = True
@@ -126,31 +132,37 @@ class GreedyParallelGrouping:
 
 
 @dataclass
-class UOpToParallel(abc.RewriteRule):
+class UOpToParallelRule(abc.RewriteRule):
     address_analysis: Dict[ir.SSAValue, address.Address]
     dags: Dict[ir.Block, StmtDag]
+    grouping_results: Dict[ir.Block, MergeResults] = field(
+        init=False, default_factory=dict
+    )
     parallel_grouping: Callable[[StmtDag], MergeResults] = field(init=False)
-
-    merge_groups: List[List[ir.Statement]] = field(init=False)
-    group_numbers: Dict[ir.Statement, int] = field(init=False)
 
     def __post_init__(self):
         self.parallel_grouping = GreedyParallelGrouping()
 
-    def rewrite_Block(self, block: ir.Block):
-        merge_results = self.parallel_grouping(self.dags[block])
-        self.merge_groups = merge_results.merge_groups
-        self.group_numbers = merge_results.group_numbers
+    def get_merge_results(self, block: ir.Block | None) -> MergeResults | None:
+        if block is None or block not in self.dags:
+            return None
 
-        return result.RewriteResult()
+        if block not in self.grouping_results and block in self.dags:
+            self.grouping_results[block] = self.parallel_grouping(self.dags[block])
+
+        return self.grouping_results[block]
 
     def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
-        if node not in self.group_numbers:
+        merge_results = self.get_merge_results(node.parent_block)
+
+        if merge_results is None:
             return result.RewriteResult()
 
-        group_number = self.group_numbers[node]
-        group = self.merge_groups[group_number]
+        if node not in merge_results.group_numbers:
+            return result.RewriteResult()
 
+        group_number = merge_results.group_numbers[node]
+        group = merge_results.merge_groups[group_number]
         if node is group[-1]:
             method = getattr(self, f"rewrite_group_{node.name}")
             method(group)
@@ -199,8 +211,11 @@ class UOpToParallel(abc.RewriteRule):
         new_gate = parallel.CZ(ctrls=new_ctrls.result, qargs=new_qargs.result)
 
         new_gate.insert_after(last_stmt)
-        new_qargs.insert_after(new_gate)
-        new_ctrls.insert_after(new_qargs)
+        new_qargs.insert_after(last_stmt)
+        new_ctrls.insert_after(last_stmt)
+
+    def rewrite_group_U(self, group: List[ir.Statement]):
+        self.rewrite_group_u(group)
 
     def rewrite_group_u(self, group: List[ir.Statement]):
         qargs = []

@@ -3,7 +3,7 @@ from itertools import chain
 from dataclasses import field, dataclass
 from collections.abc import Sequence
 
-from kirin import ir, graph, idtable
+from kirin import ir, graph, interp, idtable
 from kirin.lattice import (
     SingletonMeta,
     BoundedLattice,
@@ -11,7 +11,7 @@ from kirin.lattice import (
     SimpleMeetMixin,
 )
 from kirin.analysis import Forward, ForwardFrame
-from kirin.dialects import ilist
+from kirin.dialects import func, ilist
 from bloqade.analysis import address
 from kirin.interp.exceptions import InterpreterError
 from bloqade.qasm2.parse.print import Printer
@@ -54,7 +54,7 @@ class Qubit(GateSchedule, metaclass=SingletonMeta):
 
 @dataclass(slots=True)
 class StmtDag(graph.Graph[ir.Statement]):
-    nodes: idtable.IdTable[ir.Statement] = field(
+    id_table: idtable.IdTable[ir.Statement] = field(
         default_factory=lambda: idtable.IdTable()
     )
     stmts: Dict[str, ir.Statement] = field(default_factory=dict)
@@ -62,27 +62,29 @@ class StmtDag(graph.Graph[ir.Statement]):
     inc_edges: Dict[str, Set[str]] = field(default_factory=dict)
 
     def add_node(self, node: ir.Statement):
-        node_id = self.nodes.add(node)
+        node_id = self.id_table[node]
         self.stmts[node_id] = node
+        self.out_edges.setdefault(node_id, set())
+        self.inc_edges.setdefault(node_id, set())
         return node_id
 
     def add_edge(self, src: ir.Statement, dst: ir.Statement):
         src_id = self.add_node(src)
         dst_id = self.add_node(dst)
 
-        self.out_edges.setdefault(src_id, set()).add(dst_id)
-        self.inc_edges.setdefault(dst_id, set()).add(src_id)
+        self.out_edges[src_id].add(dst_id)
+        self.inc_edges[dst_id].add(src_id)
 
     def get_parents(self, node: ir.Statement) -> Iterable[ir.Statement]:
         return (
             self.stmts[node_id]
-            for node_id in self.inc_edges.get(self.nodes[node], set())
+            for node_id in self.inc_edges.get(self.id_table[node], set())
         )
 
     def get_children(self, node: ir.Statement) -> Iterable[ir.Statement]:
         return (
             self.stmts[node_id]
-            for node_id in self.out_edges.get(self.nodes[node], set())
+            for node_id in self.out_edges.get(self.id_table[node], set())
         )
 
     def get_neighbors(self, node: ir.Statement) -> Iterable[ir.Statement]:
@@ -125,9 +127,19 @@ class DagScheduleAnalysis(Forward[GateSchedule]):
     def push_current_dag(self, block: ir.Block):
         # run when hitting terminator statements
         assert block not in self.stmt_dags, "Block already in stmt_dags"
+
+        for node in self.use_def.values():
+            self.stmt_dag.add_node(node)
+
         self.stmt_dags[block] = self.stmt_dag
         self.stmt_dag = StmtDag()
         self.use_def = {}
+
+    def run_method(
+        self, method: ir.Method, args: tuple[GateSchedule, ...]
+    ) -> GateSchedule:
+        # NOTE: we do not support dynamic calls here, thus no need to propagate method object
+        return self.run_callable(method.code, (self.lattice.bottom(),) + args)
 
     def eval_stmt_fallback(self, frame: ForwardFrame, stmt: ir.Statement):
         if stmt.has_trait(ir.IsTerminator):
@@ -143,15 +155,17 @@ class DagScheduleAnalysis(Forward[GateSchedule]):
             self.address_analysis.get(arg, address.Address.bottom()) for arg in args
         ]
 
-        for arg, addr in zip(args, addrs):
+        for addr in addrs:
             if not isinstance(addr, address.AddressQubit):
-                raise InterpreterError(f"Expected AddressQubit for result {arg}")
+                continue
 
             if addr.data in self.use_def:
                 self.stmt_dag.add_edge(self.use_def[addr.data], stmt)
 
         for addr in addrs:
-            assert isinstance(addr, address.AddressQubit)
+            if not isinstance(addr, address.AddressQubit):
+                continue
+
             self.use_def[addr.data] = stmt
 
     def get_ilist_ssa(self, value: ir.SSAValue):
@@ -168,9 +182,23 @@ class DagScheduleAnalysis(Forward[GateSchedule]):
 
         return value.stmt.values
 
-    def get_dag(self, mt: ir.Method, args=None, kwargs=None):
+    def get_dags(self, mt: ir.Method, args=None, kwargs=None):
         if args is None:
             args = tuple(self.lattice.top() for _ in mt.args)
 
         self.run(mt, args, kwargs).expect()
         return self.stmt_dags
+
+
+@func.dialect.register(key="qasm2.schedule.dag")
+class FuncImpl(interp.MethodTable):
+    @interp.impl(func.Invoke)
+    @interp.impl(func.Call)
+    def invoke(
+        self,
+        interp: DagScheduleAnalysis,
+        frame: ForwardFrame,
+        stmt: func.Invoke | func.Call,
+    ):
+        interp.update_dag(stmt, stmt.inputs)
+        return tuple(interp.lattice.top() for _ in stmt.results)
