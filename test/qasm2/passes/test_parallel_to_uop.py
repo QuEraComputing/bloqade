@@ -1,6 +1,5 @@
 from typing import List
 
-import pytest
 from kirin import ir
 from bloqade import qasm2
 from kirin.dialects import func
@@ -15,10 +14,10 @@ def as_float(value: float):
     return qasm2.expr.ConstFloat(value=value)
 
 
-@pytest.mark.xfail(reason="bug in `is_structurally_equal`")
+# @pytest.mark.xfail(reason="bug in `is_structurally_equal`")
 def test_cz_rewrite():
 
-    @qasm2.main
+    @qasm2.extended
     def main():
         q = qasm2.qreg(4)
 
@@ -71,3 +70,7 @@ def test_cz_rewrite():
         print("Actual:")
         main.print()
         raise e
+
+
+if __name__ == "__main__":
+    test_cz_rewrite()

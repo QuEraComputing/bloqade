@@ -1,6 +1,5 @@
-from typing import Any
-
 from kirin import ir, interp
+from kirin.ir import types
 from kirin.decl import info, statement
 from kirin.analysis import ForwardFrame
 from kirin.dialects import ilist
@@ -11,20 +10,22 @@ from bloqade.analysis.schedule import DagScheduleAnalysis
 
 dialect = ir.Dialect("qasm2.parallel")
 
+N = types.TypeVar("N")
+
 
 @statement(dialect=dialect)
 class CZ(ir.Statement):
     name = "cz"
     traits = frozenset({ir.FromPythonCall()})
-    ctrls: ir.SSAValue = info.argument(ilist.IListType[QubitType])
-    qargs: ir.SSAValue = info.argument(ilist.IListType[QubitType])
+    ctrls: ir.SSAValue = info.argument(ilist.IListType[QubitType, N])
+    qargs: ir.SSAValue = info.argument(ilist.IListType[QubitType, N])
 
 
 @statement(dialect=dialect)
 class UGate(ir.Statement):
     name = "u"
     traits = frozenset({ir.FromPythonCall()})
-    qargs: ir.SSAValue = info.argument(ilist.IListType[QubitType])
+    qargs: ir.SSAValue = info.argument(ilist.IListType[QubitType, N])
     theta: ir.SSAValue = info.argument(ir.types.Float)
     phi: ir.SSAValue = info.argument(ir.types.Float)
     lam: ir.SSAValue = info.argument(ir.types.Float)
@@ -34,7 +35,7 @@ class UGate(ir.Statement):
 class RZ(ir.Statement):
     name = "rz"
     traits = frozenset({ir.FromPythonCall()})
-    qargs: ir.SSAValue = info.argument(ilist.IListType[QubitType])
+    qargs: ir.SSAValue = info.argument(ilist.IListType[QubitType, N])
     theta: ir.SSAValue = info.argument(ir.types.Float)
 
 
@@ -42,9 +43,9 @@ class RZ(ir.Statement):
 class Parallel(interp.MethodTable):
 
     def _emit_parallel_qargs(
-        self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, args: ir.SSAValue
+        self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, qargs_ref: ir.SSAValue
     ):
-        qargs: ilist.IList[ast.Node, Any] = frame.get(args)
+        qargs = frame.get_typed(qargs_ref, ilist.IList)
         return [(emit.assert_node((ast.Name, ast.Bit), qarg),) for qarg in qargs]
 
     @interp.impl(UGate)
