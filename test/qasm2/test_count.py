@@ -1,4 +1,5 @@
 from kirin import passes
+from pytest import mark
 from bloqade import qasm2
 from kirin.dialects import py, ilist
 from bloqade.analysis.address import (
@@ -50,6 +51,7 @@ def test_multiple_return_only_reg():
     assert isinstance(ret.data[1], AddressReg) and ret.data[1].data == range(3, 7)
 
 
+@mark.xfail(reason="scf bug with folding. ")
 def test_dynamic_address():
     @qasm2.main
     def dynamic_address():

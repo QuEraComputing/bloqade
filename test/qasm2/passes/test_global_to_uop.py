@@ -1,7 +1,7 @@
 from typing import List
 
 import pytest
-from kirin import ir
+from kirin import ir, types
 from bloqade import qasm2
 from kirin.dialects import func
 from bloqade.qasm2.passes.glob import GlobalToUOP
@@ -15,7 +15,7 @@ def as_float(value: float):
     return qasm2.expr.ConstFloat(value=value)
 
 
-@pytest.mark.xfail(reason="bug in is_equal")
+@pytest.mark.xfail(reason="Unknown")
 def test_global_rewrite():
 
     @qasm2.extended
@@ -63,10 +63,10 @@ def test_global_rewrite():
         (func.Return(return_none)),
     ]
     block = ir.Block(expected)
-    block.args.append_from(ir.types.PyClass(ir.Method), "main_self")
+    block.args.append_from(types.MethodType[[], types.NoneType], "main_self")
     expected_func_stmt = func.Function(
         sym_name="main",
-        signature=func.Signature(inputs=(), output=ir.types.NoneType),
+        signature=func.Signature(inputs=(), output=types.NoneType),
         body=ir.Region(blocks=block),
     )
 
