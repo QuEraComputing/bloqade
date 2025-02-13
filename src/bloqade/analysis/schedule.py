@@ -1,5 +1,6 @@
 from typing import Any, Set, Dict, Iterable, Optional, final
 from itertools import chain
+from collections import OrderedDict
 from dataclasses import field, dataclass
 from collections.abc import Sequence
 
@@ -57,9 +58,9 @@ class StmtDag(graph.Graph[ir.Statement]):
     id_table: idtable.IdTable[ir.Statement] = field(
         default_factory=lambda: idtable.IdTable()
     )
-    stmts: Dict[str, ir.Statement] = field(default_factory=dict)
-    out_edges: Dict[str, Set[str]] = field(default_factory=dict)
-    inc_edges: Dict[str, Set[str]] = field(default_factory=dict)
+    stmts: Dict[str, ir.Statement] = field(default_factory=OrderedDict)
+    out_edges: Dict[str, Set[str]] = field(default_factory=OrderedDict)
+    inc_edges: Dict[str, Set[str]] = field(default_factory=OrderedDict)
 
     def add_node(self, node: ir.Statement):
         node_id = self.id_table[node]

@@ -17,7 +17,9 @@ def test():
 
     qasm2.u(q[1], theta, phi, lam)
     qasm2.u(q[3], theta, phi, lam)
+    gate(q[1], q[3])
     qasm2.u(q[2], theta, phi, lam)
+    qasm2.u(q[0], theta, phi, lam)
 
 
 # test.print()

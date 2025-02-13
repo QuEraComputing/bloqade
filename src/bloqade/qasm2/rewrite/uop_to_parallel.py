@@ -5,7 +5,7 @@ from kirin import ir
 from kirin.rewrite import abc, result
 from kirin.dialects import ilist
 from bloqade.analysis import address
-from bloqade.qasm2.dialects import uop, parallel
+from bloqade.qasm2.dialects import uop, core, parallel
 from bloqade.analysis.schedule import StmtDag
 
 
@@ -163,15 +163,17 @@ class UOpToParallelRule(abc.RewriteRule):
 
         group_number = merge_results.group_numbers[node]
         group = merge_results.merge_groups[group_number]
-        if node is group[-1]:
+        if node is group[0]:
             method = getattr(self, f"rewrite_group_{node.name}")
-            method(group)
+            method(node, group)
 
         node.delete()
 
         return result.RewriteResult(has_done_something=True)
 
-    def merge_qubits(self, qargs: List[ir.SSAValue]) -> Tuple[ir.SSAValue, ...]:
+    def merge_and_move_qubits(
+        self, node: ir.Statement, qargs: List[ir.SSAValue]
+    ) -> Tuple[ir.SSAValue, ...]:
 
         qubits = []
 
@@ -186,9 +188,21 @@ class UOpToParallelRule(abc.RewriteRule):
                 assert isinstance(qarg.stmt, ilist.New)
                 qubits.extend(qarg.stmt.values)
 
+        for qarg in qubits:
+            if (
+                isinstance(qarg, ir.ResultValue)
+                and isinstance(qarg.owner, core.QRegGet)
+                and isinstance(qarg.owner.idx, ir.ResultValue)
+            ):
+                idx = qarg.owner.idx
+                idx.owner.delete(safe=False)
+                idx.owner.insert_before(node)
+                qarg.owner.delete(safe=False)
+                qarg.owner.insert_before(node)
+
         return tuple(qubits)
 
-    def rewrite_group_cz(self, group: List[ir.Statement]):
+    def rewrite_group_cz(self, node: ir.Statement, group: List[ir.Statement]):
         ctrls = []
         qargs = []
 
@@ -202,22 +216,21 @@ class UOpToParallelRule(abc.RewriteRule):
             else:
                 raise RuntimeError(f"Unexpected statement {stmt}")
 
-        ctrls_values = self.merge_qubits(ctrls)
-        qargs_values = self.merge_qubits(qargs)
+        ctrls_values = self.merge_and_move_qubits(node, ctrls)
+        qargs_values = self.merge_and_move_qubits(node, qargs)
 
-        last_stmt = group[-1]
         new_ctrls = ilist.New(values=ctrls_values)
         new_qargs = ilist.New(values=qargs_values)
         new_gate = parallel.CZ(ctrls=new_ctrls.result, qargs=new_qargs.result)
 
-        new_gate.insert_after(last_stmt)
-        new_qargs.insert_after(last_stmt)
-        new_ctrls.insert_after(last_stmt)
+        new_ctrls.insert_before(node)
+        new_qargs.insert_before(node)
+        new_gate.insert_before(node)
 
-    def rewrite_group_U(self, group: List[ir.Statement]):
-        self.rewrite_group_u(group)
+    def rewrite_group_U(self, node: ir.Statement, group: List[ir.Statement]):
+        self.rewrite_group_u(node, group)
 
-    def rewrite_group_u(self, group: List[ir.Statement]):
+    def rewrite_group_u(self, node: ir.Statement, group: List[ir.Statement]):
         qargs = []
 
         for stmt in group:
@@ -228,22 +241,21 @@ class UOpToParallelRule(abc.RewriteRule):
             else:
                 raise RuntimeError(f"Unexpected statement {stmt}")
 
-        last_stmt = group[-1]
-        assert isinstance(last_stmt, (uop.UGate, parallel.UGate))
+        assert isinstance(node, (uop.UGate, parallel.UGate))
 
-        qargs_values = self.merge_qubits(qargs)
+        qargs_values = self.merge_and_move_qubits(node, qargs)
+
         new_qargs = ilist.New(values=qargs_values)
         new_gate = parallel.UGate(
             qargs=new_qargs.result,
-            theta=last_stmt.theta,
-            phi=last_stmt.phi,
-            lam=last_stmt.lam,
+            theta=node.theta,
+            phi=node.phi,
+            lam=node.lam,
         )
+        new_qargs.insert_before(node)
+        new_gate.insert_before(node)
 
-        new_gate.insert_after(last_stmt)
-        new_qargs.insert_after(new_gate)
-
-    def rewrite_group_rz(self, group: List[ir.Statement]):
+    def rewrite_group_rz(self, node: ir.Statement, group: List[ir.Statement]):
         qargs = []
 
         for stmt in group:
@@ -254,15 +266,13 @@ class UOpToParallelRule(abc.RewriteRule):
             else:
                 raise RuntimeError(f"Unexpected statement {stmt}")
 
-        last_stmt = group[-1]
-        assert isinstance(last_stmt, (uop.RZ, parallel.RZ))
+        assert isinstance(node, (uop.RZ, parallel.RZ))
 
-        qargs_values = self.merge_qubits(qargs)
+        qargs_values = self.merge_and_move_qubits(node, qargs)
         new_qargs = ilist.New(values=qargs_values)
         new_gate = parallel.RZ(
             qargs=new_qargs.result,
-            theta=last_stmt.theta,
+            theta=node.theta,
         )
-
-        new_gate.insert_after(last_stmt)
-        new_qargs.insert_after(new_gate)
+        new_qargs.insert_before(node)
+        new_gate.insert_before(node)
