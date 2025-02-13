@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from kirin import ir
-from kirin.rewrite import walk, result
+from kirin.rewrite import dce, walk, chain, result, fixpoint
 from bloqade.analysis import address, schedule
 from kirin.passes.abc import Pass
 from bloqade.qasm2.rewrite import ParallelToUOpRule, UOpToParallelRule
@@ -34,7 +34,11 @@ class ParallelToUOp(Pass):
         return ParallelToUOpRule(id_map=id_map, address_analysis=frame.entries)
 
     def unsafe_run(self, mt: ir.Method) -> result.RewriteResult:
-        return walk.Walk(self.generate_rule(mt)).rewrite(mt.code)
+        return fixpoint.Fixpoint(
+            chain.Chain(
+                walk.Walk(self.generate_rule(mt)), walk.Walk(dce.DeadCodeElimination())
+            )
+        ).rewrite(mt.code)
 
 
 @dataclass
@@ -48,4 +52,8 @@ class UOpToParallel(Pass):
         return UOpToParallelRule(dags=dags, address_analysis=frame.entries)
 
     def unsafe_run(self, mt: ir.Method) -> result.RewriteResult:
-        return walk.Walk(self.generate_rule(mt)).rewrite(mt.code)
+        return fixpoint.Fixpoint(
+            chain.Chain(
+                walk.Walk(self.generate_rule(mt)), walk.Walk(dce.DeadCodeElimination())
+            )
+        ).rewrite(mt.code)

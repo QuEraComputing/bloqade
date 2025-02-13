@@ -102,11 +102,8 @@ def extended(self):
 
         ilist_desugar_pass(mt)
         indexing_desugar_pass(mt)
-        mt.print()
-
         typeinfer_pass(mt)
 
-        mt.print()
         mt.code.typecheck()
 
     return run_pass
