@@ -1,6 +1,6 @@
 from typing import Any
 
-from kirin import ir, interp
+from kirin import ir, types, interp
 from kirin.decl import info, statement
 from kirin.dialects import ilist
 from bloqade.qasm2.parse import ast
@@ -23,9 +23,9 @@ class UGate(ir.Statement):
     name = "u"
     traits = frozenset({ir.FromPythonCall()})
     qargs: ir.SSAValue = info.argument(ilist.IListType[QubitType])
-    theta: ir.SSAValue = info.argument(ir.types.Float)
-    phi: ir.SSAValue = info.argument(ir.types.Float)
-    lam: ir.SSAValue = info.argument(ir.types.Float)
+    theta: ir.SSAValue = info.argument(types.Float)
+    phi: ir.SSAValue = info.argument(types.Float)
+    lam: ir.SSAValue = info.argument(types.Float)
 
 
 @statement(dialect=dialect)
@@ -33,7 +33,7 @@ class RZ(ir.Statement):
     name = "rz"
     traits = frozenset({ir.FromPythonCall()})
     qargs: ir.SSAValue = info.argument(ilist.IListType[QubitType])
-    theta: ir.SSAValue = info.argument(ir.types.Float)
+    theta: ir.SSAValue = info.argument(types.Float)
 
 
 @dialect.register(key="emit.qasm2.gate")
@@ -42,8 +42,8 @@ class Parallel(interp.MethodTable):
     def _emit_parallel_qargs(
         self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, qargs: ir.SSAValue
     ):
-        qargs: ilist.IList[ast.Node, Any] = frame.get(qargs)
-        return [(emit.assert_node((ast.Name, ast.Bit), qarg),) for qarg in qargs]
+        qargs_: ilist.IList[ast.Node, Any] = frame.get(qargs)  # type: ignore
+        return [(emit.assert_node((ast.Name, ast.Bit), qarg),) for qarg in qargs_]
 
     @interp.impl(UGate)
     def ugate(self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: UGate):

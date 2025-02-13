@@ -1,6 +1,6 @@
 import ast
 
-from kirin.ir import SSAValue, types
+from kirin import ir, types
 from kirin.lowering import Result, FromPythonAST, LoweringState
 from kirin.exceptions import DialectLoweringError
 
@@ -71,7 +71,9 @@ class QASMUopLowering(FromPythonAST):
         stmt.result.type = self.__promote_binop_type(lhs, rhs)
         return Result(state.append_stmt(stmt))
 
-    def __promote_binop_type(self, lhs: SSAValue, rhs: SSAValue) -> types.TypeAttribute:
+    def __promote_binop_type(
+        self, lhs: ir.SSAValue, rhs: ir.SSAValue
+    ) -> types.TypeAttribute:
         if lhs.type.is_subseteq(types.Float) or rhs.type.is_subseteq(types.Float):
             return types.Float
         return types.Int

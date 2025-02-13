@@ -115,7 +115,7 @@ class Scf(scf.typeinfer.TypeInfer):
     def ifelse(
         self,
         interp_: AddressAnalysis,
-        frame: ForwardFrame[Address, None],
+        frame: ForwardFrame[Address],
         stmt: scf.IfElse,
     ):
         then_results = interp_.run_ssacfg_region(frame, stmt.then_body)
