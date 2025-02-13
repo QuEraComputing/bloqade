@@ -50,7 +50,7 @@ class InlineQASMLowering(ir.FromPythonCall):
 class InlineQASM(ir.Statement):
     name = "text"
     traits = frozenset({InlineQASMLowering()})
-    text: str = info.attribute(types.String, property=True)
+    text: str = info.attribute(types.String)
 
     def __init__(self, text: str) -> None:
         super().__init__(properties={"text": ir.PyAttr(text)})
