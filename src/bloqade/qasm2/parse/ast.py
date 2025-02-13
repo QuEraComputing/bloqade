@@ -145,7 +145,16 @@ class ParallelQArgs(Extension):
 
 
 @dataclass
+class GlobURegisters(Extension):
+    registers: list[Name]
+
+    def __iter__(self):
+        return iter(self.registers)
+
+
+@dataclass
 class GlobUGate(Extension):
+    registers: GlobURegisters
     theta: Expr
     phi: Expr
     lam: Expr

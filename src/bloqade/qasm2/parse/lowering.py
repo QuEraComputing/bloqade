@@ -353,8 +353,18 @@ class LoweringQASM(Visitor[lowering.Result]):
         return lowering.Result()
 
     def visit_GlobUGate(self, node: ast.GlobUGate) -> lowering.Result:
+
+        registers: list[ir.SSAValue] = []
+
+        for register in node.registers:  # These will all be ast.Names
+            registers.append(self.visit(register).expect_one())
+
+        registers_stmt = ilist.New(values=registers)
+        self.state.append_stmt(registers_stmt)
         self.state.append_stmt(
+            # all the stuff going into the args should be SSA values
             glob.UGate(
+                registers=registers_stmt.result,  # expect_one = a singular SSA value
                 theta=self.visit(node.theta).expect_one(),
                 phi=self.visit(node.phi).expect_one(),
                 lam=self.visit(node.lam).expect_one(),
