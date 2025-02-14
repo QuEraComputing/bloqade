@@ -1,5 +1,5 @@
 from kirin import ir, passes
-from kirin.prelude import basic
+from kirin.prelude import structural_no_opt
 from kirin.dialects import scf, func, ilist, lowering
 from bloqade.qasm2.dialects import (
     uop,
@@ -70,7 +70,7 @@ def main(self):
 
 
 @ir.dialect_group(
-    basic.union(
+    structural_no_opt.union(
         [
             inline,
             uop,
@@ -78,12 +78,8 @@ def main(self):
             noise,
             parallel,
             core,
-            lowering.func,
-            lowering.call,
         ]
     )
-    .discard(lowering.cf)
-    .add(scf)
 )
 def extended(self):
     fold_pass = passes.Fold(self)
