@@ -21,11 +21,13 @@ import math
 from bloqade import qasm2
 from bloqade.pyqrack import PyQrack
 
-
 # In the following, we will define the Quantum Fourier Transform (QFT) circuit using recursion
 # inside a kernel function `qft`. The `qft` function takes two arguments: a quantum register `qreg`
 # and an integer `n` representing the number of qubits we want to apply the QFT circuit to.
 # %%
+pi = math.pi
+
+
 @qasm2.extended
 def qft(qreg: qasm2.QReg, n: int):
     if n == 0:
@@ -33,7 +35,7 @@ def qft(qreg: qasm2.QReg, n: int):
 
     qasm2.h(qreg[0])
     for i in range(1, n):
-        qasm2.cu1(qreg[i], qreg[0], 2 * math.pi / 2**i)
+        qasm2.cu1(qreg[i], qreg[0], 2 * pi / 2**i)
     qft(qreg, n - 1)
     return qreg
 
