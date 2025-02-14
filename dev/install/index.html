@@ -81,6 +81,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#installation" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -455,6 +460,20 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -466,6 +485,76 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bloqade-and-its-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bloqade and its extensions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bloqade and its extensions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bloqade-runtime-pyqrack" class="md-nav__link">
+    <span class="md-ellipsis">
+      bloqade-runtime-pyqrack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qbraid-extension" class="md-nav__link">
+    <span class="md-ellipsis">
+      qBraid extension
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qasm2-extension" class="md-nav__link">
+    <span class="md-ellipsis">
+      QASM2 extension
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#development" class="md-nav__link">
+    <span class="md-ellipsis">
+      Development
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2509,6 +2598,67 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bloqade-and-its-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bloqade and its extensions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bloqade and its extensions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bloqade-runtime-pyqrack" class="md-nav__link">
+    <span class="md-ellipsis">
+      bloqade-runtime-pyqrack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qbraid-extension" class="md-nav__link">
+    <span class="md-ellipsis">
+      qBraid extension
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qasm2-extension" class="md-nav__link">
+    <span class="md-ellipsis">
+      QASM2 extension
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#development" class="md-nav__link">
+    <span class="md-ellipsis">
+      Development
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -2540,14 +2690,64 @@
   
 
 
-  <h1>Installation</h1>
-
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This page is under construction. The content may be incomplete or incorrect. Submit an issue
-on <a href="https://github.com/QuEraComputing/bloqade/issues/new">GitHub</a> if you need help or want to
-contribute.</p>
+<h1 id="installation">Installation</h1>
+<p>Bloqade is available in <a href="https://pypi.org/">PyPI</a> and
+thus can be installed via <a href="https://pypi.org/project/pip/"><code>pip</code></a>.
+Install Bloqade using the following command:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade
+</code></pre></div>
+<p>Bloqade support python 3.10+.</p>
+<p>We strongly recommend developing your compiler project using <a href="https://docs.astral.sh/uv/"><code>uv</code></a>,
+which is the official development environment for Bloqade. You can install <code>uv</code> using the following command:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Linux and macOS</label><label for="__tabbed_1_2">Windows</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-LsSf<span class="w"> </span>https://astral.sh/uv/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
+</code></pre></div>
+<p>then</p>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>add<span class="w"> </span>kirin-toolchain
+</code></pre></div>
 </div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>powershell -ExecutionPolicy ByPass -c &quot;irm https://astral.sh/uv/install.ps1 | iex&quot;
+</code></pre></div>
+<p>then</p>
+<div class="highlight"><pre><span></span><code>uv add kirin-toolchain
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="bloqade-and-its-extensions">Bloqade and its extensions</h2>
+<p>Bloqade also comes with a few friends that you might find useful:</p>
+<h3 id="bloqade-runtime-pyqrack"><code>bloqade-runtime-pyqrack</code></h3>
+<p>PyQrack is a high-performance simulator for quantum circuits. We provide a Bloqade extension that allows you to run your Bloqade programs with PyQrack via interpreting the Bloqade programs with PyQrack as a runtime. You can install <code>bloqade-runtime-pyqrack</code> using the following command:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>pyqrack<span class="o">]</span>
+</code></pre></div>
+<p>or</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>pyqrack-cpu<span class="o">]</span>
+</code></pre></div>
+<p>if you want to install the CPU-only version of PyQrack.</p>
+<h3 id="qbraid-extension">qBraid extension</h3>
+<p>The qBraid extension allows you to run your Bloqade programs on the qBraid platform. You can install this extension via</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>qbraid<span class="o">]</span>
+</code></pre></div>
+<h3 id="qasm2-extension">QASM2 extension</h3>
+<p>The QASM2 extension allows you to compile your Bloqade programs to/from QASM2, or QuEra's custom extension of QASM2. You can install this extension via</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>qasm2<span class="o">]</span>
+</code></pre></div>
+<h2 id="development">Development</h2>
+<p>If you want to contribute to Bloqade, you can clone the repository from GitHub:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/QuEraComputing/bloqade.git
+</code></pre></div>
+<p>We use <code>uv</code> to manage the development environment, after you install <code>uv</code>, you can install the development dependencies using the following command:</p>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>sync
+</code></pre></div>
+<p>Our code review requires that you pass the tests and the linting checks. We recommend
+you to install <code>pre-commit</code> to run the checks before you commit your changes, the command line
+tool <code>pre-commit</code> has been installed as part of the development dependencies. You can setup
+<code>pre-commit</code> using the following command:</p>
+<div class="highlight"><pre><span></span><code>pre-commit<span class="w"> </span>install
+</code></pre></div>
 
 
 
