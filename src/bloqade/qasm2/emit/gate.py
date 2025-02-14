@@ -2,7 +2,7 @@ from dataclasses import field, dataclass
 
 from kirin import ir, interp
 from bloqade.types import QubitType
-from kirin.dialects import func, ilist
+from kirin.dialects import py, func, ilist
 from kirin.ir.dialect import Dialect as Dialect
 from bloqade.qasm2.parse import ast
 
@@ -19,6 +19,16 @@ def _default_dialect_group():
 class EmitQASM2Gate(EmitQASM2Base[ast.UOp | ast.Barrier, ast.Gate]):
     keys = ["emit.qasm2.gate"]
     dialects: ir.DialectGroup = field(default_factory=_default_dialect_group)
+
+
+@py.constant.dialect.register(key="emit.qasm2.gate")
+class Constant(interp.MethodTable):
+
+    @interp.impl(py.constant.Constant)
+    def emit_constant(
+        self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: py.constant.Constant
+    ):
+        return (stmt.value,)
 
 
 @ilist.dialect.register(key="emit.qasm2.gate")

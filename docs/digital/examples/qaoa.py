@@ -3,6 +3,7 @@ from typing import Any
 
 import networkx as nx
 from bloqade import qasm2
+from kirin.passes import aggressive
 from kirin.dialects import ilist
 
 # Define the problem instance as a MaxCut problem on a graph
@@ -86,11 +87,32 @@ def qaoa_simd(G):
     return kernel
 
 
-# print("--- Sequential ---")
-# qaoa_sequential(G).code.print()
+from kirin.dialects import py  # noqa: E402
 
+# %%
+from bloqade.qasm2.emit import QASM2  # noqa: E402
+from bloqade.qasm2.parse import pprint  # noqa: E402
+
+target = QASM2(
+    main_target=qasm2.main.add(qasm2.dialects.parallel).add(ilist).add(py.constant)
+)
 
 kernel = qaoa_simd(G)
 
-print("\n\n--- Simd ---")
-kernel.print()
+
+gamma = [0.1, 0.2]
+beta = [0.3, 0.4]
+
+
+@qasm2.extended
+def main():
+    return kernel(gamma, beta)
+
+
+aggressive.Fold(main.dialects)(main)
+main.print()
+
+
+ast = target.emit(main)
+
+pprint(ast)
