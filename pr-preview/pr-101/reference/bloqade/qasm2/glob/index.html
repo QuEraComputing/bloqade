@@ -1107,6 +1107,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bloqade.qasm2.glob.u" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;u
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2572,6 +2581,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bloqade.qasm2.glob.u" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;u
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2631,6 +2649,138 @@
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bloqade.qasm2.glob.u" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">u</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">u</span><span class="p">(</span>
+    <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">phi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">lam</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">registers</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">QReg</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Apply a U gate to all qubits in the input registers.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>theta</code>
+            </td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The angle theta.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>phi</code>
+            </td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The angle phi.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>lam</code>
+            </td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The angle lam.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>registers</code>
+            </td>
+            <td>
+                  <code>IList[<a class="autorefs autorefs-internal" title="bloqade.qasm2.types.QReg" href="../types/#bloqade.qasm2.types.QReg">QReg</a>] | list[<a class="autorefs autorefs-internal" title="bloqade.qasm2.types.QReg" href="../types/#bloqade.qasm2.types.QReg">QReg</a>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The registers to apply the gate to.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/bloqade/qasm2/glob.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@wraps</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">UGate</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">u</span><span class="p">(</span>
+    <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lam</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">registers</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">QReg</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply a U gate to all qubits in the input registers.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        theta (float): The angle theta.</span>
+<span class="sd">        phi (float): The angle phi.</span>
+<span class="sd">        lam (float): The angle lam.</span>
+<span class="sd">        registers (IList[QReg] | list[QReg]): The registers to apply the gate to.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 
