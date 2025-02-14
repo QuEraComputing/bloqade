@@ -2304,6 +2304,30 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bloqade.qasm2.passes.glob.GlobalToUOP" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;GlobalToUOP
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" GlobalToUOP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bloqade.qasm2.passes.glob.GlobalToUOP--usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage Examples
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2574,6 +2598,30 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bloqade.qasm2.passes.glob.GlobalToUOP" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;GlobalToUOP
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" GlobalToUOP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bloqade.qasm2.passes.glob.GlobalToUOP--usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage Examples
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2615,6 +2663,9 @@
 <a id="bloqade.qasm2.passes.glob"></a>
     <div class="doc doc-contents first">
 
+        <p>Passes that deal with global gates. As of now, only one rewrite pass exists
+which converts global gates to single qubit gates.</p>
+
 
 
 
@@ -2630,6 +2681,76 @@
 
 
 
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bloqade.qasm2.passes.glob.GlobalToUOP" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">GlobalToUOP</span>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="kirin.passes.abc.Pass">Pass</span></code></p>
+
+
+        <p>Pass to convert Global gates into single gates.</p>
+<p>This pass rewrites the global unitary gate from the <code>qasm2.glob</code> dialect into multiple
+single gates in the <code>qasm2.uop</code> dialect, bringing the program closer to
+conforming to standard QASM2 syntax.</p>
+<h4 id="bloqade.qasm2.passes.glob.GlobalToUOP--usage-examples">Usage Examples</h4>
+<div class="highlight"><pre><span></span><code># Define kernel
+@qasm2.extended
+def main():
+    q1 = qasm2.qreg(1)
+    q2 = qasm2.qreg(2)
+
+    theta = 1.3
+    phi = 1.1
+    lam = 1.2
+
+    qasm2.glob.u(theta=theta, phi=phi, lam=lam, registers=[q1, q2])
+
+GlobalToUOP(dialects=main.dialects)(main)
+
+# Run rewrite
+GlobalToUOP(main.dialects)(main)
+</code></pre></div>
+<p>The <code>qasm2.glob.u</code> statement has been rewritten to individual gates:</p>
+<div class="highlight"><pre><span></span><code>qasm2.uop.u(q1[0], theta, phi, lam)
+qasm2.uop.u(q1[0], theta, phi, lam)
+qasm2.uop.u(q2[1], theta, phi, lam)
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
 
 
 
