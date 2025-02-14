@@ -2,7 +2,7 @@ from abc import ABC
 from typing import Generic, TypeVar, overload
 from dataclasses import field, dataclass
 
-from kirin import ir, interp, idtable
+from kirin import ir, idtable
 from kirin.emit import EmitABC, EmitError, EmitFrame
 from typing_extensions import Self
 from bloqade.qasm2.parse import ast
@@ -39,10 +39,8 @@ class EmitQASM2Base(
         return EmitQASM2Frame.from_func_like(code)
 
     def run_method(
-        self, method: ir.Method, args: tuple[ast.Node, ...]
-    ) -> ast.Node | None:
-        if len(self.state.frames) >= self.max_depth:
-            raise interp.InterpreterError("maximum recursion depth exceeded")
+        self, method: ir.Method, args: tuple[ast.Node | None, ...]
+    ) -> tuple[EmitQASM2Frame[StmtType], ast.Node | None]:
         return self.run_callable(method.code, (ast.Name(method.sym_name),) + args)
 
     def emit_block(self, frame: EmitQASM2Frame, block: ir.Block) -> ast.Node | None:

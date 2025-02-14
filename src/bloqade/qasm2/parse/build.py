@@ -101,7 +101,6 @@ class Build:
         )
 
     def build_glob_u_gate(self, tree: ParseTree) -> ast.GlobUGate:
-        print(tree.children[3])
         return ast.GlobUGate(
             [self.build_bit(each) for each in tree.children[3].children],
             self.build_expr(tree.children[0]),
