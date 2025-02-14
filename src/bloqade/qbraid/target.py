@@ -10,10 +10,9 @@ from bloqade.qasm2.emit import QASM2
 
 
 class qBraid:
-    """qBraid target for `@qasm2.main` generated Bloqade kernels.
+    """qBraid target for Bloqade kernels.
 
-    qBraid target that accepts a Bloqade kernel defined with the `@qasm2.main` decorator
-    and submits the kernel to the QuEra simulator hosted on qBraid. A `QbraidJob` is obtainable
+    qBraid target that accepts a Bloqade kernel and submits the kernel to the QuEra simulator hosted on qBraid. A `QbraidJob` is obtainable
     that then lets you query the status of the submitted program on the simulator as well
     as obtain results.
 
