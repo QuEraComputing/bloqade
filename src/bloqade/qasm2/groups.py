@@ -1,6 +1,6 @@
 from kirin import ir, passes
 from kirin.prelude import basic
-from kirin.dialects import scf, func, lowering
+from kirin.dialects import scf, func, ilist, lowering
 from bloqade.qasm2.dialects import (
     uop,
     core,
@@ -11,6 +11,7 @@ from bloqade.qasm2.dialects import (
     indexing,
     parallel,
 )
+from bloqade.qasm2.rewrite.desugar import IndexingDesugarPass
 
 
 @ir.dialect_group([uop, func, expr, lowering.func, lowering.call])
@@ -87,19 +88,22 @@ def main(self):
 def extended(self):
     fold_pass = passes.Fold(self)
     typeinfer_pass = passes.TypeInfer(self)
+    ilist_desugar_pass = ilist.IListDesugar(self)
+    indexing_desugar_pass = IndexingDesugarPass(self)
 
     def run_pass(
-        method: ir.Method,
+        mt: ir.Method,
         *,
         fold: bool = True,
     ):
-        method.verify()
-        # TODO make special Function rewrite
-
+        mt.verify()
         if fold:
-            fold_pass(method)
+            fold_pass(mt)
 
-        typeinfer_pass(method)
-        method.code.typecheck()
+        ilist_desugar_pass(mt)
+        indexing_desugar_pass(mt)
+        typeinfer_pass(mt)
+
+        mt.code.typecheck()
 
     return run_pass

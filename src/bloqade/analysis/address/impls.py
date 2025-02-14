@@ -3,7 +3,7 @@ qubit.address method table for a few builtin dialects.
 """
 
 from kirin import interp
-from kirin.analysis import ForwardFrame
+from kirin.analysis import ForwardFrame, const
 from kirin.dialects import cf, py, scf, func, ilist
 
 from .lattice import Address, NotQubit, AddressReg, AddressQubit, AddressTuple
@@ -109,14 +109,41 @@ class Cf(cf.typeinfer.TypeInfer):
 
 
 @scf.dialect.register(key="qubit.address")
-class Scf(scf.typeinfer.TypeInfer):
-    @interp.impl(scf.IfElse)
-    def ifelse(
+class Scf(scf.absint.Methods):
+
+    @interp.impl(scf.For)
+    def for_loop(
         self,
         interp_: AddressAnalysis,
         frame: ForwardFrame[Address],
-        stmt: scf.IfElse,
+        stmt: scf.For,
     ):
-        then_results = interp_.run_ssacfg_region(frame, stmt.then_body)
-        else_results = interp_.run_ssacfg_region(frame, stmt.else_body)
-        return interp_.join_results(then_results, else_results)
+        if not isinstance(hint := stmt.iterable.hints.get("const"), const.Value):
+            return interp_.eval_stmt_fallback(frame, stmt)
+
+        iterable = hint.data
+        loop_vars = frame.get_values(stmt.initializers)
+        body_block = stmt.body.blocks[0]
+        block_args = body_block.args
+
+        # NOTE: we need to actually run iteration in case there are
+        # new allocations/re-assign in the loop body.
+        for _ in iterable:
+            with interp_.state.new_frame(interp_.new_frame(stmt)) as body_frame:
+                body_frame.entries.update(frame.entries)
+                body_frame.set_values(
+                    block_args,
+                    (NotQubit(),) + loop_vars,
+                )
+                loop_vars = interp_.run_ssacfg_region(body_frame, stmt.body)
+
+            if loop_vars is None:
+                loop_vars = ()
+            elif isinstance(loop_vars, interp.ReturnValue):
+                return loop_vars
+
+        if isinstance(body_block.last_stmt, func.Return):
+            frame.worklist.append(interp.Successor(body_block, NotQubit(), *loop_vars))
+            return  # if terminate is Return, there is no result
+
+        return loop_vars

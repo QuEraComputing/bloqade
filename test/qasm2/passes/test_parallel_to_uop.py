@@ -1,24 +1,24 @@
 from typing import List
 
-import pytest
-from kirin import ir
+from kirin import ir, types
+from pytest import mark
 from bloqade import qasm2
-from kirin.dialects import func
+from kirin.dialects import py, func
 from bloqade.qasm2.passes.parallel import ParallelToUOp
 
 
 def as_int(value: int):
-    return qasm2.expr.ConstInt(value=value)
+    return py.constant.Constant(value=value)
 
 
 def as_float(value: float):
-    return qasm2.expr.ConstFloat(value=value)
+    return py.constant.Constant(value=value)
 
 
-@pytest.mark.xfail(reason="bug in `is_structurally_equal`")
+@mark.xfail(reason="Unknown")
 def test_cz_rewrite():
 
-    @qasm2.main
+    @qasm2.extended
     def main():
         q = qasm2.qreg(4)
 
@@ -39,16 +39,16 @@ def test_cz_rewrite():
         (q1 := qasm2.core.QRegGet(reg.result, idx=idx1.result)),
         (idx3 := as_int(3)),
         (q3 := qasm2.core.QRegGet(reg.result, idx=idx3.result)),
-        (qasm2.uop.CZ(ctrl=q0.result, qarg=q2.result)),
-        (qasm2.uop.CZ(ctrl=q1.result, qarg=q3.result)),
+        (qasm2.uop.CZ(ctrl=q0.result, qarg=q1.result)),
+        (qasm2.uop.CZ(ctrl=q2.result, qarg=q3.result)),
         (return_none := func.ConstantNone()),
         (func.Return(return_none)),
     ]
     block = ir.Block(expected)
-    block.args.append_from(ir.types.PyClass(ir.Method), "main_self")
+    block.args.append_from(types.MethodType[[], types.NoneType], "main_self")
     expected_func_stmt = func.Function(
         sym_name="main",
-        signature=func.Signature(inputs=(), output=ir.types.NoneType),
+        signature=func.Signature(inputs=(), output=types.NoneType),
         body=ir.Region(blocks=block),
     )
 
@@ -61,7 +61,7 @@ def test_cz_rewrite():
         arg_names=[],
     )
 
-    qasm2.main.run_pass(expected_method)
+    qasm2.main.run_pass(expected_method)  # type: ignore
 
     try:
         assert expected_method.code.is_equal(main.code)
@@ -71,3 +71,7 @@ def test_cz_rewrite():
         print("Actual:")
         main.print()
         raise e
+
+
+if __name__ == "__main__":
+    test_cz_rewrite()

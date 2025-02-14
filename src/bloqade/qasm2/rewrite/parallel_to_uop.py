@@ -43,7 +43,7 @@ class ParallelToUOpRule(abc.RewriteRule):
 
         for ctrl, qarg in zip(ctrls, qargs):
             new_node = uop.CZ(ctrl, qarg)
-            new_node.insert_after(node)
+            new_node.insert_before(node)
 
         node.delete()
 

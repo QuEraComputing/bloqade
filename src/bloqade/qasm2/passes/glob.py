@@ -66,7 +66,7 @@ class GlobalToUOP(Pass):
         in_global_addr_regs = []
         in_global_addr_reg_ssas = []
 
-        for ssa, addr in results.items():
+        for ssa, addr in results.entries.items():
 
             # Find all the times an AddressReg is encountered
             if isinstance(addr, address.AddressReg):

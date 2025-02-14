@@ -11,13 +11,15 @@ from bloqade.analysis.schedule import DagScheduleAnalysis
 
 dialect = ir.Dialect("qasm2.parallel")
 
+N = types.TypeVar("N")
+
 
 @statement(dialect=dialect)
 class CZ(ir.Statement):
     name = "cz"
     traits = frozenset({ir.FromPythonCall()})
-    ctrls: ir.SSAValue = info.argument(ilist.IListType[QubitType])
-    qargs: ir.SSAValue = info.argument(ilist.IListType[QubitType])
+    ctrls: ir.SSAValue = info.argument(ilist.IListType[QubitType, N])
+    qargs: ir.SSAValue = info.argument(ilist.IListType[QubitType, N])
 
 
 @statement(dialect=dialect)
