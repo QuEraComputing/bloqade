@@ -25,7 +25,6 @@ class qBraid:
         gate_target: ir.DialectGroup | None = None,
         provider: "QbraidProvider",  # inject externally for easier mocking
         qelib1: bool = True,
-        custom_gate: bool = True,
     ) -> None:
         """Initialize the qBraid target.
 
@@ -42,10 +41,6 @@ class qBraid:
             qelib1 (bool):
                 Include the `include "qelib1.inc"` line in the resulting QASM2 AST that's
                 submitted to qBraid. Defaults to `True`.
-            custom_gate (bool):
-                If a custom gate was defined in the kernel, attempt to inline it
-                into the main program. Otherwise, just preserve the original
-                reference to the custom gate definition. Defaults to `True`.
         """
 
         from bloqade import qasm2
@@ -53,7 +48,6 @@ class qBraid:
         self.main_target = main_target or qasm2.main
         self.gate_target = gate_target or qasm2.gate
         self.qelib1 = qelib1
-        self.custom_gate = custom_gate
         self.provider = provider
 
     def emit(
@@ -83,7 +77,6 @@ class qBraid:
             main_target=self.main_target,
             gate_target=self.gate_target,
             qelib1=self.qelib1,
-            custom_gate=self.custom_gate,
         )
         qasm2_prog = qasm2_emitter.emit_str(method)
 

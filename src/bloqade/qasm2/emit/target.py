@@ -21,7 +21,6 @@ class QASM2:
         self,
         main_target: ir.DialectGroup | None = None,
         gate_target: ir.DialectGroup | None = None,
-        custom_gate: bool = False,
         qelib1: bool = False,
     ) -> None:
         """Initialize the QASM2 target.
@@ -34,10 +33,6 @@ class QASM2:
             gate_target (ir.DialectGroup | None):
                 The dialects involved in defining any custom gates in the kernel. Argument defaults to `None`.
                 Internally set to the `qasm2.gate` group of dialects.
-            custom_gate (bool):
-                If a custom gate was defined in the kernel, attempt to inline it
-                into the main program. Otherwise, just preserve the original
-                reference to the custom gate definition. Defaults to `True`.
             qelib1 (bool):
                 Include the `include "qelib1.inc"` line in the resulting QASM2 AST that's
                 submitted to qBraid. Defaults to `True`.
@@ -47,7 +42,7 @@ class QASM2:
         self.main_target = main_target or qasm2.main
         self.gate_target = gate_target or qasm2.gate
         self.qelib1 = qelib1
-        self.custom_gate = custom_gate
+        self.custom_gate = False
 
     def emit(self, entry: ir.Method) -> ast.MainProgram:
         """Emit a QASM2 AST from the Bloqade kernel.
