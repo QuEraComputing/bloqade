@@ -20,7 +20,6 @@ class UGate(ir.Statement):
 @dialect.register(key="qasm2.schedule.dag")
 class Glob(interp.MethodTable):
     @interp.impl(UGate)
-    def ugate(self, interp: DagScheduleAnalysis, frame: interp.Frame, node: UGate):
-        register = interp.get_ilist_ssa(node.registers)
-        interp.update_dag(node, register)
+    def ugate(self, interp: DagScheduleAnalysis, frame: interp.Frame, stmt: UGate):
+        interp.update_dag(stmt, [stmt.registers])
         return ()
