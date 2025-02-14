@@ -8,7 +8,7 @@ Install Bloqade using the following command:
 pip install bloqade
 ```
 
-Bloqade supports Python 3.9 or later. We recommend using Python 3.10+ for the best experience.
+Bloqade support python 3.10+.
 
 We strongly recommend developing your compiler project using [`uv`](https://docs.astral.sh/uv/),
 which is the official development environment for Bloqade. You can install `uv` using the following command:
