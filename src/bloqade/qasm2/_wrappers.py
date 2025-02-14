@@ -161,31 +161,91 @@ def z(qarg: Qubit) -> None:
 
 
 @wraps(uop.S)
-def s(qarg: Qubit) -> None: ...
+def s(qarg: Qubit) -> None:
+    """
+    S gate.
+
+    Args:
+        qarg: The qubit to apply the gate to.
+    """
+
+    ...
 
 
 @wraps(uop.Sdag)
-def sdg(qarg: Qubit) -> None: ...
+def sdg(qarg: Qubit) -> None:
+    """
+    Hermitian conjugate of the S gate.
+
+    Args:
+        qarg: The qubit to apply the gate to.
+
+    """
+
+    ...
 
 
 @wraps(uop.T)
-def t(qarg: Qubit) -> None: ...
+def t(qarg: Qubit) -> None:
+    """
+    T gate.
+
+    Args:
+        qarg: The qubit to apply the gate to.
+    """
+
+    ...
 
 
 @wraps(uop.Tdag)
-def tdg(qarg: Qubit) -> None: ...
+def tdg(qarg: Qubit) -> None:
+    """
+    Hermitian conjugate of the T gate.
+
+    Args:
+        qarg: The qubit to apply the gate to.
+
+    """
+
+    ...
 
 
 @wraps(uop.RX)
-def rx(qarg: Qubit, theta: float) -> None: ...
+def rx(qarg: Qubit, theta: float) -> None:
+    """
+    Single qubit rotation about the X axis on block sphere
+
+    Args:
+        qarg: The qubit to apply the gate to.
+        theta: The angle of rotation.
+    """
+    ...
 
 
 @wraps(uop.RY)
-def ry(qarg: Qubit, theta: float) -> None: ...
+def ry(qarg: Qubit, theta: float) -> None:
+    """
+    Single qubit rotation about the Y axis on block sphere
+
+    Args:
+        qarg: The qubit to apply the gate to.
+        theta: The angle of rotation.
+
+    """
+
+    ...
 
 
 @wraps(uop.RZ)
-def rz(qarg: Qubit, theta: float) -> None: ...
+def rz(qarg: Qubit, theta: float) -> None:
+    """
+    Single qubit rotation about the Z axis on block sphere
+
+    Args:
+        qarg: The qubit to apply the gate to.
+        theta: The angle of rotation.
+    """
+    ...
 
 
 @wraps(uop.U1)
@@ -197,11 +257,28 @@ def u2(qarg: Qubit, phi: float, lam: float) -> None: ...
 
 
 @wraps(uop.CZ)
-def cz(ctrl: Qubit, qarg: Qubit) -> None: ...
+def cz(ctrl: Qubit, qarg: Qubit) -> None:
+    """
+    Controlled-Z gate.
+
+    Args:
+        ctrl: The control qubit.
+        qarg: The target qubit
+    """
+    ...
 
 
 @wraps(uop.CY)
-def cy(ctrl: Qubit, qarg: Qubit) -> None: ...
+def cy(ctrl: Qubit, qarg: Qubit) -> None:
+    """
+    Controlled-Y gate.
+
+    Args:
+        ctrl: The control qubit.
+        qarg: The target qubit
+    """
+
+    ...
 
 
 @wraps(uop.CH)
