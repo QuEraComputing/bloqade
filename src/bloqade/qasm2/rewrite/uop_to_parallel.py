@@ -10,7 +10,13 @@ from bloqade.analysis.schedule import StmtDag
 
 
 def same_id_checker(ssa1: ir.SSAValue, ssa2: ir.SSAValue):
-    return ssa1 is ssa2
+    if ssa1 is ssa2:
+        return True
+
+    if "const" in ssa1.hints and "const" in ssa2.hints:
+        return ssa1.hints["const"] == ssa2.hints["const"]
+
+    return False
 
 
 class MergeResults:
