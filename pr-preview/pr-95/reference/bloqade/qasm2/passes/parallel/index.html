@@ -2300,6 +2300,54 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bloqade.qasm2.passes.parallel.ParallelToUOp" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ParallelToUOp
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" ParallelToUOp">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bloqade.qasm2.passes.parallel.ParallelToUOp--usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage Examples
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bloqade.qasm2.passes.parallel.UOpToParallel" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;UOpToParallel
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" UOpToParallel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bloqade.qasm2.passes.parallel.UOpToParallel--usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage Examples
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2328,6 +2376,8 @@
       
         
           
+        
+      
         
       
         
@@ -2376,6 +2426,28 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rewrite/desugar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Desugar
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -2478,6 +2550,54 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bloqade.qasm2.passes.parallel.ParallelToUOp" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ParallelToUOp
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" ParallelToUOp">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bloqade.qasm2.passes.parallel.ParallelToUOp--usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage Examples
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bloqade.qasm2.passes.parallel.UOpToParallel" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;UOpToParallel
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" UOpToParallel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bloqade.qasm2.passes.parallel.UOpToParallel--usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage Examples
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2519,6 +2639,9 @@
 <a id="bloqade.qasm2.passes.parallel"></a>
     <div class="doc doc-contents first">
 
+        <p>Passes for converting parallel gates into multiple single gates as well as
+converting multiple single gates to parallel gates.</p>
+
 
 
 
@@ -2534,6 +2657,150 @@
 
 
 
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bloqade.qasm2.passes.parallel.ParallelToUOp" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ParallelToUOp</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">ParallelToUOp</span><span class="p">()</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="kirin.passes.abc.Pass">Pass</span></code></p>
+
+
+        <p>Pass to convert parallel gates into single gates.</p>
+<p>This pass rewrites any parallel gates from the <code>qasm2.parallel</code> dialect into multiple
+single gates in the <code>qasm2.uop</code> dialect, bringing the program closer to
+conforming to standard QASM2 syntax.</p>
+<h4 id="bloqade.qasm2.passes.parallel.ParallelToUOp--usage-examples">Usage Examples</h4>
+<div class="highlight"><pre><span></span><code># Define kernel
+@qasm2.extended
+def main():
+    q = qasm2.qreg(4)
+
+    qasm2.parallel.cz(ctrls=[q[0], q[2]], qargs=[q[1], q[3]])
+
+# Run rewrite
+ParallelToUOp(main.dialects)(main)
+</code></pre></div>
+<p>The <code>qasm2.parallel.cz</code> statement has been rewritten to individual gates:</p>
+<div class="highlight"><pre><span></span><code>qasm2.uop.cz(ctrl=q[0], qarg=q[1])
+qasm2.uop.cz(ctrl=q[2], qarg=q[3])
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bloqade.qasm2.passes.parallel.UOpToParallel" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">UOpToParallel</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">UOpToParallel</span><span class="p">()</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="kirin.passes.abc.Pass">Pass</span></code></p>
+
+
+        <p>Pass to convert single gates into parallel gates.</p>
+<p>This pass looks for single gates from the <code>qasm2.uop</code> dialect that can be combined
+into parallel gates from the <code>qasm2.parallel</code> dialect and performs a rewrite to do so.</p>
+<h4 id="bloqade.qasm2.passes.parallel.UOpToParallel--usage-examples">Usage Examples</h4>
+<div class="highlight"><pre><span></span><code># Define kernel
+@qasm2.main
+def test():
+    q = qasm2.qreg(4)
+
+    theta = 0.1
+    phi = 0.2
+    lam = 0.3
+
+    qasm2.u(q[1], theta, phi, lam)
+    qasm2.u(q[3], theta, phi, lam)
+    qasm2.cx(q[1], q[3])
+    qasm2.u(q[2], theta, phi, lam)
+    qasm2.u(q[0], theta, phi, lam)
+    qasm2.cx(q[0], q[2])
+
+# Run rewrite
+UOpToParallel(main.dialects)(main)
+</code></pre></div>
+<p>The individual <code>qasm2.u</code> statements have now been combined
+into a single <code>qasm2.parallel.u</code> statement.</p>
+<div class="highlight"><pre><span></span><code>qasm2.parallel.u(qargs = [q[0], q[1], q[2], q[3]], theta, phi, lam)
+qasm2.uop.CX(q[1], q[3])
+qasm2.uop.CX(q[0], q[2])
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
 
 
 
