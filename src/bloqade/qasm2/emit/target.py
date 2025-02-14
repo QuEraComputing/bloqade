@@ -63,7 +63,10 @@ class QASM2:
         """
         assert len(entry.args) == 0, "entry method should not have arguments"
         entry = entry.similar()
-        QASM2Fold(entry.dialects).fixpoint(entry)
+
+        if not self.custom_gate:
+            QASM2Fold(entry.dialects).fixpoint(entry)
+
         Py2QASM(entry.dialects)(entry)
         target_main = EmitQASM2Main(self.main_target)
         target_main.run(
