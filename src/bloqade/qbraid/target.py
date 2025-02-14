@@ -73,7 +73,7 @@ class qBraid:
                 A dictionary of tags to associate with the Job.
 
         Returns:
-            Union[QbraidJob, list[QbraidJOb]]:
+            Union[QbraidJob, list[QbraidJob]]:
                 An object you can query for the status of your submission as well as
                 obtain simulator results from.
         """
