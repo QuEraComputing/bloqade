@@ -95,15 +95,18 @@ def extended(self):
         mt: ir.Method,
         *,
         fold: bool = True,
+        typeinfer: bool = True,
     ):
         mt.verify()
         if fold:
-            fold_pass(mt)
+            fold_pass.fixpoint(mt)
 
+        if typeinfer:
+            typeinfer_pass(mt)
         ilist_desugar_pass(mt)
         indexing_desugar_pass(mt)
-        typeinfer_pass(mt)
-
-        mt.code.typecheck()
+        if typeinfer:
+            typeinfer_pass(mt)  # fix types after desugaring
+            mt.code.typecheck()
 
     return run_pass

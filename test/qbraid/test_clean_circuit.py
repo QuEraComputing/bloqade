@@ -38,6 +38,7 @@ def test():
         return q
 
     RemoveNoisePass(simulation)(test_atom_loss)
+    test_atom_loss.print()
 
     expected = """OPENQASM 2.0;
 include "qelib1.inc";

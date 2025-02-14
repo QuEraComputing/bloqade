@@ -10,10 +10,10 @@ from bloqade.qasm2.dialects import core
 class IndexingDesugarRule(abc.RewriteRule):
     def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
         if isinstance(node, py.indexing.GetItem):
-            if core.QRegType.is_subseteq(node.obj.type):
+            if node.obj.type.is_subseteq(core.QRegType):
                 node.replace_by(core.QRegGet(reg=node.obj, idx=node.index))
                 return result.RewriteResult(has_done_something=True)
-            elif core.CRegType.is_subseteq(node.obj.type):
+            elif node.obj.type.is_subseteq(core.CRegType):
                 node.replace_by(core.CRegGet(reg=node.obj, idx=node.index))
                 return result.RewriteResult(has_done_something=True)
 

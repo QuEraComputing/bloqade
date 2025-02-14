@@ -72,9 +72,9 @@ def qaoa_simd(G):
         def get_qubit(x: int):
             return qreg[x]
 
-        ctrls = ilist.Map(fn=get_qubit, collection=left_ids)
-        qargs = ilist.Map(fn=get_qubit, collection=right_ids)
-        all_qubits = ilist.Map(fn=get_qubit, collection=range(N))
+        ctrls = ilist.map(fn=get_qubit, collection=left_ids)
+        qargs = ilist.map(fn=get_qubit, collection=right_ids)
+        all_qubits = ilist.map(fn=get_qubit, collection=range(N))
 
         parallel_h(all_qubits)
         for i in range(len(gamma)):

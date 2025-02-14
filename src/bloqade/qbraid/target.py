@@ -14,10 +14,16 @@ class qBraid:
     def __init__(
         self,
         *,
+        main_target: ir.DialectGroup | None = None,
+        gate_target: ir.DialectGroup | None = None,
         provider: "QbraidProvider",  # inject externally for easier mocking
         qelib1: bool = True,
         custom_gate: bool = True,
     ) -> None:
+        from bloqade import qasm2
+
+        self.main_target = main_target or qasm2.main
+        self.gate_target = gate_target or qasm2.gate
         self.qelib1 = qelib1
         self.custom_gate = custom_gate
         self.provider = provider
@@ -30,7 +36,12 @@ class qBraid:
     ) -> Union["QbraidJob", list["QbraidJob"]]:
 
         # Convert method to QASM2 string
-        qasm2_emitter = QASM2(qelib1=self.qelib1, custom_gate=self.custom_gate)
+        qasm2_emitter = QASM2(
+            main_target=self.main_target,
+            gate_target=self.gate_target,
+            qelib1=self.qelib1,
+            custom_gate=self.custom_gate,
+        )
         qasm2_prog = qasm2_emitter.emit_str(method)
 
         # Submit the QASM2 string to the qBraid simulator

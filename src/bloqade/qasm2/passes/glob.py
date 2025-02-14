@@ -1,59 +1,51 @@
-from typing import List
-from dataclasses import dataclass
+"""
+Passes that deal with global gates. As of now, only one rewrite pass exists
+which converts global gates to single qubit gates.
+"""
 
 from kirin import ir
-from bloqade import qasm2
-from kirin.rewrite import abc, cse, dce, walk, result
+from kirin.rewrite import cse, dce, walk, result
 from bloqade.analysis import address
 from kirin.passes.abc import Pass
-from bloqade.qasm2.dialects import glob
-
-
-@dataclass
-class GlobalToUOpRule(abc.RewriteRule):
-    address_regs: List[address.AddressReg]
-    address_reg_ssas: List[ir.SSAValue]
-
-    def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
-        if node.dialect == glob.dialect:
-            return getattr(self, f"rewrite_{node.name}")(node)
-
-        return result.RewriteResult()
-
-    def rewrite_ugate(self, node: ir.Statement):
-        assert isinstance(node, glob.UGate)
-
-        # if there's no register even found, just give up
-        if not self.address_regs:
-            return result.RewriteResult()
-
-        for address_reg, address_reg_ssa in zip(
-            self.address_regs, self.address_reg_ssas
-        ):
-
-            for qubit_idx in address_reg.data:
-
-                qubit_idx = qasm2.expr.ConstInt(value=qubit_idx)
-
-                qubit_stmt = qasm2.core.QRegGet(
-                    reg=address_reg_ssa, idx=qubit_idx.result
-                )
-                qubit_ssa = qubit_stmt.result
-
-                ugate_node = qasm2.uop.UGate(
-                    qarg=qubit_ssa, theta=node.theta, phi=node.phi, lam=node.lam
-                )
-
-                qubit_idx.insert_before(node)
-                qubit_stmt.insert_before(node)
-                ugate_node.insert_after(node)
-
-        node.delete()
-
-        return result.RewriteResult(has_done_something=True)
+from bloqade.qasm2.rewrite import GlobalToUOpRule
 
 
 class GlobalToUOP(Pass):
+    """Pass to convert Global gates into single gates.
+
+    This pass rewrites the global unitary gate from the `qasm2.glob` dialect into multiple
+    single gates in the `qasm2.uop` dialect, bringing the program closer to
+    conforming to standard QASM2 syntax.
+
+
+    ## Usage Examples
+    ```
+    # Define kernel
+    @qasm2.extended
+    def main():
+        q1 = qasm2.qreg(1)
+        q2 = qasm2.qreg(2)
+
+        theta = 1.3
+        phi = 1.1
+        lam = 1.2
+
+        qasm2.glob.u(theta=theta, phi=phi, lam=lam, registers=[q1, q2])
+
+    GlobalToUOP(dialects=main.dialects)(main)
+
+    # Run rewrite
+    GlobalToUOP(main.dialects)(main)
+    ```
+
+    The `qasm2.glob.u` statement has been rewritten to individual gates:
+
+    ```
+    qasm2.uop.u(q1[0], theta, phi, lam)
+    qasm2.uop.u(q1[0], theta, phi, lam)
+    qasm2.uop.u(q2[1], theta, phi, lam)
+    ```
+    """
 
     def generate_rule(self, mt: ir.Method) -> GlobalToUOpRule:
         results, _ = address.AddressAnalysis(mt.dialects).run_analysis(mt)

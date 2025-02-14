@@ -47,7 +47,11 @@ def test_qBraid_emit():
             return MockDevice()
 
     mock_provider = MockQBraidProvider()
-    mock_qBraid_emitter = qBraid(provider=mock_provider)
+    mock_qBraid_emitter = qBraid(
+        main_target=qasm2.main.add(qasm2.dialects.parallel).add(ilist),
+        gate_target=qasm2.gate.add(qasm2.dialects.parallel).add(ilist),
+        provider=mock_provider,  # type: ignore
+    )
     mock_qBraid_job = mock_qBraid_emitter.emit(method=main)
 
     assert isinstance(mock_qBraid_job, MockQBraidJob)
