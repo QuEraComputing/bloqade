@@ -81,6 +81,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#qasm2-and-its-extensions" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -551,6 +556,20 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    QASM2
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -562,6 +581,61 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-simulations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running simulations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#emitting-qasm2-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Emitting QASM2 code
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-the-compilation-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding the compilation process
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2511,6 +2585,52 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-simulations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running simulations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#emitting-qasm2-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Emitting QASM2 code
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-the-compilation-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding the compilation process
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -2542,14 +2662,97 @@
   
 
 
-  <h1>QASM2</h1>
-
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This page is under construction. The content may be incomplete or incorrect. Submit an issue
 on <a href="https://github.com/QuEraComputing/bloqade/issues/new">GitHub</a> if you need help or want to
 contribute.</p>
 </div>
+<h1 id="qasm2-and-its-extensions">QASM2 and its extensions</h1>
+<p>Bloqade provides a set of <a href="">dialects (missing link)</a> for QASM2 and our custom extensions to model parallel gates in neutral atom architectures.</p>
+<h2 id="quick-example">Quick Example</h2>
+<p>When programming with QASM2, the most common usage is via the <code>qasm2.extended</code> decorator, e.g the following Quantum Fourier Transform (QFT) circuit:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">qasm2</span>
+
+<span class="n">pi</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+
+<span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">qft</span><span class="p">(</span><span class="n">qreg</span><span class="p">:</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">QReg</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">qreg</span>
+
+    <span class="n">qasm2</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="n">qasm2</span><span class="o">.</span><span class="n">cu1</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">qreg</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="o">**</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">qft</span><span class="p">(</span><span class="n">qreg</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">qreg</span>
+</code></pre></div>
+<p>While the syntax is similar to Python, the <code>qasm2.extended</code> decorator actually compiles the <code>qft</code> function
+into lower-level intermediate representation (IR) code that can be later executed on a simulator (available via PyQrack) or a real quantum computer (not yet available).</p>
+<p>You can inspect the initial IR code by calling the pretty printer:</p>
+<div class="highlight"><pre><span></span><code><span class="n">qft</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+</code></pre></div>
+<p><img alt="QFT IR" src="/assets/qft-pprint.png" /></p>
+<h2 id="running-simulations">Running simulations</h2>
+<p>The program can be executed via a simulator backend, e.g. PyQrack, you can install it via</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>pyqrack<span class="o">]</span>
+<span class="c1"># or if you want to use the CPU only version</span>
+pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>pyqrack-cpu<span class="o">]</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">qft</span><span class="p">(</span><span class="n">qasm2</span><span class="o">.</span><span class="n">qreg</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="n">device</span> <span class="o">=</span> <span class="n">PyQrack</span><span class="p">()</span>
+<span class="n">qreg</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">qreg</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="emitting-qasm2-code">Emitting QASM2 code</h2>
+<p>You can also emit QASM2 code from the IR code:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.qasm2.emit</span><span class="w"> </span><span class="kn">import</span> <span class="n">QASM2</span> <span class="c1"># the QASM2 target</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.qasm2.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">pprint</span> <span class="c1"># the QASM2 pretty printer</span>
+
+<span class="n">target</span> <span class="o">=</span> <span class="n">QASM2</span><span class="p">()</span>
+<span class="n">ast</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+<span class="n">pprint</span><span class="p">(</span><span class="n">ast</span><span class="p">)</span>
+</code></pre></div>
+<p><img alt="QFT QASM2" src="/assets/qft-qasm2.png" /></p>
+<h2 id="understanding-the-compilation-process">Understanding the compilation process</h2>
+<p>The compilation process is divided into several stages:</p>
+<ol>
+<li><strong>Lowering</strong>: the decorator <code>qasm2.extended</code> takes Python Abstract Syntax Tree (AST) and lowers it into Kirin IR in the Static Single Assignment (SSA) form.</li>
+<li><strong>Interpretation</strong>: when invoking the PyQrack backend, the IR code is interpreted via Kirin's IR interpreter (missing link) with the PyQrack runtime backend.</li>
+<li><strong>Target code generation</strong>: when emitting QASM2 code:</li>
+<li>The IR code gets aggressively inlined and all constant expressions are evaluated.</li>
+<li>All loops and control flow are unrolled.</li>
+<li>All compatible Python expressions (e.g <code>sin</code>, arithmetics) are translated into QASM2 expression.</li>
+<li>The QASM2 code is emitted as QASM2 AST for pretty printing.</li>
+</ol>
+<p>In fact, the decorator <code>qasm2.extended</code> is a group of smaller dialects:</p>
+<div class="highlight"><pre><span></span><code><span class="n">extended</span> <span class="o">=</span> <span class="n">structural_no_opt</span><span class="o">.</span><span class="n">union</span><span class="p">(</span>
+     <span class="p">[</span>
+         <span class="n">inline</span><span class="p">,</span>
+         <span class="n">uop</span><span class="p">,</span>
+         <span class="n">glob</span><span class="p">,</span>
+         <span class="n">noise</span><span class="p">,</span>
+         <span class="n">parallel</span><span class="p">,</span>
+         <span class="n">core</span><span class="p">,</span>
+     <span class="p">]</span>
+ <span class="p">)</span>
+</code></pre></div>
+<p>where <code>structural_no_opt</code> is the base dialect group that provides the basic control flow, common Python expressions (but not all), then:</p>
+<ul>
+<li><code>core</code> provides the core QASM2 operations such as register allocation, measurement and reset.</li>
+<li><code>uop</code> provides the unary operations, such as standard Pauli gates, rotation gates, etc.</li>
+</ul>
+<p>The following dialects are specific to neutral atom quantum computing as an extension:</p>
+<ul>
+<li><code>glob</code> provides the global gates (Rydberg specific)</li>
+<li><code>noise</code> provides the noise channels</li>
+<li><code>parallel</code> provides the parallel gate support (Rydberg specific).</li>
+<li><code>inline</code> dialect provides the inline QASM string</li>
+</ul>
 
 
 

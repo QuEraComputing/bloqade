@@ -502,37 +502,55 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#bloqade-and-its-extensions" class="md-nav__link">
+  <a href="#bloqade-and-its-friends" class="md-nav__link">
     <span class="md-ellipsis">
-      Bloqade and its extensions
+      Bloqade and its friends
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Bloqade and its extensions">
+    <nav class="md-nav" aria-label="Bloqade and its friends">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#bloqade-runtime-pyqrack" class="md-nav__link">
+  <a href="#bloqadeqasm2" class="md-nav__link">
     <span class="md-ellipsis">
-      bloqade-runtime-pyqrack
+      bloqade.qasm2
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#qbraid-extension" class="md-nav__link">
+  <a href="#bloqadeanalog" class="md-nav__link">
     <span class="md-ellipsis">
-      qBraid extension
+      bloqade.analog
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#qasm2-extension" class="md-nav__link">
+  <a href="#bloqadepyqrack" class="md-nav__link">
     <span class="md-ellipsis">
-      QASM2 extension
+      bloqade.pyqrack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloqadeqbraid" class="md-nav__link">
+    <span class="md-ellipsis">
+      bloqade.qbraid
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloqadestim-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      bloqade.stim (Experimental)
     </span>
   </a>
   
@@ -2608,37 +2626,55 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#bloqade-and-its-extensions" class="md-nav__link">
+  <a href="#bloqade-and-its-friends" class="md-nav__link">
     <span class="md-ellipsis">
-      Bloqade and its extensions
+      Bloqade and its friends
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Bloqade and its extensions">
+    <nav class="md-nav" aria-label="Bloqade and its friends">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#bloqade-runtime-pyqrack" class="md-nav__link">
+  <a href="#bloqadeqasm2" class="md-nav__link">
     <span class="md-ellipsis">
-      bloqade-runtime-pyqrack
+      bloqade.qasm2
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#qbraid-extension" class="md-nav__link">
+  <a href="#bloqadeanalog" class="md-nav__link">
     <span class="md-ellipsis">
-      qBraid extension
+      bloqade.analog
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#qasm2-extension" class="md-nav__link">
+  <a href="#bloqadepyqrack" class="md-nav__link">
     <span class="md-ellipsis">
-      QASM2 extension
+      bloqade.pyqrack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloqadeqbraid" class="md-nav__link">
+    <span class="md-ellipsis">
+      bloqade.qbraid
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloqadestim-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      bloqade.stim (Experimental)
     </span>
   </a>
   
@@ -2717,23 +2753,27 @@ which is the official development environment for Bloqade. You can install <code
 </div>
 </div>
 </div>
-<h2 id="bloqade-and-its-extensions">Bloqade and its extensions</h2>
-<p>Bloqade also comes with a few friends that you might find useful:</p>
-<h3 id="bloqade-runtime-pyqrack"><code>bloqade-runtime-pyqrack</code></h3>
-<p>PyQrack is a high-performance simulator for quantum circuits. We provide a Bloqade extension that allows you to run your Bloqade programs with PyQrack via interpreting the Bloqade programs with PyQrack as a runtime. You can install <code>bloqade-runtime-pyqrack</code> using the following command:</p>
+<h2 id="bloqade-and-its-friends">Bloqade and its friends</h2>
+<p>Bloqade is a Python namespace package, we officially provide several sub-packages, each of which is an eDSL for neutral atom quantum computing. The following is a list of the sub-packages in Bloqade:</p>
+<h3 id="bloqadeqasm2"><code>bloqade.qasm2</code></h3>
+<p>QASM2 and its extensions support for neutral atom quantum computing. Available via:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>qasm2<span class="o">]</span>
+</code></pre></div>
+<h3 id="bloqadeanalog"><code>bloqade.analog</code></h3>
+<p>Analog quantum computing eDSL for neutral atom quantum computing (previously <code>bloqade-python</code>). Available via:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>analog<span class="o">]</span>
+</code></pre></div>
+<h3 id="bloqadepyqrack"><code>bloqade.pyqrack</code></h3>
+<p>Support of the PyQrack simulator as a runtime backend for QASM2 and extensions.</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>pyqrack<span class="o">]</span>
 </code></pre></div>
-<p>or</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>pyqrack-cpu<span class="o">]</span>
-</code></pre></div>
-<p>if you want to install the CPU-only version of PyQrack.</p>
-<h3 id="qbraid-extension">qBraid extension</h3>
-<p>The qBraid extension allows you to run your Bloqade programs on the qBraid platform. You can install this extension via</p>
+<h3 id="bloqadeqbraid"><code>bloqade.qbraid</code></h3>
+<p>Support of the qBraid cloud service as a runtime backend for retrieving noise models and running circuits.</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>qbraid<span class="o">]</span>
 </code></pre></div>
-<h3 id="qasm2-extension">QASM2 extension</h3>
-<p>The QASM2 extension allows you to compile your Bloqade programs to/from QASM2, or QuEra's custom extension of QASM2. You can install this extension via</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>qasm2<span class="o">]</span>
+<h3 id="bloqadestim-experimental"><code>bloqade.stim</code> (Experimental)</h3>
+<p>STIM and its extensions support for neutral atom quantum computing. Available via:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>stim<span class="o">]</span>
 </code></pre></div>
 <h2 id="development">Development</h2>
 <p>If you want to contribute to Bloqade, you can clone the repository from GitHub:</p>
