@@ -57,3 +57,15 @@ def main():
 device = PyQrack()
 qreg = device.run(main)
 print(qreg)
+
+# %% [markdown]
+# we can also emit the QASM2 code for the `main` function and print it to see the QASM2 code
+# that corresponds to the QFT circuit.
+
+# %%
+from bloqade.qasm2.emit import QASM2  # noqa: E402
+from bloqade.qasm2.parse import pprint  # noqa: E402
+
+target = QASM2()
+ast = target.emit(main)
+pprint(ast)
