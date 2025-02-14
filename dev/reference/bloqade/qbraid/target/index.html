@@ -2603,8 +2603,7 @@
     <span class="n">main_target</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">DialectGroup</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">gate_target</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">DialectGroup</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">provider</span><span class="p">:</span> <span class="n">QbraidProvider</span><span class="p">,</span>
-    <span class="n">qelib1</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">custom_gate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">qelib1</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span>
 </code></pre></div>
 
@@ -2697,24 +2696,6 @@ submitted to qBraid. Defaults to <code>True</code>.</p>
                   <code>True</code>
             </td>
           </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>custom_gate</code>
-            </td>
-            <td>
-                  <code>bool</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If a custom gate was defined in the kernel, attempt to inline it
-into the main program. Otherwise, just preserve the original
-reference to the custom gate definition. Defaults to <code>True</code>.</p>
-              </div>
-            </td>
-            <td>
-                  <code>True</code>
-            </td>
-          </tr>
       </tbody>
     </table>
 
@@ -2755,20 +2736,13 @@ reference to the custom gate definition. Defaults to <code>True</code>.</p>
 <span class="normal">48</span>
 <span class="normal">49</span>
 <span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">51</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">main_target</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">DialectGroup</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">gate_target</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">DialectGroup</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">provider</span><span class="p">:</span> <span class="s2">&quot;QbraidProvider&quot;</span><span class="p">,</span>  <span class="c1"># inject externally for easier mocking</span>
     <span class="n">qelib1</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">custom_gate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the qBraid target.</span>
 
@@ -2785,10 +2759,6 @@ reference to the custom gate definition. Defaults to <code>True</code>.</p>
 <span class="sd">        qelib1 (bool):</span>
 <span class="sd">            Include the `include &quot;qelib1.inc&quot;` line in the resulting QASM2 AST that&#39;s</span>
 <span class="sd">            submitted to qBraid. Defaults to `True`.</span>
-<span class="sd">        custom_gate (bool):</span>
-<span class="sd">            If a custom gate was defined in the kernel, attempt to inline it</span>
-<span class="sd">            into the main program. Otherwise, just preserve the original</span>
-<span class="sd">            reference to the custom gate definition. Defaults to `True`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">qasm2</span>
@@ -2796,7 +2766,6 @@ reference to the custom gate definition. Defaults to <code>True</code>.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">main_target</span> <span class="o">=</span> <span class="n">main_target</span> <span class="ow">or</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">main</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">gate_target</span> <span class="o">=</span> <span class="n">gate_target</span> <span class="ow">or</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">gate</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">qelib1</span> <span class="o">=</span> <span class="n">qelib1</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">custom_gate</span> <span class="o">=</span> <span class="n">custom_gate</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">provider</span> <span class="o">=</span> <span class="n">provider</span>
 </code></pre></div></td></tr></table></div>
                   </details>
@@ -2924,7 +2893,13 @@ obtain simulator results from.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/bloqade/qbraid/target.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
 <span class="normal">60</span>
 <span class="normal">61</span>
 <span class="normal">62</span>
@@ -2951,14 +2926,7 @@ obtain simulator results from.</p>
 <span class="normal">83</span>
 <span class="normal">84</span>
 <span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span>
+<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">method</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">,</span>
     <span class="n">shots</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -2985,7 +2953,6 @@ obtain simulator results from.</p>
         <span class="n">main_target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">main_target</span><span class="p">,</span>
         <span class="n">gate_target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gate_target</span><span class="p">,</span>
         <span class="n">qelib1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">qelib1</span><span class="p">,</span>
-        <span class="n">custom_gate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">custom_gate</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">qasm2_prog</span> <span class="o">=</span> <span class="n">qasm2_emitter</span><span class="o">.</span><span class="n">emit_str</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
 

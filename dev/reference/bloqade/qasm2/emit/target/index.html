@@ -2709,7 +2709,6 @@
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">QASM2</span><span class="p">(</span>
     <span class="n">main_target</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">DialectGroup</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">gate_target</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">DialectGroup</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">custom_gate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">qelib1</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
@@ -2770,24 +2769,6 @@ Internally set to the <code>qasm2.gate</code> group of dialects.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>custom_gate</code>
-            </td>
-            <td>
-                  <code>bool</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If a custom gate was defined in the kernel, attempt to inline it
-into the main program. Otherwise, just preserve the original
-reference to the custom gate definition. Defaults to <code>True</code>.</p>
-              </div>
-            </td>
-            <td>
-                  <code>False</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
                 <code>qelib1</code>
             </td>
             <td>
@@ -2838,16 +2819,10 @@ submitted to qBraid. Defaults to <code>True</code>.</p>
 <span class="normal">42</span>
 <span class="normal">43</span>
 <span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">45</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">main_target</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">DialectGroup</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">gate_target</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">DialectGroup</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">custom_gate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">qelib1</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the QASM2 target.</span>
@@ -2860,10 +2835,6 @@ submitted to qBraid. Defaults to <code>True</code>.</p>
 <span class="sd">        gate_target (ir.DialectGroup | None):</span>
 <span class="sd">            The dialects involved in defining any custom gates in the kernel. Argument defaults to `None`.</span>
 <span class="sd">            Internally set to the `qasm2.gate` group of dialects.</span>
-<span class="sd">        custom_gate (bool):</span>
-<span class="sd">            If a custom gate was defined in the kernel, attempt to inline it</span>
-<span class="sd">            into the main program. Otherwise, just preserve the original</span>
-<span class="sd">            reference to the custom gate definition. Defaults to `True`.</span>
 <span class="sd">        qelib1 (bool):</span>
 <span class="sd">            Include the `include &quot;qelib1.inc&quot;` line in the resulting QASM2 AST that&#39;s</span>
 <span class="sd">            submitted to qBraid. Defaults to `True`.</span>
@@ -2873,7 +2844,7 @@ submitted to qBraid. Defaults to <code>True</code>.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">main_target</span> <span class="o">=</span> <span class="n">main_target</span> <span class="ow">or</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">main</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">gate_target</span> <span class="o">=</span> <span class="n">gate_target</span> <span class="ow">or</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">gate</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">qelib1</span> <span class="o">=</span> <span class="n">qelib1</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">custom_gate</span> <span class="o">=</span> <span class="n">custom_gate</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">custom_gate</span> <span class="o">=</span> <span class="kc">False</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -2961,7 +2932,12 @@ A QASM2 AST object</p>
 
             <details class="quote">
               <summary>Source code in <code>src/bloqade/qasm2/emit/target.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">52</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
 <span class="normal">53</span>
 <span class="normal">54</span>
 <span class="normal">55</span>
@@ -3000,12 +2976,7 @@ A QASM2 AST object</p>
 <span class="normal">88</span>
 <span class="normal">89</span>
 <span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">MainProgram</span><span class="p">:</span>
+<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">MainProgram</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Emit a QASM2 AST from the Bloqade kernel.</span>
 
 <span class="sd">    Args:</span>
@@ -3127,7 +3098,12 @@ A QASM2 AST object</p>
 
             <details class="quote">
               <summary>Source code in <code>src/bloqade/qasm2/emit/target.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 98</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
 <span class="normal"> 99</span>
 <span class="normal">100</span>
 <span class="normal">101</span>
@@ -3142,12 +3118,7 @@ A QASM2 AST object</p>
 <span class="normal">110</span>
 <span class="normal">111</span>
 <span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Emit a QASM2 AST from the Bloqade kernel.</span>
 
 <span class="sd">    Args:</span>
