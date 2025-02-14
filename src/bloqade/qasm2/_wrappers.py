@@ -5,51 +5,159 @@ from .dialects import uop, core, expr, inline as inline_
 
 
 @wraps(inline_.InlineQASM)
-def inline(text: str) -> None: ...
+def inline(text: str) -> None:
+    """
+    Inline QASM code into the current program.
+
+    Args:
+        text: The QASM code to inline.
+    """
+    ...
 
 
 @wraps(core.QRegNew)
-def qreg(n_qubits: int) -> QReg: ...
+def qreg(n_qubits: int) -> QReg:
+    """
+    Create a new quantum register with `n_qubits` qubits.
+
+    Args:
+        n_qubits: The number of qubits in the register.
+
+    Returns:
+        The newly created quantum register.
+
+    """
+    ...
 
 
 @wraps(core.CRegNew)
-def creg(n_bits: int) -> CReg: ...
+def creg(n_bits: int) -> CReg:
+    """
+    Create a new classical register with `n_bits` bits.
+
+    Args:
+        n_bits: The number of bits in the register.
+
+    Returns:
+        The newly created classical register.
+
+    """
+    ...
 
 
 @wraps(core.Reset)
-def reset(qarg: Qubit) -> None: ...
+def reset(qarg: Qubit) -> None:
+    """
+    Reset the qubit `qarg` to the |0⟩ state.
+
+    Args:
+        qarg: The qubit to reset.
+
+    """
+
+    ...
 
 
 @wraps(core.Measure)
-def measure(qarg: Qubit, cbit: Bit) -> None: ...
+def measure(qarg: Qubit, cbit: Bit) -> None:
+    """
+    Measure the qubit `qarg` and store the result in the classical bit `cbit`.
+
+    Args:
+        qarg: The qubit to measure.
+        cbit: The classical bit to store the result in.
+    """
+    ...
 
 
 @wraps(uop.CX)
-def cx(ctrl: Qubit, qarg: Qubit) -> None: ...
+def cx(ctrl: Qubit, qarg: Qubit) -> None:
+    """
+    Controlled-X (CNOT) gate.
+
+    Args:
+        ctrl: The control qubit.
+        qarg: The target qubit.
+    """
+    ...
 
 
 @wraps(uop.UGate)
-def u(qarg: Qubit, theta: float, phi: float, lam: float) -> None: ...
+def u(qarg: Qubit, theta: float, phi: float, lam: float) -> None:
+    """
+    U gate.
+
+    Note:
+        See https://arxiv.org/pdf/1707.03429 for definition of angles.
+
+    Args:
+        qarg: The qubit to apply the gate to.
+        theta: The angle of rotation
+        phi: The angle of rotation
+        lam: The angle of rotation
+
+    """
+    ...
 
 
 @wraps(uop.Barrier)
-def barrier(qargs: tuple[Qubit, ...]) -> None: ...
+def barrier(qargs: tuple[Qubit, ...]) -> None:
+    """
+    Barrier instruction.
+
+    Args:
+        qargs: The qubits to apply the barrier to.
+    """
+
+    ...
 
 
 @wraps(uop.H)
-def h(qarg: Qubit) -> None: ...
+def h(qarg: Qubit) -> None:
+    """
+    Hadamard gate.
+
+    Args:
+        qarg: The qubit to apply the gate to.
+
+    """
+    ...
 
 
 @wraps(uop.X)
-def x(qarg: Qubit) -> None: ...
+def x(qarg: Qubit) -> None:
+    """
+    Pauli-X gate.
+
+    Args:
+        qarg: The qubit to apply the gate to.
+    """
+
+    ...
 
 
 @wraps(uop.Y)
-def y(qarg: Qubit) -> None: ...
+def y(qarg: Qubit) -> None:
+    """
+    Pauli-Y gate.
+
+    Args:
+        qarg: The qubit to apply the gate to.
+
+    """
+    ...
 
 
 @wraps(uop.Z)
-def z(qarg: Qubit) -> None: ...
+def z(qarg: Qubit) -> None:
+    """
+    Pauli-Z gate.
+
+    Args:
+        qarg: The qubit to apply the gate to.
+
+    """
+    ...
 
 
 @wraps(uop.S)
