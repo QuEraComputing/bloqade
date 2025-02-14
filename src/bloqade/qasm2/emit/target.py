@@ -12,22 +12,50 @@ from .main import EmitQASM2Main
 
 
 class QASM2:
+    """QASM2 target for Bloqade kernels.
+
+    QASM2 target that accepts a Bloqade kernel and produces an AST that you can then obtain a string for printing or saving as a file.
+    """
 
     def __init__(
         self,
         main_target: ir.DialectGroup | None = None,
         gate_target: ir.DialectGroup | None = None,
-        custom_gate: bool = False,
         qelib1: bool = False,
     ) -> None:
+        """Initialize the QASM2 target.
+
+        Args:
+            main_target (ir.DialectGroup | None):
+                The dialects that were used in the definition of the kernel. This is used to
+                generate the correct header for the resulting QASM2 AST. Argument defaults to `None`.
+                Internally set to the `qasm2.main` group of dialects.
+            gate_target (ir.DialectGroup | None):
+                The dialects involved in defining any custom gates in the kernel. Argument defaults to `None`.
+                Internally set to the `qasm2.gate` group of dialects.
+            qelib1 (bool):
+                Include the `include "qelib1.inc"` line in the resulting QASM2 AST that's
+                submitted to qBraid. Defaults to `True`.
+        """
         from bloqade import qasm2
 
         self.main_target = main_target or qasm2.main
         self.gate_target = gate_target or qasm2.gate
         self.qelib1 = qelib1
-        self.custom_gate = custom_gate
+        self.custom_gate = False
 
-    def emit(self, entry: ir.Method):
+    def emit(self, entry: ir.Method) -> ast.MainProgram:
+        """Emit a QASM2 AST from the Bloqade kernel.
+
+        Args:
+            entry (ir.Method):
+                The Bloqade kernel to convert to the QASM2 AST
+
+        Returns:
+            ast.MainProgram:
+                A QASM2 AST object
+
+        """
         assert len(entry.args) == 0, "entry method should not have arguments"
         entry = entry.similar()
         QASM2Fold(entry.dialects).fixpoint(entry)
@@ -63,6 +91,17 @@ class QASM2:
         return main_program
 
     def emit_str(self, entry: ir.Method) -> str:
+        """Emit a QASM2 AST from the Bloqade kernel.
+
+        Args:
+            entry (ir.Method):
+                The Bloqade kernel to convert to the QASM2 AST
+
+        Returns:
+            str:
+                A string with the QASM2 representation of the kernel
+
+        """
         console = Console(
             file=io.StringIO(),
             force_terminal=False,
