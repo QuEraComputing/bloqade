@@ -10,6 +10,13 @@ from bloqade.qasm2.emit import QASM2
 
 
 class qBraid:
+    """qBraid target for Bloqade kernels.
+
+    qBraid target that accepts a Bloqade kernel and submits the kernel to the QuEra simulator hosted on qBraid. A `QbraidJob` is obtainable
+    that then lets you query the status of the submitted program on the simulator as well
+    as obtain results.
+
+    """
 
     def __init__(
         self,
@@ -20,6 +27,27 @@ class qBraid:
         qelib1: bool = True,
         custom_gate: bool = True,
     ) -> None:
+        """Initialize the qBraid target.
+
+        Args:
+            main_target (ir.DialectGroup | None):
+                The dialects that were used in the definition of the kernel. This is used to
+                generate the correct header for the resulting QASM2 AST. Argument defaults to `None`.
+                Internally set to the `qasm2.main` group of dialects.
+            gate_target (ir.DialectGroup | None):
+                The dialects involved in defining any custom gates in the kernel. Argument defaults to `None`.
+                Internally set to the `qasm2.gate` group of dialects.
+            provider (QbraidProvider):
+                Qbraid-provided object to allow submission of the kernel to the QuEra simulator.
+            qelib1 (bool):
+                Include the `include "qelib1.inc"` line in the resulting QASM2 AST that's
+                submitted to qBraid. Defaults to `True`.
+            custom_gate (bool):
+                If a custom gate was defined in the kernel, attempt to inline it
+                into the main program. Otherwise, just preserve the original
+                reference to the custom gate definition. Defaults to `True`.
+        """
+
         from bloqade import qasm2
 
         self.main_target = main_target or qasm2.main
@@ -34,6 +62,21 @@ class qBraid:
         shots: Optional[int] = None,
         tags: Optional[dict[str, str]] = None,
     ) -> Union["QbraidJob", list["QbraidJob"]]:
+        """Submit the Bloqade kernel to the QuEra simulator on qBraid.
+
+        Args:
+            method (ir.Method):
+                The kernel to submit to qBraid.
+            shots: (Optional[int]):
+                Number of times to run the kernel. Defaults to None.
+            tags: (Optional[dict[str,str]]):
+                A dictionary of tags to associate with the Job.
+
+        Returns:
+            Union[QbraidJob, list[QbraidJob]]:
+                An object you can query for the status of your submission as well as
+                obtain simulator results from.
+        """
 
         # Convert method to QASM2 string
         qasm2_emitter = QASM2(
