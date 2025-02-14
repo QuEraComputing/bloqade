@@ -4,6 +4,8 @@ from kirin import ir
 from rich.console import Console
 from kirin.analysis import CallGraph
 from bloqade.qasm2.parse import ast, pprint
+from bloqade.qasm2.passes.fold import QASM2Fold
+from bloqade.qasm2.passes.py2qasm import Py2QASM
 
 from .gate import EmitQASM2Gate
 from .main import EmitQASM2Main
@@ -20,30 +22,38 @@ class QASM2:
         self.custom_gate = custom_gate
 
     def emit(self, entry: ir.Method):
-        main = EmitQASM2Main(entry.dialects)
-        main.run(entry, tuple(ast.Name(name) for name in entry.arg_names[1:])).expect()
-        main = main.output
-        assert main is not None, f"failed to emit {entry.sym_name}"
+        from bloqade.qasm2.groups import gate, main
+
+        assert len(entry.args) == 0, "entry method should not have arguments"
+        entry = entry.similar()
+        QASM2Fold(entry.dialects).fixpoint(entry)
+        Py2QASM(entry.dialects)(entry)
+        target_main = EmitQASM2Main(main)
+        target_main.run(
+            entry, tuple(ast.Name(name) for name in entry.arg_names[1:])
+        ).expect()
+        main_program = target_main.output
+        assert main_program is not None, f"failed to emit {entry.sym_name}"
 
         extra = []
         if self.qelib1:
             extra.append(ast.Include("qelib1.inc"))
         if self.custom_gate:
             cg = CallGraph(entry)
-            gate = EmitQASM2Gate(entry.dialects)
+            target_gate = EmitQASM2Gate(gate)
 
             for _, fn in cg.defs.items():
                 if fn is entry:
                     continue
 
-                gate.run(
+                target_gate.run(
                     fn, tuple(ast.Name(name) for name in fn.arg_names[1:])
                 ).expect()
-                assert gate.output is not None, f"failed to emit {fn.sym_name}"
-                extra.append(gate.output)
+                assert target_gate.output is not None, f"failed to emit {fn.sym_name}"
+                extra.append(target_gate.output)
 
-        main.statements = extra + main.statements
-        return main
+        main_program.statements = extra + main_program.statements
+        return main_program
 
     def emit_str(self, entry: ir.Method) -> str:
         console = Console(

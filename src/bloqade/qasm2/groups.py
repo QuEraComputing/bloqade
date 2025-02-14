@@ -98,12 +98,12 @@ def extended(self):
     ):
         mt.verify()
         if fold:
-            fold_pass(mt)
+            fold_pass.fixpoint(mt)
 
+        typeinfer_pass(mt)
         ilist_desugar_pass(mt)
         indexing_desugar_pass(mt)
-        typeinfer_pass(mt)
-
+        typeinfer_pass(mt)  # fix types after desugaring
         mt.code.typecheck()
 
     return run_pass
