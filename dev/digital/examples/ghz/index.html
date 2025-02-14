@@ -24,7 +24,7 @@
     
     
       
-        <title>GHZ State Preparation with Parallelism. - bloqade</title>
+        <title>GHZ State Preparation with Parallelism - bloqade</title>
       
     
     
@@ -120,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              GHZ State Preparation with Parallelism.
+              GHZ State Preparation with Parallelism
             
           </span>
         </div>
@@ -722,7 +722,7 @@
           
   
   <span class="md-ellipsis">
-    GHZ State Preparation with Parallelism.
+    GHZ State Preparation with Parallelism
     
   </span>
   
@@ -734,7 +734,7 @@
         
   
   <span class="md-ellipsis">
-    GHZ State Preparation with Parallelism.
+    GHZ State Preparation with Parallelism
     
   </span>
   
@@ -757,27 +757,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#simple-linear-depth-impl-of-ghz-state-prep" class="md-nav__link">
+  <a href="#simple-linear-depth-implementation-of-a-ghz-state-preparation-circuit" class="md-nav__link">
     <span class="md-ellipsis">
-      Simple linear depth impl of ghz state prep
+      Simple Linear Depth Implementation of a GHZ State Preparation Circuit
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#log-depth-impl-of-ghz-state-prep" class="md-nav__link">
+  <a href="#log-depth-implementation-of-a-ghz-state-preparation-circuit" class="md-nav__link">
     <span class="md-ellipsis">
-      log depth impl of ghz state prep
+      Log-depth Implementation of a GHZ State Preparation Circuit
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#native-gate-set-and-parallelism" class="md-nav__link">
+  <a href="#our-native-gate-set-and-parallelism" class="md-nav__link">
     <span class="md-ellipsis">
-      Native gate set and parallelism
+      Our Native Gate Set and Parallelism
     </span>
   </a>
   
@@ -2581,27 +2581,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#simple-linear-depth-impl-of-ghz-state-prep" class="md-nav__link">
+  <a href="#simple-linear-depth-implementation-of-a-ghz-state-preparation-circuit" class="md-nav__link">
     <span class="md-ellipsis">
-      Simple linear depth impl of ghz state prep
+      Simple Linear Depth Implementation of a GHZ State Preparation Circuit
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#log-depth-impl-of-ghz-state-prep" class="md-nav__link">
+  <a href="#log-depth-implementation-of-a-ghz-state-preparation-circuit" class="md-nav__link">
     <span class="md-ellipsis">
-      log depth impl of ghz state prep
+      Log-depth Implementation of a GHZ State Preparation Circuit
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#native-gate-set-and-parallelism" class="md-nav__link">
+  <a href="#our-native-gate-set-and-parallelism" class="md-nav__link">
     <span class="md-ellipsis">
-      Native gate set and parallelism
+      Our Native Gate Set and Parallelism
     </span>
   </a>
   
@@ -3075,18 +3075,23 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=33b3f9e6">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=81aca27f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="ghz-state-preparation-with-parallelism">GHZ State Preparation with Parallelism.<a class="anchor-link" href="#ghz-state-preparation-with-parallelism">¶</a></h1><p>In this example, we will consider the GHZ state preparation circuit with 2^n qubits</p>
+<h1 id="ghz-state-preparation-with-parallelism">GHZ State Preparation with Parallelism<a class="anchor-link" href="#ghz-state-preparation-with-parallelism">¶</a></h1><p>In this example, we will implement a <em>Greenberger-Horne-Zeilinger</em> (GHZ) state preparation circuit with $N = 2^n$ qubits.</p>
+<p>First, we will present the standard linear-depth construction in Bloqade but later we will present a log-depth
+construction that achieves the same result. We then take this one step further and use the fact that Bloqade
+(and QuEra's neutral atom hardware!) support <em>parallel</em> gates, allowing for the application of the same gate
+across multiple qubits simultaneously. Combined with the fact that atom <em>shuttling</em> allows for arbitrary
+connectivity, we can also decrease the circuit execution depth from $N + 1$ to just $n$.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=dbf5f1d1">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3e5a0074">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3119,19 +3124,19 @@ from kirin.dialects import ilist</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=140caf8c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=34bc3c74">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="simple-linear-depth-impl-of-ghz-state-prep">Simple linear depth impl of ghz state prep<a class="anchor-link" href="#simple-linear-depth-impl-of-ghz-state-prep">¶</a></h2><p>A simple GHZ state preparation circuit can be done with N CX gates and 1 H gate.
-This gives circuit execution depth of N+1.</p>
+<h2 id="simple-linear-depth-implementation-of-a-ghz-state-preparation-circuit">Simple Linear Depth Implementation of a GHZ State Preparation Circuit<a class="anchor-link" href="#simple-linear-depth-implementation-of-a-ghz-state-preparation-circuit">¶</a></h2><p>A simple GHZ state preparation circuit can be built with $N$ CX gates and $1$ H gate.
+This gives the circuit an execution depth of $N+1$.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8081b294">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=cef7c625">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3156,7 +3161,11 @@ This gives circuit execution depth of N+1.</p>
     <span class="k">def</span><span class="w"> </span><span class="nf">ghz_linear_program</span><span class="p">():</span>
 
         <span class="n">qreg</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">qreg</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+        <span class="c1"># Apply a Hadamard on the first qubit</span>
         <span class="n">qasm2</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="c1"># Create a cascading sequence of CX gates</span>
+        <span class="c1"># necessary for quantum computers that</span>
+        <span class="c1"># only have nearest-neighbor connectivity between qubits</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">):</span>
             <span class="n">qasm2</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">qreg</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
@@ -3169,7 +3178,11 @@ This gives circuit execution depth of N+1.</p>
     def ghz_linear_program():
 
         qreg = qasm2.qreg(n_qubits)
+        # Apply a Hadamard on the first qubit
         qasm2.h(qreg[0])
+        # Create a cascading sequence of CX gates
+        # necessary for quantum computers that
+        # only have nearest-neighbor connectivity between qubits
         for i in range(1, n_qubits):
             qasm2.cx(qreg[i - 1], qreg[i])
 
@@ -3180,23 +3193,22 @@ This gives circuit execution depth of N+1.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=807ee831">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b57cd0c1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="log-depth-impl-of-ghz-state-prep">log depth impl of ghz state prep<a class="anchor-link" href="#log-depth-impl-of-ghz-state-prep">¶</a></h2><p>Let's take a look how we can rewrite the circuit toward more QuEra's hardware friendly circuit.
-We can rewrite the GHZ state preparation circuit with log(N) depth by rearranging the CX gates
-[citation](<a href="https://arxiv.org/abs/2101.08946">https://arxiv.org/abs/2101.08946</a> – Mooney, White, Hill, Hollenberg)</p>
-<p>Note it is important to separate the concept of circuit depth and circuit execution depth.
-For example, in the following implementation, each CX gate instruction inside the for loop are executed in sequence.
-So even thought the circuit depth is N/2 + 1. The circuit execution depth is still N + 1.</p>
+<h2 id="log-depth-implementation-of-a-ghz-state-preparation-circuit">Log-depth Implementation of a GHZ State Preparation Circuit<a class="anchor-link" href="#log-depth-implementation-of-a-ghz-state-preparation-circuit">¶</a></h2><p>Let's take a look how we can rewrite the circuit to take advantage of QuEra's hardware capabilities.
+We can achieve log(N) circuit depth by <a href="https://arxiv.org/abs/2101.08946">rearranging the CX gates (see <em>Mooney, White, Hill, Hollenberg</em> - 2021)</a>.</p>
+<p>Before going any further, it's worth distinguishing between the concept of <strong>circuit depth</strong> and <strong>circuit execution depth</strong>.
+For example, in the following implementation, each CX gate instruction inside the for-loop is executed in sequence.
+So even thought the circuit depth is $N/2 + 1$, the circuit execution depth is still $N + 1$.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b8086ee1">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6483201c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3218,7 +3230,7 @@ So even thought the circuit depth is N/2 + 1. The circuit execution depth is sti
     <span class="n">n_qubits</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">n</span><span class="p">)</span>
 
     <span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">layer</span><span class="p">(</span><span class="n">i_layer</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">qreg</span><span class="p">:</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">QReg</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">layer_of_cx</span><span class="p">(</span><span class="n">i_layer</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">qreg</span><span class="p">:</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">QReg</span><span class="p">):</span>
         <span class="n">step</span> <span class="o">=</span> <span class="n">n_qubits</span> <span class="o">//</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">i_layer</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
             <span class="n">qasm2</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">ctrl</span><span class="o">=</span><span class="n">qreg</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">qarg</span><span class="o">=</span><span class="n">qreg</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="n">step</span> <span class="o">//</span> <span class="mi">2</span><span class="p">])</span>
@@ -3230,7 +3242,7 @@ So even thought the circuit depth is N/2 + 1. The circuit execution depth is sti
 
         <span class="n">qasm2</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-            <span class="n">layer</span><span class="p">(</span><span class="n">i_layer</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">qreg</span><span class="o">=</span><span class="n">qreg</span><span class="p">)</span>
+            <span class="n">layer_of_cx</span><span class="p">(</span><span class="n">i_layer</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">qreg</span><span class="o">=</span><span class="n">qreg</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">ghz_log_depth_program</span>
 </pre></div>
@@ -3238,7 +3250,7 @@ So even thought the circuit depth is N/2 + 1. The circuit execution depth is sti
     n_qubits = int(2**n)
 
     @qasm2.extended
-    def layer(i_layer: int, qreg: qasm2.QReg):
+    def layer_of_cx(i_layer: int, qreg: qasm2.QReg):
         step = n_qubits // (2**i_layer)
         for j in range(0, n_qubits, step):
             qasm2.cx(ctrl=qreg[j], qarg=qreg[j + step // 2])
@@ -3250,7 +3262,7 @@ So even thought the circuit depth is N/2 + 1. The circuit execution depth is sti
 
         qasm2.h(qreg[0])
         for i in range(n):
-            layer(i_layer=i, qreg=qreg)
+            layer_of_cx(i_layer=i, qreg=qreg)
 
     return ghz_log_depth_program</div>
 </div>
@@ -3259,28 +3271,28 @@ So even thought the circuit depth is N/2 + 1. The circuit execution depth is sti
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8f0577e3">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=502693b4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="native-gate-set-and-parallelism">Native gate set and parallelism<a class="anchor-link" href="#native-gate-set-and-parallelism">¶</a></h2><p>On our digital quantum computer, by nature can execute native gate in parallel in an single instruction/ execution cycle.
-The concept is very similar to the SIMD (Single Instruction, Multiple Data) in classical computing.
-On our hardware, there are two important factor to be consider:</p>
+<h2 id="our-native-gate-set-and-parallelism">Our Native Gate Set and Parallelism<a class="anchor-link" href="#our-native-gate-set-and-parallelism">¶</a></h2><p>By nature, our digital quantum computer can execute native gates in parallel in an single instruction/ execution cycle.
+The concept is very similar to the SIMD (Single Instruction, Multiple Data) in classical computing.</p>
+<p>On our hardware, there are two important factors to be considered:</p>
 <ol>
-<li>the native gate set is arbitrary (parallel) rotations and (parallel) CZ gates.</li>
-<li>Our atom shuttling architecture allows arbitrary qubit connectivity. This means that our parallel instruction is not limited to certain hardware connectivity (for example nearest neighbor connectivity).</li>
+<li>the native gate set allows for arbitrary (parallel) rotations and (parallel) CZ gates.</li>
+<li>Our atom shuttling architecture allows arbitrary qubit connectivity. This means that our parallel instruction is not limited to fixed connectivity (for example nearest neighbor connectivity).</li>
 </ol>
-<p>Let's try to rewrite the <code>layer</code> subroutinme.
-We know that the CX gate can be decomposed into CZ gate with two single qubit gates Ry(-pi/2) and Ry(pi/2) acting on the target qubits.
-After such decomposition, we can now using our parallel gate instructions <code>parallel.u</code> and <code>parallel.cz</code>.
-With the following modification, we can further reduce the circuit execution depth to n (log of total qubit number N)</p>
+<p>With this in mind, we can rewrite the <code>layer</code> subroutine to now use the <code>qasm2.parallel</code> dialect in Bloqade.
+We know that the CX gate can be decomposed into a CZ gate with two single-qubit gates $R_y(-\pi/2)$ and $R_y(\pi/2)$ acting on the target qubits.
+With this decomposition in mind, we can now using our parallel gate instructions <code>parallel.u</code> and <code>parallel.cz</code>.
+With the following modification, we can further reduce the circuit execution depth to just $n$ (log of the total number of qubits $N$)</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9301079e">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=43ff5b1f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3373,17 +3385,17 @@ With the following modification, we can further reduce the circuit execution dep
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7cd3b8b4">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ebfb0e72">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Note on using closure to capture global variable:
-Since qasm2 does not allow main program with arguments, so we need to put the program in a closure.
-our kirin compiler toolchain can capture the global variable inside the closure.
-In this case, the n_qubits will be captured upon calling the <code>ghz_half_simd(n_qubits)</code> python function,
-As a result, the return qasm2 program will not have any arguments.</p>
+<p>A Note on using closures to capture global variables:
+Since Bloqade's <code>qasm2</code> does not allow a main program with arguments, we need to put the program in a closure.
+Our Kirin compiler toolchain can capture the global variable inside the closure.
+In this case, the <code>n_qubits</code> will be captured upon calling the <code>ghz_log_simd(n_qubits)</code> python function.
+As a result, the returned <code>qasm2</code> program will not have any arguments.</p>
 </div>
 </div>
 </div>
