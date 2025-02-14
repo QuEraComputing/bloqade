@@ -1,21 +1,19 @@
 from typing import List
 
-import pytest
 from kirin import ir, types
 from bloqade import qasm2
-from kirin.dialects import func
+from kirin.dialects import py, func
 from bloqade.qasm2.passes.glob import GlobalToUOP
 
 
 def as_int(value: int):
-    return qasm2.expr.ConstInt(value=value)
+    return py.constant.Constant(value=value)
 
 
 def as_float(value: float):
-    return qasm2.expr.ConstFloat(value=value)
+    return py.constant.Constant(value=value)
 
 
-@pytest.mark.xfail(reason="Unknown")
 def test_global_rewrite():
 
     @qasm2.extended
