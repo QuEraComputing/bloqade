@@ -249,11 +249,32 @@ def rz(qarg: Qubit, theta: float) -> None:
 
 
 @wraps(uop.U1)
-def u1(qarg: Qubit, lam: float) -> None: ...
+def u1(qarg: Qubit, lam: float) -> None:
+    """
+    1 Parameter single qubit unitary gate.
+
+    This is equivalent to u(0,0,lambda).
+
+    Args:
+        qarg: The qubit to apply the gate to.
+        lam: The angle of rotation.
+    """
+    ...
 
 
 @wraps(uop.U2)
-def u2(qarg: Qubit, phi: float, lam: float) -> None: ...
+def u2(qarg: Qubit, phi: float, lam: float) -> None:
+    """
+    2 Parameter single qubit unitary gate.
+
+    This is equivalent to u(pi/2,phi,lambda)
+
+    Args:
+        qarg: The qubit to apply the gate to.
+        phi: The angle of rotation.
+        lam: The angle of rotation.
+    """
+    ...
 
 
 @wraps(uop.CZ)
@@ -282,44 +303,165 @@ def cy(ctrl: Qubit, qarg: Qubit) -> None:
 
 
 @wraps(uop.CH)
-def ch(ctrl: Qubit, qarg: Qubit) -> None: ...
+def ch(ctrl: Qubit, qarg: Qubit) -> None:
+    """
+    Controlled-Hadamard gate.
+
+    Args:
+        ctrl: The control qubit.
+        qarg: The target qubit
+
+    """
+
+    ...
 
 
 @wraps(uop.CCX)
-def ccx(ctrl1: Qubit, ctrl2: Qubit, qarg: Qubit) -> None: ...
+def ccx(ctrl1: Qubit, ctrl2: Qubit, qarg: Qubit) -> None:
+    """
+    Toffoli gate.
+
+    Args:
+        ctrl1: The first control qubit.
+        ctrl2: The second control qubit.
+        qarg: The target qubit.
+    """
+    ...
 
 
 @wraps(uop.CRX)
-def crx(ctrl: Qubit, qarg: Qubit, theta: float) -> None: ...
+def crx(ctrl: Qubit, qarg: Qubit, theta: float) -> None:
+    """
+    Controlled Rx rotation gate.
+
+    Args:
+        ctrl: The control qubit.
+        qarg: The target qubit.
+        theta: The angle of rotation.
+
+    """
+
+    ...
 
 
 @wraps(uop.CU1)
-def cu1(ctrl: Qubit, qarg: Qubit, lam: float) -> None: ...
+def cu1(ctrl: Qubit, qarg: Qubit, lam: float) -> None:
+    """
+    Controlled phase rotation gate.
+
+    Args:
+        ctrl: The control qubit.
+        qarg: The target qubit.
+        lam: The angle of rotation.
+    """
+
+    ...
 
 
 @wraps(uop.CU3)
-def cu3(ctrl: Qubit, qarg: Qubit, theta: float, phi: float, lam: float) -> None: ...
+def cu3(ctrl: Qubit, qarg: Qubit, theta: float, phi: float, lam: float) -> None:
+    """
+    Controlled 3-parameter unitary gate.
+
+    Args:
+        ctrl: The control qubit.
+        qarg: The target qubit.
+        theta: The angle of rotation.
+        phi: The angle of rotation.
+        lam: The angle of rotation.
+
+    """
+    ...
 
 
 @wraps(expr.Sin)
-def sin(value: float) -> float: ...
+def sin(value: float) -> float:
+    """
+    Sine math function.
+
+    Args:
+        value: The value to take the sine of.
+
+    Returns:
+        The sine of `value`.
+
+    """
+    ...
 
 
 @wraps(expr.Cos)
-def cos(value: float) -> float: ...
+def cos(value: float) -> float:
+    """
+    Cosine math function.
+
+    Args:
+        value: The value to take the cosine of.
+
+    Returns:
+        The cosine of `value`.
+
+    """
+
+    ...
 
 
 @wraps(expr.Tan)
-def tan(value: float) -> float: ...
+def tan(value: float) -> float:
+    """
+    Tangent math function.
+
+    Args:
+        value: The value to take the tangent of.
+
+    Returns:
+        The tangent of `value`.
+
+    """
+
+    ...
 
 
 @wraps(expr.Exp)
-def exp(value: float) -> float: ...
+def exp(value: float) -> float:
+    """
+    Exponential math function.
+
+    Args:
+        value: The value to exponentiate.
+
+    Returns:
+        The exponential of `value`.
+
+    """
+
+    ...
 
 
 @wraps(expr.Log)
-def ln(value: float) -> float: ...
+def ln(value: float) -> float:
+    """
+    logarithm math function.
+
+    Args:
+        value: The value to take the natural logarithm of.
+
+    Returns:
+        The natural logarithm of `value`.
+
+    """
+
+    ...
 
 
 @wraps(expr.Sqrt)
-def sqrt(value: float) -> float: ...
+def sqrt(value: float) -> float:
+    """
+    Square root math function.
+
+    Args:
+        value: The value to take the square root of.
+
+    Returns:
+        The square root of `value`.
+    """
+    ...
