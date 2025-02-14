@@ -2150,6 +2150,10 @@
       
         
       
+        
+      
+        
+      
     
     
       
@@ -2201,6 +2205,28 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/bloqade/qasm2/passes/fold/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fold
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/bloqade/qasm2/passes/glob/" class="md-nav__link">
         
   
@@ -2228,6 +2254,28 @@
   
   <span class="md-ellipsis">
     Parallel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/bloqade/qasm2/passes/py2qasm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Py2qasm
     
   </span>
   
@@ -2909,7 +2957,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=5f31097a">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b323f8b7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2938,7 +2986,7 @@ from typing import Any</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=ce88729f">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=791c3eca">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2969,7 +3017,7 @@ from kirin.dialects import ilist</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9ad22207">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=23f89727">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2980,7 +3028,7 @@ from kirin.dialects import ilist</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=361990fd">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=58897d20">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3009,7 +3057,7 @@ G = nx.random_regular_graph(3, N, seed=42)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b2186738">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=da13d85f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3082,7 +3130,7 @@ G = nx.random_regular_graph(3, N, seed=42)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=ce5f2db9">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2b5c8f94">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3135,9 +3183,9 @@ G = nx.random_regular_graph(3, N, seed=42)</div>
         <span class="k">def</span><span class="w"> </span><span class="nf">get_qubit</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">qreg</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
 
-        <span class="n">ctrls</span> <span class="o">=</span> <span class="n">ilist</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">get_qubit</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="n">left_ids</span><span class="p">)</span>
-        <span class="n">qargs</span> <span class="o">=</span> <span class="n">ilist</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">get_qubit</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="n">right_ids</span><span class="p">)</span>
-        <span class="n">all_qubits</span> <span class="o">=</span> <span class="n">ilist</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">get_qubit</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+        <span class="n">ctrls</span> <span class="o">=</span> <span class="n">ilist</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">get_qubit</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="n">left_ids</span><span class="p">)</span>
+        <span class="n">qargs</span> <span class="o">=</span> <span class="n">ilist</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">get_qubit</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="n">right_ids</span><span class="p">)</span>
+        <span class="n">all_qubits</span> <span class="o">=</span> <span class="n">ilist</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">get_qubit</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
 
         <span class="n">parallel_h</span><span class="p">(</span><span class="n">all_qubits</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gamma</span><span class="p">)):</span>
@@ -3183,9 +3231,9 @@ G = nx.random_regular_graph(3, N, seed=42)</div>
         def get_qubit(x: int):
             return qreg[x]
 
-        ctrls = ilist.Map(fn=get_qubit, collection=left_ids)
-        qargs = ilist.Map(fn=get_qubit, collection=right_ids)
-        all_qubits = ilist.Map(fn=get_qubit, collection=range(N))
+        ctrls = ilist.map(fn=get_qubit, collection=left_ids)
+        qargs = ilist.map(fn=get_qubit, collection=right_ids)
+        all_qubits = ilist.map(fn=get_qubit, collection=range(N))
 
         parallel_h(all_qubits)
         for i in range(len(gamma)):
@@ -3201,7 +3249,7 @@ G = nx.random_regular_graph(3, N, seed=42)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c195de77">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=96027b3f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3213,7 +3261,7 @@ qaoa_sequential(G).code.print()</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8a38d1a0">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a4c5339f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3240,7 +3288,7 @@ qaoa_sequential(G).code.print()</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=da3d1a2b">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=7b2f353d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
