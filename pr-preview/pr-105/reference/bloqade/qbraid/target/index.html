@@ -2611,9 +2611,8 @@
     <div class="doc doc-contents ">
 
 
-        <p>qBraid target for <code>@qasm2.main</code> generated Bloqade kernels.</p>
-<p>qBraid target that accepts a Bloqade kernel defined with the <code>@qasm2.main</code> decorator
-and submits the kernel to the QuEra simulator hosted on qBraid. A <code>QbraidJob</code> is obtainable
+        <p>qBraid target for Bloqade kernels.</p>
+<p>qBraid target that accepts a Bloqade kernel and submits the kernel to the QuEra simulator hosted on qBraid. A <code>QbraidJob</code> is obtainable
 that then lets you query the status of the submitted program on the simulator as well
 as obtain results.</p>
 
@@ -2726,7 +2725,8 @@ reference to the custom gate definition. Defaults to <code>True</code>.</p>
 
                   <details class="quote">
                     <summary>Source code in <code>src/bloqade/qbraid/target.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">22</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
+<span class="normal">22</span>
 <span class="normal">23</span>
 <span class="normal">24</span>
 <span class="normal">25</span>
@@ -2761,8 +2761,7 @@ reference to the custom gate definition. Defaults to <code>True</code>.</p>
 <span class="normal">54</span>
 <span class="normal">55</span>
 <span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">main_target</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">DialectGroup</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -2925,7 +2924,8 @@ obtain simulator results from.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/bloqade/qbraid/target.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">60</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
+<span class="normal">60</span>
 <span class="normal">61</span>
 <span class="normal">62</span>
 <span class="normal">63</span>
@@ -2958,8 +2958,7 @@ obtain simulator results from.</p>
 <span class="normal">90</span>
 <span class="normal">91</span>
 <span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span>
+<span class="normal">93</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">method</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">,</span>
     <span class="n">shots</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
