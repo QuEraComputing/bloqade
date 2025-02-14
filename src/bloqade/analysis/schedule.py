@@ -12,9 +12,8 @@ from kirin.lattice import (
     SimpleMeetMixin,
 )
 from kirin.analysis import Forward, ForwardFrame
-from kirin.dialects import func, ilist
+from kirin.dialects import func
 from bloqade.analysis import address
-from kirin.interp.exceptions import InterpreterError
 from bloqade.qasm2.parse.print import Printer
 
 
@@ -149,37 +148,27 @@ class DagScheduleAnalysis(Forward[GateSchedule]):
 
         return tuple(self.lattice.top() for _ in stmt.results)
 
-    def update_dag(self, stmt: ir.Statement, args: Sequence[ir.SSAValue]):
-        addrs = [
-            self.address_analysis.get(arg, address.Address.bottom()) for arg in args
-        ]
-
-        for addr in addrs:
-            if not isinstance(addr, address.AddressQubit):
-                continue
-
-            if addr.data in self.use_def:
-                self.stmt_dag.add_edge(self.use_def[addr.data], stmt)
-
-        for addr in addrs:
-            if not isinstance(addr, address.AddressQubit):
-                continue
-
+    def _update_dag(self, stmt: ir.Statement, addr: address.Address):
+        if isinstance(addr, address.AddressQubit):
+            old_stmt = self.use_def.get(addr.data, None)
+            if old_stmt is not None:
+                self.stmt_dag.add_edge(old_stmt, stmt)
             self.use_def[addr.data] = stmt
+        elif isinstance(addr, address.AddressReg):
+            for idx in addr.data:
+                old_stmt = self.use_def.get(idx, None)
+                if old_stmt is not None:
+                    self.stmt_dag.add_edge(old_stmt, stmt)
+                self.use_def[idx] = stmt
+        elif isinstance(addr, address.AddressTuple):
+            for sub_addr in addr.data:
+                self._update_dag(stmt, sub_addr)
 
-    def get_ilist_ssa(self, value: ir.SSAValue):
-        addr = self.address_analysis[value]
-
-        if not isinstance(addr, address.AddressTuple):
-            raise InterpreterError(f"Expected AddressTuple, got {addr}")
-
-        if not all(isinstance(addr, address.AddressQubit) for addr in addr.data):
-            raise InterpreterError("Expected AddressQubit")
-
-        assert isinstance(value, ir.ResultValue)
-        assert isinstance(value.stmt, ilist.New)
-
-        return value.stmt.values
+    def update_dag(self, stmt: ir.Statement, args: Sequence[ir.SSAValue]):
+        for arg in args:
+            self._update_dag(
+                stmt, self.address_analysis.get(arg, address.Address.bottom())
+            )
 
     def get_dags(self, mt: ir.Method, args=None, kwargs=None):
         if args is None:
