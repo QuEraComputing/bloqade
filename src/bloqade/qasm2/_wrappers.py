@@ -100,6 +100,24 @@ def u(qarg: Qubit, theta: float, phi: float, lam: float) -> None:
     ...
 
 
+@wraps(uop.UGate)
+def u3(qarg: Qubit, theta: float, phi: float, lam: float) -> None:
+    """
+    U3 gate, same as u
+
+    Note:
+        See https://arxiv.org/pdf/1707.03429 for definition of angles.
+
+    Args:
+        qarg: The qubit to apply the gate to.
+        theta: The angle of rotation
+        phi: The angle of rotation
+        lam: The angle of rotation
+
+    """
+    ...
+
+
 @wraps(uop.Barrier)
 def barrier(qargs: tuple[Qubit, ...]) -> None:
     """
