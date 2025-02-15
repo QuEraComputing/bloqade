@@ -5,6 +5,7 @@ from kirin import ir
 from kirin.rewrite import abc, result
 from kirin.dialects import ilist
 from bloqade.analysis import address
+from kirin.analysis.const import lattice
 from bloqade.qasm2.dialects import uop, core, parallel
 from bloqade.analysis.schedule import StmtDag
 
@@ -12,11 +13,11 @@ from bloqade.analysis.schedule import StmtDag
 def same_id_checker(ssa1: ir.SSAValue, ssa2: ir.SSAValue):
     if ssa1 is ssa2:
         return True
-
-    if "const" in ssa1.hints and "const" in ssa2.hints:
-        return ssa1.hints["const"] == ssa2.hints["const"]
-
-    return False
+    elif (hint1 := ssa1.hints.get("const")) and (hint2 := ssa2.hints.get("const")):
+        assert isinstance(hint1, lattice.Result) and isinstance(hint2, lattice.Result)
+        return hint1.is_equal(hint2)
+    else:
+        return False
 
 
 class MergeResults:
