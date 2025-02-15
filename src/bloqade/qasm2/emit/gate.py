@@ -2,7 +2,7 @@ from dataclasses import field, dataclass
 
 from kirin import ir, interp
 from bloqade.types import QubitType
-from kirin.dialects import func, ilist
+from kirin.dialects import py, func, ilist
 from kirin.ir.dialect import Dialect as Dialect
 from bloqade.qasm2.parse import ast
 
@@ -27,6 +27,16 @@ class Ilist(interp.MethodTable):
     @interp.impl(ilist.New)
     def emit_ilist(self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: ilist.New):
         return (ilist.IList(data=frame.get_values(stmt.values)),)
+
+
+@py.constant.dialect.register(key="emit.qasm2.gate")
+class Constant(interp.MethodTable):
+
+    @interp.impl(py.Constant)
+    def emit_constant(
+        self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: py.Constant
+    ):
+        return (stmt.value,)
 
 
 @func.dialect.register(key="emit.qasm2.gate")
