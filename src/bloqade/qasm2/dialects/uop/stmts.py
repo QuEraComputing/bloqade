@@ -56,6 +56,15 @@ class Barrier(ir.Statement):
 
 
 # qelib1.inc as statements
+
+
+@statement(dialect=dialect)
+class Id(SingleQubitGate):
+    """Apply the Identity gate."""
+
+    name = "id"
+
+
 @statement(dialect=dialect)
 class H(SingleQubitGate):
     """Apply the Hadamard gate."""
@@ -96,6 +105,20 @@ class Sdag(SingleQubitGate):
     """Apply the hermitian conj of S gate."""
 
     name = "sdg"
+
+
+@statement(dialect=dialect)
+class SX(SingleQubitGate):
+    """Apply the quantum Sqrt(X) gate."""
+
+    name = "sx"
+
+
+@statement(dialect=dialect)
+class SXdag(SingleQubitGate):
+    """Apply the dagger of quantum Sqrt(X) gate."""
+
+    name = "sxdg"
 
 
 @statement(dialect=dialect)
@@ -174,6 +197,20 @@ class CY(TwoQubitCtrlGate):
 
 
 @statement(dialect=dialect)
+class CSX(TwoQubitCtrlGate):
+    """Apply the Controlled-Sqrt(X) gate."""
+
+    name = "csx"
+
+
+@statement(dialect=dialect)
+class Swap(TwoQubitCtrlGate):
+    """Apply the Swap gate."""
+
+    name = "swap"
+
+
+@statement(dialect=dialect)
 class CH(TwoQubitCtrlGate):
     """Apply the Controlled-H gate."""
 
@@ -195,12 +232,44 @@ class CCX(ir.Statement):
 
 
 @statement(dialect=dialect)
+class CSwap(ir.Statement):
+    """Apply the controlled swap gate."""
+
+    name = "ccx"
+    traits = frozenset({ir.FromPythonCall()})
+    ctrl: ir.SSAValue = info.argument(QubitType)
+    """ctrl (Qubit): The control qubit."""
+    qarg1: ir.SSAValue = info.argument(QubitType)
+    """qarg1 (Qubit): The first target qubit."""
+    qarg2: ir.SSAValue = info.argument(QubitType)
+    """qarg2 (Qubit): The second target qubit."""
+
+
+@statement(dialect=dialect)
 class CRX(TwoQubitCtrlGate):
     """Apply the Controlled-RX gate."""
 
     name = "crx"
-    theta: ir.SSAValue = info.argument(PyNum)
-    """theta (float): The angle to rotate around the X axis."""
+    lam: ir.SSAValue = info.argument(PyNum)
+    """lam (float): The angle to rotate around the X axis."""
+
+
+@statement(dialect=dialect)
+class CRY(TwoQubitCtrlGate):
+    """Apply the Controlled-RY gate."""
+
+    name = "cry"
+    lam: ir.SSAValue = info.argument(PyNum)
+    """lam (float): The angle to rotate around the Y axis."""
+
+
+@statement(dialect=dialect)
+class CRZ(TwoQubitCtrlGate):
+    """Apply the Controlled-RZ gate."""
+
+    name = "crz"
+    lam: ir.SSAValue = info.argument(PyNum)
+    """lam (float): The angle to rotate around the Z axis."""
 
 
 @statement(dialect=dialect)
@@ -222,3 +291,34 @@ class CU3(TwoQubitCtrlGate):
     """phi (float): The phi parameter."""
     lam: ir.SSAValue = info.argument(PyNum)
     """lam (float): The lambda parameter."""
+
+
+@statement(dialect=dialect)
+class CU(TwoQubitCtrlGate):
+    """Apply the Controlled-U gate."""
+
+    name = "cu"
+    theta: ir.SSAValue = info.argument(PyNum)
+    phi: ir.SSAValue = info.argument(PyNum)
+    """phi (float): The phi parameter."""
+    lam: ir.SSAValue = info.argument(PyNum)
+    """lam (float): The lambda parameter."""
+    gamma: ir.SSAValue = info.argument(PyNum)
+
+
+@statement(dialect=dialect)
+class RXX(TwoQubitCtrlGate):
+    """Apply the XX rotation gate."""
+
+    name = "rxx"
+    theta: ir.SSAValue = info.argument(PyNum)
+    """theta (float): The angle of rotation around the X axis."""
+
+
+@statement(dialect=dialect)
+class RZZ(TwoQubitCtrlGate):
+    """Apply the ZZ rotation gate."""
+
+    name = "rzz"
+    theta: ir.SSAValue = info.argument(PyNum)
+    """theta (float): The angle of rotation around the Z axis."""

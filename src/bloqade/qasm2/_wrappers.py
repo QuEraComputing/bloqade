@@ -130,6 +130,18 @@ def barrier(qargs: tuple[Qubit, ...]) -> None:
     ...
 
 
+@wraps(uop.Id)
+def id(qarg: Qubit) -> None:
+    """
+    Identity gate.
+
+    Args:
+        qarg: The qubit to apply the gate to.
+
+    """
+    ...
+
+
 @wraps(uop.H)
 def h(qarg: Qubit) -> None:
     """
@@ -178,6 +190,21 @@ def z(qarg: Qubit) -> None:
     ...
 
 
+@wraps(uop.U1)
+def p(qarg: Qubit, lam: float) -> None:
+    """
+    Phase gate.
+
+    This is equivalent to u(0,0,lam), and u1(lam)
+
+    Args:
+        qarg: The qubit to apply the gate to.
+        lam: The angle of phase.
+
+    """
+    ...
+
+
 @wraps(uop.S)
 def s(qarg: Qubit) -> None:
     """
@@ -198,6 +225,30 @@ def sdg(qarg: Qubit) -> None:
     Args:
         qarg: The qubit to apply the gate to.
 
+    """
+
+    ...
+
+
+@wraps(uop.SX)
+def sx(qarg: Qubit) -> None:
+    """
+    Sqrt(X) gate.
+
+    Args:
+        qarg: The qubit to apply the gate to.
+    """
+
+    ...
+
+
+@wraps(uop.SXdag)
+def sxdg(qarg: Qubit) -> None:
+    """
+    Hermitian conjugate of Sqrt(X) gate.
+
+    Args:
+        qarg: The qubit to apply the gate to.
     """
 
     ...
@@ -307,6 +358,18 @@ def cz(ctrl: Qubit, qarg: Qubit) -> None:
     ...
 
 
+@wraps(uop.CSX)
+def csx(ctrl: Qubit, qarg: Qubit) -> None:
+    """
+    Controlled-Sqrt(X) gate.
+
+    Args:
+        ctrl: The control qubit.
+        qarg: The target qubit
+    """
+    ...
+
+
 @wraps(uop.CY)
 def cy(ctrl: Qubit, qarg: Qubit) -> None:
     """
@@ -347,18 +410,60 @@ def ccx(ctrl1: Qubit, ctrl2: Qubit, qarg: Qubit) -> None:
     ...
 
 
+@wraps(uop.CSwap)
+def cswap(ctrl: Qubit, qarg1: Qubit, qarg2: Qubit) -> None:
+    """
+    Controlled Swap gate (Fredkin gate).
+
+    Args:
+        ctrl: The control qubit.
+        qarg1: The first target qubit.
+        qarg2: The second target qubit.
+    """
+    ...
+
+
 @wraps(uop.CRX)
-def crx(ctrl: Qubit, qarg: Qubit, theta: float) -> None:
+def crx(ctrl: Qubit, qarg: Qubit, lam: float) -> None:
     """
     Controlled Rx rotation gate.
 
     Args:
         ctrl: The control qubit.
         qarg: The target qubit.
-        theta: The angle of rotation.
+        lam: The angle of rotation.
 
     """
 
+    ...
+
+
+@wraps(uop.CRY)
+def cry(ctrl: Qubit, qarg: Qubit, lam: float) -> None:
+    """
+    Controlled Ry rotation gate.
+
+    Args:
+        ctrl: The control qubit.
+        qarg: The target qubit.
+        lam: The angle of rotation.
+
+    """
+
+    ...
+
+
+@wraps(uop.CRZ)
+def crz(ctrl: Qubit, qarg: Qubit, lam: float) -> None:
+    """
+    Controlled Rz rotation gate.
+
+    Args:
+        ctrl: The control qubit.
+        qarg: The target qubit.
+        lam: The angle of rotation.
+
+    """
     ...
 
 
@@ -366,6 +471,20 @@ def crx(ctrl: Qubit, qarg: Qubit, theta: float) -> None:
 def cu1(ctrl: Qubit, qarg: Qubit, lam: float) -> None:
     """
     Controlled phase rotation gate.
+
+    Args:
+        ctrl: The control qubit.
+        qarg: The target qubit.
+        lam: The angle of rotation.
+    """
+
+    ...
+
+
+@wraps(uop.CU1)
+def cp(ctrl: Qubit, qarg: Qubit, lam: float) -> None:
+    """
+    Controlled phase rotation gate. Same as cu1
 
     Args:
         ctrl: The control qubit.
@@ -387,6 +506,64 @@ def cu3(ctrl: Qubit, qarg: Qubit, theta: float, phi: float, lam: float) -> None:
         theta: The angle of rotation.
         phi: The angle of rotation.
         lam: The angle of rotation.
+
+    """
+    ...
+
+
+@wraps(uop.CU)
+def cu(
+    ctrl: Qubit, qarg: Qubit, theta: float, phi: float, lam: float, gamma: float
+) -> None:
+    """
+    Controlled 4-parameter unitary gate.
+
+    This is equal to:
+
+    gate cu(theta,phi,lambda,gamma) c, t{
+        p(gamma) c;
+        p((lambda+phi)/2) c;
+        p((lambda-phi)/2) t;
+        cx c,t;
+        u(-theta/2,0,-(phi+lambda)/2) t;
+        cx c,t;
+        u(theta/2,phi,0) t;
+    }
+
+    Args:
+        ctrl: The control qubit.
+        qarg: The target qubit.
+        theta: The angle of rotation.
+        phi: The angle of rotation.
+        lam: The angle of rotation.
+        gamma: The angle of rotation.
+    """
+    ...
+
+
+@wraps(uop.RXX)
+def rxx(ctrl: Qubit, qarg: Qubit, theta: float) -> None:
+    """
+    XX rotation gate.
+
+    Args:
+        ctrl: The first qubit.
+        qarg: The second qubit.
+        theta: The angle of rotation.
+
+    """
+    ...
+
+
+@wraps(uop.RZZ)
+def rzz(ctrl: Qubit, qarg: Qubit, theta: float) -> None:
+    """
+    ZZ rotation gate.
+
+    Args:
+        ctrl: The first qubit.
+        qarg: The second qubit.
+        theta: The angle of rotation.
 
     """
     ...

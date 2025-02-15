@@ -49,6 +49,9 @@ class UOp(interp.MethodTable):
         frame.body.append(ast.Barrier(qargs=qargs))
         return ()
 
+    @interp.impl(stmts.SX)
+    @interp.impl(stmts.SXdag)
+    @interp.impl(stmts.Id)
     @interp.impl(stmts.H)
     @interp.impl(stmts.X)
     @interp.impl(stmts.Y)
@@ -101,6 +104,8 @@ class UOp(interp.MethodTable):
         )
         return ()
 
+    @interp.impl(stmts.Swap)
+    @interp.impl(stmts.CSX)
     @interp.impl(stmts.CZ)
     @interp.impl(stmts.CY)
     @interp.impl(stmts.CH)
@@ -126,15 +131,27 @@ class UOp(interp.MethodTable):
         )
         return ()
 
+    @interp.impl(stmts.CSwap)
+    def emit_cswap(self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: stmts.CSwap):
+        ctrl = emit.assert_node((ast.Bit, ast.Name), frame.get(stmt.ctrl))
+        qarg1 = emit.assert_node((ast.Bit, ast.Name), frame.get(stmt.qarg1))
+        qarg2 = emit.assert_node((ast.Bit, ast.Name), frame.get(stmt.qarg2))
+        frame.body.append(
+            ast.Instruction(
+                name=ast.Name(stmt.name), params=[], qargs=[ctrl, qarg1, qarg2]
+            )
+        )
+        return ()
+
+    @interp.impl(stmts.CRZ)
+    @interp.impl(stmts.CRY)
     @interp.impl(stmts.CRX)
-    def emit_crx(self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: stmts.CRX):
-        theta = emit.assert_node(ast.Expr, frame.get(stmt.theta))
+    def emit_cr(self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: stmts.CRX):
+        lam = emit.assert_node(ast.Expr, frame.get(stmt.lam))
         ctrl = emit.assert_node((ast.Bit, ast.Name), frame.get(stmt.ctrl))
         qarg = emit.assert_node((ast.Bit, ast.Name), frame.get(stmt.qarg))
         frame.body.append(
-            ast.Instruction(
-                name=ast.Name(stmt.name), params=[theta], qargs=[ctrl, qarg]
-            )
+            ast.Instruction(name=ast.Name(stmt.name), params=[lam], qargs=[ctrl, qarg])
         )
         return ()
 
@@ -158,6 +175,36 @@ class UOp(interp.MethodTable):
         frame.body.append(
             ast.Instruction(
                 name=ast.Name(stmt.name), params=[theta, phi, lam], qargs=[ctrl, qarg]
+            )
+        )
+        return ()
+
+    @interp.impl(stmts.CU)
+    def emit_cu(self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: stmts.CU):
+        theta = emit.assert_node(ast.Expr, frame.get(stmt.theta))
+        phi = emit.assert_node(ast.Expr, frame.get(stmt.phi))
+        lam = emit.assert_node(ast.Expr, frame.get(stmt.lam))
+        gamma = emit.assert_node(ast.Expr, frame.get(stmt.gamma))
+        ctrl = emit.assert_node((ast.Bit, ast.Name), frame.get(stmt.ctrl))
+        qarg = emit.assert_node((ast.Bit, ast.Name), frame.get(stmt.qarg))
+        frame.body.append(
+            ast.Instruction(
+                name=ast.Name(stmt.name),
+                params=[theta, phi, lam, gamma],
+                qargs=[ctrl, qarg],
+            )
+        )
+        return ()
+
+    @interp.impl(stmts.RZZ)
+    @interp.impl(stmts.RXX)
+    def emit_r2q(self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: stmts.RZZ):
+        theta = emit.assert_node(ast.Expr, frame.get(stmt.theta))
+        ctrl = emit.assert_node((ast.Bit, ast.Name), frame.get(stmt.ctrl))
+        qarg = emit.assert_node((ast.Bit, ast.Name), frame.get(stmt.qarg))
+        frame.body.append(
+            ast.Instruction(
+                name=ast.Name(stmt.name), params=[theta], qargs=[ctrl, qarg]
             )
         )
         return ()
