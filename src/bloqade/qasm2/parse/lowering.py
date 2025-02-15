@@ -202,6 +202,9 @@ class LoweringQASM(Visitor[lowering.Result]):
             )
         return lowering.Result()
 
+    def visit_instruction_id(self, node: ast.Instruction, params, qargs):
+        return uop.Id(qarg=qargs[0])
+
     def visit_instruction_x(self, node: ast.Instruction, params, qargs):
         return uop.X(qarg=qargs[0])
 
@@ -220,6 +223,12 @@ class LoweringQASM(Visitor[lowering.Result]):
     def visit_instruction_sdg(self, node: ast.Instruction, params, qargs):
         return uop.Sdag(qarg=qargs[0])
 
+    def visit_instruction_sx(self, node: ast.Instruction, params, qargs):
+        return uop.SX(qarg=qargs[0])
+
+    def visit_instruction_sxdg(self, node: ast.Instruction, params, qargs):
+        return uop.SXdag(qarg=qargs[0])
+
     def visit_instruction_t(self, node: ast.Instruction, params, qargs):
         return uop.T(qarg=qargs[0])
 
@@ -235,6 +244,9 @@ class LoweringQASM(Visitor[lowering.Result]):
     def visit_instruction_rz(self, node: ast.Instruction, params, qargs):
         return uop.RZ(theta=params[0], qarg=qargs[0])
 
+    def visit_instruction_p(self, node: ast.Instruction, params, qargs):
+        return uop.U1(lam=params[0], qarg=qargs[0])
+
     def visit_instruction_u(self, node: ast.Instruction, params, qargs):
         return uop.UGate(theta=params[0], phi=params[1], lam=params[2], qarg=qargs[0])
 
@@ -243,6 +255,9 @@ class LoweringQASM(Visitor[lowering.Result]):
 
     def visit_instruction_u2(self, node: ast.Instruction, params, qargs):
         return uop.U2(phi=params[0], lam=params[1], qarg=qargs[0])
+
+    def visit_instruction_u3(self, node: ast.Instruction, params, qargs):
+        return uop.UGate(theta=params[0], phi=params[1], lam=params[2], qarg=qargs[0])
 
     def visit_instruction_CX(self, node: ast.Instruction, params, qargs):
         return uop.CX(ctrl=qargs[0], qarg=qargs[1])
@@ -259,11 +274,26 @@ class LoweringQASM(Visitor[lowering.Result]):
     def visit_instruction_ch(self, node: ast.Instruction, params, qargs):
         return uop.CH(ctrl=qargs[0], qarg=qargs[1])
 
+    def visit_instruction_crx(self, node: ast.Instruction, params, qargs):
+        return uop.CRX(lam=params[0], ctrl=qargs[0], qarg=qargs[1])
+
+    def visit_instruction_cry(self, node: ast.Instruction, params, qargs):
+        return uop.CRY(lam=params[0], ctrl=qargs[0], qarg=qargs[1])
+
+    def visit_instruction_crz(self, node: ast.Instruction, params, qargs):
+        return uop.CRZ(lam=params[0], ctrl=qargs[0], qarg=qargs[1])
+
     def visit_instruction_ccx(self, node: ast.Instruction, params, qargs):
         return uop.CCX(ctrl1=qargs[0], ctrl2=qargs[1], qarg=qargs[2])
 
-    def visit_instruction_crx(self, node: ast.Instruction, params, qargs):
-        return uop.CRX(theta=params[0], ctrl=qargs[0], qarg=qargs[1])
+    def visit_instruction_csx(self, node: ast.Instruction, params, qargs):
+        return uop.CSX(ctrl=qargs[0], qarg=qargs[1])
+
+    def visit_instruction_cswap(self, node: ast.Instruction, params, qargs):
+        return uop.CSwap(ctrl=qargs[0], qarg1=qargs[1], qarg2=qargs[2])
+
+    def visit_instruction_cp(self, node: ast.Instruction, params, qargs):
+        return uop.CU1(lam=params[0], ctrl=qargs[0], qarg=qargs[1])
 
     def visit_instruction_cu1(self, node: ast.Instruction, params, qargs):
         return uop.CU1(lam=params[0], ctrl=qargs[0], qarg=qargs[1])
@@ -272,6 +302,17 @@ class LoweringQASM(Visitor[lowering.Result]):
         return uop.CU3(
             theta=params[0], phi=params[1], lam=params[2], ctrl=qargs[0], qarg=qargs[1]
         )
+
+    def visit_instruction_cu(self, node: ast.Instruction, params, qargs):
+        return uop.CU3(
+            theta=params[0], phi=params[1], lam=params[2], ctrl=qargs[0], qarg=qargs[1]
+        )
+
+    def visit_instruction_rxx(self, node: ast.Instruction, params, qargs):
+        return uop.RXX(theta=params[0], ctrl=qargs[0], qarg=qargs[1])
+
+    def visit_instruction_rzz(self, node: ast.Instruction, params, qargs):
+        return uop.RZZ(theta=params[0], ctrl=qargs[0], qarg=qargs[1])
 
     def visit_Number(self, node: ast.Number) -> lowering.Result:
         if isinstance(node.value, int):
