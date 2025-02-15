@@ -18,8 +18,8 @@
 Bloqade is a software development kit (SDK) for neutral atom quantum computers. It is designed to be a hub of embedded domain-specific languages (eDSLs) for neutral atom quantum computing. Bloqade is built on top of [Kirin](https://github.com/QuEraComputing/kirin), the Kernel Intermediate Representation Infrastructure.
 
 
-!!! warning
-    TODO: notice of breaking change.
+!!! info
+    The old version (<= 0.15) of Bloqade is still available as a sub-package `bloqade-analog`. You can keep using it via `bloqade.analog` module. For example `from bloqade import start` becomes `from bloqade.analog import start`.
 
 ## Installation
 
