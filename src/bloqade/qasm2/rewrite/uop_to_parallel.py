@@ -21,20 +21,20 @@ def same_id_checker(ssa1: ir.SSAValue, ssa2: ir.SSAValue):
         return False
 
 
-class MergeRewriterABC(abc.ABC):
-
-    @abc.abstractmethod
-    def apply_rewrites(self, node: ir.Statement) -> result.RewriteResult:
-        pass
-
-
 @dataclass
-class GreedyMergeRewriter(MergeRewriterABC):
+class MergeRewriterABC(abc.ABC):
     address_analysis: Dict[ir.SSAValue, address.Address]
     merge_groups: List[List[ir.Statement]]
     group_numbers: Dict[ir.Statement, int]
 
-    def apply_rewrites(self, node: ir.Statement) -> result.RewriteResult:
+    @abc.abstractmethod
+    def apply(self, node: ir.Statement) -> result.RewriteResult:
+        pass
+
+
+@dataclass
+class SimpleMergeRewriter(MergeRewriterABC):
+    def apply(self, node: ir.Statement) -> result.RewriteResult:
         if node not in self.group_numbers:
             return result.RewriteResult()
 
@@ -159,10 +159,8 @@ class GreedyMergeRewriter(MergeRewriterABC):
 
 
 @dataclass
-class GreedyParallelPolicy:
-    ssa_value_checker: Callable[[ir.SSAValue, ir.SSAValue], bool] = field(
-        default=same_id_checker
-    )
+class GreedyMergePolicy:
+    ssa_value_checker: Callable[[ir.SSAValue, ir.SSAValue], bool]
 
     def check_equiv_args(
         self,
@@ -177,8 +175,7 @@ class GreedyParallelPolicy:
         except ValueError:
             return False
 
-    def policy(self, stmt1: ir.Statement, stmt2: ir.Statement):
-
+    def can_merge(self, stmt1: ir.Statement, stmt2: ir.Statement) -> bool:
         match stmt1, stmt2:
             case (
                 (uop.UGate(), uop.UGate())
@@ -205,30 +202,66 @@ class GreedyParallelPolicy:
             case _:
                 return False
 
-    def merge_gates(self, gate_stmts: Iterable[ir.Statement]):
-        groups = []
+    def __call__(self, gate_stmts: Iterable[ir.Statement]) -> List[List[ir.Statement]]:
+        """Group gates that can be merged together based on the merge_gate_policy
 
-        for gate in gate_stmts:
-            grouped = False
-            for group in groups:
-                if any(self.policy(gate, group_gate) for group_gate in group):
-                    group.append(gate)
-                    grouped = True
-                    break
+        Args:
+            gate_stmts (Generator[ir.Statement]): The gates to try and group
 
-            if not grouped:
+        Returns:
+            List[List[ir.Statement]]: A list of groups of gates that can be merged together
+
+        """
+        iterable = iter(gate_stmts)
+        groups = [[next(iterable)]]
+        for gate in iterable:
+            if self.can_merge(gate, groups[-1][-1]):
+                groups[-1].append(gate)
+            else:
                 groups.append([gate])
 
         return groups
 
+
+@dataclass
+class Parallelize:
+    merge_gate_policy: Callable[[Iterable[ir.Statement]], List[List[ir.Statement]]] = (
+        field(default_factory=lambda: GreedyMergePolicy(same_id_checker))
+    )
+    merge_rewriter_type: type[MergeRewriterABC] = field(default=SimpleMergeRewriter)
+
     def topological_groups(self, dag: StmtDag):
+        """Split the dag into topological groups where each group
+        contains nodes that have no dependencies on each other, but
+        have dependencies on nodes in one or more previous groups.
+
+        Args:
+            dag (StmtDag): The dag to split into groups
+
+
+        Yields:
+            List[str]: A list of node ids in a topological group
+
+
+        Raises:
+            ValueError: If a cyclic dependency is detected
+
+
+        The idea is to yield all nodes with no dependencies, then remove
+        those nodes from the graph repeating until no nodes are left
+        or we reach some upper limit. Worse case is a linear dag,
+        so we can use len(dag.stmts) as the upper limit
+
+        If we reach the limit and there are still nodes left, then we
+        have a cyclic dependency.
+        """
+
         inc_edges = {k: set(v) for k, v in dag.inc_edges.items()}
-        # worse case is a linear dag,
-        # so we can use len(dag.stmts) as the limit
+
         for _ in range(len(dag.stmts)):
             if len(inc_edges) == 0:
                 break
-            # get edges with no dependencies
+            # get nodes with no dependencies
             group = [
                 node_id for node_id, inc_edges in inc_edges.items() if not inc_edges
             ]
@@ -256,7 +289,7 @@ class GreedyParallelPolicy:
                 continue
 
             stmts = map(dag.stmts.__getitem__, topological_group)
-            gate_groups = self.merge_gates(stmts)
+            gate_groups = self.merge_gate_policy(stmts)
 
             for group in gate_groups:
                 if len(group) == 1:
@@ -267,7 +300,7 @@ class GreedyParallelPolicy:
 
                 merge_groups.append(group)
 
-        return GreedyMergeRewriter(address_analysis, merge_groups, group_numbers)
+        return self.merge_rewriter_type(address_analysis, merge_groups, group_numbers)
 
 
 @dataclass
@@ -282,7 +315,7 @@ class UOpToParallelRule(rewrite_abc.RewriteRule):
     ] = field(init=False)
 
     def __post_init__(self):
-        self.parallel_policy = GreedyParallelPolicy()
+        self.parallel_policy = Parallelize()
 
     def get_merge_rewriter(self, block: ir.Block | None) -> MergeRewriterABC | None:
         if block is None or block not in self.dags:
@@ -302,4 +335,4 @@ class UOpToParallelRule(rewrite_abc.RewriteRule):
         if merge_rewriter is None:
             return result.RewriteResult()
 
-        return merge_rewriter.apply_rewrites(node)
+        return merge_rewriter.apply(node)
