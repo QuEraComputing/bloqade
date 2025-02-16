@@ -107,6 +107,48 @@ class StmtDag(graph.Graph[ir.Statement]):
     ) -> None:
         raise NotImplementedError
 
+    def topological_groups(self):
+        """Split the dag into topological groups where each group
+        contains nodes that have no dependencies on each other, but
+        have dependencies on nodes in one or more previous groups.
+
+        Yields:
+            List[str]: A list of node ids in a topological group
+
+
+        Raises:
+            ValueError: If a cyclic dependency is detected
+
+
+        The idea is to yield all nodes with no dependencies, then remove
+        those nodes from the graph repeating until no nodes are left
+        or we reach some upper limit. Worse case is a linear dag,
+        so we can use len(dag.stmts) as the upper limit
+
+        If we reach the limit and there are still nodes left, then we
+        have a cyclic dependency.
+        """
+
+        inc_edges = {k: set(v) for k, v in self.inc_edges.items()}
+
+        for _ in range(len(self.stmts)):
+            if len(inc_edges) == 0:
+                break
+            # get nodes with no dependencies
+            group = [
+                node_id for node_id, inc_edges in inc_edges.items() if not inc_edges
+            ]
+            # remove nodes in group from inc_edges
+            for n in group:
+                inc_edges.pop(n)
+                for m in self.out_edges[n]:
+                    inc_edges[m].remove(n)
+
+            yield group
+
+        if inc_edges:
+            raise ValueError("Cyclic dependency detected")
+
 
 @dataclass
 class DagScheduleAnalysis(Forward[GateSchedule]):

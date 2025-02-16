@@ -1,6 +1,6 @@
 import abc
-from typing import Dict, List, Tuple, Callable, Iterable
-from dataclasses import field, dataclass
+from typing import Dict, List, Tuple, Iterable
+from dataclasses import dataclass
 
 from kirin import ir
 from kirin.rewrite import abc as rewrite_abc, result
@@ -11,30 +11,139 @@ from bloqade.qasm2.dialects import uop, core, parallel
 from bloqade.analysis.schedule import StmtDag
 
 
-def same_id_checker(ssa1: ir.SSAValue, ssa2: ir.SSAValue):
-    if ssa1 is ssa2:
-        return True
-    elif (hint1 := ssa1.hints.get("const")) and (hint2 := ssa2.hints.get("const")):
-        assert isinstance(hint1, lattice.Result) and isinstance(hint2, lattice.Result)
-        return hint1.is_equal(hint2)
-    else:
-        return False
-
-
-@dataclass
-class MergeRewriterABC(abc.ABC):
-    address_analysis: Dict[ir.SSAValue, address.Address]
-    merge_groups: List[List[ir.Statement]]
-    group_numbers: Dict[ir.Statement, int]
-
+class MergePolicyABC(abc.ABC):
     @abc.abstractmethod
-    def apply(self, node: ir.Statement) -> result.RewriteResult:
+    def __call__(self, node: ir.Statement) -> result.RewriteResult:
+        pass
+
+    @classmethod
+    @abc.abstractmethod
+    def can_merge(cls, stmt1: ir.Statement, stmt2: ir.Statement) -> bool:
+        pass
+
+    @classmethod
+    @abc.abstractmethod
+    def merge_gates(
+        cls, gate_stmts: Iterable[ir.Statement]
+    ) -> List[List[ir.Statement]]:
+        pass
+
+    @classmethod
+    @abc.abstractmethod
+    def from_analysis(
+        cls, dag: StmtDag, address_analysis: Dict[ir.SSAValue, address.Address]
+    ) -> "MergePolicyABC":
         pass
 
 
 @dataclass
-class SimpleMergeRewriter(MergeRewriterABC):
-    def apply(self, node: ir.Statement) -> result.RewriteResult:
+class SimpleMergePolicy(MergePolicyABC):
+    """General merge policy for merging gates based on their type and arguments.
+
+    Currently implemented merge groups:
+    - CZ
+    - U
+    - RZ
+
+    To implement a concrete merge policy, subclass this class and implement the
+    `merge_gates` class method. This will take an iterable of statements and return a list
+    of groups of statements that can be merged together. One can use the `can_merge`
+    method to check if two statements can be merged together. By default, this method
+    checks if the statements are of the same type and have the same arguments (up to
+    constant equivalence or by ssa values directly).
+
+    """
+
+    address_analysis: Dict[ir.SSAValue, address.Address]
+    """Mapping from SSA values to their address analysis results. Needed for rewrites"""
+    merge_groups: List[List[ir.Statement]]
+    """List of groups of statements that can be merged together"""
+    group_numbers: Dict[ir.Statement, int]
+    """Mapping from statements to their group number"""
+
+    @staticmethod
+    def same_id_checker(ssa1: ir.SSAValue, ssa2: ir.SSAValue):
+        if ssa1 is ssa2:
+            return True
+        elif (hint1 := ssa1.hints.get("const")) and (hint2 := ssa2.hints.get("const")):
+            assert isinstance(hint1, lattice.Result) and isinstance(
+                hint2, lattice.Result
+            )
+            return hint1.is_equal(hint2)
+        else:
+            return False
+
+    @classmethod
+    def check_equiv_args(
+        cls,
+        args1: Iterable[ir.SSAValue],
+        args2: Iterable[ir.SSAValue],
+    ):
+        try:
+            return all(
+                cls.same_id_checker(ssa1, ssa2)
+                for ssa1, ssa2 in zip(args1, args2, strict=True)
+            )
+        except ValueError:
+            return False
+
+    @classmethod
+    def can_merge(cls, stmt1: ir.Statement, stmt2: ir.Statement) -> bool:
+        match stmt1, stmt2:
+            case (
+                (uop.UGate(), uop.UGate())
+                | (uop.RZ(), uop.RZ())
+                | (parallel.UGate(), parallel.UGate())
+                | (parallel.UGate(), uop.UGate())
+                | (uop.UGate(), parallel.UGate())
+                | (uop.UGate(), parallel.UGate())
+                | (uop.UGate(), parallel.UGate())
+                | (parallel.RZ(), parallel.RZ())
+                | (uop.RZ(), parallel.RZ())
+                | (parallel.RZ(), uop.RZ())
+            ):
+
+                return cls.check_equiv_args(stmt1.args[1:], stmt2.args[1:])
+            case (
+                (parallel.CZ(), parallel.CZ())
+                | (parallel.CZ(), uop.CZ())
+                | (uop.CZ(), parallel.CZ())
+                | (uop.CZ(), uop.CZ())
+            ):
+                return True
+
+            case _:
+                return False
+
+    @classmethod
+    def from_analysis(
+        cls,
+        dag: StmtDag,
+        address_analysis: Dict[ir.SSAValue, address.Address],
+    ):
+
+        merge_groups = []
+        group_numbers = {}
+
+        for group in dag.topological_groups():
+
+            gate_groups = cls.merge_gates(map(dag.stmts.__getitem__, group))
+
+            gate_groups_iter = (group for group in gate_groups if len(group) > 1)
+
+            for gate_group in gate_groups_iter:
+                group_number = len(merge_groups)
+                merge_groups.append(gate_group)
+                for stmt in gate_group:
+                    group_numbers[stmt] = group_number
+
+        return cls(
+            address_analysis=address_analysis,
+            merge_groups=merge_groups,
+            group_numbers=group_numbers,
+        )
+
+    def __call__(self, node: ir.Statement) -> result.RewriteResult:
         if node not in self.group_numbers:
             return result.RewriteResult()
 
@@ -158,181 +267,82 @@ class SimpleMergeRewriter(MergeRewriterABC):
         new_gate.insert_before(node)
 
 
-@dataclass
-class GreedyMergePolicy:
-    ssa_value_checker: Callable[[ir.SSAValue, ir.SSAValue], bool]
+class GreedyMixin(MergePolicyABC):
+    """Merge policy that greedily merges gates together.
 
-    def check_equiv_args(
-        self,
-        args1: Iterable[ir.SSAValue],
-        args2: Iterable[ir.SSAValue],
-    ):
-        try:
-            return all(
-                self.ssa_value_checker(ssa1, ssa2)
-                for ssa1, ssa2 in zip(args1, args2, strict=True)
-            )
-        except ValueError:
-            return False
+    The `merge_gates` method will merge policy will try sort the gates by their type name
+    and then iterate over them. If the next gate can be merged with the current group of
+    gates, it will be added to the group. If not, it will create a new group of gates.
+    The complexity of this policy has worse case complexity at most the complexity of the
+    the initial sort of the gates.
 
-    def can_merge(self, stmt1: ir.Statement, stmt2: ir.Statement) -> bool:
-        match stmt1, stmt2:
-            case (
-                (uop.UGate(), uop.UGate())
-                | (uop.RZ(), uop.RZ())
-                | (parallel.UGate(), parallel.UGate())
-                | (parallel.UGate(), uop.UGate())
-                | (uop.UGate(), parallel.UGate())
-                | (uop.UGate(), parallel.UGate())
-                | (uop.UGate(), parallel.UGate())
-                | (parallel.RZ(), parallel.RZ())
-                | (uop.RZ(), parallel.RZ())
-                | (parallel.RZ(), uop.RZ())
-            ):
+    """
 
-                return self.check_equiv_args(stmt1.args[1:], stmt2.args[1:])
-            case (
-                (parallel.CZ(), parallel.CZ())
-                | (parallel.CZ(), uop.CZ())
-                | (uop.CZ(), parallel.CZ())
-                | (uop.CZ(), uop.CZ())
-            ):
-                return True
+    @classmethod
+    def merge_gates(
+        cls, gate_stmts: Iterable[ir.Statement]
+    ) -> List[List[ir.Statement]]:
 
-            case _:
-                return False
+        sorted_stmts = sorted(gate_stmts, key=lambda stmt: type(stmt).__name__)
 
-    def __call__(self, gate_stmts: Iterable[ir.Statement]) -> List[List[ir.Statement]]:
-        """Group gates that can be merged together based on the merge_gate_policy
+        iterable = iter(sorted_stmts)
+        gate_groups = [[next(iterable)]]
 
-        Args:
-            gate_stmts (Generator[ir.Statement]): The gates to try and group
-
-        Returns:
-            List[List[ir.Statement]]: A list of groups of gates that can be merged together
-
-        """
-        iterable = iter(gate_stmts)
-        groups = [[next(iterable)]]
-        for gate in iterable:
-            if self.can_merge(gate, groups[-1][-1]):
-                groups[-1].append(gate)
+        for stmt in iterable:
+            if cls.can_merge(gate_groups[-1][-1], stmt):
+                gate_groups[-1].append(stmt)
             else:
-                groups.append([gate])
+                gate_groups.append([stmt])
 
-        return groups
+        return gate_groups
+
+
+class OptimalMixIn(MergePolicyABC):
+    """Merge policy that merges gates together optimally.
+
+    The `merge_gates` method will merge policy will try to merge every gate into every
+    group of gates, terminating when it finds a group that can be merged with the current
+    gate. This policy has a worst case complexity of O(n^2) where n is the number of gates
+    in the input iterable.
+
+    """
+
+    @classmethod
+    def merge_gates(
+        cls, gate_stmts: Iterable[ir.Statement]
+    ) -> List[List[ir.Statement]]:
+        gate_groups = {}
+
+        for stmt in gate_stmts:
+            groups = gate_groups.setdefault(type(stmt), [])
+            found = False
+            for group in groups:
+                if cls.can_merge(group[-1], stmt):
+                    group.append(stmt)
+                    break
+
+            if not found:
+                groups.append([stmt])
+
+        return sum(gate_groups.values(), [])
 
 
 @dataclass
-class Parallelize:
-    merge_gate_policy: Callable[[Iterable[ir.Statement]], List[List[ir.Statement]]] = (
-        field(default_factory=lambda: GreedyMergePolicy(same_id_checker))
-    )
-    merge_rewriter_type: type[MergeRewriterABC] = field(default=SimpleMergeRewriter)
-
-    def topological_groups(self, dag: StmtDag):
-        """Split the dag into topological groups where each group
-        contains nodes that have no dependencies on each other, but
-        have dependencies on nodes in one or more previous groups.
-
-        Args:
-            dag (StmtDag): The dag to split into groups
+class SimpleGreedyMergePolicy(GreedyMixin, SimpleMergePolicy):
+    pass
 
 
-        Yields:
-            List[str]: A list of node ids in a topological group
-
-
-        Raises:
-            ValueError: If a cyclic dependency is detected
-
-
-        The idea is to yield all nodes with no dependencies, then remove
-        those nodes from the graph repeating until no nodes are left
-        or we reach some upper limit. Worse case is a linear dag,
-        so we can use len(dag.stmts) as the upper limit
-
-        If we reach the limit and there are still nodes left, then we
-        have a cyclic dependency.
-        """
-
-        inc_edges = {k: set(v) for k, v in dag.inc_edges.items()}
-
-        for _ in range(len(dag.stmts)):
-            if len(inc_edges) == 0:
-                break
-            # get nodes with no dependencies
-            group = [
-                node_id for node_id, inc_edges in inc_edges.items() if not inc_edges
-            ]
-            # remove nodes in group from inc_edges
-            for n in group:
-                inc_edges.pop(n)
-                for m in dag.out_edges[n]:
-                    inc_edges[m].remove(n)
-
-            yield group
-
-        if inc_edges:
-            raise ValueError("Cyclic dependency detected")
-
-    def __call__(
-        self,
-        dag: StmtDag,
-        address_analysis: Dict[ir.SSAValue, address.Address],
-    ):
-        merge_groups: List[List[ir.Statement]] = []
-        group_numbers: Dict[ir.Statement, int] = {}
-
-        for topological_group in self.topological_groups(dag):
-            if len(topological_group) == 1:
-                continue
-
-            stmts = map(dag.stmts.__getitem__, topological_group)
-            gate_groups = self.merge_gate_policy(stmts)
-
-            for group in gate_groups:
-                if len(group) == 1:
-                    continue
-
-                for gate in group:
-                    group_numbers[gate] = len(merge_groups)
-
-                merge_groups.append(group)
-
-        return self.merge_rewriter_type(address_analysis, merge_groups, group_numbers)
+@dataclass
+class SimpleOptimalMergePolicy(OptimalMixIn, SimpleMergePolicy):
+    pass
 
 
 @dataclass
 class UOpToParallelRule(rewrite_abc.RewriteRule):
-    address_analysis: Dict[ir.SSAValue, address.Address]
-    dags: Dict[ir.Block, StmtDag]
-    grouping_results: Dict[ir.Block, MergeRewriterABC] = field(
-        init=False, default_factory=dict
-    )
-    parallel_policy: Callable[
-        [StmtDag, Dict[ir.SSAValue, address.Address]], MergeRewriterABC
-    ] = field(init=False)
-
-    def __post_init__(self):
-        self.parallel_policy = Parallelize()
-
-    def get_merge_rewriter(self, block: ir.Block | None) -> MergeRewriterABC | None:
-        if block is None or block not in self.dags:
-            return None
-
-        if block in self.grouping_results:
-            return self.grouping_results[block]
-
-        self.grouping_results[block] = self.parallel_policy(
-            self.dags[block], self.address_analysis
-        )
-        return self.grouping_results[block]
+    merge_rewriters: Dict[ir.Block | None, MergePolicyABC]
 
     def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
-        merge_rewriter = self.get_merge_rewriter(node.parent_block)
-
-        if merge_rewriter is None:
-            return result.RewriteResult()
-
-        return merge_rewriter.apply(node)
+        merge_rewriter = self.merge_rewriters.get(
+            node.parent_block, lambda _: result.RewriteResult()
+        )
+        return merge_rewriter(node)
