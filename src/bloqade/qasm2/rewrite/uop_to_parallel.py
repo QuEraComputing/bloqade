@@ -40,17 +40,11 @@ class MergePolicyABC(abc.ABC):
 class SimpleMergePolicy(MergePolicyABC):
     """General merge policy for merging gates based on their type and arguments.
 
-    Currently implemented merge groups:
-    - CZ
-    - U
-    - RZ
-
-    To implement a concrete merge policy, subclass this class and implement the
+    Base class to implement a merge policy for CZ, U and RZ gates, To completed the policy implement the
     `merge_gates` class method. This will take an iterable of statements and return a list
-    of groups of statements that can be merged together. One can use the `can_merge`
-    method to check if two statements can be merged together. By default, this method
-    checks if the statements are of the same type and have the same arguments (up to
-    constant equivalence or by ssa values directly).
+    of groups of statements that can be merged together. There are two mix-in classes
+    that can be used to implement the `merge_gates` method. The `GreedyMixin` will merge
+    gates together greedily, while the `OptimalMixIn` will merge gates together optimally.
 
     """
 
@@ -270,12 +264,9 @@ class SimpleMergePolicy(MergePolicyABC):
 class GreedyMixin(MergePolicyABC):
     """Merge policy that greedily merges gates together.
 
-    The `merge_gates` method will merge policy will try sort the gates by their type name
-    and then iterate over them. If the next gate can be merged with the current group of
-    gates, it will be added to the group. If not, it will create a new group of gates.
-    The complexity of this policy has worse case complexity at most the complexity of the
-    the initial sort of the gates.
-
+    The `merge_gates` method will merge policy will try greedily merge gates together.
+    This policy has a worst case complexity of O(n) where n is the
+    number of gates in the input iterable.
     """
 
     @classmethod
@@ -283,18 +274,16 @@ class GreedyMixin(MergePolicyABC):
         cls, gate_stmts: Iterable[ir.Statement]
     ) -> List[List[ir.Statement]]:
 
-        sorted_stmts = sorted(gate_stmts, key=lambda stmt: type(stmt).__name__)
+        iterable = iter(gate_stmts)
+        groups = [[next(iterable)]]
 
-        iterable = iter(sorted_stmts)
-        gate_groups = [[next(iterable)]]
-
-        for stmt in iterable:
-            if cls.can_merge(gate_groups[-1][-1], stmt):
-                gate_groups[-1].append(stmt)
+        for stmt in gate_stmts:
+            if cls.can_merge(groups[-1][-1], stmt):
+                groups[-1].append(stmt)
             else:
-                gate_groups.append([stmt])
+                groups.append([stmt])
 
-        return gate_groups
+        return groups
 
 
 class OptimalMixIn(MergePolicyABC):
@@ -311,20 +300,20 @@ class OptimalMixIn(MergePolicyABC):
     def merge_gates(
         cls, gate_stmts: Iterable[ir.Statement]
     ) -> List[List[ir.Statement]]:
-        gate_groups = {}
 
+        groups = []
         for stmt in gate_stmts:
-            groups = gate_groups.setdefault(type(stmt), [])
             found = False
             for group in groups:
                 if cls.can_merge(group[-1], stmt):
                     group.append(stmt)
+                    found = True
                     break
 
             if not found:
                 groups.append([stmt])
 
-        return sum(gate_groups.values(), [])
+        return groups
 
 
 @dataclass
