@@ -1,8 +1,9 @@
+import abc
 from typing import Dict, List, Tuple, Callable, Iterable
 from dataclasses import field, dataclass
 
 from kirin import ir
-from kirin.rewrite import abc, result
+from kirin.rewrite import abc as rewrite_abc, result
 from kirin.dialects import ilist
 from bloqade.analysis import address
 from kirin.analysis.const import lattice
@@ -20,14 +21,145 @@ def same_id_checker(ssa1: ir.SSAValue, ssa2: ir.SSAValue):
         return False
 
 
-class MergeResults:
-    def __init__(self, merge_groups, group_numbers):
-        self.merge_groups = merge_groups
-        self.group_numbers = group_numbers
+class MergeRewriterABC(abc.ABC):
+
+    @abc.abstractmethod
+    def apply_rewrites(self, node: ir.Statement) -> result.RewriteResult:
+        pass
 
 
 @dataclass
-class GreedyParallelGrouping:
+class GreedyMergeRewriter(MergeRewriterABC):
+    address_analysis: Dict[ir.SSAValue, address.Address]
+    merge_groups: List[List[ir.Statement]]
+    group_numbers: Dict[ir.Statement, int]
+
+    def apply_rewrites(self, node: ir.Statement) -> result.RewriteResult:
+        if node not in self.group_numbers:
+            return result.RewriteResult()
+
+        group = self.merge_groups[self.group_numbers[node]]
+        if node is group[0]:
+            method = getattr(self, f"rewrite_group_{node.name}")
+            method(node, group)
+
+        node.delete()
+
+        return result.RewriteResult(has_done_something=True)
+
+    def move_and_collect_qubit_list(
+        self, node: ir.Statement, qargs: List[ir.SSAValue]
+    ) -> Tuple[ir.SSAValue, ...]:
+
+        qubits = []
+        # collect references to qubits
+        for qarg in qargs:
+            addr = self.address_analysis[qarg]
+
+            if isinstance(addr, address.AddressQubit):
+                qubits.append(qarg)
+
+            elif isinstance(addr, address.AddressTuple):
+                assert isinstance(qarg, ir.ResultValue)
+                assert isinstance(qarg.stmt, ilist.New)
+                qubits.extend(qarg.stmt.values)
+
+        # for qubits coming from QRegGet, move both the get statement
+        # and the index statement before the current node, we do not need
+        # to move the register because the current node has some dependency
+        # on it.
+        for qarg in qubits:
+            if (
+                isinstance(qarg, ir.ResultValue)
+                and isinstance(qarg.owner, core.QRegGet)
+                and isinstance(qarg.owner.idx, ir.ResultValue)
+            ):
+                idx = qarg.owner.idx
+                idx.owner.delete(safe=False)
+                idx.owner.insert_before(node)
+                qarg.owner.delete(safe=False)
+                qarg.owner.insert_before(node)
+
+        return tuple(qubits)
+
+    def rewrite_group_cz(self, node: ir.Statement, group: List[ir.Statement]):
+        ctrls = []
+        qargs = []
+
+        for stmt in group:
+            if isinstance(stmt, uop.CZ):
+                ctrls.append(stmt.ctrl)
+                qargs.append(stmt.qarg)
+            elif isinstance(stmt, parallel.CZ):
+                ctrls.append(stmt.ctrls)
+                qargs.append(stmt.qargs)
+            else:
+                raise RuntimeError(f"Unexpected statement {stmt}")
+
+        ctrls_values = self.move_and_collect_qubit_list(node, ctrls)
+        qargs_values = self.move_and_collect_qubit_list(node, qargs)
+
+        new_ctrls = ilist.New(values=ctrls_values)
+        new_qargs = ilist.New(values=qargs_values)
+        new_gate = parallel.CZ(ctrls=new_ctrls.result, qargs=new_qargs.result)
+
+        new_ctrls.insert_before(node)
+        new_qargs.insert_before(node)
+        new_gate.insert_before(node)
+
+    def rewrite_group_U(self, node: ir.Statement, group: List[ir.Statement]):
+        self.rewrite_group_u(node, group)
+
+    def rewrite_group_u(self, node: ir.Statement, group: List[ir.Statement]):
+        qargs = []
+
+        for stmt in group:
+            if isinstance(stmt, uop.UGate):
+                qargs.append(stmt.qarg)
+            elif isinstance(stmt, parallel.UGate):
+                qargs.append(stmt.qargs)
+            else:
+                raise RuntimeError(f"Unexpected statement {stmt}")
+
+        assert isinstance(node, (uop.UGate, parallel.UGate))
+
+        qargs_values = self.move_and_collect_qubit_list(node, qargs)
+
+        new_qargs = ilist.New(values=qargs_values)
+        new_gate = parallel.UGate(
+            qargs=new_qargs.result,
+            theta=node.theta,
+            phi=node.phi,
+            lam=node.lam,
+        )
+        new_qargs.insert_before(node)
+        new_gate.insert_before(node)
+
+    def rewrite_group_rz(self, node: ir.Statement, group: List[ir.Statement]):
+        qargs = []
+
+        for stmt in group:
+            if isinstance(stmt, uop.RZ):
+                qargs.append(stmt.qarg)
+            elif isinstance(stmt, parallel.RZ):
+                qargs.append(stmt.qargs)
+            else:
+                raise RuntimeError(f"Unexpected statement {stmt}")
+
+        assert isinstance(node, (uop.RZ, parallel.RZ))
+
+        qargs_values = self.move_and_collect_qubit_list(node, qargs)
+        new_qargs = ilist.New(values=qargs_values)
+        new_gate = parallel.RZ(
+            qargs=new_qargs.result,
+            theta=node.theta,
+        )
+        new_qargs.insert_before(node)
+        new_gate.insert_before(node)
+
+
+@dataclass
+class GreedyParallelPolicy:
     ssa_value_checker: Callable[[ir.SSAValue, ir.SSAValue], bool] = field(
         default=same_id_checker
     )
@@ -79,7 +211,6 @@ class GreedyParallelGrouping:
         for gate in gate_stmts:
             grouped = False
             for group in groups:
-
                 if any(self.policy(gate, group_gate) for group_gate in group):
                     group.append(gate)
                     grouped = True
@@ -115,6 +246,7 @@ class GreedyParallelGrouping:
     def __call__(
         self,
         dag: StmtDag,
+        address_analysis: Dict[ir.SSAValue, address.Address],
     ):
         merge_groups: List[List[ir.Statement]] = []
         group_numbers: Dict[ir.Statement, int] = {}
@@ -135,151 +267,39 @@ class GreedyParallelGrouping:
 
                 merge_groups.append(group)
 
-        return MergeResults(merge_groups, group_numbers)
+        return GreedyMergeRewriter(address_analysis, merge_groups, group_numbers)
 
 
 @dataclass
-class UOpToParallelRule(abc.RewriteRule):
+class UOpToParallelRule(rewrite_abc.RewriteRule):
     address_analysis: Dict[ir.SSAValue, address.Address]
     dags: Dict[ir.Block, StmtDag]
-    grouping_results: Dict[ir.Block, MergeResults] = field(
+    grouping_results: Dict[ir.Block, MergeRewriterABC] = field(
         init=False, default_factory=dict
     )
-    parallel_grouping: Callable[[StmtDag], MergeResults] = field(init=False)
+    parallel_policy: Callable[
+        [StmtDag, Dict[ir.SSAValue, address.Address]], MergeRewriterABC
+    ] = field(init=False)
 
     def __post_init__(self):
-        self.parallel_grouping = GreedyParallelGrouping()
+        self.parallel_policy = GreedyParallelPolicy()
 
-    def get_merge_results(self, block: ir.Block | None) -> MergeResults | None:
+    def get_merge_rewriter(self, block: ir.Block | None) -> MergeRewriterABC | None:
         if block is None or block not in self.dags:
             return None
 
-        if block not in self.grouping_results and block in self.dags:
-            self.grouping_results[block] = self.parallel_grouping(self.dags[block])
+        if block in self.grouping_results:
+            return self.grouping_results[block]
 
+        self.grouping_results[block] = self.parallel_policy(
+            self.dags[block], self.address_analysis
+        )
         return self.grouping_results[block]
 
     def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
-        merge_results = self.get_merge_results(node.parent_block)
+        merge_rewriter = self.get_merge_rewriter(node.parent_block)
 
-        if merge_results is None:
+        if merge_rewriter is None:
             return result.RewriteResult()
 
-        if node not in merge_results.group_numbers:
-            return result.RewriteResult()
-
-        group_number = merge_results.group_numbers[node]
-        group = merge_results.merge_groups[group_number]
-        if node is group[0]:
-            method = getattr(self, f"rewrite_group_{node.name}")
-            method(node, group)
-
-        node.delete()
-
-        return result.RewriteResult(has_done_something=True)
-
-    def merge_and_move_qubits(
-        self, node: ir.Statement, qargs: List[ir.SSAValue]
-    ) -> Tuple[ir.SSAValue, ...]:
-
-        qubits = []
-
-        for qarg in qargs:
-            addr = self.address_analysis[qarg]
-
-            if isinstance(addr, address.AddressQubit):
-                qubits.append(qarg)
-
-            elif isinstance(addr, address.AddressTuple):
-                assert isinstance(qarg, ir.ResultValue)
-                assert isinstance(qarg.stmt, ilist.New)
-                qubits.extend(qarg.stmt.values)
-
-        for qarg in qubits:
-            if (
-                isinstance(qarg, ir.ResultValue)
-                and isinstance(qarg.owner, core.QRegGet)
-                and isinstance(qarg.owner.idx, ir.ResultValue)
-            ):
-                idx = qarg.owner.idx
-                idx.owner.delete(safe=False)
-                idx.owner.insert_before(node)
-                qarg.owner.delete(safe=False)
-                qarg.owner.insert_before(node)
-
-        return tuple(qubits)
-
-    def rewrite_group_cz(self, node: ir.Statement, group: List[ir.Statement]):
-        ctrls = []
-        qargs = []
-
-        for stmt in group:
-            if isinstance(stmt, uop.CZ):
-                ctrls.append(stmt.ctrl)
-                qargs.append(stmt.qarg)
-            elif isinstance(stmt, parallel.CZ):
-                ctrls.append(stmt.ctrls)
-                qargs.append(stmt.qargs)
-            else:
-                raise RuntimeError(f"Unexpected statement {stmt}")
-
-        ctrls_values = self.merge_and_move_qubits(node, ctrls)
-        qargs_values = self.merge_and_move_qubits(node, qargs)
-
-        new_ctrls = ilist.New(values=ctrls_values)
-        new_qargs = ilist.New(values=qargs_values)
-        new_gate = parallel.CZ(ctrls=new_ctrls.result, qargs=new_qargs.result)
-
-        new_ctrls.insert_before(node)
-        new_qargs.insert_before(node)
-        new_gate.insert_before(node)
-
-    def rewrite_group_U(self, node: ir.Statement, group: List[ir.Statement]):
-        self.rewrite_group_u(node, group)
-
-    def rewrite_group_u(self, node: ir.Statement, group: List[ir.Statement]):
-        qargs = []
-
-        for stmt in group:
-            if isinstance(stmt, uop.UGate):
-                qargs.append(stmt.qarg)
-            elif isinstance(stmt, parallel.UGate):
-                qargs.append(stmt.qargs)
-            else:
-                raise RuntimeError(f"Unexpected statement {stmt}")
-
-        assert isinstance(node, (uop.UGate, parallel.UGate))
-
-        qargs_values = self.merge_and_move_qubits(node, qargs)
-
-        new_qargs = ilist.New(values=qargs_values)
-        new_gate = parallel.UGate(
-            qargs=new_qargs.result,
-            theta=node.theta,
-            phi=node.phi,
-            lam=node.lam,
-        )
-        new_qargs.insert_before(node)
-        new_gate.insert_before(node)
-
-    def rewrite_group_rz(self, node: ir.Statement, group: List[ir.Statement]):
-        qargs = []
-
-        for stmt in group:
-            if isinstance(stmt, uop.RZ):
-                qargs.append(stmt.qarg)
-            elif isinstance(stmt, parallel.RZ):
-                qargs.append(stmt.qargs)
-            else:
-                raise RuntimeError(f"Unexpected statement {stmt}")
-
-        assert isinstance(node, (uop.RZ, parallel.RZ))
-
-        qargs_values = self.merge_and_move_qubits(node, qargs)
-        new_qargs = ilist.New(values=qargs_values)
-        new_gate = parallel.RZ(
-            qargs=new_qargs.result,
-            theta=node.theta,
-        )
-        new_qargs.insert_before(node)
-        new_gate.insert_before(node)
+        return merge_rewriter.apply_rewrites(node)

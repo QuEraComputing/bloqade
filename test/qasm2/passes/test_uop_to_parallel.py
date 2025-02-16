@@ -20,12 +20,17 @@ def test():
         qasm2.u(q[1], 0.1, 0.2, 0.3)
         qasm2.u(q[3], theta, phi, lam)
         gate(q[1], q[3])
+        qasm2.barrier((q[1], q[2]))
         qasm2.u(q[2], theta, phi, lam)
         glob.u(theta=theta, phi=phi, lam=lam, registers=[q])
         qasm2.u(q[0], theta, phi, lam)
 
-        gate(q[0], q[2])
+        # gate(q[0], q[2])
 
     # test.print()
     parallel.UOpToParallel(test.dialects)(test)
     test.print()
+
+
+if __name__ == "__main__":
+    test()
