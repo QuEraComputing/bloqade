@@ -22,7 +22,7 @@ class QASM2:
         main_target: ir.DialectGroup | None = None,
         gate_target: ir.DialectGroup | None = None,
         qelib1: bool = True,
-        custom_gate: bool = False,
+        custom_gate: bool = True,
     ) -> None:
         """Initialize the QASM2 target.
 
@@ -37,6 +37,9 @@ class QASM2:
             qelib1 (bool):
                 Include the `include "qelib1.inc"` line in the resulting QASM2 AST that's
                 submitted to qBraid. Defaults to `True`.
+            custom_gate (bool):
+                Include the custom gate definitions in the resulting QASM2 AST. Defaults to `True`. If `False`, all the qasm2.gate will be inlined.
+
         """
         from bloqade import qasm2
 
