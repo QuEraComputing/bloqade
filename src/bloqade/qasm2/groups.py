@@ -27,7 +27,7 @@ def gate(self):
         method.verify()
 
         if isinstance(method.code, func.Function):
-            new_code = core.GateFunction(
+            new_code = expr.GateFunction(
                 sym_name=method.code.sym_name,
                 signature=method.code.signature,
                 body=method.code.body,

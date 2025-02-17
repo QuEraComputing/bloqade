@@ -1,49 +1,8 @@
 from kirin import ir, types
 from kirin.decl import info, statement
 from bloqade.qasm2.types import BitType, CRegType, QRegType, QubitType
-from kirin.print.printer import Printer
-from kirin.dialects.func.attrs import Signature
 
 from ._dialect import dialect
-
-
-class GateFuncOpCallableInterface(ir.CallableStmtInterface["GateFunction"]):
-
-    @classmethod
-    def get_callable_region(cls, stmt: "GateFunction") -> ir.Region:
-        return stmt.body
-
-
-@statement(dialect=dialect)
-class GateFunction(ir.Statement):
-    """Special Function for qasm2 gate subroutine."""
-
-    name = "gate.func"
-    traits = frozenset(
-        {
-            ir.IsolatedFromAbove(),
-            ir.SymbolOpInterface(),
-            ir.HasSignature(),
-            GateFuncOpCallableInterface(),
-        }
-    )
-    sym_name: str = info.attribute()
-    signature: Signature = info.attribute()
-    body: ir.Region = info.region(multi=True)
-
-    def print_impl(self, printer: Printer) -> None:
-        with printer.rich(style="red"):
-            printer.plain_print(self.name + " ")
-
-        with printer.rich(style="cyan"):
-            printer.plain_print(self.sym_name)
-
-        self.signature.print_impl(printer)
-        printer.plain_print(" ")
-        self.body.print_impl(printer)
-
-        with printer.rich(style="black"):
-            printer.plain_print(f" // gate.func {self.sym_name}")
 
 
 @statement(dialect=dialect)

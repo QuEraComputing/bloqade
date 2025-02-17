@@ -19,7 +19,7 @@ from kirin.analysis import const
 from kirin.dialects import scf, ilist
 from kirin.ir.method import Method
 from kirin.rewrite.abc import RewriteResult
-from bloqade.qasm2.dialects import core
+from bloqade.qasm2.dialects import expr
 
 
 @dataclass
@@ -27,7 +27,7 @@ class QASM2Fold(Pass):
     """Fold pass for qasm2.extended"""
 
     constprop: const.Propagate = field(init=False)
-    fold_gate_subroutine: bool = True
+    inline_gate_subroutine: bool = True
 
     def __post_init__(self):
         self.constprop = const.Propagate(self.dialects)
@@ -45,6 +45,10 @@ class QASM2Fold(Pass):
             CommonSubexpressionElimination(),
         )
         result = Fixpoint(Walk(rule)).rewrite(mt.code).join(result)
+
+        ## NOTE here is a bug that cause inserting repeating constant.none from previous rewrite.
+        ## So here we temporary add dce to remove it.
+        result = Walk(DeadCodeElimination()).rewrite(mt.code).join(result)
         result = (
             Walk(Chain(scf.unroll.PickIfElse(), scf.unroll.ForLoop()))
             .rewrite(mt.code)
@@ -60,8 +64,8 @@ class QASM2Fold(Pass):
                 Inline(
                     lambda x: (
                         True
-                        if self.fold_gate_subroutine
-                        else not isinstance(x, core.GateFunction)
+                        if self.inline_gate_subroutine
+                        else not isinstance(x, expr.GateFunction)
                     )
                 ),
                 skip=skip_scf,
