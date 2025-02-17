@@ -19,6 +19,7 @@ from kirin.analysis import const
 from kirin.dialects import scf, ilist
 from kirin.ir.method import Method
 from kirin.rewrite.abc import RewriteResult
+from bloqade.qasm2.dialects import core
 
 
 @dataclass
@@ -26,6 +27,7 @@ class QASM2Fold(Pass):
     """Fold pass for qasm2.extended"""
 
     constprop: const.Propagate = field(init=False)
+    fold_gate_subroutine: bool = True
 
     def __post_init__(self):
         self.constprop = const.Propagate(self.dialects)
@@ -54,7 +56,18 @@ class QASM2Fold(Pass):
             return isinstance(node, (scf.For, scf.IfElse))
 
         result = (
-            Walk(Inline(lambda _: True), skip=skip_scf).rewrite(mt.code).join(result)
+            Walk(
+                Inline(
+                    lambda x: (
+                        True
+                        if self.fold_gate_subroutine
+                        else not isinstance(x, core.GateFunction)
+                    )
+                ),
+                skip=skip_scf,
+            )
+            .rewrite(mt.code)
+            .join(result)
         )
         result = Fixpoint(CFGCompactify()).rewrite(mt.code).join(result)
         return result

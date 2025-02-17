@@ -25,7 +25,18 @@ def gate(self):
         fold: bool = True,
     ):
         method.verify()
-        # TODO make special Function rewrite
+
+        if isinstance(method.code, func.Function):
+            new_code = core.GateFunction(
+                sym_name=method.code.sym_name,
+                signature=method.code.signature,
+                body=method.code.body,
+            )
+            method.code = new_code
+        else:
+            raise ValueError(
+                "Gate Method code must be a Function, cannot be lambda/closure"
+            )
 
         if fold:
             fold_pass(method)
