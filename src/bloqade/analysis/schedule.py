@@ -131,20 +131,21 @@ class StmtDag(graph.Graph[ir.Statement]):
 
         inc_edges = {k: set(v) for k, v in self.inc_edges.items()}
 
+        check_next = inc_edges.keys()
+
         for _ in range(len(self.stmts)):
             if len(inc_edges) == 0:
                 break
-            # get nodes with no dependencies
-            group = [
-                node_id for node_id, inc_edges in inc_edges.items() if not inc_edges
-            ]
-            # remove nodes in group from inc_edges
+
+            group = [node_id for node_id in check_next if len(inc_edges[node_id]) == 0]
+            yield group
+
+            check_next = set()
             for n in group:
                 inc_edges.pop(n)
                 for m in self.out_edges[n]:
+                    check_next.add(m)
                     inc_edges[m].remove(n)
-
-            yield group
 
         if inc_edges:
             raise ValueError("Cyclic dependency detected")
@@ -161,10 +162,10 @@ class DagScheduleAnalysis(Forward[GateSchedule]):
     stmt_dags: Dict[ir.Block, StmtDag] = field(init=False)
 
     def initialize(self):
-        super().initialize()
         self.use_def = {}
         self.stmt_dag = StmtDag()
         self.stmt_dags = {}
+        return super().initialize()
 
     def push_current_dag(self, block: ir.Block):
         # run when hitting terminator statements
