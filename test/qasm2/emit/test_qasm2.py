@@ -1,7 +1,7 @@
 from bloqade import qasm2
 
 
-@qasm2.gate(fold=False)
+@qasm2.gate
 def custom_gate(a: qasm2.Qubit, b: qasm2.Qubit):
     qasm2.cx(a, b)
 
