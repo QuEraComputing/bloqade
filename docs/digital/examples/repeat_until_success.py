@@ -75,7 +75,7 @@ def z_phase_gate_recursive(target: qasm2.types.Qubit, theta: float) -> qasm2.typ
     creg = qasm2.creg(1)
     qasm2.measure(target, creg[0])
     # qasm2.deallocate(target)
-    if creg[0] == 1:
+    if creg[0]:
         return ancilla
     else:
         qasm2.x(ancilla[0])
@@ -140,6 +140,20 @@ def z_phase_gate_qasm(
     #assert not creg, "Loop did not converge"
     return target
 
+
+# Lets try to get pyqrack interpreter to run
+
+from bloqade.pyqrack import PyQrack  # noqa: E402
+
+theta = 0.1
+@qasm2.extended
+def main3():
+    target = qasm2.qreg(1)
+    return z_phase_gate_qasm(target[0], theta,10)
+
+device = PyQrack()
+qreg = device.run(main3)
+print(qreg)
 
 #%% [markdown]
 # Lets unwrap the postselection and loop versions of the gadget to see the qasm circuit.
