@@ -2,7 +2,7 @@ from typing import Union
 
 from kirin.lowering import wraps
 
-from .dialects import aux, gate, collapse
+from .dialects import aux, gate, collapse, noise
 
 
 # dialect:: gate
@@ -138,3 +138,40 @@ def ry(targets: tuple[int, ...]) -> None: ...
 
 @wraps(collapse.RX)
 def rx(targets: tuple[int, ...]) -> None: ...
+
+
+# dialect:: noise
+@wraps(noise.Depolarize1)
+def depolarize1(p: float, targets: tuple[int, ...]) -> None: ...
+
+
+@wraps(noise.Depolarize2)
+def depolarize2(p: float, targets: tuple[int, ...]) -> None: ...
+
+
+@wraps(noise.PauliChannel1)
+def pauli_channel1(
+    px: float, py: float, pz: float, targets: tuple[int, ...]
+) -> None: ...
+
+
+@wraps(noise.PauliChannel2)
+def pauli_channel2(
+    pix: float, piy: float, piz: float, 
+    pxi: float, pxx: float, pxy: float, pxz: float, 
+    pyi: float, pyx: float, pyy: float, pyz: float, 
+    pzi: float, pzx: float, pzy: float, pzz: float, 
+    targets: tuple[int, ...]
+) -> None: ...
+
+
+@wraps(noise.XError)
+def x_error(p: float, targets: tuple[int, ...]) -> None: ...
+
+
+@wraps(noise.YError)
+def y_error(p: float, targets: tuple[int, ...]) -> None: ...
+
+
+@wraps(noise.ZError)
+def z_error(p: float, targets: tuple[int, ...]) -> None: ...
