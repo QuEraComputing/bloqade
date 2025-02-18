@@ -76,3 +76,29 @@ def test_noise():
 
     interp.run(test_pauli_error, args=())
     print(interp.get_output())
+
+
+def test_collapse():
+    @stim.main
+    def test_measure():
+        stim.mx(p=0.0, targets=(0, 1, 2))
+        stim.my(p=0.01, targets=(0, 1))
+        stim.mz(p=0.02, targets=(1, 2))
+        stim.mzz(p=0.03, targets=(0, 1, 2, 3))
+        stim.myy(p=0.04, targets=(0, 1))
+        stim.mxx(p=0.05, targets=(1, 2))
+
+    interp.run(test_measure, args=())
+    print(interp.get_output())
+
+
+    @stim.main
+    def test_reset():
+        stim.rx(targets=(0, 1, 2))
+        stim.ry(targets=(0, 1))
+        stim.rz(targets=(1, 2))
+    
+    interp.run(test_reset, args=())
+    print(interp.get_output())
+
+test_collapse()
