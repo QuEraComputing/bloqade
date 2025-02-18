@@ -2961,7 +2961,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4bfee2df">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d9110e94">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2977,7 +2977,7 @@ especially Fig. 7.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=daac7323">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=80221951">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2998,7 +2998,7 @@ return qreg</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=809e97d9">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3e21d63d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3020,7 +3020,7 @@ the angle, and repeat until we get the correct outcome.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5da663dc">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1effa12b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3036,16 +3036,18 @@ ancilla = prep_resource_state(theta)
 qasm2.cx(ancilla[0], target)
 creg = qasm2.creg(1)
 qasm2.measure(target, creg[0])
-if creg[0] == 1:
+return ancilla
+"""
+if creg[0]:
 return ancilla
 else:
 assert "Did not converge"
-return ancilla</p>
+"""</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b8c15112">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=005fad54">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3065,7 +3067,7 @@ qasm2.cx(ancilla[0], target)
 creg = qasm2.creg(1)
 qasm2.measure(target, creg[0])
 # qasm2.deallocate(target)
-if creg[0] == 1:
+if creg[0]:
 return ancilla
 else:
 qasm2.x(ancilla[0])
@@ -3074,7 +3076,7 @@ return z_phase_gate_recursive(ancilla[0], 2 * theta)</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=56b7eb1f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d0252db0">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3087,31 +3089,76 @@ may still fail with a small probability $2^{-attempts}$.</p>
 <p>@qasm2.extended
 def z_phase_gate_loop(
 target: qasm2.types.Qubit, theta: float, attempts: int = 10
-) -&gt; qasm2.types.QReg:
+):# -&gt; qasm2.types.QReg:
 """
 <a href="https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337">https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337</a> Fig. 7
 """
-creg = qasm2.creg(1)
-converged = False</p>
+creg = qasm2.creg(1)</p>
 <pre><code>for ctr in range(attempts):
     ancilla = prep_resource_state(theta * (2**ctr))
     qasm2.cx(ancilla[0], target)
     qasm2.measure(target, creg[0])
-
-    creg[0] == creg[0] or converged
-    if creg[0] == 0:
-        converged = True
+    
+    if creg[0]:
+        return ancilla
+    else:
         qasm2.x(ancilla[0])
         target = ancilla[0]
 
-assert converged, "Loop did not converge"
+assert "Loop did not converge"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=923f0586">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>Lets try to write this in a way that can be unwrapped into a qasm circuit.
+@qasm2.extended
+def z_phase_gate_qasm(
+target: qasm2.types.Qubit, theta: float, attempts: int = 10
+):
+"""
+<a href="https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337">https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337</a> Fig. 7
+"""
+creg = qasm2.creg(1)</p>
+<pre><code>for ctr in range(attempts):
+    ancilla = prep_resource_state(theta * (2**ctr))
+    
+    if creg[0]:
+        qasm2.id(ancilla[0])
+        
+    else:
+        qasm2.cx(ancilla[0], target)
+        qasm2.measure(target, creg[0])
+        
+        if creg[0]:
+            qasm2.id(ancilla[0])
+        else:
+            qasm2.x(ancilla[0])
+            target = ancilla[0]
+        
 
-return ancilla</code></pre>
+#assert not creg, "Loop did not converge"
+return target</code></pre>
+<p>Lets try to get pyqrack interpreter to run</p>
+<p>from bloqade.pyqrack import PyQrack  # noqa: E402</p>
+<p>theta = 0.1
+@qasm2.extended
+def main3():
+target = qasm2.qreg(1)
+return z_phase_gate_qasm(target[0], theta,10)</p>
+<p>device = PyQrack()
+qreg = device.run(main3)
+print(qreg)</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=bdac354c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b91d8e00">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3134,7 +3181,7 @@ pprint(ast)</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=40980e78">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0648fb0c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3145,7 +3192,7 @@ pprint(ast)</p>
 @qasm2.extended
 def main2():
 target = qasm2.qreg(1)
-return z_phase_gate_loop(target[0], theta)</p>
+return z_phase_gate_qasm(target[0], theta,10)</p>
 <p>target = QASM2()
 ast = target.emit(main2)
 pprint(ast)</p>
