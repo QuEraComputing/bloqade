@@ -101,4 +101,34 @@ def test_collapse():
     interp.run(test_reset, args=())
     print(interp.get_output())
 
-test_collapse()
+
+def test_repetition():
+    @stim.main
+    def test_repetition_memory():
+        stim.rz(targets=(0, 1, 2, 3, 4))
+        stim.tick()
+        stim.depolarize1(p=0.1, targets=(0, 2, 4))
+        stim.cx(controls=(0, 2), targets=(1, 3))
+        stim.tick()
+        stim.cx(controls=(2, 4), targets=(1, 3))
+        stim.tick()
+        stim.mz(p=0.1, targets=(1, 3))
+        stim.detector(coord=(1, 0), targets=(stim.rec(-2), ))
+        stim.detector(coord=(3, 0), targets=(stim.rec(-1), ))
+        stim.rz(targets=(1, 3))
+        stim.tick()
+        stim.depolarize1(p=0.1, targets=(0, 2, 4))
+        stim.cx(controls=(0, 2), targets=(1, 3))
+        stim.tick()
+        stim.cx(controls=(2, 4), targets=(1, 3))
+        stim.tick()
+        stim.mz(p=0.1, targets=(1, 3))
+        stim.detector(coord=(1, 1), targets=(stim.rec(-2), stim.rec(-4)))
+        stim.detector(coord=(3, 1), targets=(stim.rec(-1), stim.rec(-3)))
+        stim.mz(p=0.1, targets=(0, 2, 4))
+        stim.detector(coord=(1, 2), targets=(stim.rec(-2), stim.rec(-3), stim.rec(-5)))
+        stim.detector(coord=(3, 2), targets=(stim.rec(-1), stim.rec(-2), stim.rec(-4)))
+        stim.observable_include(idx=0, targets=(stim.rec(-1), ))
+
+    interp.run(test_repetition_memory, args=())
+    print(interp.get_output())
