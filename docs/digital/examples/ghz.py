@@ -6,7 +6,7 @@
 # construction that achieves the same result. We then take this one step further and use the fact that Bloqade
 # (and QuEra's neutral atom hardware!) support *parallel* gates, allowing for the application of the same gate
 # across multiple qubits simultaneously. Combined with the fact that atom *shuttling* allows for arbitrary
-# connectivity, we can also decrease the circuit execution depth from $N + 1$ to just $n$.
+# connectivity, we can also decrease the circuit *execution* depth from $N$ to just $n$.
 
 # %%
 import math
@@ -17,8 +17,8 @@ from kirin.dialects import ilist
 # %% [markdown]
 # ## Simple Linear Depth Implementation of a GHZ State Preparation Circuit
 #
-# A simple GHZ state preparation circuit can be built with $N$ CX gates and $1$ H gate.
-# This gives the circuit an execution depth of $N+1$.
+# A simple GHZ state preparation circuit can be built with $N - 1$ CX gates and $1$ H gate.
+# This gives the circuit an execution depth of $N$.
 
 
 # %%
@@ -46,9 +46,16 @@ def ghz_linear(n: int):
 # Let's take a look how we can rewrite the circuit to take advantage of QuEra's hardware capabilities.
 # We can achieve log(N) circuit depth by [rearranging the CX gates (see *Mooney, White, Hill, Hollenberg* - 2021)](https://arxiv.org/abs/2101.08946).
 #
-# Before going any further, it's worth distinguishing between the concept of **circuit depth** and **circuit execution depth**.
+
+# %% [markdown]
+# <div class="admonition note">
+# <p class="admonition-title">Circuit vs. Execution Depth</p>
+# <p>
+# Before going any further, it's worth distinguishing between the concept of circuit depth and circuit execution depth.
 # For example, in the following implementation, each CX gate instruction inside the for-loop is executed in sequence.
-# So even thought the circuit depth is $N/2 + 1$, the circuit execution depth is still $N + 1$.
+# So even thought the circuit depth is $log(N) = n$, the circuit execution depth is still $N$.
+# </p>
+# </div>
 
 
 # %%
@@ -126,8 +133,13 @@ def ghz_log_simd(n: int):
 
 
 # %% [markdown]
-# A Note on using closures to capture global variables:
-# Since Bloqade's `qasm2` does not allow a main program with arguments, we need to put the program in a closure.
+# <div class="admonition warning">
+# <p class="admonition-title">Using Closures to Capture Global Variables</p>
+# <p>
+# While bloqade.qasm2 permits a main program with arguments, standard QASM2 does not.
+# To get around this, we need to put the program in a closure.
 # Our Kirin compiler toolchain can capture the global variable inside the closure.
-# In this case, the `n_qubits` will be captured upon calling the `ghz_log_simd(n_qubits)` python function.
-# As a result, the returned `qasm2` program will not have any arguments.
+# In this case, the n_qubits will be captured upon calling the ghz_log_simd(n_qubits) python function.
+# As a result, the returned QASM2 program will not have any arguments.
+# </p>
+# </div>
