@@ -46,7 +46,7 @@ def sqrt_z(targets: tuple[int, ...], dagger: bool = False) -> None: ...
 ## clif 2q
 @wraps(gate.Swap)
 def swap(
-    controls: tuple[int, ...], targets: tuple[int, ...], dagger: bool = False
+    targets: tuple[int, ...], dagger: bool = False
 ) -> None: ...
 
 
