@@ -20,8 +20,8 @@ def main():
 
 
 main.print()
+custom_gate.print()
 
-
-target = qasm2.emit.QASM2()
+target = qasm2.emit.QASM2(custom_gate=True)
 ast = target.emit(main)
 qasm2.parse.pprint(ast)

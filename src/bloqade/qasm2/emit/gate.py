@@ -42,28 +42,6 @@ class Constant(interp.MethodTable):
 @func.dialect.register(key="emit.qasm2.gate")
 class Func(interp.MethodTable):
 
-    @interp.impl(func.Function)
-    def emit_func(
-        self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: func.Function
-    ):
-        cparams, qparams = [], []
-        for arg in stmt.body.blocks[0].args[1:]:
-            name = frame.get(arg)
-            if not isinstance(name, ast.Name):
-                raise EmitError("expected ast.Name")
-            if arg.type.is_subseteq(QubitType):
-                qparams.append(name.id)
-            else:
-                cparams.append(name.id)
-        emit.run_ssacfg_region(frame, stmt.body)
-        emit.output = ast.Gate(
-            name=stmt.sym_name,
-            cparams=cparams,
-            qparams=qparams,
-            body=frame.body,
-        )
-        return ()
-
     @interp.impl(func.Call)
     def emit_call(self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: func.Call):
         raise EmitError("cannot emit dynamic call")

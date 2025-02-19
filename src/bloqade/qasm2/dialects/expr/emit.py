@@ -2,6 +2,8 @@ from typing import Literal
 
 from kirin import interp
 from bloqade.qasm2.parse import ast
+from bloqade.qasm2.types import QubitType
+from kirin.emit.exceptions import EmitError
 from bloqade.qasm2.emit.gate import EmitQASM2Gate, EmitQASM2Frame
 
 from . import stmts
@@ -10,6 +12,29 @@ from ._dialect import dialect
 
 @dialect.register(key="emit.qasm2.gate")
 class EmitExpr(interp.MethodTable):
+
+    @interp.impl(stmts.GateFunction)
+    def emit_func(
+        self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: stmts.GateFunction
+    ):
+
+        cparams, qparams = [], []
+        for arg in stmt.body.blocks[0].args[1:]:
+            name = frame.get(arg)
+            if not isinstance(name, ast.Name):
+                raise EmitError("expected ast.Name")
+            if arg.type.is_subseteq(QubitType):
+                qparams.append(name.id)
+            else:
+                cparams.append(name.id)
+        emit.run_ssacfg_region(frame, stmt.body)
+        emit.output = ast.Gate(
+            name=stmt.sym_name,
+            cparams=cparams,
+            qparams=qparams,
+            body=frame.body,
+        )
+        return ()
 
     @interp.impl(stmts.ConstInt)
     @interp.impl(stmts.ConstFloat)
