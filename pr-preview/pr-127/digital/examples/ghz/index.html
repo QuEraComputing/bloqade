@@ -3075,7 +3075,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5feab103">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7d3c24cb">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3086,12 +3086,12 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 construction that achieves the same result. We then take this one step further and use the fact that Bloqade
 (and QuEra's neutral atom hardware!) support <em>parallel</em> gates, allowing for the application of the same gate
 across multiple qubits simultaneously. Combined with the fact that atom <em>shuttling</em> allows for arbitrary
-connectivity, we can also decrease the circuit execution depth from $N + 1$ to just $n$.</p>
+connectivity, we can also decrease the circuit <em>execution</em> depth from $N$ to just $n$.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=d61ac3a1">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e4b30db1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3124,19 +3124,19 @@ from kirin.dialects import ilist</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4b73c9e6">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7da0e89f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="simple-linear-depth-implementation-of-a-ghz-state-preparation-circuit">Simple Linear Depth Implementation of a GHZ State Preparation Circuit<a class="anchor-link" href="#simple-linear-depth-implementation-of-a-ghz-state-preparation-circuit">¶</a></h2><p>A simple GHZ state preparation circuit can be built with $N$ CX gates and $1$ H gate.
-This gives the circuit an execution depth of $N+1$.</p>
+<h2 id="simple-linear-depth-implementation-of-a-ghz-state-preparation-circuit">Simple Linear Depth Implementation of a GHZ State Preparation Circuit<a class="anchor-link" href="#simple-linear-depth-implementation-of-a-ghz-state-preparation-circuit">¶</a></h2><p>A simple GHZ state preparation circuit can be built with $N - 1$ CX gates and $1$ H gate.
+This gives the circuit an execution depth of $N$.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a0ef0556">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=398cf00f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3193,7 +3193,7 @@ This gives the circuit an execution depth of $N+1$.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c8adbd81">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=12726e31">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3201,14 +3201,29 @@ This gives the circuit an execution depth of $N+1$.</p>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="log-depth-implementation-of-a-ghz-state-preparation-circuit">Log-depth Implementation of a GHZ State Preparation Circuit<a class="anchor-link" href="#log-depth-implementation-of-a-ghz-state-preparation-circuit">¶</a></h2><p>Let's take a look how we can rewrite the circuit to take advantage of QuEra's hardware capabilities.
 We can achieve log(N) circuit depth by <a href="https://arxiv.org/abs/2101.08946">rearranging the CX gates (see <em>Mooney, White, Hill, Hollenberg</em> - 2021)</a>.</p>
-<p>Before going any further, it's worth distinguishing between the concept of <strong>circuit depth</strong> and <strong>circuit execution depth</strong>.
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=bbd2d10f">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<div class="admonition note">
+<p class="admonition-title">Circuit vs. Execution Depth</p>
+<p>
+Before going any further, it's worth distinguishing between the concept of circuit depth and circuit execution depth.
 For example, in the following implementation, each CX gate instruction inside the for-loop is executed in sequence.
-So even thought the circuit depth is $N/2 + 1$, the circuit execution depth is still $N + 1$.</p>
+So even thought the circuit depth is $log(N) = n$, the circuit execution depth is still $N$.
+</p>
+</div>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=39cb825e">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=cc3797da">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3271,7 +3286,7 @@ So even thought the circuit depth is $N/2 + 1$, the circuit execution depth is s
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3d83f7b6">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6a1f3db1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3292,7 +3307,7 @@ With the following modification, we can further reduce the circuit execution dep
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9c872f8e">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2fdd34b8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3385,17 +3400,22 @@ With the following modification, we can further reduce the circuit execution dep
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c26914a4">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=10cd744f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>A Note on using closures to capture global variables:
-Since Bloqade's <code>qasm2</code> does not allow a main program with arguments, we need to put the program in a closure.
+<div class="admonition warning">
+<p class="admonition-title">Using Closures to Capture Global Variables</p>
+<p>
+While bloqade.qasm2 permits a main program with arguments, standard QASM2 does not.
+To get around this, we need to put the program in a closure.
 Our Kirin compiler toolchain can capture the global variable inside the closure.
-In this case, the <code>n_qubits</code> will be captured upon calling the <code>ghz_log_simd(n_qubits)</code> python function.
-As a result, the returned <code>qasm2</code> program will not have any arguments.</p>
+In this case, the n_qubits will be captured upon calling the ghz_log_simd(n_qubits) python function.
+As a result, the returned QASM2 program will not have any arguments.
+</p>
+</div>
 </div>
 </div>
 </div>

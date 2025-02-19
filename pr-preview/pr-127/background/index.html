@@ -533,23 +533,14 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#analog-vs-digital-quantum-computing" class="md-nav__link">
+  <a href="#analog-mode-quantum-computing" class="md-nav__link">
     <span class="md-ellipsis">
-      Analog vs Digital Quantum Computing
+      Analog mode Quantum Computing
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Analog vs Digital Quantum Computing">
+    <nav class="md-nav" aria-label="Analog mode Quantum Computing">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#analog-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      Analog Mode
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#digital-mode" class="md-nav__link">
@@ -560,26 +551,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#reconfigurable-architectures-and-all-to-all-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reconfigurable architectures and "all to all" connectivity
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rydberg-many-body-hamiltonian" class="md-nav__link">
-    <span class="md-ellipsis">
-      Rydberg Many-Body Hamiltonian
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#local-control" class="md-nav__link">
-    <span class="md-ellipsis">
-      Local Control
-    </span>
-  </a>
   
 </li>
       
@@ -2626,23 +2608,14 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#analog-vs-digital-quantum-computing" class="md-nav__link">
+  <a href="#analog-mode-quantum-computing" class="md-nav__link">
     <span class="md-ellipsis">
-      Analog vs Digital Quantum Computing
+      Analog mode Quantum Computing
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Analog vs Digital Quantum Computing">
+    <nav class="md-nav" aria-label="Analog mode Quantum Computing">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#analog-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      Analog Mode
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#digital-mode" class="md-nav__link">
@@ -2653,26 +2626,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#reconfigurable-architectures-and-all-to-all-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reconfigurable architectures and "all to all" connectivity
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rydberg-many-body-hamiltonian" class="md-nav__link">
-    <span class="md-ellipsis">
-      Rydberg Many-Body Hamiltonian
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#local-control" class="md-nav__link">
-    <span class="md-ellipsis">
-      Local Control
-    </span>
-  </a>
   
 </li>
       
@@ -2710,44 +2674,25 @@
 
 <h1 id="background">Background</h1>
 <h2 id="neutral-atom-qubits">Neutral Atom Qubits</h2>
-<p>The qubits that QuEra's neutral atom computer <em>Aquila</em> and Bloqade are designed to emulate are based on <em>neutral atoms</em>. As the name implies they are atoms that are neutrally charged but are also capable of achieving a <a href="https://en.wikipedia.org/wiki/Rydberg_atom">Rydberg state</a> where a single electron can be excited to an incredibly high energy level without ionizing the atom.</p>
-<p>This incredibly excited electron energy level <span class="arithmatex">\(|r\rangle\)</span> and its default ground state <span class="arithmatex">\(|g\rangle\)</span> create a two-level system where superposition can occur. For enabling interaction between two or more qubits and achieving entanglement, when the neutral atoms are in the Rydberg state a phenomenon known as the Rydberg blockade can occur where an atom in the Rydberg state prevents a neighboring atom from also being excited to the same state.</p>
-<p>For a more nuanced and in-depth read about the neutral atoms that Bloqade and <em>Aquila</em> use, refer to QuEra's qBook section on <a href="https://qbook.quera.com/learn/?course=6630211af30e7d0013c66147&amp;file=6630211af30e7d0013c66149">Qubits by puffing up atoms</a>.</p>
-<h2 id="analog-vs-digital-quantum-computing">Analog vs Digital Quantum Computing</h2>
-<p>There are two modes of quantum computation that <a href="#neutral-atom-qubits">neutral atoms</a> are capable of: <a href="#analog-mode"><em>Analog</em></a> and <a href="#digital-mode"><em>Digital</em></a>.</p>
-<p>You can find a brief explanation of the distinction below but for a more in-depth explanation you can refer to QuEra's qBook section on <a href="https://qbook.quera.com/learn/?course=6630211af30e7d0013c66147&amp;file=6630211af30e7d0013c6614a">Analog vs Digital Quantum Computing</a></p>
-<h3 id="analog-mode">Analog Mode</h3>
-<p>In the analog mode (supported by Bloqade and Aquila) you control your computation through the parameters of a <a href="#rydberg-many-body-hamiltonian">time-dependent Hamiltonian</a> that influences all the qubits at once. There are options for <a href="#local-control">local control</a> of the Hamiltonian on certain qubits however.</p>
-<h3 id="digital-mode">Digital Mode</h3>
-<p>In the Digital Mode individual or multiple groups of qubits are controlled by applying <em>gates</em> (individual unitary operations). For <a href="#neutral-atom-qubits">neutral atoms</a>, this digital mode can be accomplished with the introduction of hyperfine coupling, enabling a quantum state to be stored for long periods of time while also allowing for multi-qubit gates.</p>
-<h2 id="rydberg-many-body-hamiltonian">Rydberg Many-Body Hamiltonian</h2>
-<p>When you emulate a program in Bloqade, you are emulating the time evolution of the Rydberg many-body Hamiltonian which looks like this:</p>
+<p>A key feature of a quantum computer is the ability to physically represent qubits. In neutral atom computers, the qubit is represented in the electronic state of the valence electron of Rubdidium 87. Arrays of individual atoms are held by laser tweezers, and quantum computations are executed by manipulating the electronic state of each atom using lasers and RF fields. Entanglement can be generated using the <a href="https://en.wikipedia.org/wiki/Rydberg_atom">Rydberg state</a>, which is a highly excited state that strongly interacts with adjacent atoms through a <span class="arithmatex">\(R^{-6}\)</span> power law Van der Waals force.</p>
+<h2 id="analog-mode-quantum-computing">Analog mode Quantum Computing</h2>
+<p>There are two modes of quantum computation that <a href="#neutral-atom-qubits">neutral atoms</a> are capable of: <a href="#analog-mode"><em>Analog</em></a> and <a href="#digital-mode"><em>Digital</em></a>. In analog mode, the qubit is represented as in a ground state and a Rydberg state of an atom. The atoms are placed in user-specified arbitrary positions in a 2d space, and quantum computations can be enacted by driving the atoms between the ground and Rydberg state. However, adjacent atoms in the Rydberg state are always interacting, so the computation is done through a time evolution of the atoms via the Schrodinger equation</p>
 <div class="arithmatex">\[
 i \hbar \dfrac{\partial}{\partial t} | \psi \rangle = \hat{\mathcal{H}}(t) | \psi \rangle,  \\
 \]</div>
+<p>Were <span class="arithmatex">\(H\)</span> is a time-dependent "Rydberg atom" Hamiltonian.</p>
 <div class="arithmatex">\[
 \frac{\mathcal{H}(t)}{\hbar} = \sum_j \frac{\Omega_j(t)}{2} \left( e^{i \phi_j(t) } | g_j \rangle  \langle r_j | + e^{-i \phi_j(t) } | r_j \rangle  \langle g_j | \right) - \sum_j \Delta_j(t) \hat{n}_j + \sum_{j &lt; k} V_{jk} \hat{n}_j \hat{n}_k,
 \]</div>
 <p>where: <span class="arithmatex">\(\Omega_j\)</span>, <span class="arithmatex">\(\phi_j\)</span>, and <span class="arithmatex">\(\Delta_j\)</span> denote the Rabi frequency <em>amplitude</em>, laser <em>phase</em>, and the <em>detuning</em> of the driving laser field on atom (qubit) <span class="arithmatex">\(j\)</span> coupling the two states  <span class="arithmatex">\(| g_j \rangle\)</span> (ground state) and <span class="arithmatex">\(| r_j \rangle\)</span> (Rydberg state); <span class="arithmatex">\(\hat{n}_j = |r_j\rangle \langle r_j|\)</span> is the number operator, and <span class="arithmatex">\(V_{jk} = C_6/|\mathbf{x}_j - \mathbf{x}_k|^6\)</span> describes the Rydberg interaction (van der Waals interaction) between atoms <span class="arithmatex">\(j\)</span> and <span class="arithmatex">\(k\)</span> where <span class="arithmatex">\(\mathbf{x}_j\)</span> denotes the <em>position</em> of the atom <span class="arithmatex">\(j\)</span>; <span class="arithmatex">\(C_6\)</span> is the Rydberg interaction constant that depends on the particular Rydberg state used. For Bloqade, the default <span class="arithmatex">\(C_6 = 862690 \times 2\pi \text{ MHz μm}^6\)</span> for <span class="arithmatex">\(|r \rangle = \lvert 70S_{1/2} \rangle\)</span> of the <span class="arithmatex">\(^{87}\)</span>Rb atoms; <span class="arithmatex">\(\hbar\)</span> is the reduced Planck's constant.</p>
-<h2 id="local-control">Local Control</h2>
-<p>The <a href="#rydberg-many-body-hamiltonian">Rydberg Many-Body Hamiltonian</a> already implies from its subscripts that you can also have local control over your atoms. In Bloqade this local control extends to any term in the Hamiltonian while on <em>Aquila</em> this is currently restricted to the <span class="arithmatex">\(\Delta_j\)</span> laser detuning term.</p>
-<p><em>Fields</em> in Bloqade give you local (single-atom) control over the many-body Rydberg Hamiltonian.</p>
-<p>They are a sum of one or more <em>spatial modulations</em>, which allows you to <em>scale</em> the amplitude of the waveform across the different sites in the system:</p>
-<div class="arithmatex">\[
-F_{i}(t) = \sum_{\alpha} C_{i}^{\alpha}f_{\alpha}(t)
-\]</div>
-<div class="arithmatex">\[
-C_{i}^{\alpha} \in \mathbb{R}
-\]</div>
-<div class="arithmatex">\[
-f_{\alpha}(t) \colon \mathbb{R} \to \mathbb{R}
-\]</div>
-<p>The <span class="arithmatex">\(i\)</span>-th component of the field is used to generate the <em>drive</em> at the <span class="arithmatex">\(i\)</span>-th site.</p>
-<p>Note that the drive is only applied if the <span class="arithmatex">\(i\)</span>-th site is filled with an atom.</p>
-<p>You build fields in Bloqade by first specifying the spatial modulation followed by the waveform
-it should be multiplied by.</p>
-<p>In the case of a <em>uniform</em> spatial modulation, it can be interpreted as
-a constant scaling factor where <span class="arithmatex">\(C_{i}^{\alpha} = 1.0\)</span>.</p>
+<p>For a more nuanced read about the neutral atoms that Bloqade and <em>Aquila</em> use, refer to QuEra's qBook section on <a href="https://qbook.quera.com/learn/?course=6630211af30e7d0013c66147&amp;file=6630211af30e7d0013c66149">Qubits by puffing up atoms</a>.</p>
+<p>You can find a brief explanation of the distinction below but for a more in-depth explanation you can refer to QuEra's qBook section on <a href="https://qbook.quera.com/learn/?course=6630211af30e7d0013c66147&amp;file=6630211af30e7d0013c6614a">Analog vs Digital Quantum Computing</a>. For more details on QuEra's cloud-accessible analog mode computer Aquila, please check out the <a href="https://arxiv.org/abs/2306.11727">Aquila whitepaper</a>.</p>
+<h3 id="digital-mode">Digital Mode</h3>
+<p>In the Digital Mode individual or multiple groups of qubits are controlled by applying <em>gates</em> (individual unitary operations). The digital mode qubit is represented in the two hyperfine clock ground states of the Rubidium 87 atom. These two states are extremely weakly interactive with the environment and other adjacent atoms, which leads to a very long coherence time upwards of 1 second. Single-qubit gates can be executed through a Raman laser drive coupling the two states to enact arbitrary rotations.</p>
+<p>Unlike Analog mode where the Rydberg state is persistent as part of the qubit encoding into the electronic states, digital mode only temporarily excites the atoms to the Rydberg state in order to interact with adjacent qubits, a process which typically takes less than ~1usec. Thus, a neutral atom entangling gate is executed by bringing multiple atoms together within the Rydberg blockade radius, and then doing some time-dependent drive between the hyperfine ground states and the Rydberg state, so that the final state returns to the hyperfine ground states. Due to the Rydberg blockade, only one atom can be in the Rydberg state at a time, which creates entanglement between the atoms. For more details see this paper on a <a href="https://www.nature.com/articles/s41586-023-06481-y">recent demonstration of high fidelity gates</a>.</p>
+<p>A unique advantage of reconfigurable neutral atom architectures is parallelism: the same laser can effect many lasers by aiming it in the same plane as the atom array. A single global Raman laser can enact the same parallel single-qubit gate on all qubits at the same time, and a single Rydberg laser (technically, two counter-propagating) can enact the same parallel multi-qubit gate on all cliques of qubits in an entangling region of the array. For more details see this paper on a <a href="https://www.nature.com/articles/s41586-023-06927-3">recent demonstration of reconfigurable architectures</a>. For this reason, it is important to represent quantum executions and circuits to be as parallel as possible. In our qasm2 dialect, we have extended qasm to natively include parallelism-- for example, <code>qasm2.parallel.cx(controls, targets)</code> represents a parallel CNOT gate between a list of <code>controls</code> on a list of <code>targets</code>.</p>
+<h3 id="reconfigurable-architectures-and-all-to-all-connectivity">Reconfigurable architectures and "all to all" connectivity</h3>
+<p>A second advantage of reconfigurable neutral atom architectures is reconfigurability: atoms can be moved in parallel between sites in the array. QuEra's devices will have a <em>zoned architecture</em>, with distinct storage and entanglement zones and the ability to move atoms between them using a set of dynamic crossed AOD laser tweezers. This mobility can be considered as an <em>efficient parallel swap</em> gate, where any qubit can easily be moved to be adjacent to any other to enact entangling gates. For this reason, reconfigurable neutral atoms do not have a "connectivity graph" in the traditional sense-- instead, they have an "all-to-all" connectivity. There are still some technical constraints on this connectivity due to restrictions on the crossed AOD which we will detail when we open-source a move level dialect set in the near future.</p>
 
 
 
