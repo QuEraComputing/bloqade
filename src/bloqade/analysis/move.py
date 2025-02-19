@@ -73,6 +73,21 @@ class NoiseRewriteRuleABC(result_abc.RewriteRule, abc.ABC):
     address_analysis: Dict[ir.SSAValue, address.Address]
     qubit_ssa_value: Dict[int, ir.SSAValue]
     noise_params: PauliNoiseParams
+    
+    def __post_init__(self):
+        for ssa, addr in self.address_analysis.items():
+            if not isinstance(ssa, ir.ResultValue):
+                continue
+            # insert all qubit statements
+            if isinstance(addr, address.AddressReg):
+                node = ssa.stmt
+                assert isinstance(node, core.QRegNew)
+                for pos, idx in enumerate(addr.data):
+                    if idx not in self.qubit_ssa_value:
+                        pos_stmt = py.constant.Constant(value=pos)
+                        qubit_stmt = core.QRegGet(node.result, pos_stmt.result)
+                        qubit_stmt.insert_after(node)
+                        pos_stmt.insert_after(node)
 
     @staticmethod
     def poisson_pauli_prob(rate: float, duration: float) -> float:
@@ -91,8 +106,10 @@ class NoiseRewriteRuleABC(result_abc.RewriteRule, abc.ABC):
     @abc.abstractmethod
     def move_deconflictor(
         cls, ctrls: List[int], qargs: List[int]
-    ) -> Dict[Tuple[int, int], Tuple[float, float]]:
-        """Takes a set of ctrls and qargs and returns a dictionary of (ctrl, qarg) -> (ctrl_distance, qarg_distance)"""
+    ) -> List[Dict[Tuple[int, int], Tuple[float, float]]]:
+        """Takes a set of ctrls and qargs and returns a dictionary of (ctrl, qarg) -> (ctrl_distance, qarg_distance)
+
+        """
         pass
 
     def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
@@ -148,46 +165,29 @@ class NoiseRewriteRuleABC(result_abc.RewriteRule, abc.ABC):
     def insert_move_noise_channels(
         self,
         node: ir.Statement,
-        qarg: ir.SSAValue,
-        distance: float,
-        insert_before: bool,
+        groups: List[Dict[Tuple[int, int], Tuple[float, float]]],
+        insert_before: bool
     ):
-        duration = distance / self.noise_params.move_speed
-
-        def move_noise(rate: float, distance: float, pick_prob: float):
-            return self.join_pauli_probs(
-                pick_prob,
-                self.poisson_pauli_prob(rate, distance),
-            )
-
-        px_value = move_noise(
-            self.noise_params.move_px_rate, duration, self.noise_params.pick_px
-        )
-
-        py_value = move_noise(
-            self.noise_params.move_py_rate, duration, self.noise_params.pick_py
-        )
-
-        pz_value = move_noise(
-            self.noise_params.move_pz_rate, duration, self.noise_params.pick_pz
-        )
-
-        p_loss_value = move_noise(
-            self.noise_params.move_loss_rate, duration, self.noise_params.pick_loss_prob
-        )
-
-        px_node = py.constant.Constant(value=px_value)
-        py_node = py.constant.Constant(value=py_value)
-        pz_node = py.constant.Constant(value=pz_value)
-        p_loss_node = py.constant.Constant(value=p_loss_value)
+        
+        px_node = py.constant.Constant(value=self.noise_params.pick_px)
+        py_node = py.constant.Constant(value=self.noise_params.pick_py)
+        pz_node = py.constant.Constant(value=self.noise_params.pick_pz)
+        p_loss_node = py.constant.Constant(value=self.noise_params.pick_loss_prob)
 
         if insert_before:
             p_loss_node.insert_before(node)
-            native.AtomLossChannel(p_loss_node.result, qarg).insert_before(node)
-
             px_node.insert_before(node)
             py_node.insert_before(node)
             pz_node.insert_before(node)
+
+            
+            for group in groups:
+                distances = sum(group.values(), ())
+                distance = max(0.0, *distances)
+
+            
+
+            native.AtomLossChannel(p_loss_node.result, qarg).insert_before(node)
             native.PauliChannel(
                 px_node.result, py_node.result, pz_node.result, qarg
             ).insert_before(node)
@@ -198,10 +198,11 @@ class NoiseRewriteRuleABC(result_abc.RewriteRule, abc.ABC):
             native.PauliChannel(
                 px_node.result, py_node.result, pz_node.result, qarg
             ).insert_after(node)
+            p_loss_node.insert_before(node)
             px_node.insert_after(node)
             py_node.insert_after(node)
             pz_node.insert_after(node)
-
+            
     def insert_cz_gate_noise(
         self,
         node: ir.Statement,
@@ -210,13 +211,12 @@ class NoiseRewriteRuleABC(result_abc.RewriteRule, abc.ABC):
         ctrl_distances: Sequence[float],
         qarg_distances: Sequence[float],
     ):
-
-        for qarg, qarg_distance in zip(qargs, qarg_distances):
-            self.insert_move_noise_channels(
+        move_duration = 0.0
+        for qarg, qarg_distance, ctrl, ctrl_distance in zip(qargs, qarg_distances, ctrls, ctrl_distances):
+            move_duration += self.insert_move_noise_channels(
                 node, qarg, qarg_distance, insert_before=True
             )
-        for ctrl, ctrl_distance in zip(ctrls, ctrl_distances):
-            self.insert_move_noise_channels(
+            move_duration += self.insert_move_noise_channels(
                 node, ctrl, ctrl_distance, insert_before=True
             )
 
