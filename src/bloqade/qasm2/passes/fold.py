@@ -46,9 +46,6 @@ class QASM2Fold(Pass):
         )
         result = Fixpoint(Walk(rule)).rewrite(mt.code).join(result)
 
-        ## NOTE here is a bug that cause inserting repeating constant.none from previous rewrite.
-        ## So here we temporary add dce to remove it.
-        result = Walk(DeadCodeElimination()).rewrite(mt.code).join(result)
         result = (
             Walk(Chain(scf.unroll.PickIfElse(), scf.unroll.ForLoop()))
             .rewrite(mt.code)
