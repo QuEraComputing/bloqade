@@ -87,7 +87,7 @@ def z_phase_gate_recursive(target: qasm2.Qubit, theta: float):
 
 
 @qasm2.extended
-def z_phase_gate_loop(target: qasm2.types.Qubit, theta: float, attempts: int):
+def z_phase_gate_loop(target: qasm2.Qubit, theta: float, attempts: int):
     """
     https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337 Fig. 7
     """
@@ -107,7 +107,7 @@ def z_phase_gate_loop(target: qasm2.types.Qubit, theta: float, attempts: int):
 # # %% [markdown]
 # # Lets try to write this in a way that can be unwrapped into a qasm circuit.
 # @qasm2.extended
-# def z_phase_gate_qasm(target: qasm2.types.Qubit, theta: float, attempts: int = 10):
+# def z_phase_gate_qasm(target: qasm2.Qubit, theta: float, attempts: int = 10):
 #     """
 #     https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337 Fig. 7
 #     """
