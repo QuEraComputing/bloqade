@@ -99,4 +99,7 @@ class Scf(interp.MethodTable):
                 body=then_frame.body,  # type: ignore
             )
         )
+        term = stmt.then_body.blocks[0].last_stmt
+        if isinstance(term, scf.Yield):
+            return then_frame.get_values(term.values)
         return ()
