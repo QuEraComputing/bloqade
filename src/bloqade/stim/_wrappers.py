@@ -2,7 +2,7 @@ from typing import Union
 
 from kirin.lowering import wraps
 
-from .dialects import aux, gate, collapse, noise
+from .dialects import aux, gate, noise, collapse
 
 
 # dialect:: gate
@@ -45,9 +45,7 @@ def sqrt_z(targets: tuple[int, ...], dagger: bool = False) -> None: ...
 
 ## clif 2q
 @wraps(gate.Swap)
-def swap(
-    targets: tuple[int, ...], dagger: bool = False
-) -> None: ...
+def swap(targets: tuple[int, ...], dagger: bool = False) -> None: ...
 
 
 ## ctrl 2q
@@ -157,11 +155,22 @@ def pauli_channel1(
 
 @wraps(noise.PauliChannel2)
 def pauli_channel2(
-    pix: float, piy: float, piz: float, 
-    pxi: float, pxx: float, pxy: float, pxz: float, 
-    pyi: float, pyx: float, pyy: float, pyz: float, 
-    pzi: float, pzx: float, pzy: float, pzz: float, 
-    targets: tuple[int, ...]
+    pix: float,
+    piy: float,
+    piz: float,
+    pxi: float,
+    pxx: float,
+    pxy: float,
+    pxz: float,
+    pyi: float,
+    pyx: float,
+    pyy: float,
+    pyz: float,
+    pzi: float,
+    pzx: float,
+    pzy: float,
+    pzz: float,
+    targets: tuple[int, ...],
 ) -> None: ...
 
 
