@@ -2,6 +2,7 @@ from typing import List
 
 from kirin import ir, types
 from bloqade import qasm2
+from kirin.rewrite import Walk, Fixpoint, CommonSubexpressionElimination
 from kirin.dialects import py, func
 from bloqade.qasm2.passes.glob import GlobalToUOP
 
@@ -76,14 +77,6 @@ def test_global_rewrite():
         code=expected_func_stmt,
         arg_names=[],
     )
-
     qasm2.main.run_pass(expected_method)
-
-    try:
-        assert expected_method.code.is_equal(main.code)
-    except AssertionError as e:
-        print("Expected:")
-        expected_method.print()
-        print("Actual:")
-        main.print()
-        raise e
+    Fixpoint(Walk(CommonSubexpressionElimination())).rewrite(expected_method.code)
+    assert expected_method.code.is_equal(main.code)
