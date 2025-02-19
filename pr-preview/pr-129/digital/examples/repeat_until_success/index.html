@@ -2961,7 +2961,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a7f0c0ae">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e8ce6e46">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2977,7 +2977,7 @@ especially Fig. 7.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=95e156ef">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cf813df2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2999,7 +2999,7 @@ return qubit</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=bd4b0f63">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8fdeed77">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3021,7 +3021,7 @@ the angle, and repeat until we get the correct outcome.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ba8c8e7c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3de25ea4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3041,7 +3041,7 @@ qasm2.measure(target, creg[0])</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=62456a23">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=bf4f1ac3">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3068,7 +3068,7 @@ return</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6e62dc53">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=10ef86cd">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3079,7 +3079,7 @@ implement the same gate. If the number of repeats is fixed, this can be represen
 as a static circuit, though it would require a large number of resource qubits and
 may still fail with a small probability $2^{-attempts}$.</p>
 <p>@qasm2.extended
-def z_phase_gate_loop(target: qasm2.types.Qubit, theta: float, attempts: int):
+def z_phase_gate_loop(target: qasm2.Qubit, theta: float, attempts: int):
 """
 <a href="https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337">https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337</a> Fig. 7
 """
@@ -3094,7 +3094,7 @@ creg = qasm2.creg(1)</p>
         qasm2.reset(ancilla)
         target = ancilla</code></pre>
 <h1 id="markdown">%% [markdown]<a class="anchor-link" href="#markdown">¶</a></h1><h1 id="lets-try-to-write-this-in-a-way-that-can-be-unwrapped-into-a-qasm-circuit">Lets try to write this in a way that can be unwrapped into a qasm circuit.<a class="anchor-link" href="#lets-try-to-write-this-in-a-way-that-can-be-unwrapped-into-a-qasm-circuit">¶</a></h1><p>@qasm2.extended
-def z_phase_gate_qasm(target: qasm2.types.Qubit, theta: float, attempts: int = 10):
+def z_phase_gate_qasm(target: qasm2.Qubit, theta: float, attempts: int = 10):
 """
 <a href="https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337">https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337</a> Fig. 7
 """
@@ -3137,7 +3137,7 @@ print(qreg)</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a966334e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b676aace">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3160,7 +3160,7 @@ pprint(ast)</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c0c716e5">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=844eb057">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
