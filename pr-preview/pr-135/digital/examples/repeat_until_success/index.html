@@ -20,7 +20,7 @@
     
     
       
-        <title>Repeat until success - bloqade</title>
+        <title>Repeat Until Success with STAR Gadget - bloqade</title>
       
     
     
@@ -77,6 +77,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#repeat-until-success-with-star-gadget" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -111,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Repeat until success
+              Repeat Until Success with STAR Gadget
             
           </span>
         </div>
@@ -2511,6 +2516,8 @@
   
   
   
+    
+  
   
 </nav>
                   </div>
@@ -2541,8 +2548,6 @@
     </a>
   
 
-
-  <h1>Repeat until success</h1>
 
 <script>
 (function (global, factory) {
@@ -2980,193 +2985,213 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=95431900">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7ff9d2fa">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-1">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">qasm2</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-1">from bloqade import qasm2</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h1 id="repeat-until-success-with-star-gadget">Repeat Until Success with STAR Gadget<a class="anchor-link" href="#repeat-until-success-with-star-gadget">¶</a></h1><p>In this example, we will demonstrate a near-term fault tolerant gadget
+which is a repeat-until-success protocol to implement a Z phase gate
+using a resource state (similar to a T state), Pauli gates, and feed-forward measurement.</p>
+<p>For more information, see <a href="https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337">https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337</a>,
+especially Fig. 7.</p>
+<p>from bloqade import qasm2</p>
 </div>
 </div>
 </div>
 </div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=891bc82e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b588cee7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-2">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">prep_resource_state</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">QReg</span><span class="p">:</span>
-    <span class="n">qreg</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">qreg</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">qasm2</span><span class="o">.</span><span class="n">rz</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">theta</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">qreg</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-2">@qasm2.extended
-def prep_resource_state(theta: float) -&gt; qasm2.types.QReg:
-    qreg = qasm2.qreg(1)
-    qasm2.rz(qreg[0], theta)
-    return qreg</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>This example highlights a few interesting capabilities of having a full kernel structure with
+runtime control flow. One example is the ability to dynamically allocate qubits, possibly
+based on previous run-time measurement outcomes.</p>
+<p>In this case, we prepare a resource state, which is a generalization of the T state with
+an arbitrary Z rotation $|0\rangle + e^{i\theta}|1\rangle$.</p>
+<p>@qasm2.extended
+def prep_resource_state(theta: float):
+qreg = qasm2.qreg(1)
+qubit = qreg[0]
+qasm2.h(qubit)
+qasm2.rz(qubit, theta)
+return qubit</p>
 </div>
 </div>
 </div>
 </div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=7bcca80e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=06de481d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-3">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>Using this resource state, we can teleport the Z phase gate to a target qubit using
+only Clifford gates, which are much easier to implement fault-tolerantly.
+This is implemented by first applying a CNOT gate controlled by the resource state
+on the target qubit, then measuring the target qubit in the computational basis.
+If the measurement outcome is 1 (which occurs with 50% probability), the gadget
+executed a Z(theta) gate on the target qubit and teleported it
+to the new resource state.</p>
+<p>However, if the measurement outcome is 0 (which occurs with 50% probability),
+we apply an X gate, and the gadget executed a Z(-theta) gate on the target qubit.
+In order to correct this gate, we must apply a Z(+2<em>theta) gate on the new target state.
+Of course, we can apply this Z(+2</em>theta) gate by applying the same gadget with twice
+the angle, and repeat until we get the correct outcome.</p>
 </div>
-</clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">star_gadget_recursive</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">QReg</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337 Fig. 7</span>
-<span class="sd">    """</span>
-    <span class="n">ancilla</span> <span class="o">=</span> <span class="n">prep_resource_state</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
-    <span class="n">qasm2</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">ancilla</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">target</span><span class="p">)</span>
-    <span class="n">creg</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">creg</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">qasm2</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">creg</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="c1"># qasm2.deallocate(target)</span>
-    <span class="k">if</span> <span class="n">creg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">ancilla</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">qasm2</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">ancilla</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">star_gadget_recursive</span><span class="p">(</span><span class="n">ancilla</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">theta</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-3">@qasm2.extended
-def star_gadget_recursive(target: qasm2.types.Qubit, theta: float) -&gt; qasm2.types.QReg:
-    """
-    https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337 Fig. 7
-    """
-    ancilla = prep_resource_state(theta)
-    qasm2.cx(ancilla[0], target)
-    creg = qasm2.creg(1)
-    qasm2.measure(target, creg[0])
-    # qasm2.deallocate(target)
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=86bdaa45">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>The simplest way to implement the gadget is to simply post-select the correct measurement outcome
+using an assert statement. This is straightforward, but comes with an exponential overhead in the
+number of resource states: there is a 50% chance of success at each step, so there is only a
+$2^{-n}$ chance of success after $n$ Z phase gates.</p>
+<p>@qasm2.extended
+def z_phase_gate_postselect(target: qasm2.Qubit, theta: float):
+ancilla = prep_resource_state(theta)
+qasm2.cx(ancilla, target)
+creg = qasm2.creg(1)
+qasm2.measure(target, creg[0])</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d9ea85c4">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>To (deterministically) implement the gate, we can recursively apply the gadget.
+Observe that, while it is efficient to represent this as a composition of kernels,
+there is no equivalent representation as a circuit, as the number of resource qubits and
+total number of gates is not known until runtime.</p>
+<p>@qasm2.extended
+def z_phase_gate_recursive(target: qasm2.Qubit, theta: float):
+"""
+<a href="https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337">https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337</a> Fig. 7
+"""
+ancilla = prep_resource_state(theta)
+qasm2.cx(ancilla, target)
+creg = qasm2.creg(1)
+qasm2.measure(target, creg[0])
+if creg[0] == 1:
+qasm2.reset(ancilla)
+z_phase_gate_recursive(ancilla, 2 * theta)
+return</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0688746f">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>An alternative representation uses control flow to
+implement the same gate. If the number of repeats is fixed, this can be represented
+as a static circuit, though it would require a large number of resource qubits and
+may still fail with a small probability $2^{-attempts}$.</p>
+<p>@qasm2.extended
+def z_phase_gate_loop(target: qasm2.Qubit, theta: float, attempts: int):
+"""
+<a href="https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337">https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337</a> Fig. 7
+"""
+creg = qasm2.creg(1)</p>
+<pre><code>for ctr in range(attempts):
+    ancilla = prep_resource_state(theta * (2**ctr))
+    if creg[0] == 0:
+        qasm2.cx(ancilla, target)
+        qasm2.measure(target, creg[0])
+
     if creg[0] == 1:
-        return ancilla
+        qasm2.reset(ancilla)
+        target = ancilla</code></pre>
+<h1 id="markdown">%% [markdown]<a class="anchor-link" href="#markdown">¶</a></h1><h1 id="lets-try-to-write-this-in-a-way-that-can-be-unwrapped-into-a-qasm-circuit">Lets try to write this in a way that can be unwrapped into a qasm circuit.<a class="anchor-link" href="#lets-try-to-write-this-in-a-way-that-can-be-unwrapped-into-a-qasm-circuit">¶</a></h1><p>@qasm2.extended
+def z_phase_gate_qasm(target: qasm2.Qubit, theta: float, attempts: int = 10):
+"""
+<a href="https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337">https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337</a> Fig. 7
+"""
+creg = qasm2.creg(1)</p>
+<pre><code>for ctr in range(attempts):
+    ancilla = prep_resource_state(theta * (2**ctr))
+
+    if creg[0]:
+        qasm2.id(ancilla[0])
+
     else:
-        qasm2.x(ancilla[0])
-        return star_gadget_recursive(ancilla[0], 2 * theta)</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3c30a38f">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-4">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">star_gadget_loop</span><span class="p">(</span>
-    <span class="n">target</span><span class="p">:</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">attempts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">QReg</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337 Fig. 7</span>
-<span class="sd">    """</span>
-    <span class="n">creg</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">creg</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">converged</span> <span class="o">=</span> <span class="kc">False</span>
-
-    <span class="k">for</span> <span class="n">ctr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">attempts</span><span class="p">):</span>
-        <span class="n">ancilla</span> <span class="o">=</span> <span class="n">prep_resource_state</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">ctr</span><span class="p">))</span>
-        <span class="n">qasm2</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">ancilla</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">target</span><span class="p">)</span>
-        <span class="n">qasm2</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">creg</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-
-        <span class="n">creg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">creg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">converged</span>
-        <span class="k">if</span> <span class="n">creg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">converged</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">qasm2</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">ancilla</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="n">target</span> <span class="o">=</span> <span class="n">ancilla</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-    <span class="k">assert</span> <span class="n">converged</span><span class="p">,</span> <span class="s2">"Loop did not converge"</span>
-
-    <span class="k">return</span> <span class="n">ancilla</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-4">@qasm2.extended
-def star_gadget_loop(
-    target: qasm2.types.Qubit, theta: float, attempts: int = 100
-) -&gt; qasm2.types.QReg:
-    """
-    https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337 Fig. 7
-    """
-    creg = qasm2.creg(1)
-    converged = False
-
-    for ctr in range(attempts):
-        ancilla = prep_resource_state(theta * (2**ctr))
         qasm2.cx(ancilla[0], target)
         qasm2.measure(target, creg[0])
 
-        creg[0] == creg[0] or converged
-        if creg[0] == 0:
-            converged = True
+        if creg[0]:
+            qasm2.id(ancilla[0])
+        else:
             qasm2.x(ancilla[0])
             target = ancilla[0]
 
-    assert converged, "Loop did not converge"
-
-    return ancilla</div>
+# assert not creg, "Loop did not converge"
+return target</code></pre>
+<p>Lets try to get pyqrack interpreter to run</p>
+<p>from bloqade.pyqrack import PyQrack  # noqa: E402</p>
+<p>theta = 0.1</p>
+<p>@qasm2.extended
+def recursion_main():
+target = qasm2.qreg(1)
+z_phase_gate_recursive(target[0], theta)
+return target</p>
+<p>@qasm2.extended
+def loop_main():
+target = qasm2.qreg(1)
+z_phase_gate_loop(target[0], theta, 5)
+return target</p>
+<p>device = PyQrack()
+qreg = device.run(recursion_main)
+print(qreg)</p>
 </div>
 </div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4481359e">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>Lets unwrap the postselection and loop versions of the gadget to see the qasm circuit.</p>
+<p>from bloqade.qasm2.emit import QASM2  # noqa: E402
+from bloqade.qasm2.parse import pprint  # noqa: E402</p>
+<p>qasm2 does not support parameterized circuits, so the entry point must be a function
+of zero arguments. We can use a closure to pass the parameters from outside the function.
+theta = 0.1</p>
+<p>@qasm2.extended
+def main():
+target = qasm2.qreg(1)
+return z_phase_gate_postselect(target[0], theta)</p>
+<p>target = QASM2()
+ast = target.emit(main)
+pprint(ast)</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=841a4cb7">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>And now the loop version, which first needs to be unwrapped:</p>
+<p>pprint(target.emit(loop_main))</p>
 </div>
 </div>
 </div>
