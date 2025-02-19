@@ -83,7 +83,7 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
     def rewrite_s(self, node: uop.S) -> abc.RewriteResult:
         return self._rewrite_1q_gates(cirq.S(self.cached_qubits[0]), node)
 
-    def rewrite_sdg(self, node: uop.Sdg) -> abc.RewriteResult:
+    def rewrite_sdg(self, node: uop.Sdag) -> abc.RewriteResult:
         return self._rewrite_1q_gates(cirq.S(self.cached_qubits[0]) ** -1, node)
 
     def _rewrite_1q_gates(
