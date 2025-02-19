@@ -58,7 +58,9 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
         return result.RewriteResult()
 
     def rewrite_CX(self, node: uop.CX) -> result.RewriteResult:
-        return self._rewrite_2q_ctrl_gates(cirq.CX, node)
+        return self._rewrite_2q_ctrl_gates(
+            cirq.CX(self.cached_qubits[0], self.cached_qubits[1]), node
+        )
 
     def rewrite_U(self, node: uop.UGate) -> abc.RewriteResult:
         return result.RewriteResult()
@@ -66,12 +68,28 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
     def rewrite_id(self, node: uop.Id) -> abc.RewriteResult:
         return result.RewriteResult()
 
+    def rewrite_h(self, node: uop.H) -> abc.RewriteResult:
+        return self._rewrite_1q_gates(cirq.H(self.cached_qubits[0]), node)
+
+    def rewrite_x(self, node: uop.X) -> abc.RewriteResult:
+        return self._rewrite_1q_gates(cirq.X(self.cached_qubits[0]), node)
+
+    def rewrite_y(self, node: uop.Y) -> abc.RewriteResult:
+        return self._rewrite_1q_gates(cirq.Y(self.cached_qubits[0]), node)
+
+    def rewrite_z(self, node: uop.Z) -> abc.RewriteResult:
+        return self._rewrite_1q_gates(cirq.Z(self.cached_qubits[0]), node)
+
+    def rewrite_s(self, node: uop.S) -> abc.RewriteResult:
+        return self._rewrite_1q_gates(cirq.S(self.cached_qubits[0]), node)
+
+    def rewrite_sdg(self, node: uop.Sdg) -> abc.RewriteResult:
+        return self._rewrite_1q_gates(cirq.S(self.cached_qubits[0]) ** -1, node)
+
     def _rewrite_1q_gates(
-        self, cirq_gate: type[cirq.Operation], node: uop.SingleQubitGate
+        self, cirq_gate: cirq.Operation, node: uop.SingleQubitGate
     ) -> result.RewriteResult:
-        target_gates = self.gateset.decompose_to_target_gateset(
-            cirq_gate(self.cached_qubits[0]), 0
-        )
+        target_gates = self.gateset.decompose_to_target_gateset(cirq_gate, 0)
 
         new_stmts = []
         for new_gate in target_gates:
@@ -94,12 +112,10 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
         return self._rewrite_gate_stmts(new_gate_stmts=new_stmts, node=node)
 
     def _rewrite_2q_ctrl_gates(
-        self, cirq_gate: type[cirq.Operation], node: uop.TwoQubitCtrlGate
+        self, cirq_gate: cirq.Operation, node: uop.TwoQubitCtrlGate
     ) -> result.RewriteResult:
 
-        target_gates = self.gateset.decompose_to_target_gateset(
-            cirq_gate(self.cached_qubits[0], self.cached_qubits[1]), 0
-        )
+        target_gates = self.gateset.decompose_to_target_gateset(cirq_gate, 0)
 
         qubits_ssa = [node.ctrl, node.qarg]
         new_stmts = []
