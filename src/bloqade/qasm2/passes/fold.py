@@ -47,7 +47,13 @@ class QASM2Fold(Pass):
         result = Fixpoint(Walk(rule)).rewrite(mt.code).join(result)
 
         result = (
-            Walk(Chain(scf.unroll.PickIfElse(), scf.unroll.ForLoop()))
+            Walk(
+                Chain(
+                    scf.unroll.PickIfElse(),
+                    scf.unroll.ForLoop(),
+                    scf.trim.UnusedYield(),
+                )
+            )
             .rewrite(mt.code)
             .join(result)
         )

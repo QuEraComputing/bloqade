@@ -19,7 +19,6 @@ class SingleQubitGate(Gate):
 @statement
 class TwoQubitGate(Gate):
     name = "two_qubit_gate"
-    controls: tuple[ir.SSAValue, ...] = info.argument(types.Int)
 
 
 # control can either be a qubit or a measurement record
