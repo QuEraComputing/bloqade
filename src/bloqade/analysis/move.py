@@ -182,7 +182,7 @@ class NoiseRewriteRuleABC(result_abc.RewriteRule, abc.ABC):
 
             
             for group in groups:
-                distances = sum(group.values(), ())
+                distances = sum(map(list, group.values()), [])
                 distance = max(0.0, *distances)
 
             
