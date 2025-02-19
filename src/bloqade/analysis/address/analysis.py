@@ -15,11 +15,16 @@ class AddressAnalysis(Forward[Address]):
     def initialize(self):
         super().initialize()
         self.next_address: int = 0
+        self._address_map: dict[int, ir.SSAValue] = {}
         return self
 
     @property
     def qubit_count(self) -> int:
         return self.next_address
+
+    @property
+    def qubit_ssa_value(self):
+        return self._address_map
 
     T = TypeVar("T")
 
