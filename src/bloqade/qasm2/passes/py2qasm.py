@@ -1,5 +1,4 @@
-"""Rewrite py dialects into qasm dialects.
-"""
+"""Rewrite py dialects into qasm dialects."""
 
 from kirin import ir
 from kirin.passes import Pass

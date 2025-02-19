@@ -1,8 +1,9 @@
-from typing import Dict, List, Tuple, Callable, Iterable
-from dataclasses import field, dataclass
+import abc
+from typing import Dict, List, Tuple, Iterable
+from dataclasses import dataclass
 
 from kirin import ir
-from kirin.rewrite import abc, result
+from kirin.rewrite import abc as rewrite_abc, result
 from kirin.dialects import ilist
 from bloqade.analysis import address
 from kirin.analysis.const import lattice
@@ -10,43 +11,78 @@ from bloqade.qasm2.dialects import uop, core, parallel
 from bloqade.analysis.schedule import StmtDag
 
 
-def same_id_checker(ssa1: ir.SSAValue, ssa2: ir.SSAValue):
-    if ssa1 is ssa2:
-        return True
-    elif (hint1 := ssa1.hints.get("const")) and (hint2 := ssa2.hints.get("const")):
-        assert isinstance(hint1, lattice.Result) and isinstance(hint2, lattice.Result)
-        return hint1.is_equal(hint2)
-    else:
-        return False
+class MergePolicyABC(abc.ABC):
+    @abc.abstractmethod
+    def __call__(self, node: ir.Statement) -> result.RewriteResult:
+        pass
 
+    @classmethod
+    @abc.abstractmethod
+    def can_merge(cls, stmt1: ir.Statement, stmt2: ir.Statement) -> bool:
+        pass
 
-class MergeResults:
-    def __init__(self, merge_groups, group_numbers):
-        self.merge_groups = merge_groups
-        self.group_numbers = group_numbers
+    @classmethod
+    @abc.abstractmethod
+    def merge_gates(
+        cls, gate_stmts: Iterable[ir.Statement]
+    ) -> List[List[ir.Statement]]:
+        pass
+
+    @classmethod
+    @abc.abstractmethod
+    def from_analysis(
+        cls, dag: StmtDag, address_analysis: Dict[ir.SSAValue, address.Address]
+    ) -> "MergePolicyABC":
+        pass
 
 
 @dataclass
-class GreedyParallelGrouping:
-    ssa_value_checker: Callable[[ir.SSAValue, ir.SSAValue], bool] = field(
-        default=same_id_checker
-    )
+class SimpleMergePolicy(MergePolicyABC):
+    """General merge policy for merging gates based on their type and arguments.
 
+    Base class to implement a merge policy for CZ, U and RZ gates, To completed the policy implement the
+    `merge_gates` class method. This will take an iterable of statements and return a list
+    of groups of statements that can be merged together. There are two mix-in classes
+    that can be used to implement the `merge_gates` method. The `GreedyMixin` will merge
+    gates together greedily, while the `OptimalMixIn` will merge gates together optimally.
+
+    """
+
+    address_analysis: Dict[ir.SSAValue, address.Address]
+    """Mapping from SSA values to their address analysis results. Needed for rewrites"""
+    merge_groups: List[List[ir.Statement]]
+    """List of groups of statements that can be merged together"""
+    group_numbers: Dict[ir.Statement, int]
+    """Mapping from statements to their group number"""
+
+    @staticmethod
+    def same_id_checker(ssa1: ir.SSAValue, ssa2: ir.SSAValue):
+        if ssa1 is ssa2:
+            return True
+        elif (hint1 := ssa1.hints.get("const")) and (hint2 := ssa2.hints.get("const")):
+            assert isinstance(hint1, lattice.Result) and isinstance(
+                hint2, lattice.Result
+            )
+            return hint1.is_equal(hint2)
+        else:
+            return False
+
+    @classmethod
     def check_equiv_args(
-        self,
+        cls,
         args1: Iterable[ir.SSAValue],
         args2: Iterable[ir.SSAValue],
     ):
         try:
             return all(
-                self.ssa_value_checker(ssa1, ssa2)
+                cls.same_id_checker(ssa1, ssa2)
                 for ssa1, ssa2 in zip(args1, args2, strict=True)
             )
         except ValueError:
             return False
 
-    def policy(self, stmt1: ir.Statement, stmt2: ir.Statement):
-
+    @classmethod
+    def can_merge(cls, stmt1: ir.Statement, stmt2: ir.Statement) -> bool:
         match stmt1, stmt2:
             case (
                 (uop.UGate(), uop.UGate())
@@ -61,7 +97,7 @@ class GreedyParallelGrouping:
                 | (parallel.RZ(), uop.RZ())
             ):
 
-                return self.check_equiv_args(stmt1.args[1:], stmt2.args[1:])
+                return cls.check_equiv_args(stmt1.args[1:], stmt2.args[1:])
             case (
                 (parallel.CZ(), parallel.CZ())
                 | (parallel.CZ(), uop.CZ())
@@ -73,103 +109,39 @@ class GreedyParallelGrouping:
             case _:
                 return False
 
-    def merge_gates(self, gate_stmts: Iterable[ir.Statement]):
-        groups = []
-
-        for gate in gate_stmts:
-            grouped = False
-            for group in groups:
-
-                if any(self.policy(gate, group_gate) for group_gate in group):
-                    group.append(gate)
-                    grouped = True
-                    break
-
-            if not grouped:
-                groups.append([gate])
-
-        return groups
-
-    def topological_groups(self, dag: StmtDag):
-        inc_edges = {k: set(v) for k, v in dag.inc_edges.items()}
-        # worse case is a linear dag,
-        # so we can use len(dag.stmts) as the limit
-        for _ in range(len(dag.stmts)):
-            if len(inc_edges) == 0:
-                break
-            # get edges with no dependencies
-            group = [
-                node_id for node_id, inc_edges in inc_edges.items() if not inc_edges
-            ]
-            # remove nodes in group from inc_edges
-            for n in group:
-                inc_edges.pop(n)
-                for m in dag.out_edges[n]:
-                    inc_edges[m].remove(n)
-
-            yield group
-
-        if inc_edges:
-            raise ValueError("Cyclic dependency detected")
-
-    def __call__(
-        self,
+    @classmethod
+    def from_analysis(
+        cls,
         dag: StmtDag,
+        address_analysis: Dict[ir.SSAValue, address.Address],
     ):
-        merge_groups: List[List[ir.Statement]] = []
-        group_numbers: Dict[ir.Statement, int] = {}
 
-        for topological_group in self.topological_groups(dag):
-            if len(topological_group) == 1:
-                continue
+        merge_groups = []
+        group_numbers = {}
 
-            stmts = map(dag.stmts.__getitem__, topological_group)
-            gate_groups = self.merge_gates(stmts)
+        for group in dag.topological_groups():
 
-            for group in gate_groups:
-                if len(group) == 1:
-                    continue
+            gate_groups = cls.merge_gates(map(dag.stmts.__getitem__, group))
 
-                for gate in group:
-                    group_numbers[gate] = len(merge_groups)
+            gate_groups_iter = (group for group in gate_groups if len(group) > 1)
 
-                merge_groups.append(group)
+            for gate_group in gate_groups_iter:
+                group_number = len(merge_groups)
+                merge_groups.append(gate_group)
+                for stmt in gate_group:
+                    group_numbers[stmt] = group_number
 
-        return MergeResults(merge_groups, group_numbers)
+        return cls(
+            address_analysis=address_analysis,
+            merge_groups=merge_groups,
+            group_numbers=group_numbers,
+        )
 
-
-@dataclass
-class UOpToParallelRule(abc.RewriteRule):
-    address_analysis: Dict[ir.SSAValue, address.Address]
-    dags: Dict[ir.Block, StmtDag]
-    grouping_results: Dict[ir.Block, MergeResults] = field(
-        init=False, default_factory=dict
-    )
-    parallel_grouping: Callable[[StmtDag], MergeResults] = field(init=False)
-
-    def __post_init__(self):
-        self.parallel_grouping = GreedyParallelGrouping()
-
-    def get_merge_results(self, block: ir.Block | None) -> MergeResults | None:
-        if block is None or block not in self.dags:
-            return None
-
-        if block not in self.grouping_results and block in self.dags:
-            self.grouping_results[block] = self.parallel_grouping(self.dags[block])
-
-        return self.grouping_results[block]
-
-    def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
-        merge_results = self.get_merge_results(node.parent_block)
-
-        if merge_results is None:
+    def __call__(self, node: ir.Statement) -> result.RewriteResult:
+        if node not in self.group_numbers:
             return result.RewriteResult()
 
-        if node not in merge_results.group_numbers:
-            return result.RewriteResult()
-
-        group_number = merge_results.group_numbers[node]
-        group = merge_results.merge_groups[group_number]
+        group = self.merge_groups[self.group_numbers[node]]
         if node is group[0]:
             method = getattr(self, f"rewrite_group_{node.name}")
             method(node, group)
@@ -178,12 +150,12 @@ class UOpToParallelRule(abc.RewriteRule):
 
         return result.RewriteResult(has_done_something=True)
 
-    def merge_and_move_qubits(
+    def move_and_collect_qubit_list(
         self, node: ir.Statement, qargs: List[ir.SSAValue]
     ) -> Tuple[ir.SSAValue, ...]:
 
         qubits = []
-
+        # collect references to qubits
         for qarg in qargs:
             addr = self.address_analysis[qarg]
 
@@ -195,6 +167,10 @@ class UOpToParallelRule(abc.RewriteRule):
                 assert isinstance(qarg.stmt, ilist.New)
                 qubits.extend(qarg.stmt.values)
 
+        # for qubits coming from QRegGet, move both the get statement
+        # and the index statement before the current node, we do not need
+        # to move the register because the current node has some dependency
+        # on it.
         for qarg in qubits:
             if (
                 isinstance(qarg, ir.ResultValue)
@@ -223,8 +199,8 @@ class UOpToParallelRule(abc.RewriteRule):
             else:
                 raise RuntimeError(f"Unexpected statement {stmt}")
 
-        ctrls_values = self.merge_and_move_qubits(node, ctrls)
-        qargs_values = self.merge_and_move_qubits(node, qargs)
+        ctrls_values = self.move_and_collect_qubit_list(node, ctrls)
+        qargs_values = self.move_and_collect_qubit_list(node, qargs)
 
         new_ctrls = ilist.New(values=ctrls_values)
         new_qargs = ilist.New(values=qargs_values)
@@ -250,7 +226,7 @@ class UOpToParallelRule(abc.RewriteRule):
 
         assert isinstance(node, (uop.UGate, parallel.UGate))
 
-        qargs_values = self.merge_and_move_qubits(node, qargs)
+        qargs_values = self.move_and_collect_qubit_list(node, qargs)
 
         new_qargs = ilist.New(values=qargs_values)
         new_gate = parallel.UGate(
@@ -275,7 +251,7 @@ class UOpToParallelRule(abc.RewriteRule):
 
         assert isinstance(node, (uop.RZ, parallel.RZ))
 
-        qargs_values = self.merge_and_move_qubits(node, qargs)
+        qargs_values = self.move_and_collect_qubit_list(node, qargs)
         new_qargs = ilist.New(values=qargs_values)
         new_gate = parallel.RZ(
             qargs=new_qargs.result,
@@ -283,3 +259,79 @@ class UOpToParallelRule(abc.RewriteRule):
         )
         new_qargs.insert_before(node)
         new_gate.insert_before(node)
+
+
+class GreedyMixin(MergePolicyABC):
+    """Merge policy that greedily merges gates together.
+
+    The `merge_gates` method will merge policy will try greedily merge gates together.
+    This policy has a worst case complexity of O(n) where n is the
+    number of gates in the input iterable.
+    """
+
+    @classmethod
+    def merge_gates(
+        cls, gate_stmts: Iterable[ir.Statement]
+    ) -> List[List[ir.Statement]]:
+
+        iterable = iter(gate_stmts)
+        groups = [[next(iterable)]]
+
+        for stmt in gate_stmts:
+            if cls.can_merge(groups[-1][-1], stmt):
+                groups[-1].append(stmt)
+            else:
+                groups.append([stmt])
+
+        return groups
+
+
+class OptimalMixIn(MergePolicyABC):
+    """Merge policy that merges gates together optimally.
+
+    The `merge_gates` method will merge policy will try to merge every gate into every
+    group of gates, terminating when it finds a group that can be merged with the current
+    gate. This policy has a worst case complexity of O(n^2) where n is the number of gates
+    in the input iterable.
+
+    """
+
+    @classmethod
+    def merge_gates(
+        cls, gate_stmts: Iterable[ir.Statement]
+    ) -> List[List[ir.Statement]]:
+
+        groups = []
+        for stmt in gate_stmts:
+            found = False
+            for group in groups:
+                if cls.can_merge(group[-1], stmt):
+                    group.append(stmt)
+                    found = True
+                    break
+
+            if not found:
+                groups.append([stmt])
+
+        return groups
+
+
+@dataclass
+class SimpleGreedyMergePolicy(GreedyMixin, SimpleMergePolicy):
+    pass
+
+
+@dataclass
+class SimpleOptimalMergePolicy(OptimalMixIn, SimpleMergePolicy):
+    pass
+
+
+@dataclass
+class UOpToParallelRule(rewrite_abc.RewriteRule):
+    merge_rewriters: Dict[ir.Block | None, MergePolicyABC]
+
+    def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
+        merge_rewriter = self.merge_rewriters.get(
+            node.parent_block, lambda _: result.RewriteResult()
+        )
+        return merge_rewriter(node)
