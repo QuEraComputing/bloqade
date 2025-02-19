@@ -2961,7 +2961,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d9110e94">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a7f0c0ae">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2977,7 +2977,7 @@ especially Fig. 7.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=80221951">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=95e156ef">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2989,16 +2989,17 @@ based on previous run-time measurement outcomes.</p>
 <p>In this case, we prepare a resource state, which is a generalization of the T state with
 an arbitrary Z rotation $|0\rangle + e^{i\theta}|1\rangle$.</p>
 <p>@qasm2.extended
-def prep_resource_state(theta: float) -&gt; qasm2.types.QReg:
+def prep_resource_state(theta: float):
 qreg = qasm2.qreg(1)
-qasm2.h(qreg[0])
-qasm2.rz(qreg[0], theta)
-return qreg</p>
+qubit = qreg[0]
+qasm2.h(qubit)
+qasm2.rz(qubit, theta)
+return qubit</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3e21d63d">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=bd4b0f63">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3020,7 +3021,7 @@ the angle, and repeat until we get the correct outcome.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1effa12b">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ba8c8e7c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3031,23 +3032,16 @@ using an assert statement. This is straightforward, but comes with an exponentia
 number of resource states: there is a 50% chance of success at each step, so there is only a
 $2^{-n}$ chance of success after $n$ Z phase gates.</p>
 <p>@qasm2.extended
-def z_phase_gate_postselect(target: qasm2.types.Qubit, theta: float) -&gt; qasm2.types.QReg:
+def z_phase_gate_postselect(target: qasm2.Qubit, theta: float):
 ancilla = prep_resource_state(theta)
-qasm2.cx(ancilla[0], target)
+qasm2.cx(ancilla, target)
 creg = qasm2.creg(1)
-qasm2.measure(target, creg[0])
-return ancilla
-"""
-if creg[0]:
-return ancilla
-else:
-assert "Did not converge"
-"""</p>
+qasm2.measure(target, creg[0])</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=005fad54">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=62456a23">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3058,107 +3052,92 @@ Observe that, while it is efficient to represent this as a composition of kernel
 there is no equivalent representation as a circuit, as the number of resource qubits and
 total number of gates is not known until runtime.</p>
 <p>@qasm2.extended
-def z_phase_gate_recursive(target: qasm2.types.Qubit, theta: float) -&gt; qasm2.types.QReg:
+def z_phase_gate_recursive(target: qasm2.Qubit, theta: float):
 """
 <a href="https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337">https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337</a> Fig. 7
 """
 ancilla = prep_resource_state(theta)
-qasm2.cx(ancilla[0], target)
+qasm2.cx(ancilla, target)
 creg = qasm2.creg(1)
 qasm2.measure(target, creg[0])
-# qasm2.deallocate(target)
-if creg[0]:
-return ancilla
-else:
-qasm2.x(ancilla[0])
-return z_phase_gate_recursive(ancilla[0], 2 * theta)</p>
+if creg[0] == 1:
+qasm2.reset(ancilla)
+z_phase_gate_recursive(ancilla, 2 * theta)
+return</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d0252db0">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6e62dc53">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>An alternative representation uses structural control flow (for and while loops) to
+<p>An alternative representation uses control flow to
 implement the same gate. If the number of repeats is fixed, this can be represented
 as a static circuit, though it would require a large number of resource qubits and
 may still fail with a small probability $2^{-attempts}$.</p>
 <p>@qasm2.extended
-def z_phase_gate_loop(
-target: qasm2.types.Qubit, theta: float, attempts: int = 10
-):# -&gt; qasm2.types.QReg:
+def z_phase_gate_loop(target: qasm2.types.Qubit, theta: float, attempts: int):
 """
 <a href="https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337">https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337</a> Fig. 7
 """
 creg = qasm2.creg(1)</p>
 <pre><code>for ctr in range(attempts):
     ancilla = prep_resource_state(theta * (2**ctr))
-    qasm2.cx(ancilla[0], target)
-    qasm2.measure(target, creg[0])
-    
-    if creg[0]:
-        return ancilla
-    else:
-        qasm2.x(ancilla[0])
-        target = ancilla[0]
+    if creg[0] == 0:
+        qasm2.cx(ancilla, target)
+        qasm2.measure(target, creg[0])
 
-assert "Loop did not converge"</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=923f0586">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Lets try to write this in a way that can be unwrapped into a qasm circuit.
-@qasm2.extended
-def z_phase_gate_qasm(
-target: qasm2.types.Qubit, theta: float, attempts: int = 10
-):
+    if creg[0] == 1:
+        qasm2.reset(ancilla)
+        target = ancilla</code></pre>
+<h1 id="markdown">%% [markdown]<a class="anchor-link" href="#markdown">¶</a></h1><h1 id="lets-try-to-write-this-in-a-way-that-can-be-unwrapped-into-a-qasm-circuit">Lets try to write this in a way that can be unwrapped into a qasm circuit.<a class="anchor-link" href="#lets-try-to-write-this-in-a-way-that-can-be-unwrapped-into-a-qasm-circuit">¶</a></h1><p>@qasm2.extended
+def z_phase_gate_qasm(target: qasm2.types.Qubit, theta: float, attempts: int = 10):
 """
 <a href="https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337">https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337</a> Fig. 7
 """
 creg = qasm2.creg(1)</p>
 <pre><code>for ctr in range(attempts):
     ancilla = prep_resource_state(theta * (2**ctr))
-    
+
     if creg[0]:
         qasm2.id(ancilla[0])
-        
+
     else:
         qasm2.cx(ancilla[0], target)
         qasm2.measure(target, creg[0])
-        
+
         if creg[0]:
             qasm2.id(ancilla[0])
         else:
             qasm2.x(ancilla[0])
             target = ancilla[0]
-        
 
-#assert not creg, "Loop did not converge"
+# assert not creg, "Loop did not converge"
 return target</code></pre>
 <p>Lets try to get pyqrack interpreter to run</p>
 <p>from bloqade.pyqrack import PyQrack  # noqa: E402</p>
-<p>theta = 0.1
-@qasm2.extended
-def main3():
+<p>theta = 0.1</p>
+<p>@qasm2.extended
+def recursion_main():
 target = qasm2.qreg(1)
-return z_phase_gate_qasm(target[0], theta,10)</p>
+z_phase_gate_recursive(target[0], theta)
+return target</p>
+<p>@qasm2.extended
+def loop_main():
+target = qasm2.qreg(1)
+z_phase_gate_loop(target[0], theta, 5)
+return target</p>
 <p>device = PyQrack()
-qreg = device.run(main3)
+qreg = device.run(recursion_main)
 print(qreg)</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b91d8e00">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a966334e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3169,8 +3148,8 @@ print(qreg)</p>
 from bloqade.qasm2.parse import pprint  # noqa: E402</p>
 <p>qasm2 does not support parameterized circuits, so the entry point must be a function
 of zero arguments. We can use a closure to pass the parameters from outside the function.
-theta = 0.1
-@qasm2.extended
+theta = 0.1</p>
+<p>@qasm2.extended
 def main():
 target = qasm2.qreg(1)
 return z_phase_gate_postselect(target[0], theta)</p>
@@ -3181,21 +3160,14 @@ pprint(ast)</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0648fb0c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c0c716e5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>And now the loop version, which first needs to be unwrapped:</p>
-<p>theta = 0.1
-@qasm2.extended
-def main2():
-target = qasm2.qreg(1)
-return z_phase_gate_qasm(target[0], theta,10)</p>
-<p>target = QASM2()
-ast = target.emit(main2)
-pprint(ast)</p>
+<p>pprint(target.emit(loop_main))</p>
 </div>
 </div>
 </div>

@@ -2507,6 +2507,66 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bloqade.qasm2.rewrite.uop_to_parallel.GreedyMixin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;GreedyMixin
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bloqade.qasm2.rewrite.uop_to_parallel.OptimalMixIn" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;OptimalMixIn
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bloqade.qasm2.rewrite.uop_to_parallel.SimpleMergePolicy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SimpleMergePolicy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" SimpleMergePolicy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bloqade.qasm2.rewrite.uop_to_parallel.SimpleMergePolicy.address_analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;address_analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloqade.qasm2.rewrite.uop_to_parallel.SimpleMergePolicy.group_numbers" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;group_numbers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloqade.qasm2.rewrite.uop_to_parallel.SimpleMergePolicy.merge_groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;merge_groups
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2572,6 +2632,66 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bloqade.qasm2.rewrite.uop_to_parallel.GreedyMixin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;GreedyMixin
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bloqade.qasm2.rewrite.uop_to_parallel.OptimalMixIn" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;OptimalMixIn
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bloqade.qasm2.rewrite.uop_to_parallel.SimpleMergePolicy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SimpleMergePolicy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" SimpleMergePolicy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bloqade.qasm2.rewrite.uop_to_parallel.SimpleMergePolicy.address_analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;address_analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloqade.qasm2.rewrite.uop_to_parallel.SimpleMergePolicy.group_numbers" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;group_numbers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloqade.qasm2.rewrite.uop_to_parallel.SimpleMergePolicy.merge_groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;merge_groups
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2628,6 +2748,228 @@
 
 
 
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bloqade.qasm2.rewrite.uop_to_parallel.GreedyMixin" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">GreedyMixin</span>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="bloqade.qasm2.rewrite.uop_to_parallel.MergePolicyABC">MergePolicyABC</span></code></p>
+
+
+        <p>Merge policy that greedily merges gates together.</p>
+<p>The <code>merge_gates</code> method will merge policy will try greedily merge gates together.
+This policy has a worst case complexity of O(n) where n is the
+number of gates in the input iterable.</p>
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bloqade.qasm2.rewrite.uop_to_parallel.OptimalMixIn" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">OptimalMixIn</span>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="bloqade.qasm2.rewrite.uop_to_parallel.MergePolicyABC">MergePolicyABC</span></code></p>
+
+
+        <p>Merge policy that merges gates together optimally.</p>
+<p>The <code>merge_gates</code> method will merge policy will try to merge every gate into every
+group of gates, terminating when it finds a group that can be merged with the current
+gate. This policy has a worst case complexity of O(n^2) where n is the number of gates
+in the input iterable.</p>
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bloqade.qasm2.rewrite.uop_to_parallel.SimpleMergePolicy" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">SimpleMergePolicy</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">SimpleMergePolicy</span><span class="p">(</span>
+    <span class="n">address_analysis</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">,</span> <span class="n">address</span><span class="o">.</span><span class="n">Address</span><span class="p">],</span>
+    <span class="n">merge_groups</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">ir</span><span class="o">.</span><span class="n">Statement</span><span class="p">]],</span>
+    <span class="n">group_numbers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">ir</span><span class="o">.</span><span class="n">Statement</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="bloqade.qasm2.rewrite.uop_to_parallel.MergePolicyABC">MergePolicyABC</span></code></p>
+
+
+        <p>General merge policy for merging gates based on their type and arguments.</p>
+<p>Base class to implement a merge policy for CZ, U and RZ gates, To completed the policy implement the
+<code>merge_gates</code> class method. This will take an iterable of statements and return a list
+of groups of statements that can be merged together. There are two mix-in classes
+that can be used to implement the <code>merge_gates</code> method. The <code>GreedyMixin</code> will merge
+gates together greedily, while the <code>OptimalMixIn</code> will merge gates together optimally.</p>
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="bloqade.qasm2.rewrite.uop_to_parallel.SimpleMergePolicy.address_analysis" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">address_analysis</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">address_analysis</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">SSAValue</span><span class="p">,</span> <span class="n">Address</span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Mapping from SSA values to their address analysis results. Needed for rewrites</p>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="bloqade.qasm2.rewrite.uop_to_parallel.SimpleMergePolicy.group_numbers" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">group_numbers</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">group_numbers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Statement</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Mapping from statements to their group number</p>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="bloqade.qasm2.rewrite.uop_to_parallel.SimpleMergePolicy.merge_groups" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">merge_groups</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">merge_groups</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Statement</span><span class="p">]]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>List of groups of statements that can be merged together</p>
+    </div>
+
+</div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
 
 
 
