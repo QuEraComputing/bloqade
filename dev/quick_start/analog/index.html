@@ -1296,16 +1296,16 @@ contribute.</p>
 <p>As you develop your Bloqade program, you are expected to rely on pop-up "hints" provided in your development environment to help you determine what the next part of your program should be.</p>
 <h3 id="vs-code">VS Code</h3>
 <p>In <a href="https://code.visualstudio.com/">VS Code</a> this is automatic, just type the <code>.</code> and see what options pop up:</p>
-<p><img alt="VSCode Hints" src="assets/quick_start/vscode-hints.gif" /></p>
+<p><img alt="VSCode Hints" src="vscode-hints.gif" /></p>
 <h3 id="jetbrains-pycharm">JetBrains PyCharm</h3>
 <p>The same goes for <a href="https://www.jetbrains.com/pycharm/">JetBrains PyCharm</a>:</p>
-<p><img alt="PyCharm Hints" src="assets/quick_start/pycharm-hints.gif" /></p>
+<p><img alt="PyCharm Hints" src="pycharm-hints.gif" /></p>
 <h3 id="jupyter-notebook">Jupyter Notebook</h3>
 <p>In a <a href="https://jupyter.org/">Jupyter Notebook</a> you'll need to type <code>.</code> and then hit tab for the hints to appear:</p>
-<p><img alt="Jupyter Hints" src="assets/quick_start/jupyter-hints.gif" /></p>
+<p><img alt="Jupyter Hints" src="jupyter-hints.gif" /></p>
 <h3 id="ipython">IPython</h3>
 <p>The same goes for <a href="https://ipython.readthedocs.io/en/stable/">IPython</a>:</p>
-<p><img alt="IPython Hints" src="assets/quick_start/ipython-hints.gif" /></p>
+<p><img alt="IPython Hints" src="ipython-hints.gif" /></p>
 <h2 id="defining-atom-geometry">Defining Atom Geometry</h2>
 <p>You can import pre-defined geometries based on <a href="https://en.wikipedia.org/wiki/Bravais_lattice">Bravais lattices</a> from <code>bloqade.analog.atom_arrangement</code>. You may also specify a lattice spacing which dictates the spacing between the atoms as well as the number of atom sites in a certain direction.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.analog.atom_arrangement</span><span class="w"> </span><span class="kn">import</span> <span class="n">Square</span><span class="p">,</span> <span class="n">Kagome</span>
@@ -1317,7 +1317,7 @@ contribute.</p>
 <div class="highlight"><pre><span></span><code><span class="n">more_complex_geometry</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
 <figure>
-<img alt="IPython Hints" src="assets/quick_start/geometry-visualization.png" width="50%" />
+<img alt="IPython Hints" src="geometry-visualization.png" width="50%" />
 </figure>
 <p>You can also add positions to a pre-defined geometry:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.analog.atom_arrangement</span><span class="w"> </span><span class="kn">import</span> <span class="n">Square</span>
@@ -1441,7 +1441,7 @@ In the example below, we target the ground-Rydberg level coupling to drive with 
 <p>You can visualize your sequence as well with <code>.show()</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="n">pulse_sequence</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
-<p><img alt="" src="assets/quick_start/pulse-sequence-visualization.png" /></p>
+<p><img alt="" src="pulse-sequence-visualization.png" /></p>
 <p>And when you're content with it you just <code>.apply()</code> it on the geometries of your choice:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.analog.atom_arrangement</span><span class="w"> </span><span class="kn">import</span> <span class="n">Honeycomb</span><span class="p">,</span> <span class="n">Kagome</span>
 
@@ -1523,7 +1523,7 @@ task_number
 <p>And can also provide useful visual information such as the state of your atoms and the bitstring distribution via:</p>
 <div class="highlight"><pre><span></span><code><span class="n">report</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
-<p><img alt="" src="assets/quick_start/report-visualization.png" /></p>
+<p><img alt="" src="report-visualization.png" /></p>
 <h2 id="parameter-sweeps">Parameter Sweeps</h2>
 <p>You can easily do parameter sweeps in emulation and on <em>Aquila</em> with variables. Bloqade automatically detects strings in your program as variables that you can later assign singular or multiple values to.</p>
 <p>In the example below, we define a program with a singular variable that controls the amplitude of the waveform.</p>
