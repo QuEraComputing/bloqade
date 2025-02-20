@@ -15,25 +15,25 @@ As you develop your Bloqade program, you are expected to rely on pop-up "hints" 
 
 In [VS Code](https://code.visualstudio.com/) this is automatic, just type the `.` and see what options pop up:
 
-![VSCode Hints](assets/quick_start/vscode-hints.gif)
+![VSCode Hints](vscode-hints.gif)
 
 ### JetBrains PyCharm
 
 The same goes for [JetBrains PyCharm](https://www.jetbrains.com/pycharm/):
 
-![PyCharm Hints](assets/quick_start/pycharm-hints.gif)
+![PyCharm Hints](pycharm-hints.gif)
 
 ### Jupyter Notebook
 
 In a [Jupyter Notebook](https://jupyter.org/) you'll need to type `.` and then hit tab for the hints to appear:
 
-![Jupyter Hints](assets/quick_start/jupyter-hints.gif)
+![Jupyter Hints](jupyter-hints.gif)
 
 ### IPython
 
 The same goes for [IPython](https://ipython.readthedocs.io/en/stable/):
 
-![IPython Hints](assets/quick_start/ipython-hints.gif)
+![IPython Hints](ipython-hints.gif)
 
 ## Defining Atom Geometry
 
@@ -52,7 +52,7 @@ You can easily visualize your geometries as well with `.show()`:
 more_complex_geometry.show()
 ```
 <figure markdown="span">
-![IPython Hints](assets/quick_start/geometry-visualization.png){ width="50%" }
+![IPython Hints](geometry-visualization.png){ width="50%" }
 </figure>
 
 
@@ -219,7 +219,7 @@ You can visualize your sequence as well with `.show()`:
 pulse_sequence.show()
 ```
 
-![](assets/quick_start/pulse-sequence-visualization.png)
+![](pulse-sequence-visualization.png)
 
 And when you're content with it you just `.apply()` it on the geometries of your choice:
 
@@ -333,9 +333,7 @@ And can also provide useful visual information such as the state of your atoms a
 report.show()
 ```
 
-![](assets/quick_start/report-visualization.png)
-
-
+![](report-visualization.png)
 
 ## Parameter Sweeps
 
