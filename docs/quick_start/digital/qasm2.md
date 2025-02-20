@@ -5,7 +5,11 @@
 
 # QASM2 and its extensions
 
-Bloqade provides a set of [dialects (missing link)]() for QASM2 and our custom extensions to model parallel gates in neutral atom architectures.
+Bloqade provides a set of [dialects (missing link)]() for QASM2 and our custom extensions to model parallel gates in neutral atom architectures. The basic QASM2 functionality can be enabled via
+
+```bash
+pip install bloqade[qasm2]
+```
 
 ## Quick Example
 
@@ -15,8 +19,6 @@ When programming with QASM2, the most common usage is via the `qasm2.extended` d
 import math
 from bloqade import qasm2
 
-pi = math.pi
-
 @qasm2.extended
 def qft(qreg: qasm2.QReg, n: int):
     if n == 0:
@@ -24,7 +26,7 @@ def qft(qreg: qasm2.QReg, n: int):
 
     qasm2.h(qreg[0])
     for i in range(1, n):
-        qasm2.cu1(qreg[i], qreg[0], 2 * pi / 2**i)
+        qasm2.cu1(qreg[i], qreg[0], 2 * math.pi / 2**i)
     qft(qreg, n - 1)
     return qreg
 ```
@@ -113,3 +115,38 @@ The following dialects are specific to neutral atom quantum computing as an exte
 - `noise` provides the noise channels
 - `parallel` provides the parallel gate support (Rydberg specific).
 - `inline` dialect provides the inline QASM string
+
+## Strict QASM2 mode
+
+While the `qasm2.extended` decorator provides a lot of high-level features as an extension of QASM2, you may want to program in strict QASM2 mode for compatibility reasons. You can do this by using the `qasm2.main` and `qasm2.gate` decorators:
+
+```python
+@qasm2.main
+def main():
+    qasm2.h(0)
+    qasm2.cx(0, 1)
+    qasm2.measure(0)
+    qasm2.measure(1)
+    return qasm2.qreg(2)
+```
+
+which corresponding to the following QASM2 code:
+
+```qasm
+OPENQASM 2.0;
+include "qelib1.inc";
+
+qreg q[2];
+creg c[2];
+
+h q[0];
+cx q[0], q[1];
+measure q[0] -> c[0];
+measure q[1] -> c[1];
+```
+
+Note that the `return` values are all ignore due to lack of equivalent in QASM2.
+
+## API Reference
+
+::: bloqade.qasm2

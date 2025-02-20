@@ -13,8 +13,11 @@ nav:
       - Installation: install.md
       - Background: background.md
       - Quick Start:
-        - QASM2: qasm2.md
-        - Analog: analog.md
+        - Digital:
+          - quick_start/digital/index.md
+          - QASM2: quick_start/digital/qasm2.md
+        - Analog:
+          - quick_start/analog/index.md
       - Contributing: contrib.md
   - Digital:
     - digital/index.md
@@ -26,8 +29,8 @@ nav:
   - Analog: 'https://queracomputing.github.io/bloqade-python/latest/'
   - Blog:
     - blog/index.md
-  - API Reference:
-      - QASM2: reference/bloqade/qasm2/
+  # - API Reference:
+  #     - QASM2: reference/bloqade/qasm2/
 
 theme:
   name: material

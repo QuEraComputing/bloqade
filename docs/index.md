@@ -36,8 +36,8 @@ To install the extensions or extras for Bloqade and to setup the development env
 To get started with Bloqade, you can refer to the following tutorials:
 
 - [Background](background.md): Background information on neutral atom quantum computing.
-- [QASM2 quick start](qasm2.md): A quick start guide for QASM2 and its extensions.
-- [Analog quick start](analog.md): A quick start guide for the analog quantum computing eDSL.
+- [Digital quick start](quick_start/digital/index.md): A quick start guide for QASM2 and its extensions.
+- [Analog quick start](quick_start/analog/index.md): A quick start guide for the analog quantum computing eDSL (same as older `bloqade` versions).
 
 ## Contributing
 

@@ -7,6 +7,7 @@
 # For more information, see https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337,
 # especially Fig. 7.
 
+# %%
 from bloqade import qasm2
 
 # %% [markdown]
@@ -18,6 +19,7 @@ from bloqade import qasm2
 # an arbitrary Z rotation $|0\rangle + e^{i\theta}|1\rangle$.
 
 
+# %%
 @qasm2.extended
 def prep_resource_state(theta: float):
     qreg = qasm2.qreg(1)
@@ -49,6 +51,7 @@ def prep_resource_state(theta: float):
 # $2^{-n}$ chance of success after $n$ Z phase gates.
 
 
+# %%
 @qasm2.extended
 def z_phase_gate_postselect(target: qasm2.Qubit, theta: float):
     ancilla = prep_resource_state(theta)
@@ -64,6 +67,7 @@ def z_phase_gate_postselect(target: qasm2.Qubit, theta: float):
 # total number of gates is not known until runtime.
 
 
+# %%
 @qasm2.extended
 def z_phase_gate_recursive(target: qasm2.Qubit, theta: float):
     """
@@ -86,6 +90,7 @@ def z_phase_gate_recursive(target: qasm2.Qubit, theta: float):
 # may still fail with a small probability $2^{-attempts}$.
 
 
+# %%
 @qasm2.extended
 def z_phase_gate_loop(target: qasm2.Qubit, theta: float, attempts: int):
     """
@@ -104,37 +109,9 @@ def z_phase_gate_loop(target: qasm2.Qubit, theta: float, attempts: int):
             target = ancilla
 
 
-# # %% [markdown]
-# # Lets try to write this in a way that can be unwrapped into a qasm circuit.
-# @qasm2.extended
-# def z_phase_gate_qasm(target: qasm2.Qubit, theta: float, attempts: int = 10):
-#     """
-#     https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337 Fig. 7
-#     """
-#     creg = qasm2.creg(1)
-
-#     for ctr in range(attempts):
-#         ancilla = prep_resource_state(theta * (2**ctr))
-
-#         if creg[0]:
-#             qasm2.id(ancilla[0])
-
-#         else:
-#             qasm2.cx(ancilla[0], target)
-#             qasm2.measure(target, creg[0])
-
-#             if creg[0]:
-#                 qasm2.id(ancilla[0])
-#             else:
-#                 qasm2.x(ancilla[0])
-#                 target = ancilla[0]
-
-#     # assert not creg, "Loop did not converge"
-#     return target
-
-
 # Lets try to get pyqrack interpreter to run
 
+# %%
 from bloqade.pyqrack import PyQrack  # noqa: E402
 
 theta = 0.1
@@ -161,12 +138,15 @@ print(qreg)
 # %% [markdown]
 # Lets unwrap the postselection and loop versions of the gadget to see the qasm circuit.
 
+# %%
 from bloqade.qasm2.emit import QASM2  # noqa: E402
 from bloqade.qasm2.parse import pprint  # noqa: E402
 
 # qasm2 does not support parameterized circuits, so the entry point must be a function
 # of zero arguments. We can use a closure to pass the parameters from outside the function.
-# theta = 0.1
+
+# %%
+theta = 0.1
 
 
 @qasm2.extended
@@ -182,4 +162,5 @@ pprint(ast)
 # %% [markdown]
 # And now the loop version, which first needs to be unwrapped:
 
+# %%
 pprint(target.emit(loop_main))
