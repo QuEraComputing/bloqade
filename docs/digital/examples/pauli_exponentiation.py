@@ -1,12 +1,10 @@
 import math
-from typing import Any
 
 from bloqade import qasm2
-from kirin.dialects import ilist
 
 
 @qasm2.extended
-def zzzz_gadget(targets: ilist.IList[qasm2.types.Qubit, Any], gamma: float):
+def zzzz_gadget(targets: tuple[qasm2.Qubit, ...], gamma: float):
     for i in range(len(targets) - 1):
         qasm2.cx(targets[i], targets[i + 1])
 
@@ -17,11 +15,9 @@ def zzzz_gadget(targets: ilist.IList[qasm2.types.Qubit, Any], gamma: float):
 
 
 @qasm2.extended
-def pauli_basis_change(
-    targets: ilist.IList[qasm2.types.Qubit, Any], start: str, end: str
-):
-    assert len(targets) == len(start)
-    assert len(targets) == len(end)
+def pauli_basis_change(targets: tuple[qasm2.Qubit, ...], start: str, end: str):
+    # assert len(targets) == len(start)
+    # assert len(targets) == len(end)
 
     # for qubit, start_pauli, end_pauli in zip(targets, start, end):
     for i in range(len(targets)):
@@ -51,23 +47,20 @@ def pauli_basis_change(
 
 
 @qasm2.extended
-def pauli_exponential(
-    targets: ilist.IList[qasm2.types.Qubit, Any], pauli: str, gamma: float
-):
-    assert len(targets) == len(pauli)
+def pauli_exponential(targets: tuple[qasm2.Qubit, ...], pauli: str, gamma: float):
+    # assert len(targets) == len(pauli)
 
     pauli_basis_change(targets=targets, start="Z" * len(targets), end=pauli)
     zzzz_gadget(targets=targets, gamma=gamma)
     pauli_basis_change(targets=targets, start=pauli, end="Z" * len(targets))
 
 
-if __name__ == "__main__":
+@qasm2.extended
+def main():
+    register = qasm2.qreg(4)
+    pauli_exponential((register[0], register[1], register[2]), "ZXY", 0.5)
 
-    @qasm2.extended
-    def main():
-        register = qasm2.qreg(4)
-        pauli_exponential([register[0], register[1], register[2]], "ZXY", 0.5)
 
-    target = qasm2.emit.QASM2()
-    ast = target.emit(main)
-    qasm2.parse.pprint(ast)
+target = qasm2.emit.QASM2()
+ast = target.emit(main)
+qasm2.parse.pprint(ast)
