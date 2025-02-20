@@ -1556,7 +1556,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cdae27d3">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8d8ff238">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1576,7 +1576,7 @@ pi = math.pi</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b822d849">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2f2979e3">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1591,7 +1591,7 @@ G = nx.random_regular_graph(3, N, seed=42)</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9fd1c3ac">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=99e2bdd5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1638,7 +1638,7 @@ return kernel</code></pre>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=030913d2">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b0ec6522">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1708,11 +1708,9 @@ def kernel(gamma: ilist.IList[float, Any], beta: ilist.IList[float, Any]):
 
     def get_qubit(x: int):
         return qreg[x]
-    all_qubits = ilist.IList([get_qubit(i) for i in range(len(nodes))])
+    all_qubits = ilist.map(fn=get_qubit, collection=range(N))
     
     parallel_h(all_qubits)
-
-    
 
     
     for i in range(len(gamma)): # For each QAOA layer...
@@ -1726,7 +1724,7 @@ def kernel(gamma: ilist.IList[float, Any], beta: ilist.IList[float, Any]):
         # parallel local rotations.
         #qasm2.glob.u(theta=beta[i],phi=0.0,lam=0.0,registers=[qreg])
         qasm2.parallel.u(qargs=all_qubits, theta=beta[i], phi=0.0, lam=0.0)
-
+    
     return qreg
 
 return kernel</code></pre>
@@ -1734,7 +1732,7 @@ return kernel</code></pre>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=519a66b3">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=725d53cf">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1763,7 +1761,7 @@ qaoa_sequential(G).code.print()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6d7be872">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=534ccd96">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1796,7 +1794,7 @@ kernel.print()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6de7afa6">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4443c60c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1827,7 +1825,7 @@ def main():
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6434b5d3">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=756f538f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
