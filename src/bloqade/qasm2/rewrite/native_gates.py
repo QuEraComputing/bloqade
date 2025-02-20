@@ -1,3 +1,5 @@
+import math
+from typing import Optional
 from functools import cached_property
 from dataclasses import field, dataclass
 
@@ -8,6 +10,7 @@ import cirq.transformers.target_gatesets
 import cirq.transformers.target_gatesets.compilation_target_gateset
 from kirin import ir
 from kirin.rewrite import abc, result
+from kirin.dialects import py
 from bloqade.qasm2.dialects import uop, expr
 from cirq.transformers.target_gatesets.compilation_target_gateset import (
     CompilationTargetGateset,
@@ -62,6 +65,14 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
             cirq.CX(self.cached_qubits[0], self.cached_qubits[1]), node
         )
 
+    def rewrite_cy(self, node: uop.CY) -> result.RewriteResult:
+        return self._rewrite_2q_ctrl_gates(
+            cirq.ControlledGate(cirq.Y, 1)(
+                self.cached_qubits[0], self.cached_qubits[1]
+            ),
+            node,
+        )
+
     def rewrite_U(self, node: uop.UGate) -> abc.RewriteResult:
         return result.RewriteResult()
 
@@ -85,6 +96,119 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
 
     def rewrite_sdg(self, node: uop.Sdag) -> abc.RewriteResult:
         return self._rewrite_1q_gates(cirq.S(self.cached_qubits[0]) ** -1, node)
+
+    def rewrite_t(self, node: uop.T) -> abc.RewriteResult:
+        return self._rewrite_1q_gates(cirq.T(self.cached_qubits[0]), node)
+
+    def rewrite_tdg(self, node: uop.Tdag) -> abc.RewriteResult:
+        return self._rewrite_1q_gates(cirq.T(self.cached_qubits[0]) ** -1, node)
+
+    def rewrite_sx(self, node: uop.SX) -> abc.RewriteResult:
+        return self._rewrite_1q_gates(
+            cirq.XPowGate(exponent=0.5).on(self.cached_qubits), node
+        )
+
+    def rewrite_sxdg(self, node: uop.SXdag) -> abc.RewriteResult:
+        return self._rewrite_1q_gates(
+            cirq.XPowGate(exponent=-0.5).on(self.cached_qubits), node
+        )
+
+    def rewrite_u1(self, node: uop.U1) -> abc.RewriteResult:
+        theta = node.lam
+        (phi := expr.ConstFloat(value=0.0)).insert_before(node)
+        node.replace_by(
+            uop.UGate(qarg=node.qarg, theta=phi.result, phi=phi.result, lam=theta)
+        )
+        return abc.RewriteResult(has_done_something=True)
+
+    def rewrite_u2(self, node: uop.U2) -> abc.RewriteResult:
+        phi = node.phi
+        lam = node.lam
+        (pi := expr.ConstPI()).insert_before(node)
+        (two := expr.ConstFloat(value=2.0)).insert_before(node)
+        (theta := expr.Div(pi.result, two.result)).insert_before(node)
+        node.replace_by(uop.UGate(qarg=node.qarg, theta=theta.result, phi=phi, lam=lam))
+        return abc.RewriteResult(has_done_something=True)
+
+    def rewrite_rx(self, node: uop.RX) -> abc.RewriteResult:
+        theta = node.theta
+        (pi := expr.ConstPI()).insert_before(node)
+        (two := expr.ConstFloat(value=2.0)).insert_before(node)
+        (phi := expr.Div(pi.result, two.result)).insert_before(node)
+        (lam := expr.Neg(phi.result)).insert_before(node)
+        node.replace_by(
+            uop.UGate(qarg=node.qarg, theta=theta, phi=phi.result, lam=lam.result)
+        )
+        return abc.RewriteResult(has_done_something=True)
+
+    def rewrite_ry(self, node: uop.RY) -> abc.RewriteResult:
+        theta = node.theta
+        (phi := expr.ConstFloat(value=0.0)).insert_before(node)
+        node.replace_by(
+            uop.UGate(qarg=node.qarg, theta=theta, phi=phi.result, lam=phi.result)
+        )
+        return abc.RewriteResult(has_done_something=True)
+
+    def rewrite_rz(self, node: uop.RZ) -> abc.RewriteResult:
+        theta = node.theta
+        (phi := expr.ConstFloat(value=0.0)).insert_before(node)
+        node.replace_by(
+            uop.UGate(qarg=node.qarg, theta=phi.result, phi=phi.result, lam=theta)
+        )
+        return abc.RewriteResult(has_done_something=True)
+
+    def rewrite_crx(self, node: uop.CRX) -> abc.RewriteResult:
+        lam = self._get_const_value(node.lam)
+
+        if lam is None:
+            return abc.RewriteResult()
+
+        return self._rewrite_2q_ctrl_gates(
+            cirq.ControlledGate(cirq.Rx(rads=lam), 1).on(
+                self.cached_qubits[0], self.cached_qubits[1]
+            ),
+            node,
+        )
+
+    def rewrite_cry(self, node: uop.CRX) -> abc.RewriteResult:
+        lam = self._get_const_value(node.lam)
+
+        if lam is None:
+            return abc.RewriteResult()
+
+        return self._rewrite_2q_ctrl_gates(
+            cirq.ControlledGate(cirq.Ry(rads=lam), 1).on(
+                self.cached_qubits[0], self.cached_qubits[1]
+            ),
+            node,
+        )
+
+    def rewrite_crz(self, node: uop.CRX) -> abc.RewriteResult:
+        lam = self._get_const_value(node.lam)
+
+        if lam is None:
+            return abc.RewriteResult()
+
+        return self._rewrite_2q_ctrl_gates(
+            cirq.ControlledGate(cirq.Rz(rads=lam), 1).on(
+                self.cached_qubits[0], self.cached_qubits[1]
+            ),
+            node,
+        )
+
+    def _get_const_value(self, ssa: ir.SSAValue) -> Optional[float | int]:
+        if not isinstance(ssa, ir.ResultValue) or not isinstance(
+            ssa.owner,
+            (expr.ConstFloat, expr.ConstInt, py.constant.Constant, expr.ConstPI),
+        ):
+            return None
+
+        if isinstance(
+            ssa.owner, (expr.ConstFloat, expr.ConstInt, py.constant.Constant)
+        ):
+            return ssa.owner.value
+        else:
+            return math.pi
 
     def _rewrite_1q_gates(
         self, cirq_gate: cirq.Operation, node: uop.SingleQubitGate
