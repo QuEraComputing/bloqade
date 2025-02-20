@@ -1101,57 +1101,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#navigating-the-bloqade-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      Navigating the Bloqade API
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Navigating the Bloqade API">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#vs-code" class="md-nav__link">
-    <span class="md-ellipsis">
-      VS Code
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#jetbrains-pycharm" class="md-nav__link">
-    <span class="md-ellipsis">
-      JetBrains PyCharm
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#jupyter-notebook" class="md-nav__link">
-    <span class="md-ellipsis">
-      Jupyter Notebook
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ipython" class="md-nav__link">
-    <span class="md-ellipsis">
-      IPython
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#defining-atom-geometry" class="md-nav__link">
     <span class="md-ellipsis">
       Defining Atom Geometry
@@ -1290,20 +1239,6 @@ contribute.</p>
 </div>
 <h1 id="quick-start">Quick Start</h1>
 <p>All the sections below are self-contained, you can click on the links in the Table of Contents to read the relevant parts.</p>
-<h2 id="navigating-the-bloqade-api">Navigating the Bloqade API</h2>
-<p>As you develop your Bloqade program, you are expected to rely on pop-up "hints" provided in your development environment to help you determine what the next part of your program should be.</p>
-<h3 id="vs-code">VS Code</h3>
-<p>In <a href="https://code.visualstudio.com/">VS Code</a> this is automatic, just type the <code>.</code> and see what options pop up:</p>
-<p><img alt="VSCode Hints" src="vscode-hints.gif" /></p>
-<h3 id="jetbrains-pycharm">JetBrains PyCharm</h3>
-<p>The same goes for <a href="https://www.jetbrains.com/pycharm/">JetBrains PyCharm</a>:</p>
-<p><img alt="PyCharm Hints" src="pycharm-hints.gif" /></p>
-<h3 id="jupyter-notebook">Jupyter Notebook</h3>
-<p>In a <a href="https://jupyter.org/">Jupyter Notebook</a> you'll need to type <code>.</code> and then hit tab for the hints to appear:</p>
-<p><img alt="Jupyter Hints" src="jupyter-hints.gif" /></p>
-<h3 id="ipython">IPython</h3>
-<p>The same goes for <a href="https://ipython.readthedocs.io/en/stable/">IPython</a>:</p>
-<p><img alt="IPython Hints" src="ipython-hints.gif" /></p>
 <h2 id="defining-atom-geometry">Defining Atom Geometry</h2>
 <p>You can import pre-defined geometries based on <a href="https://en.wikipedia.org/wiki/Bravais_lattice">Bravais lattices</a> from <code>bloqade.analog.atom_arrangement</code>. You may also specify a lattice spacing which dictates the spacing between the atoms as well as the number of atom sites in a certain direction.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.analog.atom_arrangement</span><span class="w"> </span><span class="kn">import</span> <span class="n">Square</span><span class="p">,</span> <span class="n">Kagome</span>
