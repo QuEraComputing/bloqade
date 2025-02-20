@@ -1,8 +1,18 @@
+# %% [markdown]
+# # Pauli Exponentiation for Quantum Simulation
+# In this example, we will consider a simple Pauli Exponentiation circuit.
+
+# %%
 import math
 
 from bloqade import qasm2
 
+# %% [markdown]
+# First, we define the `zzzz_gadget` function which is a simple implementation of Pauli Z exponentiation
+# with a parameterized angle `gamma`.
 
+
+# %%
 @qasm2.extended
 def zzzz_gadget(targets: tuple[qasm2.Qubit, ...], gamma: float):
     for i in range(len(targets) - 1):
@@ -14,6 +24,12 @@ def zzzz_gadget(targets: tuple[qasm2.Qubit, ...], gamma: float):
         qasm2.cx(targets[-j - 1], targets[-j - 2])
 
 
+# %% [markdown]
+# Next, we define the `pauli_basis_change` function which is a simple implementation of Pauli basis change
+# with a parameterized start and end Pauli basis.
+
+
+# %%
 @qasm2.extended
 def pauli_basis_change(targets: tuple[qasm2.Qubit, ...], start: str, end: str):
     # assert len(targets) == len(start)
@@ -46,6 +62,10 @@ def pauli_basis_change(targets: tuple[qasm2.Qubit, ...], start: str, end: str):
             qasm2.rx(qubit, math.pi / 2)
 
 
+# %% [markdown]
+# Putting it all together, we define the `pauli_exponential` function which is a simple implementation of Pauli Exponentiation
+# with a parameterized Pauli basis and angle `gamma`.
+# %%
 @qasm2.extended
 def pauli_exponential(targets: tuple[qasm2.Qubit, ...], pauli: str, gamma: float):
     # assert len(targets) == len(pauli)
@@ -55,12 +75,20 @@ def pauli_exponential(targets: tuple[qasm2.Qubit, ...], pauli: str, gamma: float
     pauli_basis_change(targets=targets, start=pauli, end="Z" * len(targets))
 
 
+# %% [markdown]
+# Finally, we define the `main` function as the entry point of the program.
+
+
+# %%
 @qasm2.extended
 def main():
     register = qasm2.qreg(4)
     pauli_exponential((register[0], register[1], register[2]), "ZXY", 0.5)
 
 
+# %% [markdown]
+# we can now ask the compiler to emit the QASM2 code for the `main` function.
+# %%
 target = qasm2.emit.QASM2()
 ast = target.emit(main)
 qasm2.parse.pprint(ast)
