@@ -131,11 +131,9 @@ def qaoa_simd(G:nx.Graph)->kirin.ir.Method:
 
         def get_qubit(x: int):
             return qreg[x]
-        all_qubits = ilist.IList([get_qubit(i) for i in range(len(nodes))])
+        all_qubits = ilist.map(fn=get_qubit, collection=range(N))
         
         parallel_h(all_qubits)
-
-        
 
         
         for i in range(len(gamma)): # For each QAOA layer...
@@ -149,7 +147,7 @@ def qaoa_simd(G:nx.Graph)->kirin.ir.Method:
             # parallel local rotations.
             #qasm2.glob.u(theta=beta[i],phi=0.0,lam=0.0,registers=[qreg])
             qasm2.parallel.u(qargs=all_qubits, theta=beta[i], phi=0.0, lam=0.0)
-
+        
         return qreg
 
     return kernel
