@@ -5,10 +5,6 @@
          <lastmod>2025-02-20</lastmod>
     </url>
     <url>
-         <loc>https://special-engine-kg8jlr7.pages.github.io/dev/analog/</loc>
-         <lastmod>2025-02-20</lastmod>
-    </url>
-    <url>
          <loc>https://special-engine-kg8jlr7.pages.github.io/dev/background/</loc>
          <lastmod>2025-02-20</lastmod>
     </url>
@@ -18,10 +14,6 @@
     </url>
     <url>
          <loc>https://special-engine-kg8jlr7.pages.github.io/dev/install/</loc>
-         <lastmod>2025-02-20</lastmod>
-    </url>
-    <url>
-         <loc>https://special-engine-kg8jlr7.pages.github.io/dev/qasm2/</loc>
          <lastmod>2025-02-20</lastmod>
     </url>
     <url>
@@ -58,6 +50,18 @@
     </url>
     <url>
          <loc>https://special-engine-kg8jlr7.pages.github.io/dev/digital/examples/repeat_until_success/</loc>
+         <lastmod>2025-02-20</lastmod>
+    </url>
+    <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/dev/quick_start/analog/</loc>
+         <lastmod>2025-02-20</lastmod>
+    </url>
+    <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/dev/quick_start/digital/</loc>
+         <lastmod>2025-02-20</lastmod>
+    </url>
+    <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/dev/quick_start/digital/qasm2/</loc>
          <lastmod>2025-02-20</lastmod>
     </url>
     <url>
