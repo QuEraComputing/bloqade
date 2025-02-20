@@ -19,14 +19,14 @@ nav:
         - Analog:
           - quick_start/analog/index.md
       - Contributing: contrib.md
-  - Digital:
+  - Digital Tutorial:
     - digital/index.md
     - Quantum Fourier Transform: "digital/examples/qft.py"
     - GHZ state preparation: "digital/examples/ghz.py"
     - Pauli Exponential: "digital/examples/pauli_exponentiation.py"
     - Repeat Until Success: "digital/examples/repeat_until_success.py"
     - QAOA: "digital/examples/qaoa.py"
-  - Analog: 'https://queracomputing.github.io/bloqade-python/latest/'
+  - Analog Tutorial: 'https://queracomputing.github.io/bloqade-python/latest/'
   - Blog:
     - blog/index.md
   # - API Reference:
