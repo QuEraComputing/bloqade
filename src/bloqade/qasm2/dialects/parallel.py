@@ -90,9 +90,7 @@ class ParallelDag(interp.MethodTable):
 
     @interp.impl(CZ)
     def parallel_cz(self, interp: DagScheduleAnalysis, frame: ForwardFrame, stmt: CZ):
-        ctrls_ssa = interp.get_ilist_ssa(stmt.ctrls)
-        qargs_ssa = interp.get_ilist_ssa(stmt.qargs)
-        interp.update_dag(stmt, ctrls_ssa + qargs_ssa)
+        interp.update_dag(stmt, [stmt.qargs, stmt.ctrls])
         return ()
 
     @interp.impl(UGate)
@@ -102,12 +100,10 @@ class ParallelDag(interp.MethodTable):
         frame: ForwardFrame,
         stmt: UGate,
     ):
-        qargs_ssa = interp.get_ilist_ssa(stmt.qargs)
-        interp.update_dag(stmt, qargs_ssa)
+        interp.update_dag(stmt, [stmt.qargs])
         return ()
 
     @interp.impl(RZ)
     def parallel_rz(self, interp: DagScheduleAnalysis, frame: ForwardFrame, stmt: RZ):
-        qargs_ssa = interp.get_ilist_ssa(stmt.qargs)
-        interp.update_dag(stmt, qargs_ssa)
+        interp.update_dag(stmt, [stmt.qargs])
         return ()

@@ -1,5 +1,5 @@
 from kirin import ir, passes
-from kirin.prelude import basic
+from kirin.prelude import structural_no_opt
 from kirin.dialects import scf, func, ilist, lowering
 from bloqade.qasm2.dialects import (
     uop,
@@ -25,7 +25,18 @@ def gate(self):
         fold: bool = True,
     ):
         method.verify()
-        # TODO make special Function rewrite
+
+        if isinstance(method.code, func.Function):
+            new_code = expr.GateFunction(
+                sym_name=method.code.sym_name,
+                signature=method.code.signature,
+                body=method.code.body,
+            )
+            method.code = new_code
+        else:
+            raise ValueError(
+                "Gate Method code must be a Function, cannot be lambda/closure"
+            )
 
         if fold:
             fold_pass(method)
@@ -70,7 +81,7 @@ def main(self):
 
 
 @ir.dialect_group(
-    basic.union(
+    structural_no_opt.union(
         [
             inline,
             uop,
@@ -78,12 +89,8 @@ def main(self):
             noise,
             parallel,
             core,
-            lowering.func,
-            lowering.call,
         ]
     )
-    .discard(lowering.cf)
-    .add(scf)
 )
 def extended(self):
     fold_pass = passes.Fold(self)

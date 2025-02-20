@@ -3,13 +3,19 @@ Passes for converting parallel gates into multiple single gates as well as
 converting multiple single gates to parallel gates.
 """
 
+from typing import Type
 from dataclasses import dataclass
 
 from kirin import ir
 from kirin.rewrite import dce, walk, chain, result, fixpoint
 from bloqade.analysis import address, schedule
 from kirin.passes.abc import Pass
-from bloqade.qasm2.rewrite import ParallelToUOpRule, UOpToParallelRule
+from bloqade.qasm2.rewrite import (
+    MergePolicyABC,
+    ParallelToUOpRule,
+    UOpToParallelRule,
+    SimpleGreedyMergePolicy,
+)
 
 
 @dataclass
@@ -113,12 +119,20 @@ class UOpToParallel(Pass):
 
     """
 
+    merge_policy_type: Type[MergePolicyABC] = SimpleGreedyMergePolicy
+
     def generate_rule(self, mt: ir.Method):
         frame, _ = address.AddressAnalysis(mt.dialects).run_analysis(mt)
         dags = schedule.DagScheduleAnalysis(
             mt.dialects, address_analysis=frame.entries
         ).get_dags(mt)
-        return UOpToParallelRule(dags=dags, address_analysis=frame.entries)
+
+        return UOpToParallelRule(
+            {
+                block: self.merge_policy_type.from_analysis(dag, frame.entries)
+                for block, dag in dags.items()
+            }
+        )
 
     def unsafe_run(self, mt: ir.Method) -> result.RewriteResult:
         return fixpoint.Fixpoint(

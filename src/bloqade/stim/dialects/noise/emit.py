@@ -9,26 +9,27 @@ from ._dialect import dialect
 @dialect.register(key="emit.stim")
 class EmitStimNoiseMethods(MethodTable):
 
+    single_p_error_map: dict[str, str] = {
+        stmts.Depolarize1.name: "DEPOLARIZE1",
+        stmts.Depolarize2.name: "DEPOLARIZE2",
+        stmts.XError.name: "X_ERROR",
+        stmts.YError.name: "Y_ERROR",
+        stmts.ZError.name: "Z_ERROR",
+    }
+
+    @impl(stmts.XError)
+    @impl(stmts.YError)
+    @impl(stmts.ZError)
     @impl(stmts.Depolarize1)
-    def depolarize1(
+    @impl(stmts.Depolarize2)
+    def single_p_error(
         self, emit: EmitStimMain, frame: EmitStrFrame, stmt: stmts.Depolarize1
     ):
 
         targets: tuple[str, ...] = frame.get_values(stmt.targets)
         p: str = frame.get(stmt.p)
-        res = f"DEPOLARIZE1({p}) " + " ".join(targets)
-        emit.writeln(frame, res)
-
-        return ()
-
-    @impl(stmts.Depolarize2)
-    def depolarize2(
-        self, emit: EmitStimMain, frame: EmitStrFrame, stmt: stmts.Depolarize2
-    ):
-
-        targets: tuple[str, ...] = frame.get_values(stmt.targets)
-        p: str = frame.get(stmt.p)
-        res = f"DEPOLARIZE2({p}) " + " ".join(targets)
+        name = self.single_p_error_map[stmt.name]
+        res = f"{name}({p}) " + " ".join(targets)
         emit.writeln(frame, res)
 
         return ()

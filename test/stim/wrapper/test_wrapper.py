@@ -130,11 +130,11 @@ def test_wrapper_swap():
 
     @stim.main
     def main_swap():
-        stim.Swap(controls=(0, 1, 2), targets=(3, 4, 5), dagger=False)
+        stim.Swap(targets=(0, 3, 1, 4, 2, 5), dagger=False)
 
     @stim.main
     def main_swap_wrap():
-        stim.swap(controls=(0, 1, 2), targets=(3, 4, 5), dagger=False)
+        stim.swap(targets=(0, 3, 1, 4, 2, 5), dagger=False)
 
     assert main_swap.callable_region.is_structurally_equal(
         main_swap_wrap.callable_region

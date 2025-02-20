@@ -2,7 +2,7 @@ from dataclasses import field, dataclass
 
 from kirin import ir, interp
 from bloqade.types import QubitType
-from kirin.dialects import func, ilist
+from kirin.dialects import py, func, ilist
 from kirin.ir.dialect import Dialect as Dialect
 from bloqade.qasm2.parse import ast
 
@@ -29,30 +29,18 @@ class Ilist(interp.MethodTable):
         return (ilist.IList(data=frame.get_values(stmt.values)),)
 
 
+@py.constant.dialect.register(key="emit.qasm2.gate")
+class Constant(interp.MethodTable):
+
+    @interp.impl(py.Constant)
+    def emit_constant(
+        self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: py.Constant
+    ):
+        return (stmt.value,)
+
+
 @func.dialect.register(key="emit.qasm2.gate")
 class Func(interp.MethodTable):
-
-    @interp.impl(func.Function)
-    def emit_func(
-        self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: func.Function
-    ):
-        cparams, qparams = [], []
-        for arg in stmt.body.blocks[0].args[1:]:
-            name = frame.get(arg)
-            if not isinstance(name, ast.Name):
-                raise EmitError("expected ast.Name")
-            if arg.type.is_subseteq(QubitType):
-                qparams.append(name.id)
-            else:
-                cparams.append(name.id)
-        emit.run_ssacfg_region(frame, stmt.body)
-        emit.output = ast.Gate(
-            name=stmt.sym_name,
-            cparams=cparams,
-            qparams=qparams,
-            body=frame.body,
-        )
-        return ()
 
     @interp.impl(func.Call)
     def emit_call(self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: func.Call):

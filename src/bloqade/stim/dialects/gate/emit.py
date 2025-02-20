@@ -38,6 +38,22 @@ class EmitStimGateMethods(MethodTable):
 
         return ()
 
+    gate_2q_map: dict[str, tuple[str, str]] = {
+        stmts.Swap.name: ("SWAP", "SWAP"),
+    }
+
+    @impl(stmts.Swap)
+    def two_qubit_gate(
+        self, emit: EmitStimMain, frame: EmitStrFrame, stmt: ControlledTwoQubitGate
+    ):
+        targets: tuple[str, ...] = frame.get_values(stmt.targets)
+        res = f"{self.gate_ctrl_2q_map[stmt.name][int(stmt.dagger)]} " + " ".join(
+            targets
+        )
+        emit.writeln(frame, res)
+
+        return ()
+
     gate_ctrl_2q_map: dict[str, tuple[str, str]] = {
         stmts.CX.name: ("CX", "CX"),
         stmts.CY.name: ("CY", "CY"),
@@ -48,11 +64,9 @@ class EmitStimGateMethods(MethodTable):
     @impl(stmts.CX)
     @impl(stmts.CY)
     @impl(stmts.CZ)
-    @impl(stmts.Swap)
-    def two_qubit_gate(
+    def ctrl_two_qubit_gate(
         self, emit: EmitStimMain, frame: EmitStrFrame, stmt: ControlledTwoQubitGate
     ):
-
         controls: tuple[str, ...] = frame.get_values(stmt.controls)
         targets: tuple[str, ...] = frame.get_values(stmt.targets)
         res = f"{self.gate_ctrl_2q_map[stmt.name][int(stmt.dagger)]} " + " ".join(

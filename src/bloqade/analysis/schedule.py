@@ -12,9 +12,8 @@ from kirin.lattice import (
     SimpleMeetMixin,
 )
 from kirin.analysis import Forward, ForwardFrame
-from kirin.dialects import func, ilist
+from kirin.dialects import func
 from bloqade.analysis import address
-from kirin.interp.exceptions import InterpreterError
 from bloqade.qasm2.parse.print import Printer
 
 
@@ -108,6 +107,49 @@ class StmtDag(graph.Graph[ir.Statement]):
     ) -> None:
         raise NotImplementedError
 
+    def topological_groups(self):
+        """Split the dag into topological groups where each group
+        contains nodes that have no dependencies on each other, but
+        have dependencies on nodes in one or more previous groups.
+
+        Yields:
+            List[str]: A list of node ids in a topological group
+
+
+        Raises:
+            ValueError: If a cyclic dependency is detected
+
+
+        The idea is to yield all nodes with no dependencies, then remove
+        those nodes from the graph repeating until no nodes are left
+        or we reach some upper limit. Worse case is a linear dag,
+        so we can use len(dag.stmts) as the upper limit
+
+        If we reach the limit and there are still nodes left, then we
+        have a cyclic dependency.
+        """
+
+        inc_edges = {k: set(v) for k, v in self.inc_edges.items()}
+
+        check_next = inc_edges.keys()
+
+        for _ in range(len(self.stmts)):
+            if len(inc_edges) == 0:
+                break
+
+            group = [node_id for node_id in check_next if len(inc_edges[node_id]) == 0]
+            yield group
+
+            check_next = set()
+            for n in group:
+                inc_edges.pop(n)
+                for m in self.out_edges[n]:
+                    check_next.add(m)
+                    inc_edges[m].remove(n)
+
+        if inc_edges:
+            raise ValueError("Cyclic dependency detected")
+
 
 @dataclass
 class DagScheduleAnalysis(Forward[GateSchedule]):
@@ -120,10 +162,10 @@ class DagScheduleAnalysis(Forward[GateSchedule]):
     stmt_dags: Dict[ir.Block, StmtDag] = field(init=False)
 
     def initialize(self):
-        super().initialize()
         self.use_def = {}
         self.stmt_dag = StmtDag()
         self.stmt_dags = {}
+        return super().initialize()
 
     def push_current_dag(self, block: ir.Block):
         # run when hitting terminator statements
@@ -149,37 +191,27 @@ class DagScheduleAnalysis(Forward[GateSchedule]):
 
         return tuple(self.lattice.top() for _ in stmt.results)
 
-    def update_dag(self, stmt: ir.Statement, args: Sequence[ir.SSAValue]):
-        addrs = [
-            self.address_analysis.get(arg, address.Address.bottom()) for arg in args
-        ]
-
-        for addr in addrs:
-            if not isinstance(addr, address.AddressQubit):
-                continue
-
-            if addr.data in self.use_def:
-                self.stmt_dag.add_edge(self.use_def[addr.data], stmt)
-
-        for addr in addrs:
-            if not isinstance(addr, address.AddressQubit):
-                continue
-
+    def _update_dag(self, stmt: ir.Statement, addr: address.Address):
+        if isinstance(addr, address.AddressQubit):
+            old_stmt = self.use_def.get(addr.data, None)
+            if old_stmt is not None:
+                self.stmt_dag.add_edge(old_stmt, stmt)
             self.use_def[addr.data] = stmt
+        elif isinstance(addr, address.AddressReg):
+            for idx in addr.data:
+                old_stmt = self.use_def.get(idx, None)
+                if old_stmt is not None:
+                    self.stmt_dag.add_edge(old_stmt, stmt)
+                self.use_def[idx] = stmt
+        elif isinstance(addr, address.AddressTuple):
+            for sub_addr in addr.data:
+                self._update_dag(stmt, sub_addr)
 
-    def get_ilist_ssa(self, value: ir.SSAValue):
-        addr = self.address_analysis[value]
-
-        if not isinstance(addr, address.AddressTuple):
-            raise InterpreterError(f"Expected AddressTuple, got {addr}")
-
-        if not all(isinstance(addr, address.AddressQubit) for addr in addr.data):
-            raise InterpreterError("Expected AddressQubit")
-
-        assert isinstance(value, ir.ResultValue)
-        assert isinstance(value.stmt, ilist.New)
-
-        return value.stmt.values
+    def update_dag(self, stmt: ir.Statement, args: Sequence[ir.SSAValue]):
+        for arg in args:
+            self._update_dag(
+                stmt, self.address_analysis.get(arg, address.Address.bottom())
+            )
 
     def get_dags(self, mt: ir.Method, args=None, kwargs=None):
         if args is None:

@@ -3,39 +3,39 @@
     on [GitHub](https://github.com/QuEraComputing/bloqade/issues/new) if you need help or want to
     contribute.
 
-## Quick Start
+# Quick Start
 
 All the sections below are self-contained, you can click on the links in the Table of Contents to read the relevant parts.
 
-### Navigating the Bloqade API
+## Navigating the Bloqade API
 
 As you develop your Bloqade program, you are expected to rely on pop-up "hints" provided in your development environment to help you determine what the next part of your program should be.
 
-#### VS Code
+### VS Code
 
 In [VS Code](https://code.visualstudio.com/) this is automatic, just type the `.` and see what options pop up:
 
-![VSCode Hints](../assets/quick_start/vscode-hints.gif)
+![VSCode Hints](assets/quick_start/vscode-hints.gif)
 
-#### JetBrains PyCharm
+### JetBrains PyCharm
 
 The same goes for [JetBrains PyCharm](https://www.jetbrains.com/pycharm/):
 
-![PyCharm Hints](../assets/quick_start/pycharm-hints.gif)
+![PyCharm Hints](assets/quick_start/pycharm-hints.gif)
 
-#### Jupyter Notebook
+### Jupyter Notebook
 
 In a [Jupyter Notebook](https://jupyter.org/) you'll need to type `.` and then hit tab for the hints to appear:
 
-![Jupyter Hints](../assets/quick_start/jupyter-hints.gif)
+![Jupyter Hints](assets/quick_start/jupyter-hints.gif)
 
-#### IPython
+### IPython
 
 The same goes for [IPython](https://ipython.readthedocs.io/en/stable/):
 
-![IPython Hints](../assets/quick_start/ipython-hints.gif)
+![IPython Hints](assets/quick_start/ipython-hints.gif)
 
-### Defining Atom Geometry
+## Defining Atom Geometry
 
 You can import pre-defined geometries based on [Bravais lattices](https://en.wikipedia.org/wiki/Bravais_lattice) from `bloqade.atom_arrangement`. You may also specify a lattice spacing which dictates the spacing between the atoms as well as the number of atom sites in a certain direction.
 
@@ -52,7 +52,7 @@ You can easily visualize your geometries as well with `.show()`:
 more_complex_geometry.show()
 ```
 <figure markdown="span">
-![IPython Hints](../assets/quick_start/geometry-visualization.png){ width="50%" }
+![IPython Hints](assets/quick_start/geometry-visualization.png){ width="50%" }
 </figure>
 
 
@@ -82,7 +82,7 @@ from bloqade import start
 my_geometry = start.add_position([(1,2), (3,4), (5,6)])
 ```
 
-### Building Waveforms
+## Building Waveforms
 
 After you've [defined a geometry](#defining-atom-geometry) you:
 
@@ -112,7 +112,7 @@ You aren't restricted to just piecewise linear waveforms however, you can also s
 * [`poly`]() - Define a polynomial waveform using coefficients over a duration
 
 
-### Arbitrary Functions as Waveforms
+## Arbitrary Functions as Waveforms
 
 For more complex waveforms it may provide to be tedious trying to chain together a large number of [`piecewise_constant`]() or [`piecewise_linear`]() methods and instead easier to just define the waveform as a function of time.
 
@@ -154,7 +154,7 @@ custom_discretized_waveform_applied = (
     Programs that have custom functions as waveforms are not fully serializable. This means that when you are [saving and reloading results](#saving-and-loading-results), the original embedded program will be missing that custom waveform. You will still be able to analyze the saved results!
 
 
-### Slicing and Recording Waveforms
+## Slicing and Recording Waveforms
 
 When you conduct [parameter sweeps](#parameter-sweeps) with your program, you may want to sweep over your program across  time. This will require "slicing" your waveforms, where you define the waveform of interest and then, using a variable with `.slice`, indicate the times at which the waveform duration should be cut short.
 
@@ -198,7 +198,7 @@ vars_assigned_program = sliced_program.batch_assign(run_time=run_times)
 ```
 
 
-### Waveforms with No Geometry
+## Waveforms with No Geometry
 
 If you have multiple [atom geometries](#defining-atom-geometry) you'd like to apply a [pulse sequence](#building-waveforms) to or you simply don't want to worry about what atom geometry to start with, you can just build straight off of `start`:
 
@@ -219,7 +219,7 @@ You can visualize your sequence as well with `.show()`:
 pulse_sequence.show()
 ```
 
-![](../assets/quick_start/pulse-sequence-visualization.png)
+![](assets/quick_start/pulse-sequence-visualization.png)
 
 And when you're content with it you just `.apply()` it on the geometries of your choice:
 
@@ -233,7 +233,7 @@ program_1  = geometry_1.apply(pulse_sequence)
 program_2  = geometry_2.apply(pulse_sequence)
 ```
 
-### Emulation
+## Emulation
 
 When you've completed the definition of your program you can use Bloqade's own emulator to get results.
 The emulation performs the [time evolution][rydberg-hamiltonian] of the [analog Rydberg Hamiltonian][rydberg-hamiltonian].
@@ -256,7 +256,7 @@ results = your_program.bloqade.python().run(1000)
     results = your_program.bloqade.python().run(1000, interaction_picture=True)
     ```
 
-### Submitting to Hardware
+## Submitting to Hardware
 
 To submit your program to hardware ensure you have your AWS Braket credentials loaded. You will need to use the [AWS CLI]() to do this.
 
@@ -283,7 +283,7 @@ Which gives us the Task ID, a unique identifier for the task as well as the stat
 ```
 
 
-### Analyzing Results
+## Analyzing Results
 
 When you've retrieved your results from either [emulation](#emulation) or [hardware](#submitting-to-hardware) you can generate a `.report()`:
 
@@ -333,11 +333,11 @@ And can also provide useful visual information such as the state of your atoms a
 report.show()
 ```
 
-![](../assets/quick_start/report-visualization.png)
+![](assets/quick_start/report-visualization.png)
 
 
 
-### Parameter Sweeps
+## Parameter Sweeps
 
 You can easily do parameter sweeps in emulation and on *Aquila* with variables. Bloqade automatically detects strings in your program as variables that you can later assign singular or multiple values to.
 
@@ -389,7 +389,7 @@ results = callable_program(1.0, shots=100)
 
 Variables aren't just restricted to having values assigned to them, you can also [symbolically manipulate](#symbolic-parameters) them!
 
-### Symbolic Parameters
+## Symbolic Parameters
 
 [Variables](#parameter-sweeps) in Bloqade can also be symbolically manipulated, giving you even more flexibility when you construct your program.
 
@@ -450,7 +450,7 @@ program = detuning_waveform.assign(a=0.5, b=1.2, c=0.5)
 ```
 
 
-### Saving and Loading Results
+## Saving and Loading Results
 
 You can save your results in JSON format using Bloqade's `save` function:
 
