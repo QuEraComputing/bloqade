@@ -7,34 +7,6 @@
 
 All the sections below are self-contained, you can click on the links in the Table of Contents to read the relevant parts.
 
-## Navigating the Bloqade API
-
-As you develop your Bloqade program, you are expected to rely on pop-up "hints" provided in your development environment to help you determine what the next part of your program should be.
-
-### VS Code
-
-In [VS Code](https://code.visualstudio.com/) this is automatic, just type the `.` and see what options pop up:
-
-![VSCode Hints](vscode-hints.gif)
-
-### JetBrains PyCharm
-
-The same goes for [JetBrains PyCharm](https://www.jetbrains.com/pycharm/):
-
-![PyCharm Hints](pycharm-hints.gif)
-
-### Jupyter Notebook
-
-In a [Jupyter Notebook](https://jupyter.org/) you'll need to type `.` and then hit tab for the hints to appear:
-
-![Jupyter Hints](jupyter-hints.gif)
-
-### IPython
-
-The same goes for [IPython](https://ipython.readthedocs.io/en/stable/):
-
-![IPython Hints](ipython-hints.gif)
-
 ## Defining Atom Geometry
 
 You can import pre-defined geometries based on [Bravais lattices](https://en.wikipedia.org/wiki/Bravais_lattice) from `bloqade.analog.atom_arrangement`. You may also specify a lattice spacing which dictates the spacing between the atoms as well as the number of atom sites in a certain direction.
