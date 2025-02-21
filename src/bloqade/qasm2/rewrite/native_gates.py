@@ -12,6 +12,7 @@ from kirin import ir
 from kirin.rewrite import abc, result
 from kirin.dialects import py
 from bloqade.qasm2.dialects import uop, expr
+from cirq.circuits.qasm_output import QasmUGate
 from cirq.transformers.target_gatesets.compilation_target_gateset import (
     CompilationTargetGateset,
 )
@@ -170,7 +171,7 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
             node,
         )
 
-    def rewrite_cry(self, node: uop.CRX) -> abc.RewriteResult:
+    def rewrite_cry(self, node: uop.CRY) -> abc.RewriteResult:
         lam = self._get_const_value(node.lam)
 
         if lam is None:
@@ -183,7 +184,7 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
             node,
         )
 
-    def rewrite_crz(self, node: uop.CRX) -> abc.RewriteResult:
+    def rewrite_crz(self, node: uop.CRZ) -> abc.RewriteResult:
         lam = self._get_const_value(node.lam)
 
         if lam is None:
@@ -192,6 +193,116 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
         return self._rewrite_2q_ctrl_gates(
             cirq.ControlledGate(cirq.Rz(rads=lam), 1).on(
                 self.cached_qubits[0], self.cached_qubits[1]
+            ),
+            node,
+        )
+
+    def rewrite_cu1(self, node: uop.CU1) -> abc.RewriteResult:
+
+        lam = self._get_const_value(node.lam)
+
+        if lam is None:
+            return abc.RewriteResult()
+
+        # cirq.ControlledGate(u3(0, 0, lambda))
+        return self._rewrite_2q_ctrl_gates(
+            cirq.ControlledGate(QasmUGate(0, 0, lam / math.pi)).on(
+                self.cached_qubits[0], self.cached_qubits[1]
+            ),
+            node,
+        )
+        pass
+
+    def rewrite_cu3(self, node: uop.CU3) -> abc.RewriteResult:
+
+        theta = self._get_const_value(node.theta)
+        lam = self._get_const_value(node.lam)
+        phi = self._get_const_value(node.phi)
+
+        if not all((theta, phi, lam)):
+            return abc.RewriteResult()
+
+        # cirq.ControlledGate(u3(theta, lambda phi))
+        return self._rewrite_2q_ctrl_gates(
+            cirq.ControlledGate(
+                QasmUGate(theta / math.pi, phi / math.pi, lam / math.pi).on(
+                    self.cached_qubits[0], self.cached_qubits[1]
+                )
+            ),
+            node,
+        )
+
+    def rewrite_cu(self, node: uop.CU) -> abc.RewriteResult:
+
+        gamma = self._get_const_value(node.gamma)
+        theta = self._get_const_value(node.theta)
+        lam = self._get_const_value(node.lam)
+        phi = self._get_const_value(node.phi)
+
+        # decompose the CU by defining a custom Cirq Gate with the qelib1 definition
+        # Need to be careful about the fact that U(theta, phi, lambda) in standard QASM2
+        # and its variants
+        class CU(cirq.Gate):
+            def __init__(self):
+                super()
+
+            def _num_qubits_(self):
+                return 2
+
+            def _decompose_(self, qubits):
+                ctrl, target = qubits
+                # taken from qelib1 definition
+                # p(gamma) c;
+                yield QasmUGate(0, 0, gamma / math.pi)(ctrl)
+                # p((lambda+phi/2)) c;
+                yield QasmUGate(0, 0, (lam + phi / 2) / math.pi)(ctrl)
+                # p((lambda-phi/2)) t;
+                yield QasmUGate(0, 0, (lam - phi / 2) / math.pi)(target)
+                # cx c,t
+                yield cirq.CX(ctrl, target)
+                # u(-theta/2, 0, -(phi+lambda/2)) t;
+                yield QasmUGate((-theta / 2) / math.pi, 0, -(phi + lam / 2) / math.pi)(
+                    target
+                )
+                # cx c,t
+                yield cirq.CX(ctrl, target)
+                # u(theta/2, phi, 0) t;
+                yield QasmUGate((theta / 2) / math.pi, phi / math.pi, 0)(target)
+
+            def _circuit_diagram_info_(self, args):
+                return "*", "CU"
+
+        # need to create custom 2q gate, then feed that into rewrite_2q
+
+        return self._rewrite_2q_ctrl_gates(
+            CU().on(self.cached_qubits[0], self.cached_qubits[1]), node
+        )
+
+    def rewrite_rxx(self, node: uop.RXX) -> abc.RewriteResult:
+
+        theta = self._get_const_value(node.theta)
+
+        if theta is None:
+            return abc.RewriteResult()
+
+        # even though the XX gate is not controlled,
+        # the end U + CZ decomposition that happens internally means
+        return self._rewrite_2q_ctrl_gates(
+            cirq.XXPowGate(
+                self.cached_qubits[0], self.cached_qubits[1], exponent=theta
+            ),
+            node,
+        )
+
+    def rewrite_rzz(self, node: uop.RZZ) -> abc.RewriteResult:
+        theta = self._get_const_value(node.theta)
+
+        if theta is None:
+            return abc.RewriteResult()
+
+        return self._rewrite_2q_ctrl_gates(
+            cirq.ZZPowGate(
+                self.cached_qubits[0], self.cached_qubits[1], exponent=theta
             ),
             node,
         )
