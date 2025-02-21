@@ -31,11 +31,11 @@ class RydbergTargetGateset(cirq.CZTargetGateset):
 
 
 def one_qubit_gate_to_u3_angles(op: cirq.Operation) -> tuple[float, float, float]:
-    mat = cirq.unitary(op)
-    phi0, phi1, phi2 = (  # Z angle, Y angle, then Z angle
-        cirq.deconstruct_single_qubit_matrix_into_angles(mat)
+    phi, theta, lam = (  # Z angle, Y angle, then Z angle
+        cirq.deconstruct_single_qubit_matrix_into_angles(cirq.unitary(op))
     )
-    return phi0, phi1, phi2
+
+    return theta, phi, lam
 
 
 @dataclass
@@ -59,6 +59,9 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
         return result.RewriteResult()
 
     def rewrite_barrier(self, node: uop.Barrier) -> result.RewriteResult:
+        return result.RewriteResult()
+
+    def rewrite_cz(self, node: uop.CZ) -> result.RewriteResult:
         return result.RewriteResult()
 
     def rewrite_CX(self, node: uop.CX) -> result.RewriteResult:
@@ -326,22 +329,25 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
     ) -> result.RewriteResult:
         target_gates = self.gateset.decompose_to_target_gateset(cirq_gate, 0)
 
+        if isinstance(target_gates, cirq.GateOperation):
+            target_gates = [target_gates]
+
         new_stmts = []
         for new_gate in target_gates:
-            phi0, phi1, phi2 = one_qubit_gate_to_u3_angles(new_gate)
-            phi0_stmt = expr.ConstFloat(value=phi0)
-            phi1_stmt = expr.ConstFloat(value=phi1)
-            phi2_stmt = expr.ConstFloat(value=phi2)
+            theta, phi, lam = one_qubit_gate_to_u3_angles(new_gate)
+            theta_stmt = expr.ConstFloat(value=theta)
+            phi_stmt = expr.ConstFloat(value=phi)
+            lam_stmt = expr.ConstFloat(value=lam)
 
-            new_stmts.append(phi0_stmt)
-            new_stmts.append(phi1_stmt)
-            new_stmts.append(phi2_stmt)
+            new_stmts.append(theta_stmt)
+            new_stmts.append(phi_stmt)
+            new_stmts.append(lam_stmt)
             new_stmts.append(
                 uop.UGate(
                     qarg=node.qarg,
-                    theta=phi0_stmt.result,
-                    phi=phi1_stmt.result,
-                    lam=phi2_stmt.result,
+                    theta=theta_stmt.result,
+                    phi=phi_stmt.result,
+                    lam=lam_stmt.result,
                 )
             )
         return self._rewrite_gate_stmts(new_gate_stmts=new_stmts, node=node)
