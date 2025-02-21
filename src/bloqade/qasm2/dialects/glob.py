@@ -1,10 +1,12 @@
+from typing import Any
+
 from kirin import ir, types, interp
 from kirin.decl import info, statement
 from kirin.dialects import ilist
-from bloqade.qasm2.types import QRegType
-from bloqade.analysis.schedule import DagScheduleAnalysis
 from bloqade.qasm2.parse import ast
+from bloqade.qasm2.types import QRegType
 from bloqade.qasm2.emit.gate import EmitQASM2Gate, EmitQASM2Frame
+from bloqade.analysis.schedule import DagScheduleAnalysis
 
 dialect = ir.Dialect("qasm2.glob")
 
@@ -25,7 +27,6 @@ class Glob(interp.MethodTable):
     def ugate(self, interp: DagScheduleAnalysis, frame: interp.Frame, stmt: UGate):
         interp.update_dag(stmt, [stmt.registers])
         return ()
-
 
 
 @dialect.register(key="emit.qasm2.gate")
