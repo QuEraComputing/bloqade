@@ -3,6 +3,8 @@ from kirin.decl import info, statement
 from kirin.dialects import ilist
 from bloqade.qasm2.types import QRegType
 from bloqade.analysis.schedule import DagScheduleAnalysis
+from bloqade.qasm2.parse import ast
+from bloqade.qasm2.emit.gate import EmitQASM2Gate, EmitQASM2Frame
 
 dialect = ir.Dialect("qasm2.glob")
 
@@ -22,4 +24,28 @@ class Glob(interp.MethodTable):
     @interp.impl(UGate)
     def ugate(self, interp: DagScheduleAnalysis, frame: interp.Frame, stmt: UGate):
         interp.update_dag(stmt, [stmt.registers])
+        return ()
+
+
+
+@dialect.register(key="emit.qasm2.gate")
+class GlobEmit(interp.MethodTable):
+
+    def _emit_parallel_qargs(
+        self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, qargs: ir.SSAValue
+    ):
+        qargs_: ilist.IList[ast.Node, Any] = frame.get(qargs)  # type: ignore
+        return [emit.assert_node(ast.Name, qarg) for qarg in qargs_]
+
+    @interp.impl(UGate)
+    def ugate(self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: UGate):
+        qargs = self._emit_parallel_qargs(emit, frame, stmt.registers)
+        theta = emit.assert_node(ast.Expr, frame.get(stmt.theta))
+        phi = emit.assert_node(ast.Expr, frame.get(stmt.phi))
+        lam = emit.assert_node(ast.Expr, frame.get(stmt.lam))
+        frame.body.append(
+            ast.GlobUGate(
+                theta=theta, phi=phi, lam=lam, registers=ast.ParallelQArgs(qargs=qargs)
+            )
+        )
         return ()
