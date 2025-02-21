@@ -225,10 +225,8 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
         # cirq.ControlledGate(u3(theta, lambda phi))
         return self._rewrite_2q_ctrl_gates(
             cirq.ControlledGate(
-                QasmUGate(theta / math.pi, phi / math.pi, lam / math.pi).on(
-                    self.cached_qubits[0], self.cached_qubits[1]
-                )
-            ),
+                QasmUGate(theta / math.pi, phi / math.pi, lam / math.pi)
+            ).on(self.cached_qubits[0], self.cached_qubits[1]),
             node,
         )
 
@@ -288,8 +286,8 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
         # even though the XX gate is not controlled,
         # the end U + CZ decomposition that happens internally means
         return self._rewrite_2q_ctrl_gates(
-            cirq.XXPowGate(
-                self.cached_qubits[0], self.cached_qubits[1], exponent=theta
+            cirq.XXPowGate(exponent=theta).on(
+                self.cached_qubits[0], self.cached_qubits[1]
             ),
             node,
         )
@@ -301,8 +299,8 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
             return abc.RewriteResult()
 
         return self._rewrite_2q_ctrl_gates(
-            cirq.ZZPowGate(
-                self.cached_qubits[0], self.cached_qubits[1], exponent=theta
+            cirq.ZZPowGate(exponent=theta).on(
+                self.cached_qubits[0], self.cached_qubits[1]
             ),
             node,
         )
