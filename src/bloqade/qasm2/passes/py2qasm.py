@@ -1,5 +1,4 @@
-"""Rewrite py dialects into qasm dialects.
-"""
+"""Rewrite py dialects into qasm dialects."""
 
 from kirin import ir
 from kirin.passes import Pass
@@ -7,7 +6,7 @@ from kirin.rewrite import Walk, Fixpoint
 from kirin.dialects import py, math
 from kirin.rewrite.abc import RewriteRule
 from kirin.rewrite.result import RewriteResult
-from bloqade.qasm2.dialects import expr
+from bloqade.qasm2.dialects import core, expr
 
 
 class _Py2QASM(RewriteRule):
@@ -46,6 +45,13 @@ class _Py2QASM(RewriteRule):
             if (pystmt := self.UNARY_OPS.get(type(node))) is not None:
                 node.replace_by(pystmt(node.value))
                 return RewriteResult(has_done_something=True)
+        elif isinstance(node, py.cmp.Eq):
+            node.replace_by(core.CRegEq(node.lhs, node.rhs))
+            return RewriteResult(has_done_something=True)
+        elif isinstance(node, py.assign.Alias):
+            node.result.replace_by(node.value)
+            node.delete()
+            return RewriteResult(has_done_something=True)
         return RewriteResult()
 
 

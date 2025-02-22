@@ -21,7 +21,8 @@ class QASM2:
         self,
         main_target: ir.DialectGroup | None = None,
         gate_target: ir.DialectGroup | None = None,
-        qelib1: bool = False,
+        qelib1: bool = True,
+        custom_gate: bool = True,
     ) -> None:
         """Initialize the QASM2 target.
 
@@ -36,13 +37,16 @@ class QASM2:
             qelib1 (bool):
                 Include the `include "qelib1.inc"` line in the resulting QASM2 AST that's
                 submitted to qBraid. Defaults to `True`.
+            custom_gate (bool):
+                Include the custom gate definitions in the resulting QASM2 AST. Defaults to `True`. If `False`, all the qasm2.gate will be inlined.
+
         """
         from bloqade import qasm2
 
         self.main_target = main_target or qasm2.main
         self.gate_target = gate_target or qasm2.gate
         self.qelib1 = qelib1
-        self.custom_gate = False
+        self.custom_gate = custom_gate
 
     def emit(self, entry: ir.Method) -> ast.MainProgram:
         """Emit a QASM2 AST from the Bloqade kernel.
@@ -58,18 +62,22 @@ class QASM2:
         """
         assert len(entry.args) == 0, "entry method should not have arguments"
         entry = entry.similar()
-        QASM2Fold(entry.dialects).fixpoint(entry)
+        QASM2Fold(entry.dialects, inline_gate_subroutine=not self.custom_gate).fixpoint(
+            entry
+        )
         Py2QASM(entry.dialects)(entry)
         target_main = EmitQASM2Main(self.main_target)
         target_main.run(
             entry, tuple(ast.Name(name) for name in entry.arg_names[1:])
         ).expect()
+
         main_program = target_main.output
         assert main_program is not None, f"failed to emit {entry.sym_name}"
 
         extra = []
         if self.qelib1:
             extra.append(ast.Include("qelib1.inc"))
+
         if self.custom_gate:
             cg = CallGraph(entry)
             target_gate = EmitQASM2Gate(self.gate_target)

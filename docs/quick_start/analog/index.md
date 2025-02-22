@@ -7,40 +7,12 @@
 
 All the sections below are self-contained, you can click on the links in the Table of Contents to read the relevant parts.
 
-## Navigating the Bloqade API
-
-As you develop your Bloqade program, you are expected to rely on pop-up "hints" provided in your development environment to help you determine what the next part of your program should be.
-
-### VS Code
-
-In [VS Code](https://code.visualstudio.com/) this is automatic, just type the `.` and see what options pop up:
-
-![VSCode Hints](assets/quick_start/vscode-hints.gif)
-
-### JetBrains PyCharm
-
-The same goes for [JetBrains PyCharm](https://www.jetbrains.com/pycharm/):
-
-![PyCharm Hints](assets/quick_start/pycharm-hints.gif)
-
-### Jupyter Notebook
-
-In a [Jupyter Notebook](https://jupyter.org/) you'll need to type `.` and then hit tab for the hints to appear:
-
-![Jupyter Hints](assets/quick_start/jupyter-hints.gif)
-
-### IPython
-
-The same goes for [IPython](https://ipython.readthedocs.io/en/stable/):
-
-![IPython Hints](assets/quick_start/ipython-hints.gif)
-
 ## Defining Atom Geometry
 
-You can import pre-defined geometries based on [Bravais lattices](https://en.wikipedia.org/wiki/Bravais_lattice) from `bloqade.atom_arrangement`. You may also specify a lattice spacing which dictates the spacing between the atoms as well as the number of atom sites in a certain direction.
+You can import pre-defined geometries based on [Bravais lattices](https://en.wikipedia.org/wiki/Bravais_lattice) from `bloqade.analog.atom_arrangement`. You may also specify a lattice spacing which dictates the spacing between the atoms as well as the number of atom sites in a certain direction.
 
 ```python
-from bloqade.atom_arrangement import Square, Kagome
+from bloqade.analog.atom_arrangement import Square, Kagome
 
 simple_geometry = Square(2, 4, lattice_spacing = 4.0)
 more_complex_geometry = Kagome(2, 2, lattice_spacing = 2.0)
@@ -52,14 +24,14 @@ You can easily visualize your geometries as well with `.show()`:
 more_complex_geometry.show()
 ```
 <figure markdown="span">
-![IPython Hints](assets/quick_start/geometry-visualization.png){ width="50%" }
+![IPython Hints](geometry-visualization.png){ width="50%" }
 </figure>
 
 
 You can also add positions to a pre-defined geometry:
 
 ```python
-from bloqade.atom_arrangement import Square
+from bloqade.analog.atom_arrangement import Square
 
 base_geometry = Square(2)
 geometry_with_my_positions = base_geometry.add_position([(10,10), (20,20)])
@@ -68,7 +40,7 @@ geometry_with_my_positions = base_geometry.add_position([(10,10), (20,20)])
 As well as apply defects via `.apply_defect_density`. In the example below we apply a defect with a probability of 0.2:
 
 ```python
-from bloqade.atom_arrangement import Square, Kagome
+from bloqade.analog.atom_arrangement import Square, Kagome
 
 more_complex_geometry = Kagome(2, 2, lattice_spacing = 2.0)
 defective_geometry = more_complex_geometry.apply_defect_density(0.2)
@@ -77,7 +49,7 @@ defective_geometry = more_complex_geometry.apply_defect_density(0.2)
 Or if you want to completely roll out your own atom geometry from scratch just use `add_position` by itself:
 
 ```python
-from bloqade import start
+from bloqade.analog import start
 
 my_geometry = start.add_position([(1,2), (3,4), (5,6)])
 ```
@@ -94,7 +66,7 @@ Which then leads you to the ability to specify a waveform of interest and begin 
 In the example below, we target the ground-Rydberg level coupling to drive with uniform [spatial modulation][local-control] for the Rabi amplitude. Our waveform is a piecewise linear one which ramps from $0$ to $5 \,\text{rad/us}$, holds that value for $1 \,\text{us}$ and then ramps back down to $0 \,\text{rad/us}$.
 
 ```python
-from bloqade import start
+from bloqade.analog import start
 
 geometry = start.add_position((0,0))
 target_rabi_amplitude = geometry.rydberg.rabi.amplitude.uniform
@@ -119,7 +91,7 @@ For more complex waveforms it may provide to be tedious trying to chain together
 Bloqade lets you easily plug in an arbitrary function with `.fn`:
 
 ```python
-from bloqade import start
+from bloqade.analog import start
 from math import sin
 
 geometry = start.add_position((0,0))
@@ -162,7 +134,7 @@ In the example below we define a simple piecewise linear waveform but slice it s
 
 
 ```python
-from bloqade import start
+from bloqade.analog import start
 import numpy as np
 
 sliced_program = (
@@ -181,7 +153,7 @@ This program will run fine in [emulation](#emulation) but due to hardware constr
 In the program below the waveform is still sliced but with the help of `.record` a linear segment that pulls the waveform down to $0.0 \,\text{rad}/\text{us}$ from whatever its current value at the slice is in $0.7 \,\text{us}$ is added.
 
 ```python
-from bloqade import start
+from bloqade.analog import start
 import numpy as np
 
 sliced_program = (
@@ -203,7 +175,7 @@ vars_assigned_program = sliced_program.batch_assign(run_time=run_times)
 If you have multiple [atom geometries](#defining-atom-geometry) you'd like to apply a [pulse sequence](#building-waveforms) to or you simply don't want to worry about what atom geometry to start with, you can just build straight off of `start`:
 
 ```python
-from bloqade import start
+from bloqade.analog import start
 
 pulse_sequence = (
     start
@@ -219,12 +191,12 @@ You can visualize your sequence as well with `.show()`:
 pulse_sequence.show()
 ```
 
-![](assets/quick_start/pulse-sequence-visualization.png)
+![](pulse-sequence-visualization.png)
 
 And when you're content with it you just `.apply()` it on the geometries of your choice:
 
 ```python
-from bloqade.atom_arrangement import Honeycomb, Kagome
+from bloqade.analog.atom_arrangement import Honeycomb, Kagome
 
 geometry_1 = Honeycomb(2, lattice_spacing = 6.0)
 geometry_2 = Kagome(2, lattice_spacing = 6.0)
@@ -333,9 +305,7 @@ And can also provide useful visual information such as the state of your atoms a
 report.show()
 ```
 
-![](assets/quick_start/report-visualization.png)
-
-
+![](report-visualization.png)
 
 ## Parameter Sweeps
 
@@ -344,7 +314,7 @@ You can easily do parameter sweeps in emulation and on *Aquila* with variables. 
 In the example below, we define a program with a singular variable that controls the amplitude of the waveform.
 
 ```python
-from bloqade import start
+from bloqade.analog import start
 
 rabi_oscillations_program = (
     start.add_position((0, 0))
@@ -396,7 +366,7 @@ Variables aren't just restricted to having values assigned to them, you can also
 In the example below, we externally declare a variable `my_var` that then has some arithmetic done on it to allow it to have a different value in a later part of the program:
 
 ```python
-from bloqade import start, var
+from bloqade.analog import start, var
 
 my_var = var("my_variable")
 waveform_durations = [0.6, 1.0, 0.6]
@@ -425,7 +395,7 @@ program = detuning_waveform.assign(my_variable=1.0)
 You can also use Python's built-in `sum` if you want the sum of multiple variables as a value in your program. This is quite useful when it comes to needing to indicate a full duration for a waveform that doesn't need to be split up:
 
 ```python
-from bloqade import start, var
+from bloqade.analog import start, var
 
 variable_durations = var(["a", "b", "c"])
 
@@ -455,7 +425,7 @@ program = detuning_waveform.assign(a=0.5, b=1.2, c=0.5)
 You can save your results in JSON format using Bloqade's `save` function:
 
 ```python
-from bloqade import start, save
+from bloqade.analog import start, save
 
 your_program = ...
 emulation_results = your_program.bloqade.python().run(100)
@@ -468,7 +438,7 @@ save(hardware_results, "hardware_results.json")
 And later reload them into Python using the `load` function:
 
 ```python
-from bloqade import load
+from bloqade.analog import load
 emulation_results = load("emulation_results.json")
 hardware_results = load("hardware_results.json")
 ```

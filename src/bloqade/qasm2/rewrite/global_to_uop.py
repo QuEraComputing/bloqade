@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from kirin import ir
 from bloqade import qasm2
 from kirin.rewrite import abc, result
+from kirin.dialects import py
 from bloqade.analysis import address
 from bloqade.qasm2.dialects import glob
 
@@ -32,7 +33,7 @@ class GlobalToUOpRule(abc.RewriteRule):
 
             for qubit_idx in address_reg.data:
 
-                qubit_idx = qasm2.expr.ConstInt(value=qubit_idx)
+                qubit_idx = py.constant.Constant(value=qubit_idx)
 
                 qubit_stmt = qasm2.core.QRegGet(
                     reg=address_reg_ssa, idx=qubit_idx.result
