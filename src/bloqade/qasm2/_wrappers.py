@@ -397,6 +397,18 @@ def ch(ctrl: Qubit, qarg: Qubit) -> None:
     ...
 
 
+@wraps(uop.Swap)
+def swap(ctrl: Qubit, qarg: Qubit) -> None:
+    """
+    Swap gate.
+
+    Args:
+        ctrl: The first qubit.
+        qarg: The second qubit.
+    """
+    ...
+
+
 @wraps(uop.CCX)
 def ccx(ctrl1: Qubit, ctrl2: Qubit, qarg: Qubit) -> None:
     """
