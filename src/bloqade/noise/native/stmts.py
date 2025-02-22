@@ -1,5 +1,6 @@
 from kirin import ir, types
 from kirin.decl import info, statement
+from kirin.dialects import ilist
 from bloqade.qasm2.types import QubitType
 
 from ._dialect import dialect
@@ -11,10 +12,13 @@ class PauliChannel(ir.Statement):
 
     traits = frozenset({ir.FromPythonCall()})
 
-    px: ir.SSAValue = info.argument(type=types.Float)
-    py: ir.SSAValue = info.argument(type=types.Float)
-    pz: ir.SSAValue = info.argument(type=types.Float)
-    qarg: ir.SSAValue = info.argument(type=QubitType)
+    px: float = info.attribute(types.Float)
+    py: float = info.attribute(types.Float)
+    pz: float = info.attribute(types.Float)
+    qargs: ir.SSAValue = info.argument(ilist.IListType[QubitType])
+
+
+NumQubits = types.TypeVar("NumQubits")
 
 
 @statement(dialect=dialect)
@@ -23,15 +27,15 @@ class CZPauliChannel(ir.Statement):
 
     traits = frozenset({ir.FromPythonCall()})
 
-    paired: bool = info.attribute()
-    px_1: ir.SSAValue = info.argument(type=types.Float)
-    py_1: ir.SSAValue = info.argument(type=types.Float)
-    pz_1: ir.SSAValue = info.argument(type=types.Float)
-    px_2: ir.SSAValue = info.argument(type=types.Float)
-    py_2: ir.SSAValue = info.argument(type=types.Float)
-    pz_2: ir.SSAValue = info.argument(type=types.Float)
-    qarg1: ir.SSAValue = info.argument(type=QubitType)
-    qarg2: ir.SSAValue = info.argument(type=QubitType)
+    paired: bool = info.attribute(types.Bool)
+    px_ctrl: float = info.attribute(types.Float)
+    py_ctrl: float = info.attribute(types.Float)
+    pz_ctrl: float = info.attribute(types.Float)
+    px_qarg: float = info.attribute(types.Float)
+    py_qarg: float = info.attribute(types.Float)
+    pz_qarg: float = info.attribute(types.Float)
+    ctrls: ir.SSAValue = info.argument(ilist.IListType[QubitType, NumQubits])
+    qargs: ir.SSAValue = info.argument(ilist.IListType[QubitType, NumQubits])
 
 
 @statement(dialect=dialect)
@@ -40,5 +44,5 @@ class AtomLossChannel(ir.Statement):
 
     traits = frozenset({ir.FromPythonCall()})
 
-    prob: ir.SSAValue = info.argument(type=types.Float)
-    qarg: ir.SSAValue = info.argument(type=QubitType)
+    prob: float = info.attribute(types.Float)
+    qargs: ir.SSAValue = info.argument(ilist.IListType[QubitType])
