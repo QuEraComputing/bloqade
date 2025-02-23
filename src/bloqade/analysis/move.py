@@ -76,6 +76,7 @@ class NoiseModelABC(abc.ABC):
 class FixLocationNoiseModel(NoiseModelABC):
 
     gate_zone_y_offset: float = 20.0
+    gate_spacing: float = 20.0
 
     def deconflict(
         self, ctrls: List[int], qargs: List[int]
@@ -104,18 +105,56 @@ class FixLocationNoiseModel(NoiseModelABC):
     def calculate_move_duration(self, ctrls: List[int], qargs: List[int]) -> float:
         """Calculate the time it takes to move the qubits from the ctrl to the qarg qubits."""
 
-        qarg_x_distance = 0.0
-        ctrl_x_distance = max(abs(ctrl - qarg) for ctrl, qarg in zip(ctrls, qargs))
+        position_pairs = list(zip(qargs, ctrls))
+        # sort by the distance between the ctrl and qarg qubits
+        sorted(position_pairs, key=lambda ele: abs(ele[0] - ele[1]))
 
-        qarg_distance = math.sqrt(qarg_x_distance**2 + self.gate_zone_y_offset**2)
-        ctrl_distance = math.sqrt(
+        # greedy algorithm to find the best slot for each qubit pair
+        slots = {}
+        while position_pairs:
+            ctrl, qarg = position_pairs.pop()
+
+            mid = (ctrl + qarg) * self.lattice_spacing / 2
+            slot = int(mid / self.gate_spacing)
+
+            if slot not in slots:
+                slots[slot] = (ctrl, qarg)
+                continue
+
+            # find the first slot that is not in slots that is close to the mid point
+            for i in range(1, len(slots) + 1):
+                if slot + i not in slots:
+                    slots[slot + i] = (ctrl, qarg)
+                    found = True
+                    break
+                elif slot - i not in slots:
+                    slots[slot - i] = (ctrl, qarg)
+                    found = True
+                    break
+
+            assert found, "No slot found"
+
+        qarg_x_distance = float("-inf")
+        ctrl_x_distance = float("-inf")
+
+        for slot, (ctrl, qarg) in slots.items():
+            qarg_x_distance = max(
+                qarg_x_distance,
+                abs(qarg * self.lattice_spacing - slot * self.gate_spacing),
+            )
+            ctrl_x_distance = max(
+                ctrl_x_distance,
+                abs(ctrl * self.lattice_spacing - slot * self.gate_spacing),
+            )
+
+        qarg_max_distance = math.sqrt(qarg_x_distance**2 + self.gate_zone_y_offset**2)
+        ctrl_max_distance = math.sqrt(
             ctrl_x_distance**2 + (self.gate_zone_y_offset - 3) ** 2
         )
 
-        ctrl_duration = ctrl_distance * self.lattice_spacing / self.move_speed
-        qarg_duration = qarg_distance * self.lattice_spacing / self.move_speed
+        return (qarg_max_distance + ctrl_max_distance) / self.move_speed
 
-        return qarg_duration + ctrl_duration
+        return
 
     def parallel_cz_errors(
         self, ctrls: List[int], qargs: List[int], rest: List[int]
