@@ -6,66 +6,49 @@ from dataclasses import field, dataclass
 from kirin import ir
 from bloqade import qasm2
 from bloqade.noise import native
-from kirin.rewrite import abc as result_abc, result
+from kirin.rewrite import abc as result_abc, walk, result
 from kirin.dialects import py, ilist
 from bloqade.analysis import address
+from bloqade.qasm2.passes import UOpToParallel
 from bloqade.qasm2.dialects import uop, core, glob, parallel
-
-
-@qasm2.extended
-def mt():
-    q = qasm2.qreg(4)
-
-    qasm2.h(q[0])
-    qasm2.h(q[1])
-    qasm2.h(q[2])
-    qasm2.h(q[3])
-    qasm2.parallel.cz(ctrls=[q[0], q[2]], qargs=[q[1], q[3]])
-    qasm2.h(q[0])
-    qasm2.h(q[1])
-    qasm2.h(q[2])
-    qasm2.h(q[3])
-
-    return q
-
-
-frame, _ = address.AddressAnalysis(mt.dialects).run_analysis(mt)
 
 
 @dataclass
 class NoiseModelABC(abc.ABC):
-    move_px_rate: float  # rate = prob/distance
-    move_py_rate: float
-    move_pz_rate: float
-    move_loss_rate: float
+    # rate = prob/time
 
-    pick_loss_prob: float
-    pick_px: float
-    pick_py: float
-    pick_pz: float
+    move_px_rate: float = field(default=1e-6, kw_only=True)
+    move_py_rate: float = field(default=1e-6, kw_only=True)
+    move_pz_rate: float = field(default=1e-6, kw_only=True)
+    move_loss_rate: float = field(default=1e-6, kw_only=True)
 
-    local_px: float
-    local_py: float
-    local_pz: float
-    local_loss_prob: float
+    pick_loss_prob: float = field(default=1e-4, kw_only=True)
+    pick_px: float = field(default=1e-3, kw_only=True)
+    pick_py: float = field(default=1e-3, kw_only=True)
+    pick_pz: float = field(default=1e-3, kw_only=True)
 
-    global_px: float
-    global_py: float
-    global_pz: float
-    global_loss_prob: float
+    local_px: float = field(default=1e-3, kw_only=True)
+    local_py: float = field(default=1e-3, kw_only=True)
+    local_pz: float = field(default=1e-3, kw_only=True)
+    local_loss_prob: float = field(default=1e-4, kw_only=True)
 
-    cz_paired_gate_px: float
-    cz_paired_gate_py: float
-    cz_paired_gate_pz: float
-    cz_gate_loss_prob: float
+    global_px: float = field(default=1e-3, kw_only=True)
+    global_py: float = field(default=1e-3, kw_only=True)
+    global_pz: float = field(default=1e-3, kw_only=True)
+    global_loss_prob: float = field(default=1e-3, kw_only=True)
 
-    cz_unpaired_gate_px: float
-    cz_unpaired_gate_py: float
-    cz_unpaired_gate_pz: float
-    cz_ungate_loss_prob: float
+    cz_paired_gate_px: float = field(default=1e-3, kw_only=True)
+    cz_paired_gate_py: float = field(default=1e-3, kw_only=True)
+    cz_paired_gate_pz: float = field(default=1e-3, kw_only=True)
+    cz_gate_loss_prob: float = field(default=1e-3, kw_only=True)
 
-    move_speed: float
-    lattice_spacing: float
+    cz_unpaired_gate_px: float = field(default=1e-3, kw_only=True)
+    cz_unpaired_gate_py: float = field(default=1e-3, kw_only=True)
+    cz_unpaired_gate_pz: float = field(default=1e-3, kw_only=True)
+    cz_ungate_loss_prob: float = field(default=1e-3, kw_only=True)
+
+    move_speed: float = field(default=1e-2, kw_only=True)
+    lattice_spacing: float = field(default=4.0, kw_only=True)
 
     @classmethod
     @abc.abstractmethod
@@ -129,8 +112,8 @@ class FixLocationNoiseModel(NoiseModelABC):
             ctrl_x_distance**2 + (self.gate_zone_y_offset - 3) ** 2
         )
 
-        ctrl_duration = ctrl_distance / self.move_speed
-        qarg_duration = qarg_distance / self.move_speed
+        ctrl_duration = ctrl_distance * self.lattice_spacing / self.move_speed
+        qarg_duration = qarg_distance * self.lattice_spacing / self.move_speed
 
         return qarg_duration + ctrl_duration
 
@@ -165,7 +148,7 @@ class FixLocationNoiseModel(NoiseModelABC):
 
 
 @dataclass
-class NoiseRewriteRuleABC(result_abc.RewriteRule):
+class NoiseRewriteRule(result_abc.RewriteRule):
     address_analysis: Dict[ir.SSAValue, address.Address]
     qubit_ssa_value: Dict[int, ir.SSAValue]
     noise_model: NoiseModelABC = field(default_factory=FixLocationNoiseModel)
@@ -186,7 +169,7 @@ class NoiseRewriteRuleABC(result_abc.RewriteRule):
                         pos_stmt.insert_after(node)
 
     def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
-        if isinstance(node, (uop.RZ, uop.UGate)):
+        if isinstance(node, uop.SingleQubitGate):
             return self.rewrite_single_qubit_gate(node)
         elif isinstance(node, uop.CZ):
             return self.rewrite_cz_gate(node)
@@ -219,9 +202,7 @@ class NoiseRewriteRuleABC(result_abc.RewriteRule):
             self.noise_model.local_pz,
             self.noise_model.local_loss_prob,
         )
-        (qargs := ilist.New(values=[self.qubit_ssa_value[node.qarg]])).insert_before(
-            node
-        )
+        (qargs := ilist.New(values=(node.qarg,))).insert_before(node)
         return self.insert_single_qubit_noise(node, qargs.result, probs)
 
     def insert_move_noise_channels(
@@ -363,10 +344,38 @@ class NoiseRewriteRuleABC(result_abc.RewriteRule):
 
         ctrl_qubits = list(map(lambda addr: addr.data, ctrls.data))
         qarg_qubits = list(map(lambda addr: addr.data, qargs.data))
-
-        groups = self.noise_model.parallel_cz_errors(ctrl_qubits, qarg_qubits)
+        rest = sorted(set(self.qubit_ssa_value.keys()) - set(ctrl_qubits + qarg_qubits))
+        groups = self.noise_model.parallel_cz_errors(ctrl_qubits, qarg_qubits, rest)
 
         self.insert_move_noise_channels(node, groups, insert_before=True)
         self.insert_cz_gate_noise(node, node.ctrls, node.qargs)
         self.insert_move_noise_channels(node, groups, insert_before=False)
         return result.RewriteResult(has_done_something=True)
+
+
+@qasm2.extended
+def mt():
+    q = qasm2.qreg(4)
+
+    qasm2.h(q[0])
+    qasm2.h(q[1])
+    qasm2.h(q[2])
+    qasm2.h(q[3])
+    qasm2.parallel.cz(ctrls=[q[0], q[2]], qargs=[q[1], q[3]])
+    qasm2.h(q[0])
+    qasm2.h(q[1])
+    qasm2.h(q[2])
+    qasm2.h(q[3])
+
+    return q
+
+
+UOpToParallel(mt.dialects)(mt)
+address_analysis = address.AddressAnalysis(mt.dialects)
+frame, _ = address_analysis.run_analysis(mt)
+print(address_analysis.qubit_ssa_value)
+noise = walk.Walk(NoiseRewriteRule(frame.entries, address_analysis.qubit_ssa_value))
+noise.rewrite(mt.code)
+
+
+mt.print()
