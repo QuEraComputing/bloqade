@@ -30,7 +30,7 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         run: uv python install ${{ matrix.python-version }}
       - name: Install the project
-        run: uv sync --all-extras --dev --index="https://${{ secrets.JFROG_USER}}:${{ secrets.JFROG_TOKEN }}@quera.jfrog.io/artifactory/api/pypi/kirin/simple/ https://${{ secrets.JFROG_USER}}:${{ secrets.JFROG_TOKEN }}@quera.jfrog.io/artifactory/api/pypi/quera-pypi-algo/simple/"
+        run: uv sync --all-extras --dev
       - name: Run tests
         # For example, using `pytest`
         run: uv run just coverage

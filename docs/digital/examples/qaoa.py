@@ -1,16 +1,20 @@
+# %%
 import math
 from typing import Any
 
+# %%
 import networkx as nx
 from bloqade import qasm2
 from kirin.dialects import py, ilist
 
+# %%
 # Define the problem instance as a MaxCut problem on a graph
 pi = math.pi
 N = 64
 G = nx.random_regular_graph(3, N, seed=42)
 
 
+# %%
 def qaoa_sequential(G):
 
     edges = list(G.edges)
@@ -37,6 +41,7 @@ def qaoa_sequential(G):
     return kernel
 
 
+# %%
 def qaoa_simd(G):
 
     left_ids = ilist.IList([edge[0] for edge in G.edges])
@@ -86,21 +91,24 @@ def qaoa_simd(G):
     return kernel
 
 
-# print("--- Sequential ---")
-# qaoa_sequential(G).code.print()
+# %%
+print("--- Sequential ---")
+qaoa_sequential(G).code.print()
 
-
+# %%
 kernel = qaoa_simd(G)
 
-# print("\n\n--- Simd ---")
-# kernel.print()
+print("\n\n--- Simd ---")
+kernel.print()
 
 
+# %%
 @qasm2.extended
 def main():
     kernel([0.1, 0.2], [0.3, 0.4])
 
 
+# %%
 target = qasm2.emit.QASM2(
     main_target=qasm2.main.union([qasm2.dialects.parallel, ilist, py.constant])
 )

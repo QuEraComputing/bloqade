@@ -24,7 +24,7 @@ jobs:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
       - name: Install Documentation dependencies
-        run: uv sync --group doc --index="https://${{ secrets.JFROG_USER}}:${{ secrets.JFROG_TOKEN }}@quera.jfrog.io/artifactory/api/pypi/kirin/simple/ https://${{ secrets.JFROG_USER}}:${{ secrets.JFROG_TOKEN }}@quera.jfrog.io/artifactory/api/pypi/quera-pypi-algo/simple/"
+        run: uv sync --group doc
       - name: Set up build cache
         uses: actions/cache@v4
         id: cache

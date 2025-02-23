@@ -1,4 +1,4 @@
-site_name: bloqade
+site_name: "The Neutral Atom SDK"
 repo_name: bloqade
 repo_url: https://github.com/QuEraComputing/bloqade
 site_description: >-
@@ -13,21 +13,30 @@ nav:
       - Installation: install.md
       - Background: background.md
       - Quick Start:
-        - QASM2: qasm2.md
-        - Analog: analog.md
+        - Digital:
+          - quick_start/digital/index.md
+          - QASM2: quick_start/digital/qasm2.md
+        - Analog:
+          - quick_start/analog/index.md
       - Contributing: contrib.md
-  - Digital:
+  - Digital Tutorial:
     - digital/index.md
     - Quantum Fourier Transform: "digital/examples/qft.py"
     - GHZ state preparation: "digital/examples/ghz.py"
-  - Analog: 'https://queracomputing.github.io/bloqade-python/latest/'
+    - Pauli Exponential: "digital/examples/pauli_exponentiation.py"
+    - Repeat Until Success: "digital/examples/repeat_until_success.py"
+    - QAOA: "digital/examples/qaoa.py"
+  - Analog Tutorial: 'https://queracomputing.github.io/bloqade-python/latest/'
   - Blog:
     - blog/index.md
-  - API Reference:
-      - QASM2: reference/bloqade/qasm2/
+  - QuEra Computing: 'https://quera.com'
+  # - API Reference:
+  #     - QASM2: reference/bloqade/qasm2/
 
 theme:
   name: material
+  favicon: assets/favicon.ico
+  logo: assets/logo-dark.svg
   palette:
     - scheme: default
       primary: custom
