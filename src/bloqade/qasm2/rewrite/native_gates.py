@@ -42,6 +42,7 @@ def one_qubit_gate_to_u3_angles(op: cirq.Operation) -> tuple[float, float, float
 class RydbergGateSetRewriteRule(abc.RewriteRule):
     # NOTE
     # 1. this can only rewrite qasm2.main and qasm2.gate!
+    dialect_group: ir.DialectGroup
     gateset: CompilationTargetGateset = field(default_factory=RydbergTargetGateset)
 
     @cached_property
@@ -49,6 +50,20 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
 
         # qasm2 stmts only have up to 3 qubits gates, so we cached only 3.
         return tuple(cirq.LineQubit(i) for i in range(3))
+
+    @cached_property
+    def const_float(self):
+        if expr in self.dialect_group:
+            return expr.ConstFloat
+        else:
+            return py.constant.Constant
+
+    @cached_property
+    def const_pi(self):
+        if expr in self.dialect_group:
+            return expr.ConstPI()
+        else:
+            return py.constant.Constant(value=math.pi)
 
     def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
 
@@ -119,7 +134,7 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
 
     def rewrite_u1(self, node: uop.U1) -> abc.RewriteResult:
         theta = node.lam
-        (phi := expr.ConstFloat(value=0.0)).insert_before(node)
+        (phi := self.const_float(value=0.0)).insert_before(node)
         node.replace_by(
             uop.UGate(qarg=node.qarg, theta=phi.result, phi=phi.result, lam=theta)
         )
@@ -128,18 +143,14 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
     def rewrite_u2(self, node: uop.U2) -> abc.RewriteResult:
         phi = node.phi
         lam = node.lam
-        (pi := expr.ConstPI()).insert_before(node)
-        (two := expr.ConstFloat(value=2.0)).insert_before(node)
-        (theta := expr.Div(pi.result, two.result)).insert_before(node)
+        (theta := self.const_float(value=math.pi / 2)).insert_before(node)
         node.replace_by(uop.UGate(qarg=node.qarg, theta=theta.result, phi=phi, lam=lam))
         return abc.RewriteResult(has_done_something=True)
 
     def rewrite_rx(self, node: uop.RX) -> abc.RewriteResult:
         theta = node.theta
-        (pi := expr.ConstPI()).insert_before(node)
-        (two := expr.ConstFloat(value=2.0)).insert_before(node)
-        (phi := expr.Div(pi.result, two.result)).insert_before(node)
-        (lam := expr.Neg(phi.result)).insert_before(node)
+        (phi := self.const_float(value=math.pi / 2)).insert_before(node)
+        (lam := self.const_float(value=-math.pi / 2)).insert_before(node)
         node.replace_by(
             uop.UGate(qarg=node.qarg, theta=theta, phi=phi.result, lam=lam.result)
         )
@@ -147,7 +158,7 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
 
     def rewrite_ry(self, node: uop.RY) -> abc.RewriteResult:
         theta = node.theta
-        (phi := expr.ConstFloat(value=0.0)).insert_before(node)
+        (phi := self.const_float(value=0.0)).insert_before(node)
         node.replace_by(
             uop.UGate(qarg=node.qarg, theta=theta, phi=phi.result, lam=phi.result)
         )
@@ -155,7 +166,7 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
 
     def rewrite_rz(self, node: uop.RZ) -> abc.RewriteResult:
         theta = node.theta
-        (phi := expr.ConstFloat(value=0.0)).insert_before(node)
+        (phi := self.const_float(value=0.0)).insert_before(node)
         node.replace_by(
             uop.UGate(qarg=node.qarg, theta=phi.result, phi=phi.result, lam=theta)
         )
