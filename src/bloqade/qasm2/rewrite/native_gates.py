@@ -96,7 +96,8 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
         return result.RewriteResult()
 
     def rewrite_id(self, node: uop.Id) -> abc.RewriteResult:
-        return result.RewriteResult()
+        node.delete()  # just delete the identity gate
+        return abc.RewriteResult(has_done_something=True)
 
     def rewrite_h(self, node: uop.H) -> abc.RewriteResult:
         return self._rewrite_1q_gates(cirq.H(self.cached_qubits[0]), node)
