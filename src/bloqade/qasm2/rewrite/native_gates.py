@@ -68,7 +68,7 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
     def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
 
         # only deal with uop
-        if node.dialect == uop.dialect:
+        if node in uop.dialect.stmts:
             return getattr(self, f"rewrite_{node.name}")(node)
 
         return result.RewriteResult()
