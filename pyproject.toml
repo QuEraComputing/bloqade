@@ -32,6 +32,10 @@ vis = [
 qbraid = [
     "qbraid>=0.9.3",
 ]
+cirq = [
+    "cirq>=1.4.1",
+    "cirq-core[contrib]>=1.4.1",
+]
 
 [build-system]
 requires = ["hatchling"]
