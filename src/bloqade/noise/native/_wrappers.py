@@ -7,12 +7,14 @@ from bloqade.qasm2.types import Qubit
 
 
 @wraps(native.AtomLossChannel)
-def atom_loss_channel(prob: float, qargs: ilist.IList[Qubit, Any] | list) -> None: ...
+def atom_loss_channel(
+    qargs: ilist.IList[Qubit, Any] | list, *, prob: float
+) -> None: ...
 
 
 @wraps(native.PauliChannel)
 def pauli_channel(
-    px: float, py: float, pz: float, qargs: ilist.IList[Qubit, Any] | list
+    qargs: ilist.IList[Qubit, Any] | list, *, px: float, py: float, pz: float
 ) -> None: ...
 
 
