@@ -5,6 +5,7 @@ from kirin import ir, types, passes
 from bloqade import noise, qasm2
 from bloqade.qbraid import schema
 from kirin.dialects import func, ilist
+from bloqade.qasm2.dialects import parallel
 
 
 @ir.dialect_group([func, qasm2.core, qasm2.uop, qasm2.expr, noise.native])
@@ -86,11 +87,9 @@ class Lowering:
 
         for idx_value, qubit in enumerate(noise_model.all_qubits):
             idx = self.lower_number(idx_value)
-            qubit_stmt = qasm2.core.QRegGet(reg.result, idx)
-            bit_stmt = qasm2.core.CRegGet(creg.result, idx)
+            self.block_list.append(qubit_stmt := qasm2.core.QRegGet(reg.result, idx))
+            self.block_list.append(bit_stmt := qasm2.core.CRegGet(creg.result, idx))
 
-            self.block_list.append(qubit_stmt)
-            self.block_list.append(bit_stmt)
             self.qubit_id_map[qubit] = qubit_stmt.result
             self.bit_id_map[qubit] = bit_stmt.result
             self.qubit_list.append(qubit_stmt.result)
@@ -187,7 +186,7 @@ class Lowering:
                 unpaired_layers.setdefault((up_ctrl, up_qarg), []).append(participant)
 
         for (px, py, pz), qubits in single_layers.items():
-            self.block_list(
+            self.block_list.append(
                 qargs := ilist.New(values=tuple(self.qubit_id_map[q] for q in qubits))
             )
             self.block_list.append(
@@ -197,10 +196,10 @@ class Lowering:
         for (p_ctrl, p_qarg), qubits in paired_layers.items():
             ctrls, qargs = list(zip(*qubits))
             self.block_list.append(
-                qargs := ilist.New(values=tuple(self.qubit_id_map[q] for q in qargs))
+                ctrls := ilist.New(values=tuple(self.qubit_id_map[q] for q in ctrls))
             )
             self.block_list.append(
-                ctrls := ilist.New(values=tuple(self.qubit_id_map[q] for q in ctrls))
+                qargs := ilist.New(values=tuple(self.qubit_id_map[q] for q in qargs))
             )
             self.block_list.append(
                 noise.native.CZPauliChannel(
@@ -211,18 +210,18 @@ class Lowering:
                     px_qarg=p_qarg[0],
                     py_qarg=p_qarg[1],
                     pz_qarg=p_qarg[2],
-                    qargs=qargs.result,
                     ctrls=ctrls.result,
+                    qargs=qargs.result,
                 )
             )
 
         for (p_ctrl, p_qarg), qubits in unpaired_layers.items():
             ctrls, qargs = list(zip(*qubits))
             self.block_list.append(
-                qargs := ilist.New(values=tuple(self.qubit_id_map[q] for q in qargs))
+                ctrls := ilist.New(values=tuple(self.qubit_id_map[q] for q in ctrls))
             )
             self.block_list.append(
-                ctrls := ilist.New(values=tuple(self.qubit_id_map[q] for q in ctrls))
+                qargs := ilist.New(values=tuple(self.qubit_id_map[q] for q in qargs))
             )
             self.block_list.append(
                 noise.native.CZPauliChannel(
@@ -233,8 +232,8 @@ class Lowering:
                     px_qarg=p_qarg[0],
                     py_qarg=p_qarg[1],
                     pz_qarg=p_qarg[2],
-                    qargs=qargs.result,
                     ctrls=ctrls.result,
+                    qargs=qargs.result,
                 )
             )
 
@@ -246,27 +245,28 @@ class Lowering:
         self.block_list.append(
             qargs := ilist.New(values=tuple(self.qubit_id_map[q] for q in qargs))
         )
-        self.block_list.append(
-            qasm2.dialects.parallel.CZ(ctrls=ctrls.result, qargs=qargs.result)
-        )
+        self.block_list.append(parallel.CZ(ctrls=ctrls.result, qargs=qargs.result))
 
     def lower_w_gates(self, participants: Sequence[int], theta: float, phi: float):
-        theta = self.lower_full_turns(theta)
-        phi = self.lower_full_turns(phi + 0.5)
-        lam = self.lower_full_turns(-(0.5 + phi))
         self.block_list.append(
             qargs := ilist.New(values=tuple(self.qubit_id_map[q] for q in participants))
         )
         self.block_list.append(
-            qasm2.parallel.u(theta=theta, phi=phi, lam=lam, qargs=qargs.result)
+            parallel.UGate(
+                theta=self.lower_full_turns(theta),
+                phi=self.lower_full_turns(phi + 0.5),
+                lam=self.lower_full_turns(-(0.5 + phi)),
+                qargs=qargs.result,
+            )
         )
 
     def lower_rz_gates(self, participants: Tuple[int, ...], phi: float):
-        phi = self.lower_full_turns(phi)
         self.block_list.append(
             qargs := ilist.New(values=tuple(self.qubit_id_map[q] for q in participants))
         )
-        self.block_list.append(qasm2.parallel.rz(phi=phi, qargs=qargs.result))
+        self.block_list.append(
+            parallel.RZ(theta=self.lower_full_turns(phi), qargs=qargs.result)
+        )
 
     def lower_pauli_errors(self, operator_error: schema.PauliErrorModel):
         assert isinstance(
@@ -279,10 +279,10 @@ class Lowering:
             layers.setdefault(pauli_errors, []).append(qubit_num)
 
         for (px, py, pz), qubits in layers.items():
-            self.block_list(
+            self.block_list.append(
                 qargs := ilist.New(values=tuple(self.qubit_id_map[q] for q in qubits))
             )
-            self.block_list(
+            self.block_list.append(
                 noise.native.PauliChannel(px=px, py=py, pz=pz, qargs=qargs.result)
             )
 
@@ -295,14 +295,12 @@ class Lowering:
     def lower_atom_loss(self, survival_probs: Tuple[float, ...]):
         layers = {}
 
-        for qubit_num, survival_prob in enumerate(survival_probs):
+        for qubit_num, survival_prob in zip(self.qubit_list, survival_probs):
             layers.setdefault(survival_prob, []).append(qubit_num)
 
         for survival_prob, qubits in layers.items():
-            self.block_list(
-                qargs := ilist.New(values=tuple(self.qubit_id_map[q] for q in qubits))
-            )
-            self.block_list(
+            self.block_list.append(qargs := ilist.New(values=qubits))
+            self.block_list.append(
                 noise.native.AtomLossChannel(prob=survival_prob, qargs=qargs.result)
             )
 
