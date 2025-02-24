@@ -85,7 +85,7 @@ class Parallel(interp.MethodTable):
         return ()
 
 
-@dialect.register(key="qasm2.dag")
+@dialect.register(key="qasm2.schedule.dag")
 class ParallelDag(interp.MethodTable):
 
     @interp.impl(CZ)
