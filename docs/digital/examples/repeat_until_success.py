@@ -53,7 +53,7 @@ def prep_resource_state(theta: float):
 
 # %%
 @qasm2.extended
-def z_phase_gate_postselect(target: qasm2.Qubit, theta: float)->qasm2.Qubit:
+def z_phase_gate_postselect(target: qasm2.Qubit, theta: float) -> qasm2.Qubit:
     ancilla = prep_resource_state(theta)
     qasm2.cx(ancilla, target)
     creg = qasm2.creg(1)
@@ -61,6 +61,7 @@ def z_phase_gate_postselect(target: qasm2.Qubit, theta: float)->qasm2.Qubit:
     if creg[0] == 1:
         qasm2.x(ancilla)
     return ancilla
+
 
 # %% [markdown]
 # To (deterministically) implement the gate, we can recursively apply the gadget by correcting
@@ -72,7 +73,7 @@ def z_phase_gate_postselect(target: qasm2.Qubit, theta: float)->qasm2.Qubit:
 
 # %%
 @qasm2.extended
-def z_phase_gate_recursive(target: qasm2.Qubit, theta: float)->qasm2.Qubit:
+def z_phase_gate_recursive(target: qasm2.Qubit, theta: float) -> qasm2.Qubit:
     """
     https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337 Fig. 7
     """
@@ -100,7 +101,7 @@ def z_phase_gate_loop(target: qasm2.Qubit, theta: float, attempts: int):
     """
     https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337 Fig. 7
     """
-    creg = qasm2.creg(1) # Implicitly initialized to 0, thanks qasm...
+    creg = qasm2.creg(1)  # Implicitly initialized to 0, thanks qasm...
     for ctr in range(attempts):
         ancilla = prep_resource_state(theta * (2**ctr))
         if creg[0] == 0:
@@ -110,16 +111,19 @@ def z_phase_gate_loop(target: qasm2.Qubit, theta: float, attempts: int):
     qasm2.x(target)
 
 
-#%% [markdown] Before we analyze these circuits, we must declare a main function
+# %% [markdown] Before we analyze these circuits, we must declare a main function
 # which takes no inputs, as qasm2 does not support parameterized circuits or
 # subcircuits.
 
-theta = 0.1 # Specify some Z rotation angle. Note that this is being defined
+theta = 0.1  # Specify some Z rotation angle. Note that this is being defined
+
+
 # outside the main function and being used inside the function via closure.
 @qasm2.extended
 def postselect_main():
     target = qasm2.qreg(1)
     z_phase_gate_postselect(target[0], theta)
+
 
 @qasm2.extended
 def recursion_main():
@@ -133,13 +137,12 @@ def loop_main():
     z_phase_gate_loop(target[0], theta, 5)
 
 
-#%% [markdown] Now lets explore running some interpreters on these circuits.
+# %% [markdown] Now lets explore running some interpreters on these circuits.
 # We support the quantum emulation backend PyQrack, which simulates quantum
 # circuits using state vectors.
 
 # %%
 from bloqade.pyqrack import PyQrack  # noqa: E402
-
 
 device = PyQrack()
 qreg = device.run(postselect_main)
@@ -157,9 +160,9 @@ target = QASM2()
 qasm_postselect = target.emit(postselect_main)
 qasm_loop = target.emit(loop_main)
 
-try: # The recursion version has no qasm representation.
+try:  # The recursion version has no qasm representation.
     qasm_recursive = target.emit(recursion_main)
-except RecursionError as e:
+except RecursionError:
     print("Whoops! We hit a recursion limit. This is expected.")
 
 print("\n\n--- Postselect ---")
