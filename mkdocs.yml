@@ -13,11 +13,15 @@ nav:
       - Installation: install.md
       - Background: background.md
       - Quick Start:
-        - Digital:
-          - quick_start/digital/index.md
-          - QASM2: quick_start/digital/qasm2.md
+        - Circuits: quick_start/circuits/index.md
+          - API:
+            - QASM2 Core: quick_start/circuits/API/qasm2 core.md
+            - QASM2 Noise: quick_start/circuits/API/qasm2 noise.md
+            - QASM2 Parallel: quick_start/circuits/API/qasm2 parallel.md
+            - QASM2 Uop: quick_start/circuits/API/qasm2 uop.md
         - Analog:
           - quick_start/analog/index.md
+        - Qourier: quick_start/qourier/index.md
       - Contributing: contrib.md
   - Digital Tutorial:
     - digital/index.md

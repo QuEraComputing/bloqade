@@ -3,4 +3,4 @@
     on [GitHub](https://github.com/QuEraComputing/bloqade/issues/new) if you need help or want to
     contribute.
 
-Maybe integrate with qasm2 core API to cut down on pages?
+?? Merge with qasm2 core API to cut down on pages?
