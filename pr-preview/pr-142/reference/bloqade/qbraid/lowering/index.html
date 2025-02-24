@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.3">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.d7758b05.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.8608ea7d.min.css">
       
         
         <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
@@ -293,6 +293,23 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://quera.com" class="md-tabs__link">
+        
+  
+    
+  
+  QuEra Computing
+
+      </a>
+    </li>
   
 
       
@@ -1056,6 +1073,27 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://quera.com" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    QuEra Computing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -1217,7 +1255,7 @@
 </h3>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">lower</span><span class="p">(</span>
     <span class="n">sym_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">noise_model</span><span class="p">:</span> <span class="n">schema</span><span class="o">.</span><span class="n">NoiseModel</span><span class="p">,</span>
+    <span class="n">noise_model</span><span class="p">:</span> <span class="n">NoiseModel</span><span class="p">,</span>
     <span class="n">return_qreg</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span>
 </code></pre></div>
@@ -1243,7 +1281,7 @@
                 <code>name</code>
             </td>
             <td>
-                  <code>str</code>
+                  <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1259,7 +1297,7 @@
                 <code>return_qreg</code>
             </td>
             <td>
-                  <code>bool</code>
+                  <code><span title="bool">bool</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1298,8 +1336,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/bloqade/qbraid/lowering.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">40</span>
-<span class="normal">41</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">41</span>
 <span class="normal">42</span>
 <span class="normal">43</span>
 <span class="normal">44</span>
@@ -1335,7 +1372,8 @@
 <span class="normal">74</span>
 <span class="normal">75</span>
 <span class="normal">76</span>
-<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">lower</span><span class="p">(</span>
+<span class="normal">77</span>
+<span class="normal">78</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">lower</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">sym_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">noise_model</span><span class="p">:</span> <span class="n">schema</span><span class="o">.</span><span class="n">NoiseModel</span><span class="p">,</span>

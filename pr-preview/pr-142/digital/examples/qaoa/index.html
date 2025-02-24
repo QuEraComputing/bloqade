@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.3">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.d7758b05.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.8608ea7d.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
@@ -294,6 +294,23 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://quera.com" class="md-tabs__link">
+        
+  
+    
+  
+  QuEra Computing
+
+      </a>
+    </li>
   
 
       
@@ -1070,6 +1087,27 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://quera.com" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    QuEra Computing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -1556,7 +1594,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8d8ff238">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=11952aa5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1570,13 +1608,13 @@ from typing import Any</p>
 <p>import kirin
 import networkx as nx
 from bloqade import qasm2
-from kirin.dialects import py, ilist
-pi = math.pi</p>
+from kirin.dialects import py, ilist</p>
+<p>pi = math.pi</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2f2979e3">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ae7b0539">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1591,7 +1629,7 @@ G = nx.random_regular_graph(3, N, seed=42)</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=99e2bdd5">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9966aa31">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1605,7 +1643,7 @@ then repeats between the (diagonal) cost function and the mixer X with angles ga
 It is parameterized by gamma and betas, which are each the p length lists of angles.</p>
 <p>Lets first implement the sequential version of the QAOA algorithm, which
 does not inform any parallelism to the compiler.</p>
-<p>def qaoa_sequential(G:nx.Graph)-&gt;kirin.ir.Method:</p>
+<p>def qaoa_sequential(G: nx.Graph) -&gt; kirin.ir.Method:</p>
 <pre><code>edges = list(G.edges)
 nodes = list(G.nodes)
 N = len(nodes)
@@ -1614,9 +1652,9 @@ N = len(nodes)
 def kernel(gamma: ilist.IList[float, Any], beta: ilist.IList[float, Any]):
     # Initialize the register in the |+&gt; state
     qreg = qasm2.qreg(N)
-    for i in range(N): # structural control flow is native to the Kirin compiler
+    for i in range(N):  # structural control flow is native to the Kirin compiler
         qasm2.h(qreg[i])
-        
+
     # Repeat the cost and mixer layers
     for i in range(len(gamma)):
         # The cost layer, which corresponds to a ZZ(phase) gate applied
@@ -1638,7 +1676,7 @@ return kernel</code></pre>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b0ec6522">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9b8681a5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1650,10 +1688,10 @@ This can be done by coloring the (commuting) ZZ(phase) gates into groups with no
 sets of qubits, and then applying each of those groups in parallel.
 By <a href="https://en.wikipedia.org/wiki/Vizing%27s_theorem">Vizing's theorem</a> the edges of a graph
 can efficiently be colored into $\Delta+1$ colors, where $\Delta$ is the maximum degree of the graph.
-Unfortunatly, networkx does not have a native implementation of the algorithm so instead we use
+Unfortunately, networkx does not have a native implementation of the algorithm so instead we use
 the lesser [Brooks' theorem]<a href="https://en.wikipedia.org/wiki/Brooks%27_theorem">https://en.wikipedia.org/wiki/Brooks%27_theorem</a>) to color the edges
 using an equitable coloring of the line graph.</p>
-<p>def qaoa_simd(G:nx.Graph)-&gt;kirin.ir.Method:</p>
+<p>def qaoa_simd(G: nx.Graph) -&gt; kirin.ir.Method:</p>
 <pre><code>nodes = list(G.nodes)
 
 # Note that graph computation is happening /outside/ the kernel function:
@@ -1661,15 +1699,19 @@ using an equitable coloring of the line graph.</p>
 # a program, as opposed to on a piece of quantum hardware, which is what
 # occurs inside of the kernel.
 Gline = nx.line_graph(G)
-colors = nx.algorithms.coloring.equitable_color(Gline,num_colors=5)
-left_ids = ilist.IList([
-    ilist.IList([edge[0] for edge in G.edges if colors[edge] == i])
+colors = nx.algorithms.coloring.equitable_color(Gline, num_colors=5)
+left_ids = ilist.IList(
+    [
+        ilist.IList([edge[0] for edge in G.edges if colors[edge] == i])
         for i in range(5)
-])
-right_ids = ilist.IList([
-    ilist.IList([edge[1] for edge in G.edges if colors[edge] == i])
+    ]
+)
+right_ids = ilist.IList(
+    [
+        ilist.IList([edge[1] for edge in G.edges if colors[edge] == i])
         for i in range(5)
-])
+    ]
+)
 # We can use composition of kernel functions to simplify repeated code.
 # Small snippets (say, the CX gate) can be written once and then called
 # many times.
@@ -1698,33 +1740,33 @@ def parallel_cz_phase(
     qasm2.parallel.rz(qargs, gamma)
     parallel_cx(ctrls, qargs)
 
-
-
 @qasm2.extended
 def kernel(gamma: ilist.IList[float, Any], beta: ilist.IList[float, Any]):
     # Declare the register and set it to the |+&gt; state
     qreg = qasm2.qreg(len(nodes))
-    #qasm2.glob.u(theta=pi / 2, phi=0.0, lam=pi,registers=[qreg])
+    # qasm2.glob.u(theta=pi / 2, phi=0.0, lam=pi,registers=[qreg])
 
     def get_qubit(x: int):
         return qreg[x]
+
     all_qubits = ilist.map(fn=get_qubit, collection=range(N))
-    
+
     parallel_h(all_qubits)
 
-    
-    for i in range(len(gamma)): # For each QAOA layer...
+    for i in range(len(gamma)):  # For each QAOA layer...
         # Do the ZZ phase gates...
-        for cind in range(5): # by applying a parallel CZ phase gate in parallel for each color,
+        for cind in range(
+            5
+        ):  # by applying a parallel CZ phase gate in parallel for each color,
             ctrls = ilist.map(fn=get_qubit, collection=left_ids[cind])
             qargs = ilist.map(fn=get_qubit, collection=right_ids[cind])
             parallel_cz_phase(ctrls, qargs, gamma[i])
         # ...then, do an X phase gate. Observe that because this happens on every
         # qubit, we can do a global rotation, which is higher fidelity than
         # parallel local rotations.
-        #qasm2.glob.u(theta=beta[i],phi=0.0,lam=0.0,registers=[qreg])
+        # qasm2.glob.u(theta=beta[i],phi=0.0,lam=0.0,registers=[qreg])
         qasm2.parallel.u(qargs=all_qubits, theta=beta[i], phi=0.0, lam=0.0)
-    
+
     return qreg
 
 return kernel</code></pre>
@@ -1732,7 +1774,7 @@ return kernel</code></pre>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=725d53cf">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=758e5d44">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1761,7 +1803,7 @@ qaoa_sequential(G).code.print()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=534ccd96">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2a79a22b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1794,7 +1836,7 @@ kernel.print()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4443c60c">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6a7c862e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1825,7 +1867,7 @@ def main():
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=756f538f">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=15f56ac6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1844,13 +1886,17 @@ def main():
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">emit</span><span class="o">.</span><span class="n">QASM2</span><span class="p">(</span>
-    <span class="n">main_target</span><span class="o">=</span><span class="n">qasm2</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">union</span><span class="p">([</span><span class="n">qasm2</span><span class="o">.</span><span class="n">dialects</span><span class="o">.</span><span class="n">parallel</span><span class="p">,</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">dialects</span><span class="o">.</span><span class="n">glob</span><span class="p">,</span> <span class="n">ilist</span><span class="p">,</span> <span class="n">py</span><span class="o">.</span><span class="n">constant</span><span class="p">])</span>
+    <span class="n">main_target</span><span class="o">=</span><span class="n">qasm2</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">union</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">qasm2</span><span class="o">.</span><span class="n">dialects</span><span class="o">.</span><span class="n">parallel</span><span class="p">,</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">dialects</span><span class="o">.</span><span class="n">glob</span><span class="p">,</span> <span class="n">ilist</span><span class="p">,</span> <span class="n">py</span><span class="o">.</span><span class="n">constant</span><span class="p">]</span>
+    <span class="p">)</span>
 <span class="p">)</span>
 <span class="n">ast</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
 <span class="n">qasm2</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">ast</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-4">target = qasm2.emit.QASM2(
-    main_target=qasm2.main.union([qasm2.dialects.parallel, qasm2.dialects.glob, ilist, py.constant])
+    main_target=qasm2.main.union(
+        [qasm2.dialects.parallel, qasm2.dialects.glob, ilist, py.constant]
+    )
 )
 ast = target.emit(main)
 qasm2.parse.pprint(ast)</div>

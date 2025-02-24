@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../../../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.3">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../../../assets/stylesheets/main.d7758b05.min.css">
+      <link rel="stylesheet" href="../../../../../assets/stylesheets/main.8608ea7d.min.css">
       
         
         <link rel="stylesheet" href="../../../../../assets/stylesheets/palette.06af60db.min.css">
@@ -293,6 +293,23 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://quera.com" class="md-tabs__link">
+        
+  
+    
+  
+  QuEra Computing
+
+      </a>
+    </li>
   
 
       
@@ -1056,6 +1073,27 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://quera.com" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    QuEra Computing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -1189,8 +1227,8 @@
 
 </h2>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">QASM2</span><span class="p">(</span>
-    <span class="n">main_target</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">DialectGroup</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">gate_target</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">DialectGroup</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">main_target</span><span class="p">:</span> <span class="n">DialectGroup</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">gate_target</span><span class="p">:</span> <span class="n">DialectGroup</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">qelib1</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">custom_gate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
@@ -1255,7 +1293,7 @@ Internally set to the <code>qasm2.gate</code> group of dialects.</p>
                 <code>qelib1</code>
             </td>
             <td>
-                  <code>bool</code>
+                  <code><span title="bool">bool</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1272,7 +1310,7 @@ submitted to qBraid. Defaults to <code>True</code>.</p>
                 <code>custom_gate</code>
             </td>
             <td>
-                  <code>bool</code>
+                  <code><span title="bool">bool</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1375,7 +1413,7 @@ submitted to qBraid. Defaults to <code>True</code>.</p>
 
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">emit</span><span class="p">(</span><span class="n">entry</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">MainProgram</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">emit</span><span class="p">(</span><span class="n">entry</span><span class="p">:</span> <span class="n">Method</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">MainProgram</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -1550,7 +1588,7 @@ A QASM2 AST object</p>
 
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">emit_str</span><span class="p">(</span><span class="n">entry</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">emit_str</span><span class="p">(</span><span class="n">entry</span><span class="p">:</span> <span class="n">Method</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -1600,7 +1638,7 @@ A QASM2 AST object</p>
       <tbody>
           <tr class="doc-section-item">
 <td><code>str</code></td>            <td>
-                  <code>str</code>
+                  <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
