@@ -154,8 +154,6 @@ class FixLocationNoiseModel(NoiseModelABC):
 
         return (qarg_max_distance + ctrl_max_distance) / self.move_speed
 
-        return
-
     def parallel_cz_errors(
         self, ctrls: List[int], qargs: List[int], rest: List[int]
     ) -> Dict[Tuple[float, float, float, float], List[int]]:
@@ -244,89 +242,6 @@ class NoiseRewriteRule(result_abc.RewriteRule):
         (qargs := ilist.New(values=(node.qarg,))).insert_before(node)
         return self.insert_single_qubit_noise(node, qargs.result, probs)
 
-    def insert_move_noise_channels(
-        self,
-        node: ir.Statement,
-        errors: Dict[Tuple[float, float, float, float], List[int]],
-        insert_before: bool,
-    ):
-
-        nodes = []
-
-        for probs, qubits in errors.items():
-            nodes.append(
-                qargs := ilist.New(values=[self.qubit_ssa_value[q] for q in qubits])
-            )
-            nodes.append(native.AtomLossChannel(qargs.result, prob=probs[3]))
-            nodes.append(
-                native.PauliChannel(qargs.result, px=probs[0], py=probs[1], pz=probs[2])
-            )
-
-        if insert_before:
-            for n in nodes:
-                n.insert_before(node)
-        else:
-            for n in reversed(nodes):
-                n.insert_after(node)
-
-    def insert_cz_gate_noise(
-        self,
-        node: ir.Statement,
-        ctrls: ir.SSAValue,
-        qargs: ir.SSAValue,
-    ):
-        native.CZPauliChannel(
-            ctrls,
-            qargs,
-            px_ctrl=self.noise_model.cz_paired_gate_px,
-            py_ctrl=self.noise_model.cz_paired_gate_py,
-            pz_ctrl=self.noise_model.cz_paired_gate_pz,
-            px_qarg=self.noise_model.cz_paired_gate_px,
-            py_qarg=self.noise_model.cz_paired_gate_py,
-            pz_qarg=self.noise_model.cz_paired_gate_pz,
-            paired=True,
-        ).insert_before(node)
-
-        native.CZPauliChannel(
-            ctrls,
-            qargs,
-            px_ctrl=self.noise_model.cz_unpaired_gate_px,
-            py_ctrl=self.noise_model.cz_unpaired_gate_py,
-            pz_ctrl=self.noise_model.cz_unpaired_gate_pz,
-            px_qarg=self.noise_model.cz_unpaired_gate_px,
-            py_qarg=self.noise_model.cz_unpaired_gate_py,
-            pz_qarg=self.noise_model.cz_unpaired_gate_pz,
-            paired=False,
-        ).insert_before(node)
-
-    def rewrite_cz_gate(self, node: uop.CZ):
-        qarg_addr = self.address_analysis[node.qarg]
-        ctrl_addr = self.address_analysis[node.ctrl]
-
-        if not isinstance(qarg_addr, address.AddressQubit) or not isinstance(
-            ctrl_addr, address.AddressQubit
-        ):
-            return result.RewriteResult()
-
-        other_qubits = sorted(set(self.qubit_ssa_value.keys()) - {node.qarg, node.ctrl})
-        errors = self.noise_model.parallel_cz_errors(
-            [ctrl_addr.data], [qarg_addr.data], other_qubits
-        )
-        self.insert_move_noise_channels(node, errors, insert_before=True)
-        (
-            ctrls := ilist.New(values=[self.qubit_ssa_value[ctrl_addr.data]])
-        ).insert_before(node)
-        (
-            qargs := ilist.New(values=[self.qubit_ssa_value[qarg_addr.data]])
-        ).insert_before(node)
-        self.insert_cz_gate_noise(
-            node,
-            ctrls.result,
-            qargs.result,
-        )
-        self.insert_move_noise_channels(node, errors, insert_before=False)
-        return result.RewriteResult(has_done_something=True)
-
     def rewrite_global_single_qubit_gate(self, node: glob.UGate):
         addrs = self.address_analysis[node.registers]
         if not isinstance(addrs, address.AddressTuple):
@@ -367,6 +282,90 @@ class NoiseRewriteRule(result_abc.RewriteRule):
         assert isinstance(node.qargs.stmt, ilist.New)
         return self.insert_single_qubit_noise(node, node.qargs.stmt.values, probs)
 
+    def move_noise_stmts(
+        self,
+        errors: Dict[Tuple[float, float, float, float], List[int]],
+    ) -> list[ir.Statement]:
+
+        nodes = []
+
+        for probs, qubits in errors.items():
+            if len(qubits) == 0:
+                continue
+
+            nodes.append(
+                qargs := ilist.New(tuple(self.qubit_ssa_value[q] for q in qubits))
+            )
+            nodes.append(native.AtomLossChannel(qargs.result, prob=probs[3]))
+            nodes.append(
+                native.PauliChannel(qargs.result, px=probs[0], py=probs[1], pz=probs[2])
+            )
+
+        return nodes
+
+    def cz_gate_noise(
+        self,
+        ctrls: ir.SSAValue,
+        qargs: ir.SSAValue,
+    ) -> list[ir.Statement]:
+        return [
+            native.CZPauliChannel(
+                ctrls,
+                qargs,
+                px_ctrl=self.noise_model.cz_paired_gate_px,
+                py_ctrl=self.noise_model.cz_paired_gate_py,
+                pz_ctrl=self.noise_model.cz_paired_gate_pz,
+                px_qarg=self.noise_model.cz_paired_gate_px,
+                py_qarg=self.noise_model.cz_paired_gate_py,
+                pz_qarg=self.noise_model.cz_paired_gate_pz,
+                paired=True,
+            ),
+            native.CZPauliChannel(
+                ctrls,
+                qargs,
+                px_ctrl=self.noise_model.cz_unpaired_gate_px,
+                py_ctrl=self.noise_model.cz_unpaired_gate_py,
+                pz_ctrl=self.noise_model.cz_unpaired_gate_pz,
+                px_qarg=self.noise_model.cz_unpaired_gate_px,
+                py_qarg=self.noise_model.cz_unpaired_gate_py,
+                pz_qarg=self.noise_model.cz_unpaired_gate_pz,
+                paired=False,
+            ),
+            native.AtomLossChannel(ctrls, prob=self.noise_model.cz_gate_loss_prob),
+            native.AtomLossChannel(qargs, prob=self.noise_model.cz_gate_loss_prob),
+        ]
+
+    def rewrite_cz_gate(self, node: uop.CZ):
+        qarg_addr = self.address_analysis[node.qarg]
+        ctrl_addr = self.address_analysis[node.ctrl]
+
+        if not isinstance(qarg_addr, address.AddressQubit) or not isinstance(
+            ctrl_addr, address.AddressQubit
+        ):
+            return result.RewriteResult()
+
+        other_qubits = sorted(set(self.qubit_ssa_value.keys()) - {node.qarg, node.ctrl})
+        errors = self.noise_model.parallel_cz_errors(
+            [ctrl_addr.data], [qarg_addr.data], other_qubits
+        )
+        self.move_noise_stmts(node, errors, insert_before=True)
+        self.move_noise_stmts(node, errors, insert_before=False)
+        (ctrls := ilist.New([self.qubit_ssa_value[ctrl_addr.data]])).insert_after(node)
+        (qargs := ilist.New([self.qubit_ssa_value[qarg_addr.data]])).insert_after(node)
+        move_noise_nodes = self.move_noise_stmts(errors)
+        gate_noise_nodes = self.cz_gate_noise(ctrls.result, qargs.result)
+
+        for new_node in move_noise_nodes:
+            new_node.insert_before(node)
+
+        for new_node in gate_noise_nodes:
+            new_node.insert_before(node)
+
+        for new_node in reversed(move_noise_nodes):
+            new_node.from_stmt(new_node).insert_after(node)
+
+        return result.RewriteResult(has_done_something=True)
+
     def rewrite_parallel_cz_gate(self, node: parallel.CZ):
         ctrls = self.address_analysis[node.ctrls]
         qargs = self.address_analysis[node.qargs]
@@ -384,11 +383,20 @@ class NoiseRewriteRule(result_abc.RewriteRule):
         ctrl_qubits = list(map(lambda addr: addr.data, ctrls.data))
         qarg_qubits = list(map(lambda addr: addr.data, qargs.data))
         rest = sorted(set(self.qubit_ssa_value.keys()) - set(ctrl_qubits + qarg_qubits))
-        groups = self.noise_model.parallel_cz_errors(ctrl_qubits, qarg_qubits, rest)
+        errors = self.noise_model.parallel_cz_errors(ctrl_qubits, qarg_qubits, rest)
 
-        self.insert_move_noise_channels(node, groups, insert_before=True)
-        self.insert_cz_gate_noise(node, node.ctrls, node.qargs)
-        self.insert_move_noise_channels(node, groups, insert_before=False)
+        move_noise_nodes = self.move_noise_stmts(errors)
+        gate_noise_nodes = self.cz_gate_noise(node.ctrls, node.qargs)
+
+        for new_node in move_noise_nodes:
+            new_node.insert_before(node)
+
+        for new_node in gate_noise_nodes:
+            new_node.insert_before(node)
+
+        for new_node in reversed(move_noise_nodes):
+            new_node.from_stmt(new_node).insert_after(node)
+
         return result.RewriteResult(has_done_something=True)
 
 
@@ -396,15 +404,7 @@ class NoiseRewriteRule(result_abc.RewriteRule):
 def mt():
     q = qasm2.qreg(4)
 
-    qasm2.h(q[0])
-    qasm2.h(q[1])
-    qasm2.h(q[2])
-    qasm2.h(q[3])
     qasm2.parallel.cz(ctrls=[q[0], q[2]], qargs=[q[1], q[3]])
-    qasm2.h(q[0])
-    qasm2.h(q[1])
-    qasm2.h(q[2])
-    qasm2.h(q[3])
 
     return q
 
