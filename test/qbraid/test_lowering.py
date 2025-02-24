@@ -1,10 +1,14 @@
+import io
+import difflib
 from typing import List
 
 from kirin import ir, types
 from bloqade import qasm2
+from rich.console import Console
 from bloqade.noise import native
 from bloqade.qbraid import schema, lowering
-from kirin.dialects import func
+from kirin.dialects import func, ilist
+from bloqade.qasm2.dialects import parallel
 
 
 def as_int(value: int):
@@ -42,19 +46,31 @@ def run_assert(noise_model: schema.NoiseModel, expected_stmts: List[ir.Statement
     try:
         assert expected_mt.code.is_structurally_equal(mt.code)
     except AssertionError as e:
-        print("Generated:")
-        mt.print()
-        print("Expected:")
-        expected_mt.print()
+
+        gn_con = Console(record=True, file=io.StringIO())
+        mt.print(console=gn_con)
+
+        gn = gn_con.export_text()
+
+        expected_con = Console(record=True, file=io.StringIO())
+        expected_mt.print(console=expected_con)
+
+        expected = expected_con.export_text()
+
+        diff = difflib.Differ().compare(
+            expected.splitlines(),
+            gn.splitlines(),
+        )
+
+        print("\n".join(diff))
+
         raise e
 
 
 def test_lowering_cz():
 
     survival_prob_0_value = 0.9
-    survival_prob_1_value = 0.9
-    survival_prob_5_value = 1.0
-    survival_prob_3_value = 0.5
+    survival_prob_1_value = 1.0
 
     px_stor_5_value = 0.1
     py_stor_5_value = 0.2
@@ -85,8 +101,8 @@ def test_lowering_cz():
         survival_prob=(
             survival_prob_0_value,
             survival_prob_1_value,
-            survival_prob_5_value,
-            survival_prob_3_value,
+            survival_prob_0_value,
+            survival_prob_1_value,
         ),
         storage_error=schema.PauliErrorModel(
             errors=((5, (px_stor_5_value, py_stor_5_value, pz_stor_5_value)),),
@@ -131,61 +147,47 @@ def test_lowering_cz():
         (idx3 := as_int(3)),
         (q3 := qasm2.core.QRegGet(reg.result, idx=idx3.result)),
         (_ := qasm2.core.CRegGet(creg.result, idx=idx3.result)),
-        (survival_prob_0 := as_float(survival_prob_0_value)),
-        native.AtomLossChannel(survival_prob_0.result, q0.result),
-        (survival_prob_1 := as_float(survival_prob_1_value)),
-        native.AtomLossChannel(survival_prob_1.result, q1.result),
-        (survival_prob_5 := as_float(survival_prob_5_value)),
-        native.AtomLossChannel(survival_prob_5.result, q5.result),
-        (survival_prob_3 := as_float(survival_prob_3_value)),
-        native.AtomLossChannel(survival_prob_3.result, q3.result),
-        (px_stor_5 := as_float(px_stor_5_value)),
-        (py_stor_5 := as_float(py_stor_5_value)),
-        (pz_stor_5 := as_float(pz_stor_5_value)),
+        (group_0 := ilist.New((q0.result, q5.result))),
+        native.AtomLossChannel(group_0.result, prob=survival_prob_0_value),
+        (group_1 := ilist.New((q1.result, q3.result))),
+        native.AtomLossChannel(group_1.result, prob=survival_prob_1_value),
+        (qargs := ilist.New((q5.result,))),
         native.PauliChannel(
-            px_stor_5.result, py_stor_5.result, pz_stor_5.result, q5.result
+            qargs.result, px=px_stor_5_value, py=py_stor_5_value, pz=pz_stor_5_value
         ),
-        (px_sing_0 := as_float(px_sing_0_value)),
-        (py_sing_0 := as_float(py_sing_0_value)),
-        (pz_sing_0 := as_float(pz_sing_0_value)),
-        (px_sing_1 := as_float(px_sing_1_value)),
-        (py_sing_1 := as_float(py_sing_1_value)),
-        (pz_sing_1 := as_float(pz_sing_1_value)),
-        native.CZPauliChannel(
-            px_sing_0.result,
-            py_sing_0.result,
-            pz_sing_0.result,
-            px_sing_1.result,
-            py_sing_1.result,
-            pz_sing_1.result,
-            q0.result,
-            q1.result,
-            paired=False,
+        (qargs := ilist.New((q3.result,))),
+        native.PauliChannel(
+            qargs.result, px=px_sing_3_value, py=py_sing_3_value, pz=pz_sing_3_value
         ),
-        (px_ent_0 := as_float(px_ent_0_value)),
-        (py_ent_0 := as_float(py_ent_0_value)),
-        (pz_ent_0 := as_float(pz_ent_0_value)),
-        (px_ent_1 := as_float(px_ent_1_value)),
-        (py_ent_1 := as_float(py_ent_1_value)),
-        (pz_ent_1 := as_float(pz_ent_1_value)),
+        (ctrls := ilist.New((q0.result,))),
+        (qargs := ilist.New((q1.result,))),
         native.CZPauliChannel(
-            px_ent_0.result,
-            py_ent_0.result,
-            pz_ent_0.result,
-            px_ent_1.result,
-            py_ent_1.result,
-            pz_ent_1.result,
-            q0.result,
-            q1.result,
+            ctrls.result,
+            qargs.result,
+            px_ctrl=px_ent_0_value,
+            py_ctrl=py_ent_0_value,
+            pz_ctrl=pz_ent_0_value,
+            px_qarg=px_ent_1_value,
+            py_qarg=py_ent_1_value,
+            pz_qarg=pz_ent_1_value,
             paired=True,
         ),
-        (px_sing_3 := as_float(px_sing_3_value)),
-        (py_sing_3 := as_float(py_sing_3_value)),
-        (pz_sing_3 := as_float(pz_sing_3_value)),
-        native.PauliChannel(
-            px_sing_3.result, py_sing_3.result, pz_sing_3.result, q3.result
+        (ctrls := ilist.New((q0.result,))),
+        (qargs := ilist.New((q1.result,))),
+        native.CZPauliChannel(
+            ctrls.result,
+            qargs.result,
+            px_ctrl=px_sing_0_value,
+            py_ctrl=py_sing_0_value,
+            pz_ctrl=pz_sing_0_value,
+            px_qarg=px_sing_1_value,
+            py_qarg=py_sing_1_value,
+            pz_qarg=pz_sing_1_value,
+            paired=False,
         ),
-        qasm2.uop.CZ(q0.result, q1.result),
+        (ctrls := ilist.New((q0.result,))),
+        (qargs := ilist.New((q1.result,))),
+        parallel.CZ(ctrls.result, qargs.result),
         func.Return(creg.result),
     ]
 
@@ -221,14 +223,11 @@ def test_lowering_global_w():
         (idx0 := as_int(0)),
         (q0 := qasm2.core.QRegGet(reg.result, idx=idx0.result)),
         (_ := qasm2.core.CRegGet(creg.result, idx=idx0.result)),
-        (survival_prob_0 := as_float(0.9)),
-        native.AtomLossChannel(survival_prob_0.result, q0.result),
-        (px_sing_0 := as_float(0.1)),
-        (py_sing_0 := as_float(0.2)),
-        (pz_sing_0 := as_float(0.3)),
-        native.PauliChannel(
-            px_sing_0.result, py_sing_0.result, pz_sing_0.result, q0.result
-        ),
+        (qargs := ilist.New((q0.result,))),
+        native.AtomLossChannel(qargs.result, prob=0.9),
+        (qargs := ilist.New((q0.result,))),
+        native.PauliChannel(qargs.result, px=0.1, py=0.2, pz=0.3),
+        (qargs := ilist.New((q0.result,))),
         (pi_theta := qasm2.expr.ConstPI()),
         (theta_num := as_float(2 * theta_val)),
         (theta := qasm2.expr.Mul(pi_theta.result, theta_num.result)),
@@ -238,8 +237,8 @@ def test_lowering_global_w():
         (pi_lam := qasm2.expr.ConstPI()),
         (lam_num := as_float(2 * -(0.5 + phi_val))),
         (lam := qasm2.expr.Mul(pi_lam.result, lam_num.result)),
-        qasm2.uop.UGate(
-            theta=theta.result, phi=phi.result, lam=lam.result, qarg=q0.result
+        parallel.UGate(
+            theta=theta.result, phi=phi.result, lam=lam.result, qargs=qargs.result
         ),
         func.Return(creg.result),
     ]
@@ -282,22 +281,15 @@ def test_lowering_local_w():
         (idx1 := as_int(1)),
         (q1 := qasm2.core.QRegGet(reg.result, idx=idx1.result)),
         (_ := qasm2.core.CRegGet(creg.result, idx=idx1.result)),
-        (survival_prob_0 := as_float(0.9)),
-        native.AtomLossChannel(survival_prob_0.result, q0.result),
-        (survival_prob_1 := as_float(0.4)),
-        native.AtomLossChannel(survival_prob_1.result, q1.result),
-        (px_sing_0 := as_float(0.1)),
-        (py_sing_0 := as_float(0.2)),
-        (pz_sing_0 := as_float(0.3)),
-        native.PauliChannel(
-            px_sing_0.result, py_sing_0.result, pz_sing_0.result, q0.result
-        ),
-        (px_sing_1 := as_float(0.5)),
-        (py_sing_1 := as_float(0.1)),
-        (pz_sing_1 := as_float(0.2)),
-        native.PauliChannel(
-            px_sing_1.result, py_sing_1.result, pz_sing_1.result, q1.result
-        ),
+        (qargs := ilist.New((q0.result,))),
+        native.AtomLossChannel(qargs.result, prob=0.9),
+        (qargs := ilist.New((q1.result,))),
+        native.AtomLossChannel(qargs.result, prob=0.4),
+        (qargs := ilist.New((q0.result,))),
+        native.PauliChannel(qargs.result, px=0.1, py=0.2, pz=0.3),
+        (qargs := ilist.New((q1.result,))),
+        native.PauliChannel(qargs.result, px=0.5, py=0.1, pz=0.2),
+        (qargs := ilist.New((q1.result,))),
         (pi_theta := qasm2.expr.ConstPI()),
         (theta_num := as_float(2 * theta_val)),
         (theta := qasm2.expr.Mul(pi_theta.result, theta_num.result)),
@@ -307,8 +299,8 @@ def test_lowering_local_w():
         (pi_lam := qasm2.expr.ConstPI()),
         (lam_num := as_float(2 * -(0.5 + phi_val))),
         (lam := qasm2.expr.Mul(pi_lam.result, lam_num.result)),
-        qasm2.uop.UGate(
-            theta=theta.result, phi=phi.result, lam=lam.result, qarg=q1.result
+        parallel.UGate(
+            qargs=qargs.result, theta=theta.result, phi=phi.result, lam=lam.result
         ),
         func.Return(creg.result),
     ]
@@ -344,18 +336,15 @@ def test_lowering_global_rz():
         (idx0 := as_int(0)),
         (q0 := qasm2.core.QRegGet(reg.result, idx=idx0.result)),
         (_ := qasm2.core.CRegGet(creg.result, idx=idx0.result)),
-        (survival_prob_0 := as_float(0.9)),
-        native.AtomLossChannel(survival_prob_0.result, q0.result),
-        (px_sing_0 := as_float(0.1)),
-        (py_sing_0 := as_float(0.2)),
-        (pz_sing_0 := as_float(0.3)),
-        native.PauliChannel(
-            px_sing_0.result, py_sing_0.result, pz_sing_0.result, q0.result
-        ),
+        (qargs := ilist.New((q0.result,))),
+        native.AtomLossChannel(qargs.result, prob=0.9),
+        (qargs := ilist.New((q0.result,))),
+        native.PauliChannel(qargs.result, px=0.1, py=0.2, pz=0.3),
+        (qargs := ilist.New((q0.result,))),
         (theta_pi := qasm2.expr.ConstPI()),
         (theta_num := as_float(2 * phi_val)),
         (theta := qasm2.expr.Mul(theta_pi.result, theta_num.result)),
-        qasm2.uop.RZ(theta=theta.result, qarg=q0.result),
+        parallel.RZ(theta=theta.result, qargs=qargs.result),
         func.Return(creg.result),
     ]
 
@@ -396,26 +385,19 @@ def test_lowering_local_rz():
         (idx1 := as_int(1)),
         (q1 := qasm2.core.QRegGet(reg.result, idx=idx1.result)),
         (_ := qasm2.core.CRegGet(creg.result, idx=idx1.result)),
-        (survival_prob_0 := as_float(0.9)),
-        native.AtomLossChannel(survival_prob_0.result, q0.result),
-        (survival_prob_1 := as_float(0.4)),
-        native.AtomLossChannel(survival_prob_1.result, q1.result),
-        (px_sing_0 := as_float(0.1)),
-        (py_sing_0 := as_float(0.2)),
-        (pz_sing_0 := as_float(0.3)),
-        native.PauliChannel(
-            px_sing_0.result, py_sing_0.result, pz_sing_0.result, q0.result
-        ),
-        (px_sing_1 := as_float(0.5)),
-        (py_sing_1 := as_float(0.1)),
-        (pz_sing_1 := as_float(0.2)),
-        native.PauliChannel(
-            px_sing_1.result, py_sing_1.result, pz_sing_1.result, q1.result
-        ),
+        (qargs := ilist.New((q0.result,))),
+        native.AtomLossChannel(qargs.result, prob=0.9),
+        (qargs := ilist.New((q1.result,))),
+        native.AtomLossChannel(qargs.result, prob=0.4),
+        (qargs := ilist.New((q0.result,))),
+        native.PauliChannel(qargs.result, px=0.1, py=0.2, pz=0.3),
+        (qargs := ilist.New((q1.result,))),
+        native.PauliChannel(qargs.result, px=0.5, py=0.1, pz=0.2),
+        (qargs := ilist.New((q1.result,))),
         (theta_pi := qasm2.expr.ConstPI()),
         (theta_num := as_float(2 * phi_val)),
         (theta := qasm2.expr.Mul(theta_pi.result, theta_num.result)),
-        qasm2.uop.RZ(theta=theta.result, qarg=q1.result),
+        parallel.RZ(theta=theta.result, qargs=qargs.result),
         func.Return(creg.result),
     ]
 
