@@ -53,15 +53,19 @@ def prep_resource_state(theta: float):
 
 # %%
 @qasm2.extended
-def z_phase_gate_postselect(target: qasm2.Qubit, theta: float):
+def z_phase_gate_postselect(target: qasm2.Qubit, theta: float) -> qasm2.Qubit:
     ancilla = prep_resource_state(theta)
     qasm2.cx(ancilla, target)
     creg = qasm2.creg(1)
     qasm2.measure(target, creg[0])
+    if creg[0] == 1:
+        qasm2.x(ancilla)
+    return ancilla
 
 
 # %% [markdown]
-# To (deterministically) implement the gate, we can recursively apply the gadget.
+# To (deterministically) implement the gate, we can recursively apply the gadget by correcting
+# the angle of the Z gate by applying Z(+2*theta).
 # Observe that, while it is efficient to represent this as a composition of kernels,
 # there is no equivalent representation as a circuit, as the number of resource qubits and
 # total number of gates is not known until runtime.
@@ -69,7 +73,7 @@ def z_phase_gate_postselect(target: qasm2.Qubit, theta: float):
 
 # %%
 @qasm2.extended
-def z_phase_gate_recursive(target: qasm2.Qubit, theta: float):
+def z_phase_gate_recursive(target: qasm2.Qubit, theta: float) -> qasm2.Qubit:
     """
     https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337 Fig. 7
     """
@@ -77,10 +81,11 @@ def z_phase_gate_recursive(target: qasm2.Qubit, theta: float):
     qasm2.cx(ancilla, target)
     creg = qasm2.creg(1)
     qasm2.measure(target, creg[0])
+    if creg[0] == 0:
+        return z_phase_gate_recursive(ancilla, 2 * theta)
     if creg[0] == 1:
-        qasm2.reset(ancilla)
-        z_phase_gate_recursive(ancilla, 2 * theta)
-        return
+        qasm2.x(ancilla)
+    return ancilla
 
 
 # %% [markdown]
@@ -96,71 +101,74 @@ def z_phase_gate_loop(target: qasm2.Qubit, theta: float, attempts: int):
     """
     https://journals.aps.org/prxquantum/pdf/10.1103/PRXQuantum.5.010337 Fig. 7
     """
-    creg = qasm2.creg(1)
-
+    creg = qasm2.creg(1)  # Implicitly initialized to 0, thanks qasm...
     for ctr in range(attempts):
         ancilla = prep_resource_state(theta * (2**ctr))
         if creg[0] == 0:
             qasm2.cx(ancilla, target)
             qasm2.measure(target, creg[0])
-
-        if creg[0] == 1:
-            qasm2.reset(ancilla)
             target = ancilla
+    qasm2.x(target)
 
 
-# Lets try to get pyqrack interpreter to run
+# %% [markdown] Before we analyze these circuits, we must declare a main function
+# which takes no inputs, as qasm2 does not support parameterized circuits or
+# subcircuits.
 
-# %%
-from bloqade.pyqrack import PyQrack  # noqa: E402
+theta = 0.1  # Specify some Z rotation angle. Note that this is being defined
 
-theta = 0.1
+
+# outside the main function and being used inside the function via closure.
+@qasm2.extended
+def postselect_main():
+    target = qasm2.qreg(1)
+    z_phase_gate_postselect(target[0], theta)
 
 
 @qasm2.extended
 def recursion_main():
     target = qasm2.qreg(1)
     z_phase_gate_recursive(target[0], theta)
-    return target
 
 
 @qasm2.extended
 def loop_main():
     target = qasm2.qreg(1)
     z_phase_gate_loop(target[0], theta, 5)
-    return target
 
+
+# %% [markdown] Now lets explore running some interpreters on these circuits.
+# We support the quantum emulation backend PyQrack, which simulates quantum
+# circuits using state vectors.
+
+# %%
+from bloqade.pyqrack import PyQrack  # noqa: E402
 
 device = PyQrack()
-qreg = device.run(recursion_main)
+qreg = device.run(postselect_main)
 print(qreg)
 
 # %% [markdown]
-# Lets unwrap the postselection and loop versions of the gadget to see the qasm circuit.
+# Now lets generate the QASM2 code for these circuits! This is an example of code generation,
+# where we go from one DSL and translate to another.
 
 # %%
 from bloqade.qasm2.emit import QASM2  # noqa: E402
 from bloqade.qasm2.parse import pprint  # noqa: E402
 
-# qasm2 does not support parameterized circuits, so the entry point must be a function
-# of zero arguments. We can use a closure to pass the parameters from outside the function.
-
-# %%
-theta = 0.1
-
-
-@qasm2.extended
-def main():
-    target = qasm2.qreg(1)
-    return z_phase_gate_postselect(target[0], theta)
-
-
 target = QASM2()
-ast = target.emit(main)
-pprint(ast)
+qasm_postselect = target.emit(postselect_main)
+qasm_loop = target.emit(loop_main)
 
-# %% [markdown]
-# And now the loop version, which first needs to be unwrapped:
+try:  # The recursion version has no qasm representation.
+    qasm_recursive = target.emit(recursion_main)
+except RecursionError:
+    print("Whoops! We hit a recursion limit. This is expected.")
 
-# %%
-pprint(target.emit(loop_main))
+print("\n\n--- Postselect ---")
+pprint(qasm_postselect)
+print("\n\n--- Loop ---")
+pprint(qasm_loop)
+
+# We can also get qasm out as a string
+payload = target.emit_str(postselect_main)
