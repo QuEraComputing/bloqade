@@ -99,5 +99,4 @@ class GlobalToUOpRule(abc.RewriteRule, GlobalRewriteBase):
             stmt.insert_before(node)
 
         node.delete()
-
         return result.RewriteResult(has_done_something=True)
