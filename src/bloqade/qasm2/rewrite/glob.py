@@ -15,7 +15,7 @@ class GlobalRewriteBase:
 
     def get_qubit_ssa(self, node: glob.UGate):
         new_stmts: List[ir.Statement] = []
-
+        qubit_ssa: List[ir.SSAValue] = []
         # can't rewrite if the registers are coming from a block argument
         if not isinstance(node.registers, ir.ResultValue):
             return new_stmts, None
@@ -23,7 +23,6 @@ class GlobalRewriteBase:
         if not isinstance(node.registers.owner, ilist.New):
             return new_stmts, None
 
-        qubit_ssa = []
         register_ssa_values = node.registers.owner.values
 
         for register_ssa in register_ssa_values:
