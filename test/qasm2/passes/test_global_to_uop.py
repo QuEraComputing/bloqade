@@ -22,6 +22,7 @@ def test_global_rewrite():
         q1 = qasm2.qreg(1)
         q2 = qasm2.qreg(2)
 
+        qasm2.glob.u(theta=1.3, phi=1.1, lam=1.2, registers=[q2])
         qasm2.glob.u(theta=1.3, phi=1.1, lam=1.2, registers=[q1, q2])
 
     GlobalToUOP(dialects=main.dialects)(main)
