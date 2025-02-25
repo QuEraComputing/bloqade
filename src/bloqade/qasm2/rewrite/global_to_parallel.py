@@ -32,7 +32,6 @@ class GlobalToParallelRule(abc.RewriteRule):
             self.address_regs, self.address_reg_ssas
         ):
 
-            
             for qubit_idx in address_reg.data:
 
                 qubit_idx = py.constant.Constant(value=qubit_idx)
@@ -49,7 +48,9 @@ class GlobalToParallelRule(abc.RewriteRule):
         list_stmt = ilist.New(values=list_ssa)
         list_stmt.insert_before(node)
 
-        new_gate_stmt = qasm2.parallel.parallel.UGate(theta=node.theta, phi=node.phi, lam=node.lam, qargs=list_stmt.result)
+        new_gate_stmt = qasm2.dialects.parallel.UGate(
+            theta=node.theta, phi=node.phi, lam=node.lam, qargs=list_stmt.result
+        )
 
         new_gate_stmt.insert_before(node)
 
