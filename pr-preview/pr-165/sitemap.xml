@@ -17,6 +17,10 @@
          <lastmod>2025-02-25</lastmod>
     </url>
     <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/vision/</loc>
+         <lastmod>2025-02-25</lastmod>
+    </url>
+    <url>
          <loc>https://special-engine-kg8jlr7.pages.github.io/blog/</loc>
          <lastmod>2025-02-25</lastmod>
     </url>
@@ -57,11 +61,59 @@
          <lastmod>2025-02-25</lastmod>
     </url>
     <url>
-         <loc>https://special-engine-kg8jlr7.pages.github.io/quick_start/digital/</loc>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/quick_start/circuits/</loc>
          <lastmod>2025-02-25</lastmod>
     </url>
     <url>
-         <loc>https://special-engine-kg8jlr7.pages.github.io/quick_start/digital/qasm2/</loc>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/quick_start/circuits/API/qasm2_core/</loc>
+         <lastmod>2025-02-25</lastmod>
+    </url>
+    <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/quick_start/circuits/API/qasm2_inline_defunct/</loc>
+         <lastmod>2025-02-25</lastmod>
+    </url>
+    <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/quick_start/circuits/API/qasm2_noise/</loc>
+         <lastmod>2025-02-25</lastmod>
+    </url>
+    <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/quick_start/circuits/API/qasm2_parallel/</loc>
+         <lastmod>2025-02-25</lastmod>
+    </url>
+    <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/quick_start/circuits/API/qasm2_uop/</loc>
+         <lastmod>2025-02-25</lastmod>
+    </url>
+    <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/quick_start/circuits/compiler_passes/</loc>
+         <lastmod>2025-02-25</lastmod>
+    </url>
+    <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/quick_start/circuits/compiler_passes/asap_parallelism/</loc>
+         <lastmod>2025-02-25</lastmod>
+    </url>
+    <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/quick_start/circuits/compiler_passes/circuit_simplification/</loc>
+         <lastmod>2025-02-25</lastmod>
+    </url>
+    <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/quick_start/circuits/compiler_passes/native_gate_rewrite/</loc>
+         <lastmod>2025-02-25</lastmod>
+    </url>
+    <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/quick_start/circuits/interpreters_and_analysis/</loc>
+         <lastmod>2025-02-25</lastmod>
+    </url>
+    <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/quick_start/circuits/interpreters_and_analysis/pyqrack_emulator/</loc>
+         <lastmod>2025-02-25</lastmod>
+    </url>
+    <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/quick_start/circuits/interpreters_and_analysis/qasm2_codegen/</loc>
+         <lastmod>2025-02-25</lastmod>
+    </url>
+    <url>
+         <loc>https://special-engine-kg8jlr7.pages.github.io/quick_start/qourier/</loc>
          <lastmod>2025-02-25</lastmod>
     </url>
     <url>
