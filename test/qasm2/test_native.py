@@ -12,7 +12,7 @@ def test_native():
 
     qasm2_cx.print()
 
-    Walk(RydbergGateSetRewriteRule()).rewrite(qasm2_cx.code)
+    Walk(RydbergGateSetRewriteRule(qasm2_cx.dialects)).rewrite(qasm2_cx.code)
 
     qasm2_cx.print()
 

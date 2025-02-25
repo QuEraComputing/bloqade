@@ -66,7 +66,7 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
             return py.constant.Constant(value=math.pi)
 
     def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
-
+        print("test", node)
         # only deal with uop
         if type(node) in uop.dialect.stmts:
             return getattr(self, f"rewrite_{node.name}")(node)
@@ -92,92 +92,92 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
             node,
         )
 
-    def rewrite_U(self, node: uop.UGate) -> abc.RewriteResult:
+    def rewrite_U(self, node: uop.UGate) -> result.RewriteResult:
         return result.RewriteResult()
 
-    def rewrite_id(self, node: uop.Id) -> abc.RewriteResult:
+    def rewrite_id(self, node: uop.Id) -> result.RewriteResult:
         node.delete()  # just delete the identity gate
-        return abc.RewriteResult(has_done_something=True)
+        return result.RewriteResult(has_done_something=True)
 
-    def rewrite_h(self, node: uop.H) -> abc.RewriteResult:
+    def rewrite_h(self, node: uop.H) -> result.RewriteResult:
         return self._rewrite_1q_gates(cirq.H(self.cached_qubits[0]), node)
 
-    def rewrite_x(self, node: uop.X) -> abc.RewriteResult:
+    def rewrite_x(self, node: uop.X) -> result.RewriteResult:
         return self._rewrite_1q_gates(cirq.X(self.cached_qubits[0]), node)
 
-    def rewrite_y(self, node: uop.Y) -> abc.RewriteResult:
+    def rewrite_y(self, node: uop.Y) -> result.RewriteResult:
         return self._rewrite_1q_gates(cirq.Y(self.cached_qubits[0]), node)
 
-    def rewrite_z(self, node: uop.Z) -> abc.RewriteResult:
+    def rewrite_z(self, node: uop.Z) -> result.RewriteResult:
         return self._rewrite_1q_gates(cirq.Z(self.cached_qubits[0]), node)
 
-    def rewrite_s(self, node: uop.S) -> abc.RewriteResult:
+    def rewrite_s(self, node: uop.S) -> result.RewriteResult:
         return self._rewrite_1q_gates(cirq.S(self.cached_qubits[0]), node)
 
-    def rewrite_sdg(self, node: uop.Sdag) -> abc.RewriteResult:
+    def rewrite_sdg(self, node: uop.Sdag) -> result.RewriteResult:
         return self._rewrite_1q_gates(cirq.S(self.cached_qubits[0]) ** -1, node)
 
-    def rewrite_t(self, node: uop.T) -> abc.RewriteResult:
+    def rewrite_t(self, node: uop.T) -> result.RewriteResult:
         return self._rewrite_1q_gates(cirq.T(self.cached_qubits[0]), node)
 
-    def rewrite_tdg(self, node: uop.Tdag) -> abc.RewriteResult:
+    def rewrite_tdg(self, node: uop.Tdag) -> result.RewriteResult:
         return self._rewrite_1q_gates(cirq.T(self.cached_qubits[0]) ** -1, node)
 
-    def rewrite_sx(self, node: uop.SX) -> abc.RewriteResult:
+    def rewrite_sx(self, node: uop.SX) -> result.RewriteResult:
         return self._rewrite_1q_gates(
             cirq.XPowGate(exponent=0.5).on(self.cached_qubits), node
         )
 
-    def rewrite_sxdg(self, node: uop.SXdag) -> abc.RewriteResult:
+    def rewrite_sxdg(self, node: uop.SXdag) -> result.RewriteResult:
         return self._rewrite_1q_gates(
             cirq.XPowGate(exponent=-0.5).on(self.cached_qubits), node
         )
 
-    def rewrite_u1(self, node: uop.U1) -> abc.RewriteResult:
+    def rewrite_u1(self, node: uop.U1) -> result.RewriteResult:
         theta = node.lam
         (phi := self.const_float(value=0.0)).insert_before(node)
         node.replace_by(
             uop.UGate(qarg=node.qarg, theta=phi.result, phi=phi.result, lam=theta)
         )
-        return abc.RewriteResult(has_done_something=True)
+        return result.RewriteResult(has_done_something=True)
 
-    def rewrite_u2(self, node: uop.U2) -> abc.RewriteResult:
+    def rewrite_u2(self, node: uop.U2) -> result.RewriteResult:
         phi = node.phi
         lam = node.lam
         (theta := self.const_float(value=math.pi / 2)).insert_before(node)
         node.replace_by(uop.UGate(qarg=node.qarg, theta=theta.result, phi=phi, lam=lam))
-        return abc.RewriteResult(has_done_something=True)
+        return result.RewriteResult(has_done_something=True)
 
-    def rewrite_rx(self, node: uop.RX) -> abc.RewriteResult:
+    def rewrite_rx(self, node: uop.RX) -> result.RewriteResult:
         theta = node.theta
         (phi := self.const_float(value=math.pi / 2)).insert_before(node)
         (lam := self.const_float(value=-math.pi / 2)).insert_before(node)
         node.replace_by(
             uop.UGate(qarg=node.qarg, theta=theta, phi=phi.result, lam=lam.result)
         )
-        return abc.RewriteResult(has_done_something=True)
+        return result.RewriteResult(has_done_something=True)
 
-    def rewrite_ry(self, node: uop.RY) -> abc.RewriteResult:
+    def rewrite_ry(self, node: uop.RY) -> result.RewriteResult:
         theta = node.theta
         (phi := self.const_float(value=0.0)).insert_before(node)
         node.replace_by(
             uop.UGate(qarg=node.qarg, theta=theta, phi=phi.result, lam=phi.result)
         )
-        return abc.RewriteResult(has_done_something=True)
+        return result.RewriteResult(has_done_something=True)
 
-    def rewrite_rz(self, node: uop.RZ) -> abc.RewriteResult:
+    def rewrite_rz(self, node: uop.RZ) -> result.RewriteResult:
         theta = node.theta
         (phi := self.const_float(value=0.0)).insert_before(node)
         node.replace_by(
             uop.UGate(qarg=node.qarg, theta=phi.result, phi=phi.result, lam=theta)
         )
-        return abc.RewriteResult(has_done_something=True)
+        return result.RewriteResult(has_done_something=True)
 
-    def rewrite_crx(self, node: uop.CRX) -> abc.RewriteResult:
+    def rewrite_crx(self, node: uop.CRX) -> result.RewriteResult:
         lam = self._get_const_value(node.lam)
 
         if lam is None:
-            return abc.RewriteResult()
+            return result.RewriteResult()
 
         return self._rewrite_2q_ctrl_gates(
             cirq.ControlledGate(cirq.Rx(rads=lam), 1).on(
@@ -186,11 +186,11 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
             node,
         )
 
-    def rewrite_cry(self, node: uop.CRY) -> abc.RewriteResult:
+    def rewrite_cry(self, node: uop.CRY) -> result.RewriteResult:
         lam = self._get_const_value(node.lam)
 
         if lam is None:
-            return abc.RewriteResult()
+            return result.RewriteResult()
 
         return self._rewrite_2q_ctrl_gates(
             cirq.ControlledGate(cirq.Ry(rads=lam), 1).on(
@@ -199,11 +199,11 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
             node,
         )
 
-    def rewrite_crz(self, node: uop.CRZ) -> abc.RewriteResult:
+    def rewrite_crz(self, node: uop.CRZ) -> result.RewriteResult:
         lam = self._get_const_value(node.lam)
 
         if lam is None:
-            return abc.RewriteResult()
+            return result.RewriteResult()
 
         return self._rewrite_2q_ctrl_gates(
             cirq.ControlledGate(cirq.Rz(rads=lam), 1).on(
@@ -212,12 +212,12 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
             node,
         )
 
-    def rewrite_cu1(self, node: uop.CU1) -> abc.RewriteResult:
+    def rewrite_cu1(self, node: uop.CU1) -> result.RewriteResult:
 
         lam = self._get_const_value(node.lam)
 
         if lam is None:
-            return abc.RewriteResult()
+            return result.RewriteResult()
 
         # cirq.ControlledGate(u3(0, 0, lambda))
         return self._rewrite_2q_ctrl_gates(
@@ -228,14 +228,14 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
         )
         pass
 
-    def rewrite_cu3(self, node: uop.CU3) -> abc.RewriteResult:
+    def rewrite_cu3(self, node: uop.CU3) -> result.RewriteResult:
 
         theta = self._get_const_value(node.theta)
         lam = self._get_const_value(node.lam)
         phi = self._get_const_value(node.phi)
 
         if not all((theta, phi, lam)):
-            return abc.RewriteResult()
+            return result.RewriteResult()
 
         # cirq.ControlledGate(u3(theta, lambda phi))
         return self._rewrite_2q_ctrl_gates(
@@ -245,7 +245,7 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
             node,
         )
 
-    def rewrite_cu(self, node: uop.CU) -> abc.RewriteResult:
+    def rewrite_cu(self, node: uop.CU) -> result.RewriteResult:
 
         gamma = self._get_const_value(node.gamma)
         theta = self._get_const_value(node.theta)
@@ -291,12 +291,12 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
             CU().on(self.cached_qubits[0], self.cached_qubits[1]), node
         )
 
-    def rewrite_rxx(self, node: uop.RXX) -> abc.RewriteResult:
+    def rewrite_rxx(self, node: uop.RXX) -> result.RewriteResult:
 
         theta = self._get_const_value(node.theta)
 
         if theta is None:
-            return abc.RewriteResult()
+            return result.RewriteResult()
 
         # even though the XX gate is not controlled,
         # the end U + CZ decomposition that happens internally means
@@ -307,11 +307,11 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
             node,
         )
 
-    def rewrite_rzz(self, node: uop.RZZ) -> abc.RewriteResult:
+    def rewrite_rzz(self, node: uop.RZZ) -> result.RewriteResult:
         theta = self._get_const_value(node.theta)
 
         if theta is None:
-            return abc.RewriteResult()
+            return result.RewriteResult()
 
         return self._rewrite_2q_ctrl_gates(
             cirq.ZZPowGate(exponent=theta).on(
