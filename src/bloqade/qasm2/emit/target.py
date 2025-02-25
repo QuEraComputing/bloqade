@@ -63,8 +63,8 @@ class QASM2:
             self.gate_target = self.gate_target.add(qasm2.dialects.parallel)
 
         if allow_global:
-            self.main_target = self.main_target.add(qasm2.glob)
-            self.gate_target = self.gate_target.add(qasm2.glob)
+            self.main_target = self.main_target.add(qasm2.dialects.glob)
+            self.gate_target = self.gate_target.add(qasm2.dialects.glob)
 
         if allow_global or allow_parallel:
             self.main_target = self.main_target.add(ilist)
