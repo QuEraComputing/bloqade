@@ -53,14 +53,14 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
 
     @cached_property
     def const_float(self):
-        if expr in self.dialect_group:
+        if expr in self.dialect_group.data:
             return expr.ConstFloat
         else:
             return py.constant.Constant
 
     @cached_property
     def const_pi(self):
-        if expr in self.dialect_group:
+        if expr in self.dialect_group.data:
             return expr.ConstPI()
         else:
             return py.constant.Constant(value=math.pi)
@@ -68,7 +68,7 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
     def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
 
         # only deal with uop
-        if node in uop.dialect.stmts:
+        if type(node) in uop.dialect.stmts:
             return getattr(self, f"rewrite_{node.name}")(node)
 
         return result.RewriteResult()
