@@ -22,8 +22,6 @@ class QASM2:
 
     def __init__(
         self,
-        # main_target: ir.DialectGroup | None = None,
-        # gate_target: ir.DialectGroup | None = None,
         qelib1: bool = True,
         allow_parallel: bool = False,
         allow_global: bool = False,
@@ -32,11 +30,22 @@ class QASM2:
         """Initialize the QASM2 target.
 
         Args:
+            allow_parallel (bool):
+                Allow parallel gate in the resulting QASM2 AST. Defaults to `False`.
+                In the case its False, and the input kernel uses parallel gates, they will get rewrite into uop gates.
+
+            allow_global (bool):
+                Allow global gate in the resulting QASM2 AST. Defaults to `False`.
+                In the case its False, and the input kernel uses global gates, they will get rewrite into parallel gates.
+                If both `allow_parallel` and `allow_global` are False, the input kernel will be rewritten to use uop gates.
+
             qelib1 (bool):
                 Include the `include "qelib1.inc"` line in the resulting QASM2 AST that's
                 submitted to qBraid. Defaults to `True`.
             custom_gate (bool):
                 Include the custom gate definitions in the resulting QASM2 AST. Defaults to `True`. If `False`, all the qasm2.gate will be inlined.
+
+
 
         """
         from bloqade import qasm2

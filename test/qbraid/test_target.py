@@ -48,8 +48,7 @@ def test_qBraid_emit():
 
     mock_provider = MockQBraidProvider()
     mock_qBraid_emitter = qBraid(
-        main_target=qasm2.main.add(qasm2.dialects.parallel).add(ilist),
-        gate_target=qasm2.gate.add(qasm2.dialects.parallel).add(ilist),
+        allow_parallel=True,
         provider=mock_provider,  # type: ignore
     )
     mock_qBraid_job = mock_qBraid_emitter.emit(method=main)
