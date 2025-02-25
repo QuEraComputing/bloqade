@@ -1092,7 +1092,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../quick_start/circuits/API/qasm2%20core/" class="md-nav__link">
+      <a href="../../../quick_start/circuits/API/qasm2_core/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1114,7 +1114,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../quick_start/circuits/API/qasm2%20noise/" class="md-nav__link">
+      <a href="../../../quick_start/circuits/API/qasm2_noise/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1136,7 +1136,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../quick_start/circuits/API/qasm2%20parallel/" class="md-nav__link">
+      <a href="../../../quick_start/circuits/API/qasm2_parallel/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1158,7 +1158,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../quick_start/circuits/API/qasm2%20uop/" class="md-nav__link">
+      <a href="../../../quick_start/circuits/API/qasm2_uop/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2298,8 +2298,187 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=db0a1d20">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5035c85b">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>Lets do a simple example of a prototype circuit that benefits from parallelism: QAOA
+solving the MaxCut problem. For more details, see <a href="https://arxiv.org/abs/1411.4028">arXiv:1411.4028</a>
+and the considerable literature that has developed around this algorithm.</p>
+<p>import math
+from typing import Any</p>
+<p>import kirin
+import networkx as nx
+from bloqade import qasm2
+from kirin.dialects import py, ilist</p>
+<p>pi = math.pi</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e9123329">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>MaxCut is a combinatorial graph problem that seeks to bi-partition the nodes of some
+graph G such that the number of edges between the two partitions is maximized.
+Here, we choose a random 3 regular graph with 32 nodes <a href="https://journals.aps.org/pra/abstract/10.1103/PhysRevA.103.042612">ref</a>
+N = 32
+G = nx.random_regular_graph(3, N, seed=42)</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b38de06f">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>To build the quantum program, we use a builder function and use closure to pass variables
+inside of the kernel function (kirin methods).
+In this case, the two variables that are passed inside are the edges and nodes of the graph.</p>
+<p>The QAOA first prepares the |+&gt; state as a superposition of all possible bitstrings,
+then repeats between the (diagonal) cost function and the mixer X with angles gamma and beta.
+It is parameterized by gamma and betas, which are each the p length lists of angles.</p>
+<p>Lets first implement the sequential version of the QAOA algorithm, which
+does not inform any parallelism to the compiler.</p>
+<p>def qaoa_sequential(G: nx.Graph) -&gt; kirin.ir.Method:</p>
+<pre><code>edges = list(G.edges)
+nodes = list(G.nodes)
+N = len(nodes)
+
+@qasm2.extended
+def kernel(gamma: ilist.IList[float, Any], beta: ilist.IList[float, Any]):
+    # Initialize the register in the |+&gt; state
+    qreg = qasm2.qreg(N)
+    for i in range(N):  # structural control flow is native to the Kirin compiler
+        qasm2.h(qreg[i])
+
+    # Repeat the cost and mixer layers
+    for i in range(len(gamma)):
+        # The cost layer, which corresponds to a ZZ(phase) gate applied
+        # to each edge of the graph
+        for j in range(len(edges)):
+            edge = edges[j]
+            qasm2.cx(qreg[edge[0]], qreg[edge[1]])
+            qasm2.rz(qreg[edge[1]], gamma[i])
+            qasm2.cx(qreg[edge[0]], qreg[edge[1]])
+        # The mixer layer, which corresponds to a X(phase) gate applied
+        # to each node of the graph
+        for j in range(N):
+            qasm2.rx(qreg[j], beta[i])
+
+    return qreg
+
+return kernel</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=06da8cbf">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>Next, lets implement a SIMD (Single Instruction, Multiple Data) version of the QAOA algorithm,
+which effectively represents the parallelism in the QAOA algorithm.
+This can be done by coloring the (commuting) ZZ(phase) gates into groups with non-overlapping
+sets of qubits, and then applying each of those groups in parallel.
+By <a href="https://en.wikipedia.org/wiki/Vizing%27s_theorem">Vizing's theorem</a> the edges of a graph
+can efficiently be colored into $\Delta+1$ colors, where $\Delta$ is the maximum degree of the graph.
+Unfortunately, networkx does not have a native implementation of the algorithm so instead we use
+the lesser [Brooks' theorem]<a href="https://en.wikipedia.org/wiki/Brooks%27_theorem">https://en.wikipedia.org/wiki/Brooks%27_theorem</a>) to color the edges
+using an equitable coloring of the line graph.</p>
+<p>def qaoa_simd(G: nx.Graph) -&gt; kirin.ir.Method:</p>
+<pre><code>nodes = list(G.nodes)
+
+# Note that graph computation is happening /outside/ the kernel function:
+# this is a computation that occurs on your laptop in Python when you generate
+# a program, as opposed to on a piece of quantum hardware, which is what
+# occurs inside of the kernel.
+Gline = nx.line_graph(G)
+colors = nx.algorithms.coloring.equitable_color(Gline, num_colors=5)
+left_ids = ilist.IList(
+    [
+        ilist.IList([edge[0] for edge in G.edges if colors[edge] == i])
+        for i in range(5)
+    ]
+)
+right_ids = ilist.IList(
+    [
+        ilist.IList([edge[1] for edge in G.edges if colors[edge] == i])
+        for i in range(5)
+    ]
+)
+# We can use composition of kernel functions to simplify repeated code.
+# Small snippets (say, the CX gate) can be written once and then called
+# many times.
+
+@qasm2.extended
+def parallel_h(qargs: ilist.IList[qasm2.Qubit, Any]):
+    qasm2.parallel.u(qargs=qargs, theta=pi / 2, phi=0.0, lam=pi)
+
+# A parallel CX gate is equivalently a parallel H gate, followed by a parallel CZ gate,
+# followed by another parallel H. the CZ can be done in any order as they permute.
+@qasm2.extended
+def parallel_cx(
+    ctrls: ilist.IList[qasm2.Qubit, Any], qargs: ilist.IList[qasm2.Qubit, Any]
+):
+    parallel_h(qargs)
+    qasm2.parallel.cz(ctrls, qargs)
+    parallel_h(qargs)
+
+@qasm2.extended
+def parallel_cz_phase(
+    ctrls: ilist.IList[qasm2.Qubit, Any],
+    qargs: ilist.IList[qasm2.Qubit, Any],
+    gamma: float,
+):
+    parallel_cx(ctrls, qargs)
+    qasm2.parallel.rz(qargs, gamma)
+    parallel_cx(ctrls, qargs)
+
+@qasm2.extended
+def kernel(gamma: ilist.IList[float, Any], beta: ilist.IList[float, Any]):
+    # Declare the register and set it to the |+&gt; state
+    qreg = qasm2.qreg(len(nodes))
+    # qasm2.glob.u(theta=pi / 2, phi=0.0, lam=pi,registers=[qreg])
+
+    def get_qubit(x: int):
+        return qreg[x]
+
+    all_qubits = ilist.map(fn=get_qubit, collection=range(N))
+
+    parallel_h(all_qubits)
+
+    for i in range(len(gamma)):  # For each QAOA layer...
+        # Do the ZZ phase gates...
+        for cind in range(
+            5
+        ):  # by applying a parallel CZ phase gate in parallel for each color,
+            ctrls = ilist.map(fn=get_qubit, collection=left_ids[cind])
+            qargs = ilist.map(fn=get_qubit, collection=right_ids[cind])
+            parallel_cz_phase(ctrls, qargs, gamma[i])
+        # ...then, do an X phase gate. Observe that because this happens on every
+        # qubit, we can do a global rotation, which is higher fidelity than
+        # parallel local rotations.
+        # qasm2.glob.u(theta=beta[i],phi=0.0,lam=0.0,registers=[qreg])
+        qasm2.parallel.u(qargs=all_qubits, theta=beta[i], phi=0.0, lam=0.0)
+
+    return qreg
+
+return kernel</code></pre>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f965465d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2317,18 +2496,18 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"--- Sequential ---"</span><span class="p">)</span>
+<span class="n">qaoa_sequential</span><span class="p">(</span><span class="n">G</span><span class="p">)</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1">import math
-from typing import Any</div>
+<div class="clipboard-copy-txt" id="cell-1">print("--- Sequential ---")
+qaoa_sequential(G).code.print()</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f404e24b">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b7c0922f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2346,20 +2525,22 @@ from typing import Any</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">qasm2</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">kirin.dialects</span><span class="w"> </span><span class="kn">import</span> <span class="n">py</span><span class="p">,</span> <span class="n">ilist</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">kernel</span> <span class="o">=</span> <span class="n">qaoa_simd</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n\n</span><span class="s2">--- Simd ---"</span><span class="p">)</span>
+<span class="n">kernel</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2">import networkx as nx
-from bloqade import qasm2
-from kirin.dialects import py, ilist</div>
+<div class="clipboard-copy-txt" id="cell-2">kernel = qaoa_simd(G)
+
+print("\n\n--- Simd ---")
+kernel.print()</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=452593c9">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9a06d4fa">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2377,22 +2558,20 @@ from kirin.dialects import py, ilist</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Define the problem instance as a MaxCut problem on a graph</span>
-<span class="n">pi</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">64</span>
-<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">random_regular_graph</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">kernel</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">])</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3"># Define the problem instance as a MaxCut problem on a graph
-pi = math.pi
-N = 64
-G = nx.random_regular_graph(3, N, seed=42)</div>
+<div class="clipboard-copy-txt" id="cell-3">@qasm2.extended
+def main():
+    kernel([0.1, 0.2], [0.3, 0.4])</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e4969e34">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9a4e1acd">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2410,299 +2589,18 @@ G = nx.random_regular_graph(3, N, seed=42)</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">qaoa_sequential</span><span class="p">(</span><span class="n">G</span><span class="p">):</span>
-
-    <span class="n">edges</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
-    <span class="n">nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-
-    <span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">kernel</span><span class="p">(</span><span class="n">gamma</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">delta</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
-        <span class="n">qreg</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">qreg</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-            <span class="n">qasm2</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gamma</span><span class="p">)):</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">edges</span><span class="p">)):</span>
-                <span class="n">edge</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-                <span class="n">qasm2</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">qreg</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
-                <span class="n">qasm2</span><span class="o">.</span><span class="n">rz</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">gamma</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-                <span class="n">qasm2</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">qreg</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
-
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-                <span class="n">qasm2</span><span class="o">.</span><span class="n">rx</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">delta</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-
-        <span class="k">return</span> <span class="n">qreg</span>
-
-    <span class="k">return</span> <span class="n">kernel</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-4">def qaoa_sequential(G):
-
-    edges = list(G.edges)
-    nodes = list(G.nodes)
-
-    @qasm2.extended
-    def kernel(gamma: ilist.IList[float, Any], delta: ilist.IList[float, Any]):
-        qreg = qasm2.qreg(len(nodes))
-        for i in range(N):
-            qasm2.h(qreg[i])
-
-        for i in range(len(gamma)):
-            for j in range(len(edges)):
-                edge = edges[j]
-                qasm2.cx(qreg[edge[0]], qreg[edge[1]])
-                qasm2.rz(qreg[edge[1]], gamma[i])
-                qasm2.cx(qreg[edge[0]], qreg[edge[1]])
-
-            for j in range(N):
-                qasm2.rx(qreg[j], delta[i])
-
-        return qreg
-
-    return kernel</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=016caa58">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">qaoa_simd</span><span class="p">(</span><span class="n">G</span><span class="p">):</span>
-
-    <span class="n">left_ids</span> <span class="o">=</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">([</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">])</span>
-    <span class="n">right_ids</span> <span class="o">=</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">([</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">])</span>
-    <span class="n">nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-
-    <span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">parallel_h</span><span class="p">(</span><span class="n">qargs</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">qasm2</span><span class="o">.</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
-        <span class="n">qasm2</span><span class="o">.</span><span class="n">parallel</span><span class="o">.</span><span class="n">u</span><span class="p">(</span><span class="n">qargs</span><span class="o">=</span><span class="n">qargs</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="n">pi</span><span class="p">)</span>
-
-    <span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">parallel_cx</span><span class="p">(</span>
-        <span class="n">ctrls</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">qasm2</span><span class="o">.</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">qargs</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">qasm2</span><span class="o">.</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
-    <span class="p">):</span>
-        <span class="n">parallel_h</span><span class="p">(</span><span class="n">qargs</span><span class="p">)</span>
-        <span class="n">qasm2</span><span class="o">.</span><span class="n">parallel</span><span class="o">.</span><span class="n">cz</span><span class="p">(</span><span class="n">ctrls</span><span class="p">,</span> <span class="n">qargs</span><span class="p">)</span>
-        <span class="n">parallel_h</span><span class="p">(</span><span class="n">qargs</span><span class="p">)</span>
-
-    <span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">parallel_cz_phase</span><span class="p">(</span>
-        <span class="n">ctrls</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">qasm2</span><span class="o">.</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">qargs</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">qasm2</span><span class="o">.</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="n">parallel_cx</span><span class="p">(</span><span class="n">ctrls</span><span class="p">,</span> <span class="n">qargs</span><span class="p">)</span>
-        <span class="n">qasm2</span><span class="o">.</span><span class="n">parallel</span><span class="o">.</span><span class="n">rz</span><span class="p">(</span><span class="n">qargs</span><span class="p">,</span> <span class="n">gamma</span><span class="p">)</span>
-        <span class="n">parallel_cx</span><span class="p">(</span><span class="n">ctrls</span><span class="p">,</span> <span class="n">qargs</span><span class="p">)</span>
-
-    <span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">kernel</span><span class="p">(</span><span class="n">gamma</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">beta</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
-        <span class="n">qreg</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">qreg</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">))</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">get_qubit</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">qreg</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
-
-        <span class="n">ctrls</span> <span class="o">=</span> <span class="n">ilist</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">get_qubit</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="n">left_ids</span><span class="p">)</span>
-        <span class="n">qargs</span> <span class="o">=</span> <span class="n">ilist</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">get_qubit</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="n">right_ids</span><span class="p">)</span>
-        <span class="n">all_qubits</span> <span class="o">=</span> <span class="n">ilist</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">get_qubit</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
-
-        <span class="n">parallel_h</span><span class="p">(</span><span class="n">all_qubits</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gamma</span><span class="p">)):</span>
-            <span class="n">parallel_cz_phase</span><span class="p">(</span><span class="n">ctrls</span><span class="p">,</span> <span class="n">qargs</span><span class="p">,</span> <span class="n">gamma</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-            <span class="n">qasm2</span><span class="o">.</span><span class="n">parallel</span><span class="o">.</span><span class="n">u</span><span class="p">(</span><span class="n">all_qubits</span><span class="p">,</span> <span class="n">beta</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">qreg</span>
-
-    <span class="k">return</span> <span class="n">kernel</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-5">def qaoa_simd(G):
-
-    left_ids = ilist.IList([edge[0] for edge in G.edges])
-    right_ids = ilist.IList([edge[1] for edge in G.edges])
-    nodes = list(G.nodes)
-
-    @qasm2.extended
-    def parallel_h(qargs: ilist.IList[qasm2.Qubit, Any]):
-        qasm2.parallel.u(qargs=qargs, theta=pi / 2, phi=0.0, lam=pi)
-
-    @qasm2.extended
-    def parallel_cx(
-        ctrls: ilist.IList[qasm2.Qubit, Any], qargs: ilist.IList[qasm2.Qubit, Any]
-    ):
-        parallel_h(qargs)
-        qasm2.parallel.cz(ctrls, qargs)
-        parallel_h(qargs)
-
-    @qasm2.extended
-    def parallel_cz_phase(
-        ctrls: ilist.IList[qasm2.Qubit, Any],
-        qargs: ilist.IList[qasm2.Qubit, Any],
-        gamma: float,
-    ):
-        parallel_cx(ctrls, qargs)
-        qasm2.parallel.rz(qargs, gamma)
-        parallel_cx(ctrls, qargs)
-
-    @qasm2.extended
-    def kernel(gamma: ilist.IList[float, Any], beta: ilist.IList[float, Any]):
-        qreg = qasm2.qreg(len(nodes))
-
-        def get_qubit(x: int):
-            return qreg[x]
-
-        ctrls = ilist.map(fn=get_qubit, collection=left_ids)
-        qargs = ilist.map(fn=get_qubit, collection=right_ids)
-        all_qubits = ilist.map(fn=get_qubit, collection=range(N))
-
-        parallel_h(all_qubits)
-        for i in range(len(gamma)):
-            parallel_cz_phase(ctrls, qargs, gamma[i])
-            qasm2.parallel.u(all_qubits, beta[i], 0.0, 0.0)
-
-        return qreg
-
-    return kernel</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=499f5d77">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"--- Sequential ---"</span><span class="p">)</span>
-<span class="n">qaoa_sequential</span><span class="p">(</span><span class="n">G</span><span class="p">)</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-6">print("--- Sequential ---")
-qaoa_sequential(G).code.print()</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=09fe9606">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-7">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">kernel</span> <span class="o">=</span> <span class="n">qaoa_simd</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n\n</span><span class="s2">--- Simd ---"</span><span class="p">)</span>
-<span class="n">kernel</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-7">kernel = qaoa_simd(G)
-
-print("\n\n--- Simd ---")
-kernel.print()</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4bc27742">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-8">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-    <span class="n">kernel</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">])</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-8">@qasm2.extended
-def main():
-    kernel([0.1, 0.2], [0.3, 0.4])</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6cdbc582">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-9">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">emit</span><span class="o">.</span><span class="n">QASM2</span><span class="p">(</span>
-    <span class="n">main_target</span><span class="o">=</span><span class="n">qasm2</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">union</span><span class="p">([</span><span class="n">qasm2</span><span class="o">.</span><span class="n">dialects</span><span class="o">.</span><span class="n">parallel</span><span class="p">,</span> <span class="n">ilist</span><span class="p">,</span> <span class="n">py</span><span class="o">.</span><span class="n">constant</span><span class="p">])</span>
+    <span class="n">main_target</span><span class="o">=</span><span class="n">qasm2</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">union</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">qasm2</span><span class="o">.</span><span class="n">dialects</span><span class="o">.</span><span class="n">parallel</span><span class="p">,</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">dialects</span><span class="o">.</span><span class="n">glob</span><span class="p">,</span> <span class="n">ilist</span><span class="p">,</span> <span class="n">py</span><span class="o">.</span><span class="n">constant</span><span class="p">]</span>
+    <span class="p">)</span>
 <span class="p">)</span>
 <span class="n">ast</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
 <span class="n">qasm2</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">ast</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-9">target = qasm2.emit.QASM2(
-    main_target=qasm2.main.union([qasm2.dialects.parallel, ilist, py.constant])
+<div class="clipboard-copy-txt" id="cell-4">target = qasm2.emit.QASM2(
+    main_target=qasm2.main.union(
+        [qasm2.dialects.parallel, qasm2.dialects.glob, ilist, py.constant]
+    )
 )
 ast = target.emit(main)
 qasm2.parse.pprint(ast)</div>
