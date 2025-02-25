@@ -71,4 +71,6 @@ def test_global2para_rewrite():
     qasm2.main.run_pass(expected_method)
     Fixpoint(Walk(CommonSubexpressionElimination())).rewrite(expected_method.code)
     assert expected_method.code.is_equal(main.code)
+
+
 test_global2para_rewrite()
