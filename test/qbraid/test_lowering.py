@@ -67,7 +67,8 @@ def run_assert(noise_model: schema.NoiseModel, expected_stmts: List[ir.Statement
     assert lowering.qbraid_noise.run_pass
     lowering.qbraid_noise.run_pass(expected_mt)
 
-    noise_model.lower_noise_model("test")
+    mt = noise_model.lower_noise_model("test")
+    assert_with_print(expected_mt, mt)
 
 
 def test_lowering_cz():
