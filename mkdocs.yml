@@ -14,7 +14,7 @@ nav:
       - Background: background.md
       - Vision: vision.md
       - Quick Start:
-        - Circuits: 
+        - Circuits:
           - quick_start/circuits/index.md
           - Examples:
             - Quantum Fourier Transform: "digital/examples/qft.py"
@@ -32,10 +32,10 @@ nav:
             - QASM2 Codegen: quick_start/circuits/interpreters_and_analysis/qasm2_codegen.md
             - PyQrack emulator: quick_start/circuits/interpreters_and_analysis/pyqrack_emulator.md
           - Circuit dialect API:
-            - QASM2 Core: quick_start/circuits/API/qasm2 core.md
-            - QASM2 Noise: quick_start/circuits/API/qasm2 noise.md
-            - QASM2 Parallel: quick_start/circuits/API/qasm2 parallel.md
-            - QASM2 Uop: quick_start/circuits/API/qasm2 uop.md
+            - QASM2 Core: quick_start/circuits/API/qasm2_core.md
+            - QASM2 Noise: quick_start/circuits/API/qasm2_noise.md
+            - QASM2 Parallel: quick_start/circuits/API/qasm2_parallel.md
+            - QASM2 Uop: quick_start/circuits/API/qasm2_uop.md
         - Analog:
           - quick_start/analog/index.md
         - Qourier:
