@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from kirin import ir
 from bloqade import qasm2
 from kirin.rewrite import abc, result
-from kirin.dialects import py
+from kirin.dialects import py, ilist
 from bloqade.analysis import address
 from bloqade.qasm2.dialects import glob
 
@@ -27,9 +27,14 @@ class GlobalToUOpRule(abc.RewriteRule):
         if not self.address_regs:
             return result.RewriteResult()
 
-        for address_reg, address_reg_ssa in zip(
-            self.address_regs, self.address_reg_ssas
-        ):
+        ilist_stmt = node.registers.owner
+        assert isinstance(ilist_stmt, ilist.New)
+
+        active_reg_idx = [self.address_reg_ssas.index(reg) for reg in ilist_stmt.values]
+
+        for idx in active_reg_idx:
+            address_reg = self.address_regs[idx]
+            address_reg_ssa = self.address_reg_ssas[idx]
 
             for qubit_idx in address_reg.data:
 

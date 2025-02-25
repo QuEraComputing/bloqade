@@ -27,10 +27,15 @@ class GlobalToParallelRule(abc.RewriteRule):
         if not self.address_regs:
             return result.RewriteResult()
 
+        ilist_stmt = node.registers.owner
+        assert isinstance(ilist_stmt, ilist.New)
+
+        active_reg_idx = [self.address_reg_ssas.index(reg) for reg in ilist_stmt.values]
+
         list_ssa = []
-        for address_reg, address_reg_ssa in zip(
-            self.address_regs, self.address_reg_ssas
-        ):
+        for idx in active_reg_idx:
+            address_reg = self.address_regs[idx]
+            address_reg_ssa = self.address_reg_ssas[idx]
 
             for qubit_idx in address_reg.data:
 
