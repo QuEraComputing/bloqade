@@ -89,7 +89,7 @@ class QASM2:
         QASM2Fold(entry.dialects, inline_gate_subroutine=not self.custom_gate).fixpoint(
             entry
         )
-        entry.print()
+
         if not self.allow_global:
             # rewrite global to parallel
             GlobalToParallel(dialects=entry.dialects)(entry)
