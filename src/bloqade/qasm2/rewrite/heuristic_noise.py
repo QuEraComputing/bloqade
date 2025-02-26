@@ -16,6 +16,7 @@ from bloqade.qasm2.dialects import uop, core, glob, parallel
 @dataclass
 class NoiseModelABC(abc.ABC):
     # rate = prob/time
+    # numbers are just randomly chosen
 
     move_px_rate: float = field(default=1e-6, kw_only=True)
     move_py_rate: float = field(default=1e-6, kw_only=True)
@@ -61,6 +62,8 @@ class NoiseModelABC(abc.ABC):
     @staticmethod
     def poisson_pauli_prob(rate: float, duration: float) -> float:
         """Calculate the number of noise events and their probabilities for a given rate and duration."""
+        assert duration >= 0, "Duration must be non-negative"
+        assert rate >= 0, "Rate must be non-negative"
         return 0.5 * (1 - math.exp(-2 * rate * duration))
 
     @classmethod
@@ -102,8 +105,10 @@ class FixLocationNoiseModel(NoiseModelABC):
 
         return [tuple(zip(*group)) for group in groups]
 
-    def calculate_move_duration(self, ctrls: List[int], qargs: List[int]) -> float:
-        """Calculate the time it takes to move the qubits from the ctrl to the qarg qubits."""
+    def assign_gate_slots(
+        self, ctrls: List[int], qargs: List[int]
+    ) -> Dict[int, Tuple[int, int]]:
+        """Allocate slots for the qubits to move to."""
 
         position_pairs = list(zip(qargs, ctrls))
         # sort by the distance between the ctrl and qarg qubits
@@ -133,6 +138,13 @@ class FixLocationNoiseModel(NoiseModelABC):
                     break
 
             assert found, "No slot found"
+
+        return slots
+
+    def calculate_move_duration(self, ctrls: List[int], qargs: List[int]) -> float:
+        """Calculate the time it takes to move the qubits from the ctrl to the qarg qubits."""
+
+        slots = self.assign_gate_slots(ctrls, qargs)
 
         qarg_x_distance = float("-inf")
         ctrl_x_distance = float("-inf")
@@ -164,7 +176,6 @@ class FixLocationNoiseModel(NoiseModelABC):
 
         """
         groups = self.deconflict(ctrls, qargs)
-
         move_duration = sum(map(self.calculate_move_duration, *zip(*groups)))
 
         px_time = self.poisson_pauli_prob(self.move_px_rate, move_duration)
