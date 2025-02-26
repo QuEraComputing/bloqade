@@ -89,8 +89,7 @@ class QASM2:
         QASM2Fold(entry.dialects, inline_gate_subroutine=not self.custom_gate).fixpoint(
             entry
         )
-        Py2QASM(entry.dialects)(entry)
-
+        entry.print()
         if not self.allow_global:
             # rewrite global to parallel
             GlobalToParallel(dialects=entry.dialects)(entry)
@@ -98,6 +97,8 @@ class QASM2:
         if not self.allow_parallel:
             # rewrite parallel to uop
             ParallelToUOp(dialects=entry.dialects)(entry)
+
+        Py2QASM(entry.dialects)(entry)
 
         target_main = EmitQASM2Main(self.main_target)
         target_main.run(
@@ -121,7 +122,6 @@ class QASM2:
 
                 fn = fn.similar(self.gate_target)
                 QASM2Fold(fn.dialects).fixpoint(fn)
-                Py2QASM(fn.dialects)(fn)
 
                 if not self.allow_global:
                     # rewrite global to parallel
@@ -130,6 +130,8 @@ class QASM2:
                 if not self.allow_parallel:
                     # rewrite parallel to uop
                     ParallelToUOp(dialects=fn.dialects)(fn)
+
+                Py2QASM(fn.dialects)(fn)
 
                 target_gate.run(
                     fn, tuple(ast.Name(name) for name in fn.arg_names[1:])
