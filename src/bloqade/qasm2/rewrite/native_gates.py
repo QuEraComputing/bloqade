@@ -313,12 +313,37 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
         if theta is None:
             return result.RewriteResult()
 
+        class Rzz(cirq.Gate):
+            def __init__(self):
+                super(Rzz, self)
+
+            def _num_qubits_(self):
+                return 2
+
+            def _decompose_(self, qubits):
+                a, b = qubits
+                # taken from qelib1 definition
+                # cx a, b
+                yield cirq.CX(a, b)
+                # u1(theta) a, b -> where u1(theta) = u3(0,0,theta) = QasmUGate(0,0,theta/math.pi)
+                yield QasmUGate(theta=0, phi=0, lmda=theta / math.pi)(b)
+                # cx a, b
+                yield cirq.CX(a, b)
+
+            def _circuit_diagram_info_(self, args):
+                return "rzz", "rzz"
+
         return self._rewrite_2q_ctrl_gates(
-            cirq.ZZPowGate(exponent=theta).on(
-                self.cached_qubits[0], self.cached_qubits[1]
-            ),
+            Rzz().on(self.cached_qubits[0], self.cached_qubits[1]),
             node,
         )
+
+        """
+        return self._rewrite_2q_ctrl_gates(
+            cirq.ZZPowGate(exponent = theta).on(self.cached_qubits[0], self.cached_qubits[1])
+            ,node
+        )
+        """
 
     def _get_const_value(self, ssa: ir.SSAValue) -> Optional[float | int]:
         if not isinstance(ssa, ir.ResultValue) or not isinstance(
