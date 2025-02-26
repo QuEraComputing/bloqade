@@ -1,5 +1,4 @@
 from bloqade import qasm2
-from kirin.dialects import ilist
 
 
 def test_global():
@@ -11,8 +10,7 @@ def test_global():
         qasm2.glob.u(theta=0.1, phi=0.2, lam=0.3, registers=[qreg, qreg1])
 
     target = qasm2.emit.QASM2(
-        main_target=qasm2.main.add(qasm2.dialects.glob).add(ilist),
-        gate_target=qasm2.gate.add(qasm2.dialects.glob).add(ilist),
+        allow_global=True,
         custom_gate=True,
     )
     qasm2_str = target.emit_str(glob_u)
@@ -37,8 +35,7 @@ def test_para():
     para_u.print()
 
     target = qasm2.emit.QASM2(
-        main_target=qasm2.main.add(qasm2.dialects.parallel).add(ilist),
-        gate_target=qasm2.gate.add(qasm2.dialects.parallel).add(ilist),
+        allow_parallel=True,
         custom_gate=True,
     )
     qasm2_str = target.emit_str(para_u)

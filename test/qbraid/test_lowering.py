@@ -19,6 +19,31 @@ def as_float(value: float):
     return qasm2.expr.ConstFloat(value=value)
 
 
+def assert_with_print(expected_mt: ir.Method, mt: ir.Method):
+    try:
+        assert expected_mt.code.is_structurally_equal(mt.code)
+    except AssertionError as e:
+
+        gn_con = Console(record=True, file=io.StringIO())
+        mt.print(console=gn_con)
+
+        gn = gn_con.export_text()
+
+        expected_con = Console(record=True, file=io.StringIO())
+        expected_mt.print(console=expected_con)
+
+        expected = expected_con.export_text()
+
+        diff = difflib.Differ().compare(
+            expected.splitlines(),
+            gn.splitlines(),
+        )
+
+        print("\n".join(diff))
+
+        raise e
+
+
 def run_assert(noise_model: schema.NoiseModel, expected_stmts: List[ir.Statement]):
 
     block = ir.Block(stmts=expected_stmts)
@@ -43,28 +68,7 @@ def run_assert(noise_model: schema.NoiseModel, expected_stmts: List[ir.Statement
     lowering.qbraid_noise.run_pass(expected_mt)
 
     mt = noise_model.lower_noise_model("test")
-    try:
-        assert expected_mt.code.is_structurally_equal(mt.code)
-    except AssertionError as e:
-
-        gn_con = Console(record=True, file=io.StringIO())
-        mt.print(console=gn_con)
-
-        gn = gn_con.export_text()
-
-        expected_con = Console(record=True, file=io.StringIO())
-        expected_mt.print(console=expected_con)
-
-        expected = expected_con.export_text()
-
-        diff = difflib.Differ().compare(
-            expected.splitlines(),
-            gn.splitlines(),
-        )
-
-        print("\n".join(diff))
-
-        raise e
+    assert_with_print(expected_mt, mt)
 
 
 def test_lowering_cz():
