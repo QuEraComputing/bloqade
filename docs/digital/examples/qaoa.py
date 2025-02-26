@@ -1,57 +1,115 @@
-# %%
+# %% [markdown]
+# Lets do a simple example of a prototype circuit that benefits from parallelism: QAOA
+# solving the MaxCut problem. For more details, see [arXiv:1411.4028](https://arxiv.org/abs/1411.4028)
+# and the considerable literature that has developed around this algorithm.
+
 import math
 from typing import Any
 
-# %%
+import kirin
 import networkx as nx
 from bloqade import qasm2
 from kirin.dialects import py, ilist
 
-# %%
-# Define the problem instance as a MaxCut problem on a graph
 pi = math.pi
-N = 64
+
+# %% [markdown]
+# MaxCut is a combinatorial graph problem that seeks to bi-partition the nodes of some
+# graph G such that the number of edges between the two partitions is maximized.
+# Here, we choose a random 3 regular graph with 32 nodes [ref](https://journals.aps.org/pra/abstract/10.1103/PhysRevA.103.042612)
+N = 32
 G = nx.random_regular_graph(3, N, seed=42)
 
 
-# %%
-def qaoa_sequential(G):
+# %% [markdown]
+# To build the quantum program, we use a builder function and use closure to pass variables
+# inside of the kernel function (kirin methods).
+# In this case, the two variables that are passed inside are the edges and nodes of the graph.
+#
+# The QAOA first prepares the |+> state as a superposition of all possible bitstrings,
+# then repeats between the (diagonal) cost function and the mixer X with angles gamma and beta.
+# It is parameterized by gamma and betas, which are each the p length lists of angles.
+#
+# Lets first implement the sequential version of the QAOA algorithm, which
+# does not inform any parallelism to the compiler.
+
+
+def qaoa_sequential(G: nx.Graph) -> kirin.ir.Method:
 
     edges = list(G.edges)
     nodes = list(G.nodes)
+    N = len(nodes)
 
     @qasm2.extended
-    def kernel(gamma: ilist.IList[float, Any], delta: ilist.IList[float, Any]):
-        qreg = qasm2.qreg(len(nodes))
-        for i in range(N):
+    def kernel(gamma: ilist.IList[float, Any], beta: ilist.IList[float, Any]):
+        # Initialize the register in the |+> state
+        qreg = qasm2.qreg(N)
+        for i in range(N):  # structural control flow is native to the Kirin compiler
             qasm2.h(qreg[i])
 
+        # Repeat the cost and mixer layers
         for i in range(len(gamma)):
+            # The cost layer, which corresponds to a ZZ(phase) gate applied
+            # to each edge of the graph
             for j in range(len(edges)):
                 edge = edges[j]
                 qasm2.cx(qreg[edge[0]], qreg[edge[1]])
                 qasm2.rz(qreg[edge[1]], gamma[i])
                 qasm2.cx(qreg[edge[0]], qreg[edge[1]])
-
+            # The mixer layer, which corresponds to a X(phase) gate applied
+            # to each node of the graph
             for j in range(N):
-                qasm2.rx(qreg[j], delta[i])
+                qasm2.rx(qreg[j], beta[i])
 
         return qreg
 
     return kernel
 
 
-# %%
-def qaoa_simd(G):
+# %% [markdown]
+# Next, lets implement a SIMD (Single Instruction, Multiple Data) version of the QAOA algorithm,
+# which effectively represents the parallelism in the QAOA algorithm.
+# This can be done by coloring the (commuting) ZZ(phase) gates into groups with non-overlapping
+# sets of qubits, and then applying each of those groups in parallel.
+# By [Vizing's theorem](https://en.wikipedia.org/wiki/Vizing%27s_theorem) the edges of a graph
+# can efficiently be colored into $\Delta+1$ colors, where $\Delta$ is the maximum degree of the graph.
+# Unfortunately, networkx does not have a native implementation of the algorithm so instead we use
+# the lesser [Brooks' theorem]https://en.wikipedia.org/wiki/Brooks%27_theorem) to color the edges
+# using an equitable coloring of the line graph.
 
-    left_ids = ilist.IList([edge[0] for edge in G.edges])
-    right_ids = ilist.IList([edge[1] for edge in G.edges])
+
+def qaoa_simd(G: nx.Graph) -> kirin.ir.Method:
+
     nodes = list(G.nodes)
+
+    # Note that graph computation is happening /outside/ the kernel function:
+    # this is a computation that occurs on your laptop in Python when you generate
+    # a program, as opposed to on a piece of quantum hardware, which is what
+    # occurs inside of the kernel.
+    Gline = nx.line_graph(G)
+    colors = nx.algorithms.coloring.equitable_color(Gline, num_colors=5)
+    left_ids = ilist.IList(
+        [
+            ilist.IList([edge[0] for edge in G.edges if colors[edge] == i])
+            for i in range(5)
+        ]
+    )
+    right_ids = ilist.IList(
+        [
+            ilist.IList([edge[1] for edge in G.edges if colors[edge] == i])
+            for i in range(5)
+        ]
+    )
+    # We can use composition of kernel functions to simplify repeated code.
+    # Small snippets (say, the CX gate) can be written once and then called
+    # many times.
 
     @qasm2.extended
     def parallel_h(qargs: ilist.IList[qasm2.Qubit, Any]):
         qasm2.parallel.u(qargs=qargs, theta=pi / 2, phi=0.0, lam=pi)
 
+    # A parallel CX gate is equivalently a parallel H gate, followed by a parallel CZ gate,
+    # followed by another parallel H. the CZ can be done in any order as they permute.
     @qasm2.extended
     def parallel_cx(
         ctrls: ilist.IList[qasm2.Qubit, Any], qargs: ilist.IList[qasm2.Qubit, Any]
@@ -72,19 +130,30 @@ def qaoa_simd(G):
 
     @qasm2.extended
     def kernel(gamma: ilist.IList[float, Any], beta: ilist.IList[float, Any]):
+        # Declare the register and set it to the |+> state
         qreg = qasm2.qreg(len(nodes))
+        # qasm2.glob.u(theta=pi / 2, phi=0.0, lam=pi,registers=[qreg])
 
         def get_qubit(x: int):
             return qreg[x]
 
-        ctrls = ilist.map(fn=get_qubit, collection=left_ids)
-        qargs = ilist.map(fn=get_qubit, collection=right_ids)
         all_qubits = ilist.map(fn=get_qubit, collection=range(N))
 
         parallel_h(all_qubits)
-        for i in range(len(gamma)):
-            parallel_cz_phase(ctrls, qargs, gamma[i])
-            qasm2.parallel.u(all_qubits, beta[i], 0.0, 0.0)
+
+        for i in range(len(gamma)):  # For each QAOA layer...
+            # Do the ZZ phase gates...
+            for cind in range(
+                5
+            ):  # by applying a parallel CZ phase gate in parallel for each color,
+                ctrls = ilist.map(fn=get_qubit, collection=left_ids[cind])
+                qargs = ilist.map(fn=get_qubit, collection=right_ids[cind])
+                parallel_cz_phase(ctrls, qargs, gamma[i])
+            # ...then, do an X phase gate. Observe that because this happens on every
+            # qubit, we can do a global rotation, which is higher fidelity than
+            # parallel local rotations.
+            # qasm2.glob.u(theta=beta[i],phi=0.0,lam=0.0,registers=[qreg])
+            qasm2.parallel.u(qargs=all_qubits, theta=beta[i], phi=0.0, lam=0.0)
 
         return qreg
 
@@ -110,7 +179,9 @@ def main():
 
 # %%
 target = qasm2.emit.QASM2(
-    main_target=qasm2.main.union([qasm2.dialects.parallel, ilist, py.constant])
+    main_target=qasm2.main.union(
+        [qasm2.dialects.parallel, qasm2.dialects.glob, ilist, py.constant]
+    )
 )
 ast = target.emit(main)
 qasm2.parse.pprint(ast)

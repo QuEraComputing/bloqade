@@ -12,20 +12,43 @@ nav:
       - index.md
       - Installation: install.md
       - Background: background.md
+      - Vision: vision.md
       - Quick Start:
-        - Digital:
-          - quick_start/digital/index.md
-          - QASM2: quick_start/digital/qasm2.md
+        - Circuits:
+          - quick_start/circuits/index.md
+          - Examples:
+            - Quantum Fourier Transform: "digital/examples/qft.py"
+            - GHZ state preparation: "digital/examples/ghz.py"
+            - Pauli Exponential: "digital/examples/pauli_exponentiation.py"
+            - Repeat Until Success: "digital/examples/repeat_until_success.py"
+            - QAOA: "digital/examples/qaoa.py"
+          - Compiler passes:
+            - quick_start/circuits/compiler_passes/index.md
+            - Native gate rewrite: quick_start/circuits/compiler_passes/native_gate_rewrite.md
+            - ASAP Parallelism: quick_start/circuits/compiler_passes/asap_parallelism.md
+            - Circuit simplification: quick_start/circuits/compiler_passes/circuit_simplification.md
+          - Interpreters and analysis:
+            - quick_start/circuits/interpreters_and_analysis/index.md
+            - QASM2 Codegen: quick_start/circuits/interpreters_and_analysis/qasm2_codegen.md
+            - PyQrack emulator: quick_start/circuits/interpreters_and_analysis/pyqrack_emulator.md
+          - Circuit dialect API:
+            - QASM2 Core: quick_start/circuits/API/qasm2_core.md
+            - QASM2 Noise: quick_start/circuits/API/qasm2_noise.md
+            - QASM2 Parallel: quick_start/circuits/API/qasm2_parallel.md
+            - QASM2 Uop: quick_start/circuits/API/qasm2_uop.md
         - Analog:
           - quick_start/analog/index.md
+        - Qourier:
+          - quick_start/qourier/index.md
       - Contributing: contrib.md
   - Digital Tutorial:
     - digital/index.md
-    - Quantum Fourier Transform: "digital/examples/qft.py"
-    - GHZ state preparation: "digital/examples/ghz.py"
-    - Pauli Exponential: "digital/examples/pauli_exponentiation.py"
-    - Repeat Until Success: "digital/examples/repeat_until_success.py"
-    - QAOA: "digital/examples/qaoa.py"
+    - Circuits:
+      - Quantum Fourier Transform: "digital/examples/qft.py"
+      - GHZ state preparation: "digital/examples/ghz.py"
+      - Pauli Exponential: "digital/examples/pauli_exponentiation.py"
+      - Repeat Until Success: "digital/examples/repeat_until_success.py"
+      - QAOA: "digital/examples/qaoa.py"
   - Analog Tutorial: 'https://queracomputing.github.io/bloqade-python/latest/'
   - Blog:
     - blog/index.md
