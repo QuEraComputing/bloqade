@@ -2295,7 +2295,7 @@ A QASM2 AST object</p>
     <span class="n">QASM2Fold</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">dialects</span><span class="p">,</span> <span class="n">inline_gate_subroutine</span><span class="o">=</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_gate</span><span class="p">)</span><span class="o">.</span><span class="n">fixpoint</span><span class="p">(</span>
         <span class="n">entry</span>
     <span class="p">)</span>
-    <span class="n">entry</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_global</span><span class="p">:</span>
         <span class="c1"># rewrite global to parallel</span>
         <span class="n">GlobalToParallel</span><span class="p">(</span><span class="n">dialects</span><span class="o">=</span><span class="n">entry</span><span class="o">.</span><span class="n">dialects</span><span class="p">)(</span><span class="n">entry</span><span class="p">)</span>
