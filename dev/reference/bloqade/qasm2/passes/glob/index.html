@@ -1819,6 +1819,30 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#bloqade.qasm2.passes.glob.GlobalToParallel" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;GlobalToParallel
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" GlobalToParallel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bloqade.qasm2.passes.glob.GlobalToParallel--usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage Examples
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#bloqade.qasm2.passes.glob.GlobalToUOP" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;GlobalToUOP
@@ -1906,6 +1930,73 @@ which converts global gates to single qubit gates.</p>
 
 
 
+<h2 id="bloqade.qasm2.passes.glob.GlobalToParallel" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">GlobalToParallel</span>
+
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="kirin.passes.abc.Pass">Pass</span></code></p>
+
+
+        <p>Pass to convert Global gates into parallel gates.</p>
+<p>This pass rewrites the global unitary gate from the <code>qasm2.glob</code> dialect into multiple
+parallel gates in the <code>qasm2.parallel</code> dialect.</p>
+<h4 id="bloqade.qasm2.passes.glob.GlobalToParallel--usage-examples">Usage Examples</h4>
+<div class="highlight"><pre><span></span><code># Define kernel
+@qasm2.extended
+def main():
+    q1 = qasm2.qreg(1)
+    q2 = qasm2.qreg(2)
+
+    theta = 1.3
+    phi = 1.1
+    lam = 1.2
+
+    qasm2.glob.u(theta=theta, phi=phi, lam=lam, registers=[q1, q2])
+
+GlobalToParallel(dialects=main.dialects)(main)
+
+# Run rewrite
+GlobalToParallel(main.dialects)(main)
+</code></pre></div>
+<p>The <code>qasm2.glob.u</code> statement has been rewritten to individual gates:</p>
+<div class="highlight"><pre><span></span><code>qasm2.parallel.u(theta=theta, phi=phi, lam=lam, qargs=[q1[0], q2[0], q2[1]])
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
 <h2 id="bloqade.qasm2.passes.glob.GlobalToUOP" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">GlobalToUOP</span>
 
@@ -1942,7 +2033,7 @@ GlobalToUOP(main.dialects)(main)
 </code></pre></div>
 <p>The <code>qasm2.glob.u</code> statement has been rewritten to individual gates:</p>
 <div class="highlight"><pre><span></span><code>qasm2.uop.u(q1[0], theta, phi, lam)
-qasm2.uop.u(q1[0], theta, phi, lam)
+qasm2.uop.u(q2[0], theta, phi, lam)
 qasm2.uop.u(q2[1], theta, phi, lam)
 </code></pre></div>
 

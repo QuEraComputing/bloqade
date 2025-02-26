@@ -1918,9 +1918,9 @@
 
 </h2>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">QASM2</span><span class="p">(</span>
-    <span class="n">main_target</span><span class="p">:</span> <span class="n">DialectGroup</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">gate_target</span><span class="p">:</span> <span class="n">DialectGroup</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">qelib1</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">allow_parallel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">allow_global</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">custom_gate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
@@ -1946,37 +1946,37 @@
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>main_target</code>
+                <code>allow_parallel</code>
             </td>
             <td>
-                  <code><span title="kirin.ir.DialectGroup">DialectGroup</span> | None</code>
+                  <code><span title="bool">bool</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The dialects that were used in the definition of the kernel. This is used to
-generate the correct header for the resulting QASM2 AST. Argument defaults to <code>None</code>.
-Internally set to the <code>qasm2.main</code> group of dialects.</p>
+                <p>Allow parallel gate in the resulting QASM2 AST. Defaults to <code>False</code>.
+In the case its False, and the input kernel uses parallel gates, they will get rewrite into uop gates.</p>
               </div>
             </td>
             <td>
-                  <code>None</code>
+                  <code>False</code>
             </td>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>gate_target</code>
+                <code>allow_global</code>
             </td>
             <td>
-                  <code><span title="kirin.ir.DialectGroup">DialectGroup</span> | None</code>
+                  <code><span title="bool">bool</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The dialects involved in defining any custom gates in the kernel. Argument defaults to <code>None</code>.
-Internally set to the <code>qasm2.gate</code> group of dialects.</p>
+                <p>Allow global gate in the resulting QASM2 AST. Defaults to <code>False</code>.
+In the case its False, and the input kernel uses global gates, they will get rewrite into parallel gates.
+If both <code>allow_parallel</code> and <code>allow_global</code> are False, the input kernel will be rewritten to use uop gates.</p>
               </div>
             </td>
             <td>
-                  <code>None</code>
+                  <code>False</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -2022,10 +2022,7 @@ submitted to qBraid. Defaults to <code>True</code>.</p>
 
                   <details class="quote">
                     <summary>Source code in <code>src/bloqade/qasm2/emit/target.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">23</span>
 <span class="normal">24</span>
 <span class="normal">25</span>
 <span class="normal">26</span>
@@ -2051,36 +2048,77 @@ submitted to qBraid. Defaults to <code>True</code>.</p>
 <span class="normal">46</span>
 <span class="normal">47</span>
 <span class="normal">48</span>
-<span class="normal">49</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
-    <span class="n">main_target</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">DialectGroup</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">gate_target</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">DialectGroup</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">qelib1</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">allow_parallel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">allow_global</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">custom_gate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the QASM2 target.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        main_target (ir.DialectGroup | None):</span>
-<span class="sd">            The dialects that were used in the definition of the kernel. This is used to</span>
-<span class="sd">            generate the correct header for the resulting QASM2 AST. Argument defaults to `None`.</span>
-<span class="sd">            Internally set to the `qasm2.main` group of dialects.</span>
-<span class="sd">        gate_target (ir.DialectGroup | None):</span>
-<span class="sd">            The dialects involved in defining any custom gates in the kernel. Argument defaults to `None`.</span>
-<span class="sd">            Internally set to the `qasm2.gate` group of dialects.</span>
+<span class="sd">        allow_parallel (bool):</span>
+<span class="sd">            Allow parallel gate in the resulting QASM2 AST. Defaults to `False`.</span>
+<span class="sd">            In the case its False, and the input kernel uses parallel gates, they will get rewrite into uop gates.</span>
+
+<span class="sd">        allow_global (bool):</span>
+<span class="sd">            Allow global gate in the resulting QASM2 AST. Defaults to `False`.</span>
+<span class="sd">            In the case its False, and the input kernel uses global gates, they will get rewrite into parallel gates.</span>
+<span class="sd">            If both `allow_parallel` and `allow_global` are False, the input kernel will be rewritten to use uop gates.</span>
+
 <span class="sd">        qelib1 (bool):</span>
 <span class="sd">            Include the `include &quot;qelib1.inc&quot;` line in the resulting QASM2 AST that&#39;s</span>
 <span class="sd">            submitted to qBraid. Defaults to `True`.</span>
 <span class="sd">        custom_gate (bool):</span>
 <span class="sd">            Include the custom gate definitions in the resulting QASM2 AST. Defaults to `True`. If `False`, all the qasm2.gate will be inlined.</span>
 
+
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">qasm2</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">main_target</span> <span class="o">=</span> <span class="n">main_target</span> <span class="ow">or</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">main</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">gate_target</span> <span class="o">=</span> <span class="n">gate_target</span> <span class="ow">or</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">gate</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">main_target</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">main</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">gate_target</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">gate</span>
+
     <span class="bp">self</span><span class="o">.</span><span class="n">qelib1</span> <span class="o">=</span> <span class="n">qelib1</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">custom_gate</span> <span class="o">=</span> <span class="n">custom_gate</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">allow_parallel</span> <span class="o">=</span> <span class="n">allow_parallel</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">allow_global</span> <span class="o">=</span> <span class="n">allow_global</span>
+
+    <span class="k">if</span> <span class="n">allow_parallel</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_target</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">qasm2</span><span class="o">.</span><span class="n">dialects</span><span class="o">.</span><span class="n">parallel</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gate_target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gate_target</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">qasm2</span><span class="o">.</span><span class="n">dialects</span><span class="o">.</span><span class="n">parallel</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">allow_global</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_target</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">qasm2</span><span class="o">.</span><span class="n">dialects</span><span class="o">.</span><span class="n">glob</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gate_target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gate_target</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">qasm2</span><span class="o">.</span><span class="n">dialects</span><span class="o">.</span><span class="n">glob</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">allow_global</span> <span class="ow">or</span> <span class="n">allow_parallel</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_target</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ilist</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gate_target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gate_target</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ilist</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -2168,55 +2206,75 @@ A QASM2 AST object</p>
 
             <details class="quote">
               <summary>Source code in <code>src/bloqade/qasm2/emit/target.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span>
-<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">MainProgram</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">MainProgram</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Emit a QASM2 AST from the Bloqade kernel.</span>
 
 <span class="sd">    Args:</span>
@@ -2229,11 +2287,22 @@ A QASM2 AST object</p>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;entry method should not have arguments&quot;</span>
+
+    <span class="c1"># make a cloned instance of kernel</span>
     <span class="n">entry</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">similar</span><span class="p">()</span>
     <span class="n">QASM2Fold</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">dialects</span><span class="p">,</span> <span class="n">inline_gate_subroutine</span><span class="o">=</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_gate</span><span class="p">)</span><span class="o">.</span><span class="n">fixpoint</span><span class="p">(</span>
         <span class="n">entry</span>
     <span class="p">)</span>
     <span class="n">Py2QASM</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">dialects</span><span class="p">)(</span><span class="n">entry</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_global</span><span class="p">:</span>
+        <span class="c1"># rewrite global to parallel</span>
+        <span class="n">GlobalToParallel</span><span class="p">(</span><span class="n">dialects</span><span class="o">=</span><span class="n">entry</span><span class="o">.</span><span class="n">dialects</span><span class="p">)(</span><span class="n">entry</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_parallel</span><span class="p">:</span>
+        <span class="c1"># rewrite parallel to uop</span>
+        <span class="n">ParallelToUOp</span><span class="p">(</span><span class="n">dialects</span><span class="o">=</span><span class="n">entry</span><span class="o">.</span><span class="n">dialects</span><span class="p">)(</span><span class="n">entry</span><span class="p">)</span>
+
     <span class="n">target_main</span> <span class="o">=</span> <span class="n">EmitQASM2Main</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_target</span><span class="p">)</span>
     <span class="n">target_main</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
         <span class="n">entry</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">entry</span><span class="o">.</span><span class="n">arg_names</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
@@ -2257,6 +2326,15 @@ A QASM2 AST object</p>
             <span class="n">fn</span> <span class="o">=</span> <span class="n">fn</span><span class="o">.</span><span class="n">similar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gate_target</span><span class="p">)</span>
             <span class="n">QASM2Fold</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">dialects</span><span class="p">)</span><span class="o">.</span><span class="n">fixpoint</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
             <span class="n">Py2QASM</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">dialects</span><span class="p">)(</span><span class="n">fn</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_global</span><span class="p">:</span>
+                <span class="c1"># rewrite global to parallel</span>
+                <span class="n">GlobalToParallel</span><span class="p">(</span><span class="n">dialects</span><span class="o">=</span><span class="n">fn</span><span class="o">.</span><span class="n">dialects</span><span class="p">)(</span><span class="n">fn</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_parallel</span><span class="p">:</span>
+                <span class="c1"># rewrite parallel to uop</span>
+                <span class="n">ParallelToUOp</span><span class="p">(</span><span class="n">dialects</span><span class="o">=</span><span class="n">fn</span><span class="o">.</span><span class="n">dialects</span><span class="p">)(</span><span class="n">fn</span><span class="p">)</span>
+
             <span class="n">target_gate</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
                 <span class="n">fn</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">fn</span><span class="o">.</span><span class="n">arg_names</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
             <span class="p">)</span><span class="o">.</span><span class="n">expect</span><span class="p">()</span>
@@ -2342,27 +2420,27 @@ A QASM2 AST object</p>
 
             <details class="quote">
               <summary>Source code in <code>src/bloqade/qasm2/emit/target.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Emit a QASM2 AST from the Bloqade kernel.</span>
 
 <span class="sd">    Args:</span>

@@ -52,7 +52,7 @@
             * [py2qasm](bloqade/qasm2/passes/py2qasm.md)
         * [rewrite](bloqade/qasm2/rewrite/index.md)
             * [desugar](bloqade/qasm2/rewrite/desugar.md)
-            * [global_to_uop](bloqade/qasm2/rewrite/global_to_uop.md)
+            * [glob](bloqade/qasm2/rewrite/glob.md)
             * [parallel_to_uop](bloqade/qasm2/rewrite/parallel_to_uop.md)
             * [uop_to_parallel](bloqade/qasm2/rewrite/uop_to_parallel.md)
         * [types](bloqade/qasm2/types.md)
