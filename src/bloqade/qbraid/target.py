@@ -21,21 +21,23 @@ class qBraid:
     def __init__(
         self,
         *,
-        main_target: ir.DialectGroup | None = None,
-        gate_target: ir.DialectGroup | None = None,
+        allow_parallel: bool = False,
+        allow_global: bool = False,
         provider: "QbraidProvider",  # inject externally for easier mocking
         qelib1: bool = True,
     ) -> None:
         """Initialize the qBraid target.
 
         Args:
-            main_target (ir.DialectGroup | None):
-                The dialects that were used in the definition of the kernel. This is used to
-                generate the correct header for the resulting QASM2 AST. Argument defaults to `None`.
-                Internally set to the `qasm2.main` group of dialects.
-            gate_target (ir.DialectGroup | None):
-                The dialects involved in defining any custom gates in the kernel. Argument defaults to `None`.
-                Internally set to the `qasm2.gate` group of dialects.
+            allow_parallel (bool):
+                Allow parallel gate in the resulting QASM2 AST. Defaults to `False`.
+                In the case its False, and the input kernel uses parallel gates, they will get rewrite into uop gates.
+
+            allow_global (bool):
+                Allow global gate in the resulting QASM2 AST. Defaults to `False`.
+                In the case its False, and the input kernel uses global gates, they will get rewrite into parallel gates.
+                If both `allow_parallel` and `allow_global` are False, the input kernel will be rewritten to use uop gates.
+
             provider (QbraidProvider):
                 Qbraid-provided object to allow submission of the kernel to the QuEra simulator.
             qelib1 (bool):
@@ -43,12 +45,10 @@ class qBraid:
                 submitted to qBraid. Defaults to `True`.
         """
 
-        from bloqade import qasm2
-
-        self.main_target = main_target or qasm2.main
-        self.gate_target = gate_target or qasm2.gate
         self.qelib1 = qelib1
         self.provider = provider
+        self.allow_parallel = allow_parallel
+        self.allow_global = allow_global
 
     def emit(
         self,
@@ -74,8 +74,8 @@ class qBraid:
 
         # Convert method to QASM2 string
         qasm2_emitter = QASM2(
-            main_target=self.main_target,
-            gate_target=self.gate_target,
+            allow_parallel=self.allow_parallel,
+            allow_global=self.allow_global,
             qelib1=self.qelib1,
         )
         qasm2_prog = qasm2_emitter.emit_str(method)

@@ -5,10 +5,12 @@ from kirin import ir, types, passes
 from bloqade import noise, qasm2
 from bloqade.qbraid import schema
 from kirin.dialects import func, ilist
-from bloqade.qasm2.dialects import parallel
+from bloqade.qasm2.dialects import glob, parallel
 
 
-@ir.dialect_group([func, qasm2.core, qasm2.uop, qasm2.expr, noise.native])
+@ir.dialect_group(
+    [func, qasm2.core, qasm2.uop, parallel, glob, qasm2.expr, noise.native, ilist]
+)
 def qbraid_noise(
     self,
 ):
@@ -74,7 +76,6 @@ class Lowering:
             arg_names=[],
         )
         qbraid_noise.run_pass(mt)  # type: ignore
-
         return mt
 
     def process_noise_model(self, noise_model: schema.NoiseModel, return_qreg: bool):

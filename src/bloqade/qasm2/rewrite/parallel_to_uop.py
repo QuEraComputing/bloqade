@@ -13,7 +13,7 @@ class ParallelToUOpRule(abc.RewriteRule):
     address_analysis: Dict[ir.SSAValue, address.Address]
 
     def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
-        if node.dialect == parallel.dialect:
+        if type(node) in parallel.dialect.stmts:
             return getattr(self, f"rewrite_{node.name}")(node)
 
         return result.RewriteResult()
