@@ -1,23 +1,33 @@
+from typing import List
+
+import numpy as np
 from bloqade import qasm2
-from kirin.rewrite import walk
-from bloqade.analysis import address
-from bloqade.qasm2.rewrite.heuristic_noise import NoiseRewriteRule
+from pyqrack import QrackSimulator
+from bloqade.noise import native
+from bloqade.pyqrack import PyQrack
+from bloqade.pyqrack.reg import SimQReg
+from bloqade.qasm2.passes import NoisePass
 
 
-@qasm2.extended
+@qasm2.extended.add(native)
 def mt():
     q = qasm2.qreg(4)
 
-    qasm2.parallel.cz(ctrls=[q[0], q[2]], qargs=[q[1], q[3]])
+    ctrls = [q[0], q[2]]
+    qargs = [q[3], q[1]]
+
+    qasm2.parallel.cz(ctrls, qargs)
 
     return q
 
 
-address_analysis = address.AddressAnalysis(mt.dialects)
-frame, _ = address_analysis.run_analysis(mt)
-print(address_analysis.qubit_ssa_value)
-noise = walk.Walk(NoiseRewriteRule(frame.entries, address_analysis.qubit_ssa_value))
-noise.rewrite(mt.code)
+mt_copy = mt.similar()
 
+NoisePass(dialects=mt.dialects)(mt)
 
-mt.print()
+qregs: List[SimQReg[QrackSimulator]] = PyQrack().multi_run(mt, 1000)
+
+for qreg in qregs:
+    print(qreg.sim_reg.pauli_expectation([1], [0]))
+
+sv = np.array(qreg.sim_reg)

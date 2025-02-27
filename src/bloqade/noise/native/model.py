@@ -40,7 +40,7 @@ class NoiseModelABC(abc.ABC):
     cz_ungate_loss_prob: float = field(default=1e-3, kw_only=True)
 
     move_speed: float = field(default=1e-2, kw_only=True)
-    lattice_spacing: float = field(default=4.0, kw_only=True)
+    storage_spacing: float = field(default=4.0, kw_only=True)
 
     @classmethod
     @abc.abstractmethod
@@ -99,36 +99,46 @@ class TwoRowZoneModel(NoiseModelABC):
     def assign_gate_slots(
         self, ctrls: List[int], qargs: List[int]
     ) -> Dict[int, Tuple[int, int]]:
-        """Allocate slots for the qubits to move to."""
+        """Allocate slots for the qubits to move to. start from middle of atoms and move outwards
+        making sure to keep the ctrl qubits in ascending order.
 
-        position_pairs = list(zip(qargs, ctrls))
+        Note that we can do this because the move strategy is to move the ctrl qubits separately
+        from the qarg qubits, thus we don't have to worry about qarg qubits crossing the ctrl qubits
+        and vice versa. We pick the median of all the atoms because it distributes the qubits
+        as evenly as possible over the gate zone.
+
+        """
+
+        addr_pairs = list(zip(qargs, ctrls))
         # sort by the distance between the ctrl and qarg qubits
-        sorted(position_pairs, key=lambda ele: abs(ele[0] - ele[1]))
 
-        # greedy algorithm to find the best slot for each qubit pair
+        n_ctrls = len(ctrls)
+
+        ctrl_median = (
+            ctrls[n_ctrls // 2]
+            if n_ctrls % 2 == 1
+            else (ctrls[n_ctrls // 2 - 1] + ctrls[n_ctrls // 2]) / 2
+        )
+
+        all_addr = sorted(ctrls + qargs)
+        spatial_median = (
+            self.storage_spacing * (all_addr[n_ctrls] + all_addr[n_ctrls + 1]) / 2
+        )
+
+        addr_pairs.sort(key=lambda x: abs(x[0] - ctrl_median))
+
         slots = {}
-        while position_pairs:
-            ctrl, qarg = position_pairs.pop()
+        med_slot = int(spatial_median / self.gate_spacing)
+        left_slot = med_slot
+        right_slot = med_slot
+        slots[med_slot] = addr_pairs.pop(0)
+        while addr_pairs:
+            ctrl, qarg = addr_pairs.pop(0)
 
-            mid = (ctrl + qarg) * self.lattice_spacing / 2
-            slot = int(mid / self.gate_spacing)
-
-            if slot not in slots:
-                slots[slot] = (ctrl, qarg)
-                continue
-
-            # find the first slot that is not in slots that is close to the mid point
-            for i in range(1, len(slots) + 1):
-                if slot + i not in slots:
-                    slots[slot + i] = (ctrl, qarg)
-                    found = True
-                    break
-                elif slot - i not in slots:
-                    slots[slot - i] = (ctrl, qarg)
-                    found = True
-                    break
-
-            assert found, "No slot found"
+            if ctrl < ctrl_median:
+                slots[left_slot := left_slot + 1] = (ctrl, qarg)
+            else:
+                slots[right_slot := right_slot - 1] = (ctrl, qarg)
 
         return slots
 
@@ -143,11 +153,11 @@ class TwoRowZoneModel(NoiseModelABC):
         for slot, (ctrl, qarg) in slots.items():
             qarg_x_distance = max(
                 qarg_x_distance,
-                abs(qarg * self.lattice_spacing - slot * self.gate_spacing),
+                abs(qarg * self.storage_spacing - slot * self.gate_spacing),
             )
             ctrl_x_distance = max(
                 ctrl_x_distance,
-                abs(ctrl * self.lattice_spacing - slot * self.gate_spacing),
+                abs(ctrl * self.storage_spacing - slot * self.gate_spacing),
             )
 
         qarg_max_distance = math.sqrt(qarg_x_distance**2 + self.gate_zone_y_offset**2)
@@ -162,7 +172,7 @@ class TwoRowZoneModel(NoiseModelABC):
     ) -> Dict[Tuple[float, float, float, float], List[int]]:
         """Apply parallel gates by moving ctrl qubits to qarg qubits.
 
-        Deconfict the ctrl moves by finding subsets in which both the
+        Deconfict the qarg moves by finding subsets in which both the
         ctrl and the qarg qubits are in ascending order.
 
         """
