@@ -1,5 +1,5 @@
 import math
-from typing import Optional
+from typing import List, Optional
 from functools import cached_property
 from dataclasses import field, dataclass
 
@@ -30,6 +30,28 @@ class RydbergTargetGateset(cirq.CZTargetGateset):
         return max(2, self.cnz_max_size)
 
 
+class Rzz(cirq.Gate):
+    def __init__(self, *, rads: float):
+        super(Rzz, self)
+        self.rads = rads
+
+    def _num_qubits_(self):
+        return 2
+
+    def _decompose_(self, qubits):
+        a, b = qubits
+        # taken from qelib1 definition
+        # cx a, b
+        yield cirq.CX(a, b)
+        # u1(theta) a, b -> where u1(theta) = u3(0,0,theta) = QasmUGate(0,0,theta/math.pi)
+        yield cirq.Rz(rads=self.rads)(b)
+        # cx a, b
+        yield cirq.CX(a, b)
+
+    def _circuit_diagram_info_(self, args):
+        return "rzz", "rzz"
+
+
 def one_qubit_gate_to_u3_angles(op: cirq.Operation) -> tuple[float, float, float]:
     phi, theta, lam = (  # Z angle, Y angle, then Z angle
         cirq.deconstruct_single_qubit_matrix_into_angles(cirq.unitary(op))
@@ -53,7 +75,7 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
 
     @cached_property
     def const_float_type(self):
-        if expr in self.dialect_group.data:
+        if expr.dialect in self.dialect_group.data:
             return expr.ConstFloat
         else:
             return py.constant.Constant
@@ -316,26 +338,6 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
         if theta is None:
             return result.RewriteResult()
 
-        class Rzz(cirq.Gate):
-            def __init__(self):
-                super(Rzz, self)
-
-            def _num_qubits_(self):
-                return 2
-
-            def _decompose_(self, qubits):
-                a, b = qubits
-                # taken from qelib1 definition
-                # cx a, b
-                yield cirq.CX(a, b)
-                # u1(theta) a, b -> where u1(theta) = u3(0,0,theta) = QasmUGate(0,0,theta/math.pi)
-                yield QasmUGate(theta=0, phi=0, lmda=theta / math.pi)(b)
-                # cx a, b
-                yield cirq.CX(a, b)
-
-            def _circuit_diagram_info_(self, args):
-                return "rzz", "rzz"
-
         return self._rewrite_2q_ctrl_gates(
             Rzz().on(self.cached_qubits[0], self.cached_qubits[1]),
             node,
@@ -366,9 +368,7 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
             case _:
                 return None
 
-    def _rewrite_1q_gates(
-        self, cirq_gate: cirq.Operation, node: uop.SingleQubitGate
-    ) -> result.RewriteResult:
+    def _generate_1q_gate_stmts(self, cirq_gate: cirq.Operation, qarg: ir.SSAValue):
         target_gates = self.gateset.decompose_to_target_gateset(cirq_gate, 0)
 
         if isinstance(target_gates, cirq.GateOperation):
@@ -386,21 +386,24 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
             new_stmts.append(lam_stmt)
             new_stmts.append(
                 uop.UGate(
-                    qarg=node.qarg,
+                    qarg=qarg,
                     theta=theta_stmt.result,
                     phi=phi_stmt.result,
                     lam=lam_stmt.result,
                 )
             )
-        return self._rewrite_gate_stmts(new_gate_stmts=new_stmts, node=node)
+        return new_stmts
 
-    def _rewrite_2q_ctrl_gates(
-        self, cirq_gate: cirq.Operation, node: uop.TwoQubitCtrlGate
+    def _rewrite_1q_gates(
+        self, cirq_gate: cirq.Operation, node: uop.SingleQubitGate
     ) -> result.RewriteResult:
+        new_gate_stmts = self._generate_1q_gate_stmts(cirq_gate, node.qarg)
+        return self._rewrite_gate_stmts(new_gate_stmts, node)
 
+    def _generate_2q_ctrl_gate_stmts(
+        self, cirq_gate: cirq.Operation, qubits_ssa: List[ir.SSAValue]
+    ) -> list[ir.Statement]:
         target_gates = self.gateset.decompose_to_target_gateset(cirq_gate, 0)
-
-        qubits_ssa = [node.ctrl, node.qarg]
         new_stmts = []
         for new_gate in target_gates:
             if len(new_gate.qubits) == 1:
@@ -423,9 +426,17 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
                 )
             else:
                 # 2q
-                new_stmts.append(uop.CZ(ctrl=node.ctrl, qarg=node.qarg))
+                new_stmts.append(uop.CZ(ctrl=qubits_ssa[0], qarg=qubits_ssa[1]))
 
-        return self._rewrite_gate_stmts(new_gate_stmts=new_stmts, node=node)
+        return new_stmts
+
+    def _rewrite_2q_ctrl_gates(
+        self, cirq_gate: cirq.Operation, node: uop.TwoQubitCtrlGate
+    ) -> result.RewriteResult:
+        new_gate_stmts = self._generate_2q_ctrl_gate_stmts(
+            cirq_gate, [node.ctrl, node.qarg]
+        )
+        return self._rewrite_gate_stmts(new_gate_stmts, node)
 
     def _rewrite_gate_stmts(
         self, new_gate_stmts: list[ir.Statement], node: ir.Statement
@@ -434,9 +445,8 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
         node.replace_by(new_gate_stmts[0])
         node = new_gate_stmts[0]
 
-        if len(new_gate_stmts) > 1:
-            for stmt in new_gate_stmts[1:]:
-                stmt.insert_after(node)
-                node = stmt
+        for stmt in new_gate_stmts[1:]:
+            stmt.insert_after(node)
+            node = stmt
 
         return result.RewriteResult(has_done_something=True)

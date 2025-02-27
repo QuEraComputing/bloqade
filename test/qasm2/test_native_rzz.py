@@ -1,61 +1,52 @@
-import math
-
-import numpy as np
+import cirq
+import cirq.circuits
+from kirin import ir
 from bloqade import qasm2
-from cirq.testing import assert_allclose_up_to_global_phase
-from kirin.rewrite import Walk
-from cirq.contrib.qasm_import import circuit_from_qasm
+from kirin.rewrite import cse, walk, fixpoint
 from bloqade.qasm2.rewrite.native_gates import RydbergGateSetRewriteRule
 
 
-def test():
+def test_generate_2q_ctrl_gate_stmts():
 
-    theta = math.pi / 2
+    q = [cirq.LineQubit(i) for i in range(2)]
 
-    @qasm2.main
-    def main():
-        reg = qasm2.qreg(2)
-        # qasm2.cu(reg[0], reg[1], theta = 0.1, phi = 0.2, lam = 0.3, gamma = 0.4)
-        qasm2.rzz(reg[0], reg[1], theta=theta)
+    qubits_ssa = [
+        ir.TestValue(type=qasm2.QubitType),
+        ir.TestValue(type=qasm2.QubitType),
+    ]
 
-    # Convert to U + CZ
-    Walk(RydbergGateSetRewriteRule(main.dialects)).rewrite(main.code)
-
-    # Generate QASM
-    target = qasm2.emit.QASM2(custom_gate=True)
-    bloqade_qasm2_str = target.emit_str(main)
-    print(bloqade_qasm2_str)
-
-    # Load the QASM into Cirq
-    bloqade_circuit = circuit_from_qasm(bloqade_qasm2_str)
-    print(bloqade_circuit)
-
-    # Build the circuit directly in Cirq
-    ## for rzz (and probably rxx as well) there doesn't seem to exist a native QASM type \
-    ## but I can try and use the raw definition
-    cirq_circuit_str = """
-    OPENQASM 2.0;
-    include "qelib1.inc";
-    qreg q[2];
-
-    cx q[0], q[1];
-    u1(pi/3) q[1];
-    cx q[0], q[1];
-    """
-    print(cirq_circuit_str)
-    cirq_circuit = circuit_from_qasm(cirq_circuit_str)
-    print(cirq_circuit)
-
-    # Check equivalence of circuits
-
-    np.set_printoptions(precision=5, suppress=True)
-    print("Bloqade Unitary")
-    print(bloqade_circuit.unitary())
-    print("Cirq Unitary")
-    print(cirq_circuit.unitary())
-    assert_allclose_up_to_global_phase(
-        actual=bloqade_circuit.unitary(), desired=cirq_circuit.unitary(), atol=1e-5
+    stmts = RydbergGateSetRewriteRule(qasm2.main)._generate_2q_ctrl_gate_stmts(
+        cirq.CX(*q), qubits_ssa
     )
 
+    block = ir.Block(stmts=stmts)
 
-test()
+    fixpoint.Fixpoint(walk.Walk(cse.CommonSubexpressionElimination())).rewrite(block)
+
+    expected_stmts = [
+        (s0 := qasm2.expr.ConstFloat(value=1.5707963267948966)),
+        (s1 := qasm2.expr.ConstFloat(value=3.141592653589793)),
+        (qasm2.uop.UGate(qubits_ssa[1], s0.result, s1.result, s1.result)),
+        (qasm2.uop.CZ(qubits_ssa[0], qubits_ssa[1])),
+        (s4 := qasm2.expr.ConstFloat(value=6.283185307179586)),
+        (s5 := qasm2.expr.ConstFloat(value=0.0)),
+        (qasm2.uop.UGate(qubits_ssa[1], s0.result, s4.result, s5.result)),
+    ]
+
+    expected_block = ir.Block(stmts=expected_stmts)
+
+    assert block.is_equal(expected_block)
+
+
+def test2():
+
+    node = qasm2.expr.ConstFloat(value=1.5707963267948966)
+    node2 = qasm2.expr.ConstFloat(value=3.141592653589793)
+
+    block = ir.Block(stmts=[node2, node])
+
+    block.print()
+
+    RydbergGateSetRewriteRule(qasm2.main)._rewrite_gate_stmts(...)
+
+    block.print()
