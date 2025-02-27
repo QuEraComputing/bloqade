@@ -52,11 +52,14 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
         return tuple(cirq.LineQubit(i) for i in range(3))
 
     @cached_property
-    def const_float(self):
+    def const_float_type(self):
         if expr in self.dialect_group.data:
             return expr.ConstFloat
         else:
             return py.constant.Constant
+
+    def const_float(self, value: float):
+        return self.const_float_type(value=value)
 
     @cached_property
     def const_pi(self):
@@ -346,18 +349,22 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
         """
 
     def _get_const_value(self, ssa: ir.SSAValue) -> Optional[float | int]:
-        if not isinstance(ssa, ir.ResultValue) or not isinstance(
-            ssa.owner,
-            (expr.ConstFloat, expr.ConstInt, py.constant.Constant, expr.ConstPI),
-        ):
+        if not isinstance(ssa, ir.ResultValue):
             return None
 
-        if isinstance(
-            ssa.owner, (expr.ConstFloat, expr.ConstInt, py.constant.Constant)
-        ):
-            return ssa.owner.value
-        else:
-            return math.pi
+        match ssa.owner:
+            case expr.ConstFloat(value=value):
+                return value
+            case expr.ConstInt(value=value):
+                return value
+            case py.constant.Constant(value=float() as value) | py.constant.Constant(
+                value=int() as value
+            ):
+                return value
+            case expr.ConstPI():
+                return math.pi
+            case _:
+                return None
 
     def _rewrite_1q_gates(
         self, cirq_gate: cirq.Operation, node: uop.SingleQubitGate
@@ -370,9 +377,9 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
         new_stmts = []
         for new_gate in target_gates:
             theta, phi, lam = one_qubit_gate_to_u3_angles(new_gate)
-            theta_stmt = expr.ConstFloat(value=theta)
-            phi_stmt = expr.ConstFloat(value=phi)
-            lam_stmt = expr.ConstFloat(value=lam)
+            theta_stmt = self.const_float(value=theta)
+            phi_stmt = self.const_float(value=phi)
+            lam_stmt = self.const_float(value=lam)
 
             new_stmts.append(theta_stmt)
             new_stmts.append(phi_stmt)
@@ -399,9 +406,9 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
             if len(new_gate.qubits) == 1:
                 # 1q
                 phi0, phi1, phi2 = one_qubit_gate_to_u3_angles(new_gate)
-                phi0_stmt = expr.ConstFloat(value=phi0)
-                phi1_stmt = expr.ConstFloat(value=phi1)
-                phi2_stmt = expr.ConstFloat(value=phi2)
+                phi0_stmt = self.const_float(value=phi0)
+                phi1_stmt = self.const_float(value=phi1)
+                phi2_stmt = self.const_float(value=phi2)
 
                 new_stmts.append(phi0_stmt)
                 new_stmts.append(phi1_stmt)
