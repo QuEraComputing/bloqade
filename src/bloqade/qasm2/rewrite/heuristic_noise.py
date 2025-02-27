@@ -175,8 +175,6 @@ class NoiseRewriteRule(result_abc.RewriteRule):
         errors = self.noise_model.parallel_cz_errors(
             [ctrl_addr.data], [qarg_addr.data], other_qubits
         )
-        self.move_noise_stmts(node, errors, insert_before=True)
-        self.move_noise_stmts(node, errors, insert_before=False)
         (ctrls := ilist.New([self.qubit_ssa_value[ctrl_addr.data]])).insert_after(node)
         (qargs := ilist.New([self.qubit_ssa_value[qarg_addr.data]])).insert_after(node)
         move_noise_nodes = self.move_noise_stmts(errors)
