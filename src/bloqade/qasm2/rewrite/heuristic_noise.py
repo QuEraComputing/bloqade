@@ -19,7 +19,7 @@ class NoiseRewriteRule(result_abc.RewriteRule):
         for ssa, addr in self.address_analysis.items():
             if not isinstance(ssa, ir.ResultValue):
                 continue
-            # insert all qubit statements
+            # insert any missing qubit statements
             if isinstance(addr, address.AddressReg):
                 node = ssa.stmt
                 assert isinstance(node, core.QRegNew)
