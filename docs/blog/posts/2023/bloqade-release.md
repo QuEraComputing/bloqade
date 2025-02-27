@@ -9,8 +9,8 @@ authors:
 
 # Introducing Bloqade SDK for Python
 
-![Bloqade Logo](../../../assets/logo.png#only-light)
-![Bloqade Logo](../../../assets/logo-dark.png#only-dark)
+![Bloqade Logo](../../../assets/logo.svg#only-light)
+![Bloqade Logo](../../../assets/logo-dark.svg#only-dark)
 
 Greetings Neutral Atom QC experts, enthusiasts, and newcomers!
 
