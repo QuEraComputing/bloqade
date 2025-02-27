@@ -7,6 +7,7 @@ from kirin import ir
 from kirin.rewrite import cse, dce, walk, result
 from bloqade.analysis import address
 from kirin.passes.abc import Pass
+from kirin.passes.fold import Fold
 from bloqade.qasm2.rewrite import GlobalToUOpRule, GlobalToParallelRule
 from kirin.rewrite.fixpoint import Fixpoint
 
@@ -61,6 +62,8 @@ class GlobalToUOP(Pass):
             mt.code
         )
 
+        # do fold again to get proper hint for inserted const
+        result = Fold(mt.dialects)(mt)
         return result
 
 
@@ -110,5 +113,6 @@ class GlobalToParallel(Pass):
         result = Fixpoint(walk.Walk(rule=cse.CommonSubexpressionElimination())).rewrite(
             mt.code
         )
-
+        # do fold again to get proper hint
+        result = Fold(mt.dialects)(mt)
         return result
