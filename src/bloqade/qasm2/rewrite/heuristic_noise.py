@@ -26,7 +26,9 @@ class NoiseRewriteRule(result_abc.RewriteRule):
                 for pos, idx in enumerate(addr.data):
                     if idx not in self.qubit_ssa_value:
                         pos_stmt = py.constant.Constant(value=pos)
-                        qubit_stmt = core.QRegGet(node.result, pos_stmt.result)
+                        self.qubit_ssa_value[idx] = (
+                            qubit_stmt := core.QRegGet(node.result, pos_stmt.result)
+                        ).result
                         qubit_stmt.insert_after(node)
                         pos_stmt.insert_after(node)
 
