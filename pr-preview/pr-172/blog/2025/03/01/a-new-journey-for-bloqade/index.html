@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://special-engine-kg8jlr7.pages.github.io/blog/2025/02/15/a-new-journey-of-bloqade/">
+        <link rel="canonical" href="https://special-engine-kg8jlr7.pages.github.io/blog/2025/03/01/a-new-journey-for-bloqade/">
       
       
         <link rel="prev" href="../../../../2023/12/15/introducing-bloqade-sdk-for-python/">
@@ -22,7 +22,7 @@
     
     
       
-        <title>A New Journey of Bloqade - The Neutral Atom SDK</title>
+        <title>A new journey for Bloqade - The Neutral Atom SDK</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#a-new-journey-of-bloqade" class="md-skip">
+        <a href="#a-new-journey-for-bloqade" class="md-skip">
           Skip to content
         </a>
       
@@ -117,7 +117,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              A New Journey of Bloqade
+              A new journey for Bloqade
             
           </span>
         </div>
@@ -1886,6 +1886,21 @@
                 
                   <div class="md-profile md-post__profile">
                     <span class="md-author md-author--long">
+                      <img src="https://media.licdn.com/dms/image/v2/C4D03AQGgTNZKZcfglw/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1621114965360?e=1746057600&v=beta&t=gRZ2RIKiU9uFLRcn0LvXJuHaNLJLjH7c2h0YFXgZsO0" alt="Jonathan Wurtz">
+                    </span>
+                    <span class="md-profile__description">
+                      <strong>
+                        
+                          <a href="https://www.linkedin.com/in/jonathan-wurtz-7a4855181/">Jonathan Wurtz</a>
+                        
+                      </strong>
+                      <br>
+                      Quantum Solutions Lead
+                    </span>
+                  </div>
+                
+                  <div class="md-profile md-post__profile">
+                    <span class="md-author md-author--long">
                       <img src="https://github.com/Roger-luo.png" alt="Xiuzhe (Roger) Luo">
                     </span>
                     <span class="md-profile__description">
@@ -1958,7 +1973,7 @@
                     <li class="md-nav__item">
                       <div class="md-nav__link">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
-                        <time datetime="2025-02-15 00:00:00+00:00" class="md-ellipsis">February 15, 2025</time>
+                        <time datetime="2025-03-01 00:00:00+00:00" class="md-ellipsis">March 1, 2025</time>
                       </div>
                     </li>
                     
@@ -1970,7 +1985,7 @@
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
                           <span class="md-ellipsis">
                             
-                              1 min read
+                              4 min read
                             
                           </span>
                         </div>
@@ -2010,7 +2025,22 @@
   
 
 
-<h1 id="a-new-journey-of-bloqade">A New Journey of Bloqade</h1>
+<h1 id="a-new-journey-for-bloqade">A new journey for Bloqade</h1>
+<p>In 2023 we were excited to introduce bloqade, a python SDK for programming and interfacing with analog mode neutral atom hardware. Today, we introduce the next generation of Bloqade: as well as programming analog-mode computation, our new bloqade-circuits module enables programming digital and gate-based computation, with an eye on near-term NISQ demonstrations and intermediate-term fault tolerant solutions. Don’t worry; all of your favorite features of the previous generation of bloqade are still there under the <code>bloqade.analog</code> namespace, but now you can explore digital-mode computation specialized to reconfigurable neutral atoms.
+Why have we built this new module? There are plenty of incredible quantum programming packages, such as <a href="https://www.ibm.com/quantum/qiskit">qiskit</a> and <a href="https://quantumai.google/cirq">cirq</a>, as well as an entire ecosystem of middleware providers with specialized pipelines to turn abstract problems into circuits. However, these packages may not be everything that is needed for efficient hardware execution on neutral atom hardware: <strong>a circuits-only representation of quantum executions may be the incorrect abstraction for effective hardware-level programs</strong>. This is a challenge: we want to enable everyone to maximally leverage the power of neutral atom quantum computers beyond abstract circuit representations. For this reason, we are building Bloqade to be a hardware-oriented SDK to represent hybrid executions on reconfigurable neutral atom hardware. In this way, bloqade can be integrated into the larger ecosystem—for example, codegen of qasm from a bloqade-circuits program, but be an SDK specialized to our hardware: <strong>THE SDK for neutral atoms</strong>.</p>
+<p>The vision of bloqade is to empower quantum scientists, from applications development to algorithmic co-design, to build hybrid quantum-classical programs that leverage the strength of neutral atom quantum computers and have a real chance of demonstrating quantum utility. Bloqade is built on top of <a href="">Kirin (no link)</a>, an open source compiler toolchain designed for kernel-level programs and composable representations.</p>
+<h1 id="composable-quantum-programming">Composable quantum programming</h1>
+<p>As of today, bloqade has two components: bloqade-analog and bloqade-circuits. Bloqade-analog is the SDK for analog-mode neutral atom computers and includes several handy utilities ranging from building or analyzing analog programs, to emulation or executing on QuEra's cloud-accessible hardware "Aquila". Bloqade-circuits is the initial iteration to represent digital circuit execution using gate-based quantum computing on reconfigurable neutral atoms. It extends the QASM2 language to include extra annotation of circuits that is important for efficient execution, such as parallelism and global gates. As well as being able to construct quantum programs with the full convenience of typical classical programming-- such as loops and control flow—bloqade-circuits also includes basic compiler transformation passes, emulation, and code generation.</p>
+<p>But bloqade is not done with just these two components. We envision adding new components (called "dialects") which help you write programs which are tuned for optimal performance in an error corrected era, and on neutral atom hardware. Stay tuned and help us build the future of quantum computing as we build out new components, such as QEC and atom moving dialects.</p>
+<h1 id="hardware-oriented-programming-and-co-design">Hardware-oriented programming and co-design</h1>
+<p>At its core, Bloqade strives to be the neutral atom SDK for getting the most out of today's and tomorrows' quantum hardware. It is clear that the circuit-level abstraction is not enough to program real quantum hardware; indeed, tomorrows' quantum demonstrations and applications must program at the hardware level and develop special tooling to compile higher-level abstractions to efficient implementations. We call this process <strong>"co-design"</strong>: designing algorithms specialized to near-term hardware, with an eye on nontrivial demonstrations and scalable solutions. Ultimately, this co-design approach requires hardware-specific DSLs which explicitly represent the native executions on neutral atom hardware: in other words, Bloqade.</p>
+<h1 id="hybrid-computing-beyond-circuits">Hybrid computing beyond circuits</h1>
+<p>Many quantum algorithms are hybrid, requiring both classical and quantum resources to work together in a hybrid computation architecture. This could be anything from syndrome extraction and measurement-based computing to variational parameter updates in VQE methods and orbital fragmentation methods in molecular simulation. Through the use of the Kirin compiler infrastructure, Bloqade embraces this philosophy of heterogeneous compute. Kirin programs are written as (compositions of) <a href="https://en.wikipedia.org/wiki/Compute_kernel">kernels</a>-- subroutines that are intended to run on particular hardware (such as QPUs), or orchestrated to run on heterogeneous compute (such as a real-time classical runtime plus a QPU). These subroutines-- plus the built-in hybrid representations-- enable many key primitives, such as error correction.</p>
+<p>Additionally, the ability to compose functions together and to use typical classical programming structures like <code>if</code> and <code>while</code> enables many simplifications in writing raw circuit executions. In fact, <code>while</code> loops and the ability to dynamically allocate new memory (which is not known until runtime) enables many powerful subroutines and is natively enabled with bloqade's kernel-based representation; for example, see <a href="digital/examples/repeat_until_success.py">this implementation</a> of a repeat-until-success program.</p>
+<h1 id="analog-digital-logical-towards-real-quantum-utility">Analog, digital, logical: towards real quantum utility</h1>
+<p>The first step in Bloqade was building out the analog mode SDK, designed to interface with QuEra’s cloud-accessible analog-mode neutral-atom quantum computer Aquila, as well as enable analysis and scientific discovery in analog quantum computing. But the journey should not stop there: real quantum utility is error corrected and requires robust algorithmic exploration and design of quantum primitives, in-depth analysis of near-term hardware performance and benchmarking, and building pipelines and hybrid architectures that are intended not just for today’s demonstrators but also for tomorrow’s utility-scale hardware. By introducing the next generation of Bloqade, we hope to enable this exploration by adding in support for near-term digital and intermediate-term logical representations of hybrid quantum computations.</p>
+<h1 id="learn-more">Learn more</h1>
+<p>Bloqade is open-source project and can be freely downloaded; you can learn how to do so <a href="install.md">here</a>. If you want to see how to write programs with of the new bloqade-circuits package, check out our examples <a href="digital/index.md">here</a>. If you would like to learn more about QuEra computing, check out our <a href="quera.com">webpage</a> or discover our many academic publications and demonstrations.</p>
 
 
 
