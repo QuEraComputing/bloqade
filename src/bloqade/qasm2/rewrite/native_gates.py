@@ -52,6 +52,44 @@ class Rzz(cirq.Gate):
         return "rzz", "rzz"
 
 
+# decompose the CU by defining a custom Cirq Gate with the qelib1 definition
+# Need to be careful about the fact that U(theta, phi, lambda) in standard QASM2
+# and its variants
+class CU(cirq.Gate):
+    def __init__(self, theta, phi, lam, gamma):
+        super(CU, self)
+        self.theta = theta
+        self.phi = phi
+        self.lam = lam
+        self.gamma = gamma
+
+    def _num_qubits_(self):
+        return 2
+
+    def _decompose_(self, qubits):
+        ctrl, target = qubits
+        # taken from qelib1 definition
+        # p(gamma) c;
+        yield QasmUGate(0, 0, self.gamma / math.pi)(ctrl)
+        # p((lambda+phi/2)) c;
+        yield QasmUGate(0, 0, ((self.lam + self.phi) / 2) / math.pi)(ctrl)
+        # p((lambda-phi/2)) t;
+        yield QasmUGate(0, 0, ((self.lam - self.phi) / 2) / math.pi)(target)
+        # cx c,t
+        yield cirq.CX(ctrl, target)
+        # u(-theta/2, 0, -(phi+lambda/2)) t;
+        yield QasmUGate(
+            (-self.theta / 2) / math.pi, 0, (-(self.phi + self.lam) / 2) / math.pi
+        )(target)
+        # cx c,t
+        yield cirq.CX(ctrl, target)
+        # u(theta/2, phi, 0) t;
+        yield QasmUGate((self.theta / 2) / math.pi, self.phi / math.pi, 0)(target)
+
+    def _circuit_diagram_info_(self, args):
+        return "*", "CU"
+
+
 def one_qubit_gate_to_u3_angles(op: cirq.Operation) -> tuple[float, float, float]:
     phi, theta, lam = (  # Z angle, Y angle, then Z angle
         cirq.deconstruct_single_qubit_matrix_into_angles(cirq.unitary(op))
@@ -277,43 +315,11 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
         lam = self._get_const_value(node.lam)
         phi = self._get_const_value(node.phi)
 
-        # decompose the CU by defining a custom Cirq Gate with the qelib1 definition
-        # Need to be careful about the fact that U(theta, phi, lambda) in standard QASM2
-        # and its variants
-        class CU(cirq.Gate):
-            def __init__(self):
-                super()
-
-            def _num_qubits_(self):
-                return 2
-
-            def _decompose_(self, qubits):
-                ctrl, target = qubits
-                # taken from qelib1 definition
-                # p(gamma) c;
-                yield QasmUGate(0, 0, gamma / math.pi)(ctrl)
-                # p((lambda+phi/2)) c;
-                yield QasmUGate(0, 0, (lam + phi / 2) / math.pi)(ctrl)
-                # p((lambda-phi/2)) t;
-                yield QasmUGate(0, 0, (lam - phi / 2) / math.pi)(target)
-                # cx c,t
-                yield cirq.CX(ctrl, target)
-                # u(-theta/2, 0, -(phi+lambda/2)) t;
-                yield QasmUGate((-theta / 2) / math.pi, 0, -(phi + lam / 2) / math.pi)(
-                    target
-                )
-                # cx c,t
-                yield cirq.CX(ctrl, target)
-                # u(theta/2, phi, 0) t;
-                yield QasmUGate((theta / 2) / math.pi, phi / math.pi, 0)(target)
-
-            def _circuit_diagram_info_(self, args):
-                return "*", "CU"
-
         # need to create custom 2q gate, then feed that into rewrite_2q
 
         return self._rewrite_2q_ctrl_gates(
-            CU().on(self.cached_qubits[0], self.cached_qubits[1]), node
+            CU(theta, phi, lam, gamma).on(self.cached_qubits[0], self.cached_qubits[1]),
+            node,
         )
 
     def rewrite_rxx(self, node: uop.RXX) -> result.RewriteResult:
