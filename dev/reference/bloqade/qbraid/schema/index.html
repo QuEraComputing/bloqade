@@ -2651,26 +2651,22 @@ gate_events (List[GateEvent[ErrorModelType]]): The gate events for the noise mod
 <span class="normal">249</span>
 <span class="normal">250</span>
 <span class="normal">251</span>
-<span class="normal">252</span>
-<span class="normal">253</span>
-<span class="normal">254</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">decompiled_circuit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">252</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">decompiled_circuit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clean the circuit of noise.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        str: The decompiled circuit from hardware execution.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">kirin</span><span class="w"> </span><span class="kn">import</span> <span class="n">ir</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.noise</span><span class="w"> </span><span class="kn">import</span> <span class="n">native</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.qasm2.emit</span><span class="w"> </span><span class="kn">import</span> <span class="n">QASM2</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.qasm2.passes</span><span class="w"> </span><span class="kn">import</span> <span class="n">glob</span><span class="p">,</span> <span class="n">parallel</span>
 
     <span class="n">mt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_noise_model</span><span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">)</span>
 
     <span class="n">native</span><span class="o">.</span><span class="n">RemoveNoisePass</span><span class="p">(</span><span class="n">mt</span><span class="o">.</span><span class="n">dialects</span><span class="p">)(</span><span class="n">mt</span><span class="p">)</span>
-    <span class="n">mt</span><span class="o">.</span><span class="n">dialects</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">DialectGroup</span><span class="p">(</span>
-        <span class="n">mt</span><span class="o">.</span><span class="n">dialects</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">symmetric_difference</span><span class="p">([</span><span class="n">native</span><span class="o">.</span><span class="n">dialect</span><span class="p">])</span>
-    <span class="p">)</span>
-
+    <span class="n">parallel</span><span class="o">.</span><span class="n">ParallelToUOp</span><span class="p">(</span><span class="n">mt</span><span class="o">.</span><span class="n">dialects</span><span class="p">)(</span><span class="n">mt</span><span class="p">)</span>
+    <span class="n">glob</span><span class="o">.</span><span class="n">GlobalToUOP</span><span class="p">(</span><span class="n">mt</span><span class="o">.</span><span class="n">dialects</span><span class="p">)(</span><span class="n">mt</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">QASM2</span><span class="p">(</span><span class="n">qelib1</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">emit_str</span><span class="p">(</span><span class="n">mt</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
