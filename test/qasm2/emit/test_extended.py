@@ -1,7 +1,7 @@
 from bloqade import qasm2
 
 
-@qasm2.gate
+@qasm2.extended
 def my_gate(a: qasm2.Qubit, b: qasm2.Qubit):
     qasm2.cx(a, b)
     qasm2.u(a, theta=0.1, phi=0.2, lam=0.3)
