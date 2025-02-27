@@ -125,10 +125,10 @@ def test_global_rewrite():
         mod=None,
         py_func=None,
         sym_name="main",
-        dialects=qasm2.main,
+        dialects=qasm2.extended,
         code=expected_func_stmt,
         arg_names=[],
     )
-    qasm2.main.run_pass(expected_method)  # type: ignore
+    qasm2.extended.run_pass(expected_method)  # type: ignore
     Fixpoint(Walk(CommonSubexpressionElimination())).rewrite(expected_method.code)
     assert_with_print(expected_method, main)
