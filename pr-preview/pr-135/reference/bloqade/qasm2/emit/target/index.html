@@ -2274,7 +2274,9 @@ A QASM2 AST object</p>
 <span class="normal">138</span>
 <span class="normal">139</span>
 <span class="normal">140</span>
-<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">MainProgram</span><span class="p">:</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ast</span><span class="o">.</span><span class="n">MainProgram</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Emit a QASM2 AST from the Bloqade kernel.</span>
 
 <span class="sd">    Args:</span>
@@ -2293,7 +2295,6 @@ A QASM2 AST object</p>
     <span class="n">QASM2Fold</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">dialects</span><span class="p">,</span> <span class="n">inline_gate_subroutine</span><span class="o">=</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_gate</span><span class="p">)</span><span class="o">.</span><span class="n">fixpoint</span><span class="p">(</span>
         <span class="n">entry</span>
     <span class="p">)</span>
-    <span class="n">Py2QASM</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">dialects</span><span class="p">)(</span><span class="n">entry</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_global</span><span class="p">:</span>
         <span class="c1"># rewrite global to parallel</span>
@@ -2302,6 +2303,8 @@ A QASM2 AST object</p>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_parallel</span><span class="p">:</span>
         <span class="c1"># rewrite parallel to uop</span>
         <span class="n">ParallelToUOp</span><span class="p">(</span><span class="n">dialects</span><span class="o">=</span><span class="n">entry</span><span class="o">.</span><span class="n">dialects</span><span class="p">)(</span><span class="n">entry</span><span class="p">)</span>
+
+    <span class="n">Py2QASM</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">dialects</span><span class="p">)(</span><span class="n">entry</span><span class="p">)</span>
 
     <span class="n">target_main</span> <span class="o">=</span> <span class="n">EmitQASM2Main</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_target</span><span class="p">)</span>
     <span class="n">target_main</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
@@ -2325,7 +2328,6 @@ A QASM2 AST object</p>
 
             <span class="n">fn</span> <span class="o">=</span> <span class="n">fn</span><span class="o">.</span><span class="n">similar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gate_target</span><span class="p">)</span>
             <span class="n">QASM2Fold</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">dialects</span><span class="p">)</span><span class="o">.</span><span class="n">fixpoint</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
-            <span class="n">Py2QASM</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">dialects</span><span class="p">)(</span><span class="n">fn</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_global</span><span class="p">:</span>
                 <span class="c1"># rewrite global to parallel</span>
@@ -2334,6 +2336,8 @@ A QASM2 AST object</p>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_parallel</span><span class="p">:</span>
                 <span class="c1"># rewrite parallel to uop</span>
                 <span class="n">ParallelToUOp</span><span class="p">(</span><span class="n">dialects</span><span class="o">=</span><span class="n">fn</span><span class="o">.</span><span class="n">dialects</span><span class="p">)(</span><span class="n">fn</span><span class="p">)</span>
+
+            <span class="n">Py2QASM</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">dialects</span><span class="p">)(</span><span class="n">fn</span><span class="p">)</span>
 
             <span class="n">target_gate</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
                 <span class="n">fn</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">fn</span><span class="o">.</span><span class="n">arg_names</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
@@ -2420,9 +2424,7 @@ A QASM2 AST object</p>
 
             <details class="quote">
               <summary>Source code in <code>src/bloqade/qasm2/emit/target.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">145</span>
 <span class="normal">146</span>
 <span class="normal">147</span>
 <span class="normal">148</span>
@@ -2440,7 +2442,9 @@ A QASM2 AST object</p>
 <span class="normal">160</span>
 <span class="normal">161</span>
 <span class="normal">162</span>
-<span class="normal">163</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Emit a QASM2 AST from the Bloqade kernel.</span>
 
 <span class="sd">    Args:</span>
