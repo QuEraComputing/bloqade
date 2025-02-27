@@ -1,6 +1,6 @@
 from dataclasses import field, dataclass
 
-from kirin.passes import Pass
+from kirin.passes import Pass, TypeInfer
 from kirin.rewrite import (
     Walk,
     Chain,
@@ -31,6 +31,7 @@ class QASM2Fold(Pass):
 
     def __post_init__(self):
         self.constprop = const.Propagate(self.dialects)
+        self.typeinfer = TypeInfer(self.dialects)
 
     def unsafe_run(self, mt: Method) -> RewriteResult:
         result = RewriteResult()
@@ -57,7 +58,15 @@ class QASM2Fold(Pass):
             .rewrite(mt.code)
             .join(result)
         )
-        result = Walk(ilist.rewrite.Unroll()).rewrite(mt.code).join(result)
+
+        # run typeinfer again after unroll etc. because we now insert
+        # a lot of new nodes, which might have more precise types
+        self.typeinfer(mt)
+        result = (
+            Walk(Chain(ilist.rewrite.ConstList2IList(), ilist.rewrite.Unroll()))
+            .rewrite(mt.code)
+            .join(result)
+        )
 
         def skip_scf(node):
             return isinstance(node, (scf.For, scf.IfElse))
