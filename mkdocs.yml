@@ -49,7 +49,8 @@ nav:
       - Pauli Exponential: "digital/examples/pauli_exponentiation.py"
       - Repeat Until Success: "digital/examples/repeat_until_success.py"
       - QAOA: "digital/examples/qaoa.py"
-  - Analog Tutorial: 'https://queracomputing.github.io/bloqade-python/latest/'
+  - Analog Tutorial: 'https://queracomputing.github.io/bloqade-analog-examples/latest/'
+  - Bloqade Analog: 'https://queracomputing.github.io/bloqade-analog/latest/'
   - Blog:
     - blog/index.md
   - QuEra Computing: 'https://quera.com'
