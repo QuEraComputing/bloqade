@@ -60,13 +60,13 @@ def test_generate_1q_gate_stmts():
     qubit_ssa = ir.TestValue(type=qasm2.QubitType)
 
     stmts = RydbergGateSetRewriteRule(qasm2.main)._generate_1q_gate_stmts(
-        cirq.YPowGate(exponent=0.2)(q[0]), qubit_ssa
+        cirq.YPowGate(exponent=0.5)(q[0]), qubit_ssa
     )
 
     block = ir.Block(stmts=stmts)
 
     expected_stmts = [
-        (s0 := qasm2.expr.ConstFloat(value=0.6283185307179588)),
+        (s0 := qasm2.expr.ConstFloat(value=1.5707963267948966)),
         (s1 := qasm2.expr.ConstFloat(value=6.283185307179586)),
         (s2 := qasm2.expr.ConstFloat(value=0.0)),
         (qasm2.uop.UGate(qubit_ssa, s0.result, s1.result, s2.result)),
