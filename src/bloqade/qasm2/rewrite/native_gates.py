@@ -91,7 +91,7 @@ class CU(cirq.Gate):
 
 
 def one_qubit_gate_to_u3_angles(op: cirq.Operation) -> tuple[float, float, float]:
-    phi, theta, lam = (  # Z angle, Y angle, then Z angle
+    lam, theta, phi = (  # Z angle, Y angle, then Z angle
         cirq.deconstruct_single_qubit_matrix_into_angles(cirq.unitary(op))
     )
 
