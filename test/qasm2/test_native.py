@@ -1,4 +1,5 @@
 import math
+import textwrap
 
 import cirq
 import cirq.contrib
@@ -7,6 +8,7 @@ import cirq.contrib.qasm_import as qasm_import
 import cirq.circuits.qasm_output as qasm_output
 from pytest import mark
 from bloqade import qasm2
+from kirin.rewrite import walk
 from bloqade.qasm2.rewrite.native_gates import (
     RydbergGateSetRewriteRule,
     one_qubit_gate_to_u3_angles,
@@ -35,10 +37,58 @@ def test_one_qubit_gate_to_u3_angles():
 def generator(n_tests: int):
     import numpy as np
 
+    yield textwrap.dedent(
+        """
+    OPENQASM 2.0;
+    include "qelib1.inc";
+
+    qreg q[1];
+
+    tdg q[0];
+
+    """
+    )
+
+    yield textwrap.dedent(
+        """
+    OPENQASM 2.0;
+    include "qelib1.inc";
+
+    qreg q[1];
+
+    sdg q[0];
+
+    """
+    )
+
+    yield textwrap.dedent(
+        """
+    OPENQASM 2.0;
+    include "qelib1.inc";
+
+    qreg q[1];
+
+    sx q[0];
+
+    """
+    )
+
+    yield textwrap.dedent(
+        """
+    OPENQASM 2.0;
+    include "qelib1.inc";
+
+    qreg q[1];
+
+    sxdg q[0];
+
+    """
+    )
+
     rgen = np.random.RandomState(128)
     for num in range(n_tests):
         # Generate a new instance:
-        N = int(rgen.choice([4, 5, 6, 7, 8, 9, 10, 11]))
+        N = int(rgen.choice([4, 5, 6, 7, 8]))
         D = int(rgen.choice([1, 3, 5, 10, 15]))
         rho = float(rgen.random())
         circ: cirq.Circuit = cirq.testing.random_circuit(N, D, rho, random_state=rgen)
@@ -49,14 +99,14 @@ def generator(n_tests: int):
 
 @mark.parametrize(
     "qasm2_prog",
-    generator(10),
+    generator(20),
 )
 def test_rewrite(qasm2_prog: str):
     @qasm2.main.add(qasm2.dialects.inline)
     def kernel():
         qasm2.inline(qasm2_prog)
 
-    RydbergGateSetRewriteRule(kernel.dialects).rewrite(kernel.code)
+    walk.Walk(RydbergGateSetRewriteRule(kernel.dialects)).rewrite(kernel.code)
 
     new_qasm2 = qasm2.emit.QASM2().emit_str(kernel)
 

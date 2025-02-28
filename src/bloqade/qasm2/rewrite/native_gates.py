@@ -30,28 +30,6 @@ class RydbergTargetGateset(cirq.CZTargetGateset):
         return max(2, self.cnz_max_size)
 
 
-class Rzz(cirq.Gate):
-    def __init__(self, *, rads: float):
-        super(Rzz, self)
-        self.rads = rads
-
-    def _num_qubits_(self):
-        return 2
-
-    def _decompose_(self, qubits):
-        a, b = qubits
-        # taken from qelib1 definition
-        # cx a, b
-        yield cirq.CX(a, b)
-        # u1(theta) a, b -> where u1(theta) = u3(0,0,theta) = QasmUGate(0,0,theta/math.pi)
-        yield cirq.Rz(rads=self.rads)(b)
-        # cx a, b
-        yield cirq.CX(a, b)
-
-    def _circuit_diagram_info_(self, args):
-        return "rzz", "rzz"
-
-
 # decompose the CU by defining a custom Cirq Gate with the qelib1 definition
 # Need to be careful about the fact that U(theta, phi, lambda) in standard QASM2
 # and its variants
@@ -187,12 +165,12 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
 
     def rewrite_sx(self, node: uop.SX) -> result.RewriteResult:
         return self._rewrite_1q_gates(
-            cirq.XPowGate(exponent=0.5).on(self.cached_qubits), node
+            cirq.XPowGate(exponent=0.5).on(self.cached_qubits[0]), node
         )
 
     def rewrite_sxdg(self, node: uop.SXdag) -> result.RewriteResult:
         return self._rewrite_1q_gates(
-            cirq.XPowGate(exponent=-0.5).on(self.cached_qubits), node
+            cirq.XPowGate(exponent=-0.5).on(self.cached_qubits[0]), node
         )
 
     def rewrite_u1(self, node: uop.U1) -> result.RewriteResult:
@@ -331,7 +309,7 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
         # even though the XX gate is not controlled,
         # the end U + CZ decomposition that happens internally means
         return self._rewrite_2q_ctrl_gates(
-            cirq.XXPowGate(exponent=theta).on(
+            cirq.XXPowGate(exponent=theta / math.pi).on(
                 self.cached_qubits[0], self.cached_qubits[1]
             ),
             node,
@@ -344,7 +322,9 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
             return result.RewriteResult()
 
         return self._rewrite_2q_ctrl_gates(
-            Rzz().on(self.cached_qubits[0], self.cached_qubits[1]),
+            cirq.ZZPowGate(exponent=theta / math.pi).on(
+                self.cached_qubits[0], self.cached_qubits[1]
+            ),
             node,
         )
 
@@ -354,6 +334,11 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
             ,node
         )
         """
+
+    def rewrite_swap(self, node: uop.Swap):
+        return self._rewrite_2q_ctrl_gates(
+            cirq.SWAP(self.cached_qubits[0], self.cached_qubits[1]), node
+        )
 
     def _get_const_value(self, ssa: ir.SSAValue) -> Optional[float | int]:
         if not isinstance(ssa, ir.ResultValue):
