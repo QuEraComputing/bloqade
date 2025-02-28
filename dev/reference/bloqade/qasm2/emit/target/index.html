@@ -2330,7 +2330,7 @@ A QASM2 AST object</p>
     <span class="c1"># make a cloned instance of kernel</span>
     <span class="n">entry</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">similar</span><span class="p">()</span>
     <span class="n">QASM2Fold</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">dialects</span><span class="p">,</span> <span class="n">inline_gate_subroutine</span><span class="o">=</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_gate</span><span class="p">)</span><span class="o">.</span><span class="n">fixpoint</span><span class="p">(</span>
-        <span class="n">entry</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">2</span>
+        <span class="n">entry</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_global</span><span class="p">:</span>
