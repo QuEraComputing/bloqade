@@ -1,5 +1,6 @@
 from dataclasses import field, dataclass
 
+from kirin import ir
 from kirin.passes import Pass, TypeInfer
 from kirin.rewrite import (
     Walk,
@@ -61,29 +62,32 @@ class QASM2Fold(Pass):
 
         # run typeinfer again after unroll etc. because we now insert
         # a lot of new nodes, which might have more precise types
-        self.typeinfer(mt)
+        self.typeinfer.unsafe_run(mt)
         result = (
             Walk(Chain(ilist.rewrite.ConstList2IList(), ilist.rewrite.Unroll()))
             .rewrite(mt.code)
             .join(result)
         )
 
-        def skip_scf(node):
-            return isinstance(node, (scf.For, scf.IfElse))
+        def inline_simple(node: ir.Statement):
+            if isinstance(node, expr.GateFunction):
+                return self.inline_gate_subroutine
+
+            if not isinstance(node.parent_stmt, (scf.For, scf.IfElse)):
+                return True  # always inline calls outside of loops and if-else
+
+            # inside loops and if-else, only inline simple functions, i.e. functions with a single block
+            if (trait := node.get_trait(ir.CallableStmtInterface)) is None:
+                return False  # not a callable, don't inline to be safe
+            region = trait.get_callable_region(node)
+            return len(region.blocks) == 1
 
         result = (
             Walk(
-                Inline(
-                    lambda x: (
-                        True
-                        if self.inline_gate_subroutine
-                        else not isinstance(x, expr.GateFunction)
-                    )
-                ),
-                skip=skip_scf,
+                Inline(inline_simple),
             )
             .rewrite(mt.code)
             .join(result)
         )
-        result = Fixpoint(CFGCompactify()).rewrite(mt.code).join(result)
+        result = Walk(Fixpoint(CFGCompactify())).rewrite(mt.code).join(result)
         return result

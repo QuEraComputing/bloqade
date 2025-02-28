@@ -64,6 +64,8 @@ class Func(interp.MethodTable):
                 qargs=qparams,
             )
         )
+        if len(stmt.results) > 0:
+            raise EmitError("cannot emit invoke with results")
         return ()
 
     @interp.impl(func.Lambda)

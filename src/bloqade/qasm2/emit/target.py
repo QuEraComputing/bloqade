@@ -87,7 +87,7 @@ class QASM2:
         # make a cloned instance of kernel
         entry = entry.similar()
         QASM2Fold(entry.dialects, inline_gate_subroutine=not self.custom_gate).fixpoint(
-            entry
+            entry, max_iter=2
         )
 
         if not self.allow_global:
@@ -99,7 +99,7 @@ class QASM2:
             ParallelToUOp(dialects=entry.dialects)(entry)
 
         Py2QASM(entry.dialects)(entry)
-
+        entry.print()
         target_main = EmitQASM2Main(self.main_target)
         target_main.run(
             entry, tuple(ast.Name(name) for name in entry.arg_names[1:])
