@@ -20,6 +20,38 @@ def test_native():
     qasm2_cx.print()
 
 
+def test_rewrite_gate_stmts():
+    rule = RydbergGateSetRewriteRule(qasm2.main)
+
+    block = ir.Block(
+        [
+            stmt1 := qasm2.expr.ConstFloat(value=0.2),
+            stmt2 := qasm2.expr.ConstFloat(value=0.0),
+            stmt3 := qasm2.expr.ConstFloat(value=6.283185307179586),
+        ]
+    )
+
+    stmts = [
+        in1 := qasm2.expr.ConstInt(value=5),
+        in2 := qasm2.expr.ConstInt(value=6),
+        in3 := qasm2.expr.ConstPI(),
+    ]
+
+    rule._rewrite_gate_stmts(stmts, stmt2)
+
+    expected_block = ir.Block(
+        [
+            stmt1.from_stmt(stmt1),
+            in1.from_stmt(in1),
+            in2.from_stmt(in2),
+            in3.from_stmt(in3),
+            stmt3.from_stmt(stmt3),
+        ]
+    )
+
+    assert block.is_equal(expected_block)
+
+
 def test_generate_1q_gate_stmts():
 
     q = cirq.LineQubit.range(1)
