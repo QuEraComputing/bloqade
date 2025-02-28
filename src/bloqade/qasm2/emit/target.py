@@ -99,7 +99,6 @@ class QASM2:
             ParallelToUOp(dialects=entry.dialects)(entry)
 
         Py2QASM(entry.dialects)(entry)
-        entry.print()
         target_main = EmitQASM2Main(self.main_target)
         target_main.run(
             entry, tuple(ast.Name(name) for name in entry.arg_names[1:])
@@ -120,7 +119,7 @@ class QASM2:
                 if fn is entry:
                     continue
 
-                fn = fn.similar(self.gate_target)
+                fn = fn.similar()
                 QASM2Fold(fn.dialects).fixpoint(fn)
 
                 if not self.allow_global:
