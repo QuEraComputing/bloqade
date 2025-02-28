@@ -65,7 +65,11 @@ class Func(interp.MethodTable):
             )
         )
         if len(stmt.results) > 0:
-            raise EmitError("cannot emit invoke with results")
+            raise EmitError(
+                "cannot emit invoke with results, this "
+                "is not compatible QASM2 gate routine"
+                " (consider pass qreg/creg by argument)"
+            )
         return ()
 
     @interp.impl(func.Lambda)
