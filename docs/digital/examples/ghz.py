@@ -143,3 +143,9 @@ def ghz_log_simd(n: int):
 # As a result, the returned QASM2 program will not have any arguments.
 # </p>
 # </div>
+
+target = qasm2.emit.QASM2(
+    allow_parallel=True,
+)
+ast = target.emit(ghz_log_simd(4))
+qasm2.parse.pprint(ast)
