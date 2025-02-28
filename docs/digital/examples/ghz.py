@@ -20,6 +20,12 @@ from kirin.dialects import ilist
 # A simple GHZ state preparation circuit can be built with $N - 1$ CX gates and $1$ H gate.
 # This gives the circuit an execution depth of $N$.
 
+#<div align="center">
+#<picture>
+#    <img src="/digital/examples/ghz_linear_circuit.svg" >
+#</picture>
+#</div>
+
 
 # %%
 def ghz_linear(n: int):
@@ -56,6 +62,12 @@ def ghz_linear(n: int):
 # So even thought the circuit depth is $log(N) = n$, the circuit execution depth is still $N$.
 # </p>
 # </div>
+
+#<div align="center">
+#<picture>
+#    <img src="/digital/examples/ghz_log_circuit.svg" >
+#</picture>
+#</div>
 
 
 # %%
