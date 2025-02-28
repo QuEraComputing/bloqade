@@ -162,8 +162,8 @@ qasm_loop = target.emit(loop_main)
 
 try:  # The recursion version has no qasm representation.
     qasm_recursive = target.emit(recursion_main)
-except RecursionError:
-    print("Whoops! We hit a recursion limit. This is expected.")
+except Exception:
+    print("Whoops! We cannot emit calls with return value. This is expected.")
 
 print("\n\n--- Postselect ---")
 pprint(qasm_postselect)
