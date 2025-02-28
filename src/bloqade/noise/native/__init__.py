@@ -1,3 +1,4 @@
+from .model import NoiseModelABC as NoiseModelABC, TwoRowZoneModel as TwoRowZoneModel
 from .stmts import (
     PauliChannel as PauliChannel,
     CZPauliChannel as CZPauliChannel,
