@@ -129,7 +129,6 @@ class RydbergGateSetRewriteRule(abc.RewriteRule):
             return py.constant.Constant(value=math.pi)
 
     def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
-        print("test", node)
         # only deal with uop
         if type(node) in uop.dialect.stmts:
             return getattr(self, f"rewrite_{node.name}")(node)
