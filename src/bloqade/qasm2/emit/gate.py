@@ -1,6 +1,6 @@
 from dataclasses import field, dataclass
 
-from kirin import ir, interp
+from kirin import ir, types, interp
 from bloqade.types import QubitType
 from kirin.dialects import py, func, ilist
 from kirin.ir.dialect import Dialect as Dialect
@@ -50,6 +50,16 @@ class Func(interp.MethodTable):
     def emit_invoke(
         self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: func.Invoke
     ):
+        ret = ()
+        if len(stmt.results) == 1 and stmt.results[0].type.is_subseteq(types.NoneType):
+            ret = (None,)
+        elif len(stmt.results) > 0:
+            raise EmitError(
+                "cannot emit invoke with results, this "
+                "is not compatible QASM2 gate routine"
+                " (consider pass qreg/creg by argument)"
+            )
+
         cparams, qparams = [], []
         for arg in stmt.inputs:
             if arg.type.is_subseteq(QubitType):
@@ -64,7 +74,7 @@ class Func(interp.MethodTable):
                 qargs=qparams,
             )
         )
-        return ()
+        return ret
 
     @interp.impl(func.Lambda)
     @interp.impl(func.GetField)
@@ -74,4 +84,18 @@ class Func(interp.MethodTable):
     @interp.impl(func.Return)
     @interp.impl(func.ConstantNone)
     def ignore(self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt):
+        return ()
+
+    @interp.impl(func.Function)
+    def emit_func(
+        self, emit: EmitQASM2Gate, frame: EmitQASM2Frame, stmt: func.Function
+    ):
+        emit.run_ssacfg_region(frame, stmt.body)
+        cparams, qparams = [], []
+        for arg in stmt.args:
+            if arg.type.is_subseteq(QubitType):
+                qparams.append(frame.get(arg))
+            else:
+                cparams.append(frame.get(arg))
+        emit.output = ast.Gate(stmt.sym_name, cparams, qparams, frame.body)
         return ()
