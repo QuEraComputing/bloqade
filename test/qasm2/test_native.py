@@ -3,6 +3,7 @@ import cirq.circuits
 from kirin import ir
 from bloqade import qasm2
 from kirin.rewrite import Walk, cse, walk, fixpoint
+from bloqade.test_utils import assert_nodes
 from bloqade.qasm2.rewrite.native_gates import RydbergGateSetRewriteRule
 
 
@@ -49,7 +50,7 @@ def test_rewrite_gate_stmts():
         ]
     )
 
-    assert block.is_equal(expected_block)
+    assert_nodes(block, expected_block)
 
 
 def test_generate_1q_gate_stmts():
@@ -73,7 +74,7 @@ def test_generate_1q_gate_stmts():
 
     expected_block = ir.Block(stmts=expected_stmts)
 
-    assert block.is_equal(expected_block)
+    assert_nodes(block, expected_block)
 
 
 def test_generate_2q_ctrl_gate_stmts():
@@ -105,4 +106,4 @@ def test_generate_2q_ctrl_gate_stmts():
 
     expected_block = ir.Block(stmts=expected_stmts)
 
-    assert block.is_equal(expected_block)
+    assert_nodes(block, expected_block)
