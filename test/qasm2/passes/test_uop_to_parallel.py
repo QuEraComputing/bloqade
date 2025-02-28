@@ -52,8 +52,3 @@ def test_two():
 
     parallel.UOpToParallel(test.dialects, SimpleOptimalMergePolicy)(test)
     test.print()
-
-
-if __name__ == "__main__":
-    test_one()
-    test_two()
