@@ -3,6 +3,7 @@ from typing import List
 from kirin import ir, types
 from bloqade import qasm2
 from kirin.dialects import py, func
+from bloqade.test_utils import assert_methods
 from bloqade.qasm2.passes.parallel import ParallelToUOp
 
 
@@ -61,15 +62,4 @@ def test_cz_rewrite():
 
     qasm2.extended.run_pass(expected_method)  # type: ignore
 
-    try:
-        assert expected_method.code.is_equal(main.code)
-    except AssertionError as e:
-        print("Expected:")
-        expected_method.print()
-        print("Actual:")
-        main.print()
-        raise e
-
-
-if __name__ == "__main__":
-    test_cz_rewrite()
+    assert_methods(main, expected_method)

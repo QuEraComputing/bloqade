@@ -21,6 +21,10 @@ Bloqade is a Python SDK for neutral atom quantum computing. It provides a set of
 uv add bloqade
 ```
 
+## Documentation
+
+The documentation is available at [https://bloqade.quera.com/latest/](https://bloqade.quera.com/latest/). We are at an early stage of completing the documentation with more details and examples, so comments and contributions are most welcome!
+
 ## License
 
 Apache License 2.0 with LLVM Exceptions

@@ -314,6 +314,9 @@ class LoweringQASM(Visitor[lowering.Result]):
     def visit_instruction_rzz(self, node: ast.Instruction, params, qargs):
         return uop.RZZ(theta=params[0], ctrl=qargs[0], qarg=qargs[1])
 
+    def visit_instruction_swap(self, node: ast.Instruction, params, qargs):
+        return uop.Swap(ctrl=qargs[0], qarg=qargs[1])
+
     def visit_Number(self, node: ast.Number) -> lowering.Result:
         if isinstance(node.value, int):
             stmt = expr.ConstInt(value=node.value)

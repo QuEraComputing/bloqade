@@ -1,6 +1,6 @@
 [project]
 name = "bloqade"
-version = "0.20.0"
+version = "0.21.0"
 description = "The software development toolkit for neutral atom arrays."
 readme = "README.md"
 authors = [
@@ -32,6 +32,10 @@ vis = [
 qbraid = [
     "qbraid>=0.9.3",
 ]
+cirq = [
+    "cirq>=1.4.1",
+    "cirq-core[contrib]>=1.4.1",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -50,7 +54,7 @@ dev = [
     "ipython>=8.29.0",
     "isort>=5.13.2",
     "mypy>=1.13.0",
-    "numpy>=1.25.0",
+    "numpy>=1.26.4",
     "pre-commit>=4.0.1",
     "pyright>=1.1.388",
     "pytest>=8.3.3",
