@@ -39,7 +39,7 @@ class NoiseModelABC(abc.ABC):
     cz_unpaired_gate_pz: float = field(default=1e-3, kw_only=True)
     cz_ungate_loss_prob: float = field(default=1e-3, kw_only=True)
 
-    move_speed: float = field(default=1e-2, kw_only=True)
+    move_speed: float = field(default=5e-1, kw_only=True)
     storage_spacing: float = field(default=4.0, kw_only=True)
 
     @classmethod
@@ -108,9 +108,11 @@ class TwoRowZoneModel(NoiseModelABC):
         as evenly as possible over the gate zone.
 
         """
-
-        addr_pairs = list(zip(qargs, ctrls))
+        assert len(ctrls) == len(qargs), "Number of ctrls and qargs must be equal"
+        addr_pairs = sorted(zip(ctrls, qargs), key=lambda x: x[0])
         # sort by the distance between the ctrl and qarg qubits
+
+        ctrls, qargs = list(zip(*addr_pairs))
 
         n_ctrls = len(ctrls)
 
@@ -122,7 +124,7 @@ class TwoRowZoneModel(NoiseModelABC):
 
         all_addr = sorted(ctrls + qargs)
         spatial_median = (
-            self.storage_spacing * (all_addr[n_ctrls] + all_addr[n_ctrls + 1]) / 2
+            self.storage_spacing * (all_addr[n_ctrls - 1] + all_addr[n_ctrls]) / 2
         )
 
         addr_pairs.sort(key=lambda x: abs(x[0] - ctrl_median))
@@ -136,16 +138,14 @@ class TwoRowZoneModel(NoiseModelABC):
             ctrl, qarg = addr_pairs.pop(0)
 
             if ctrl < ctrl_median:
-                slots[left_slot := left_slot + 1] = (ctrl, qarg)
+                slots[left_slot := left_slot - 1] = (ctrl, qarg)
             else:
-                slots[right_slot := right_slot - 1] = (ctrl, qarg)
+                slots[right_slot := right_slot + 1] = (ctrl, qarg)
 
         return slots
 
-    def calculate_move_duration(self, ctrls: List[int], qargs: List[int]) -> float:
+    def calculate_move_duration(self, slots: Dict[int, Tuple[int, int]]) -> float:
         """Calculate the time it takes to move the qubits from the ctrl to the qarg qubits."""
-
-        slots = self.assign_gate_slots(ctrls, qargs)
 
         qarg_x_distance = float("-inf")
         ctrl_x_distance = float("-inf")
@@ -177,7 +177,9 @@ class TwoRowZoneModel(NoiseModelABC):
 
         """
         groups = self.deconflict(ctrls, qargs)
-        move_duration = sum(map(self.calculate_move_duration, *zip(*groups)))
+        slots = [self.assign_gate_slots(*group) for group in groups]
+
+        move_duration = sum(map(self.calculate_move_duration, slots))
 
         px_time = self.poisson_pauli_prob(self.move_px_rate, move_duration)
         py_time = self.poisson_pauli_prob(self.move_py_rate, move_duration)
