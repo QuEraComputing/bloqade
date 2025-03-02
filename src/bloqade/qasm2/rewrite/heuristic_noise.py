@@ -107,7 +107,7 @@ class NoiseRewriteRule(result_abc.RewriteRule):
         )
         assert isinstance(node.qargs, ir.ResultValue)
         assert isinstance(node.qargs.stmt, ilist.New)
-        return self.insert_single_qubit_noise(node, node.qargs.stmt.values, probs)
+        return self.insert_single_qubit_noise(node, node.qargs, probs)
 
     def move_noise_stmts(
         self,
@@ -171,12 +171,14 @@ class NoiseRewriteRule(result_abc.RewriteRule):
         ):
             return result.RewriteResult()
 
-        other_qubits = sorted(set(self.qubit_ssa_value.keys()) - {node.qarg, node.ctrl})
+        other_qubits = sorted(
+            set(self.qubit_ssa_value.keys()) - {ctrl_addr.data, qarg_addr.data}
+        )
         errors = self.noise_model.parallel_cz_errors(
             [ctrl_addr.data], [qarg_addr.data], other_qubits
         )
-        (ctrls := ilist.New([self.qubit_ssa_value[ctrl_addr.data]])).insert_after(node)
-        (qargs := ilist.New([self.qubit_ssa_value[qarg_addr.data]])).insert_after(node)
+        (ctrls := ilist.New([self.qubit_ssa_value[ctrl_addr.data]])).insert_before(node)
+        (qargs := ilist.New([self.qubit_ssa_value[qarg_addr.data]])).insert_before(node)
         move_noise_nodes = self.move_noise_stmts(errors)
         gate_noise_nodes = self.cz_gate_noise(ctrls.result, qargs.result)
 
@@ -185,9 +187,6 @@ class NoiseRewriteRule(result_abc.RewriteRule):
 
         for new_node in gate_noise_nodes:
             new_node.insert_before(node)
-
-        for new_node in reversed(move_noise_nodes):
-            new_node.from_stmt(new_node).insert_after(node)
 
         return result.RewriteResult(has_done_something=True)
 
@@ -218,8 +217,5 @@ class NoiseRewriteRule(result_abc.RewriteRule):
 
         for new_node in gate_noise_nodes:
             new_node.insert_before(node)
-
-        for new_node in reversed(move_noise_nodes):
-            new_node.from_stmt(new_node).insert_after(node)
 
         return result.RewriteResult(has_done_something=True)
