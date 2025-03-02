@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../../../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.6">
     
     
       
@@ -264,7 +264,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="https://queracomputing.github.io/bloqade-analog-examples/latest/" class="md-tabs__link">
+      <a href="https://queracomputing.github.io/bloqade-analog-examples/dev/" class="md-tabs__link">
         
   
     
@@ -1598,7 +1598,7 @@
   
   
     <li class="md-nav__item">
-      <a href="https://queracomputing.github.io/bloqade-analog-examples/latest/" class="md-nav__link">
+      <a href="https://queracomputing.github.io/bloqade-analog-examples/dev/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2027,7 +2027,7 @@
     <span class="n">cz_unpaired_gate_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span>
     <span class="n">cz_unpaired_gate_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span>
     <span class="n">cz_ungate_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span>
-    <span class="n">move_speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">move_speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
     <span class="n">storage_spacing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">4.0</span>
 <span class="p">)</span>
 </code></pre></div>
@@ -2185,7 +2185,7 @@
     <span class="n">cz_unpaired_gate_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span>
     <span class="n">cz_unpaired_gate_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span>
     <span class="n">cz_ungate_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span>
-    <span class="n">move_speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">move_speed</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
     <span class="n">storage_spacing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">4.0</span>
 <span class="p">)</span>
 </code></pre></div>
@@ -2281,7 +2281,9 @@ as evenly as possible over the gate zone.</p>
 <span class="normal">140</span>
 <span class="normal">141</span>
 <span class="normal">142</span>
-<span class="normal">143</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assign_gate_slots</span><span class="p">(</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assign_gate_slots</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ctrls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">qargs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Allocate slots for the qubits to move to. start from middle of atoms and move outwards</span>
@@ -2293,9 +2295,11 @@ as evenly as possible over the gate zone.</p>
 <span class="sd">    as evenly as possible over the gate zone.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">addr_pairs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">qargs</span><span class="p">,</span> <span class="n">ctrls</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">ctrls</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">qargs</span><span class="p">),</span> <span class="s2">&quot;Number of ctrls and qargs must be equal&quot;</span>
+    <span class="n">addr_pairs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">ctrls</span><span class="p">,</span> <span class="n">qargs</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="c1"># sort by the distance between the ctrl and qarg qubits</span>
+
+    <span class="n">ctrls</span><span class="p">,</span> <span class="n">qargs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">addr_pairs</span><span class="p">))</span>
 
     <span class="n">n_ctrls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ctrls</span><span class="p">)</span>
 
@@ -2307,7 +2311,7 @@ as evenly as possible over the gate zone.</p>
 
     <span class="n">all_addr</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">ctrls</span> <span class="o">+</span> <span class="n">qargs</span><span class="p">)</span>
     <span class="n">spatial_median</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">storage_spacing</span> <span class="o">*</span> <span class="p">(</span><span class="n">all_addr</span><span class="p">[</span><span class="n">n_ctrls</span><span class="p">]</span> <span class="o">+</span> <span class="n">all_addr</span><span class="p">[</span><span class="n">n_ctrls</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage_spacing</span> <span class="o">*</span> <span class="p">(</span><span class="n">all_addr</span><span class="p">[</span><span class="n">n_ctrls</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">all_addr</span><span class="p">[</span><span class="n">n_ctrls</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
     <span class="p">)</span>
 
     <span class="n">addr_pairs</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">ctrl_median</span><span class="p">))</span>
@@ -2321,9 +2325,9 @@ as evenly as possible over the gate zone.</p>
         <span class="n">ctrl</span><span class="p">,</span> <span class="n">qarg</span> <span class="o">=</span> <span class="n">addr_pairs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ctrl</span> <span class="o">&lt;</span> <span class="n">ctrl_median</span><span class="p">:</span>
-            <span class="n">slots</span><span class="p">[</span><span class="n">left_slot</span> <span class="o">:=</span> <span class="n">left_slot</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">qarg</span><span class="p">)</span>
+            <span class="n">slots</span><span class="p">[</span><span class="n">left_slot</span> <span class="o">:=</span> <span class="n">left_slot</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">qarg</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">slots</span><span class="p">[</span><span class="n">right_slot</span> <span class="o">:=</span> <span class="n">right_slot</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">qarg</span><span class="p">)</span>
+            <span class="n">slots</span><span class="p">[</span><span class="n">right_slot</span> <span class="o">:=</span> <span class="n">right_slot</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ctrl</span><span class="p">,</span> <span class="n">qarg</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">slots</span>
 </code></pre></div></td></tr></table></div>
@@ -2341,7 +2345,7 @@ as evenly as possible over the gate zone.</p>
 
 </h3>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">calculate_move_duration</span><span class="p">(</span>
-    <span class="n">ctrls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">qargs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">slots</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </code></pre></div>
 
@@ -2351,9 +2355,7 @@ as evenly as possible over the gate zone.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/bloqade/noise/native/model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">147</span>
 <span class="normal">148</span>
 <span class="normal">149</span>
 <span class="normal">150</span>
@@ -2374,10 +2376,8 @@ as evenly as possible over the gate zone.</p>
 <span class="normal">165</span>
 <span class="normal">166</span>
 <span class="normal">167</span>
-<span class="normal">168</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">calculate_move_duration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctrls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">qargs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="normal">168</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">calculate_move_duration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slots</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the time it takes to move the qubits from the ctrl to the qarg qubits.&quot;&quot;&quot;</span>
-
-    <span class="n">slots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assign_gate_slots</span><span class="p">(</span><span class="n">ctrls</span><span class="p">,</span> <span class="n">qargs</span><span class="p">)</span>
 
     <span class="n">qarg_x_distance</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;-inf&quot;</span><span class="p">)</span>
     <span class="n">ctrl_x_distance</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;-inf&quot;</span><span class="p">)</span>
@@ -2451,7 +2451,9 @@ ctrl and the qarg qubits are in ascending order.</p>
 <span class="normal">193</span>
 <span class="normal">194</span>
 <span class="normal">195</span>
-<span class="normal">196</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parallel_cz_errors</span><span class="p">(</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parallel_cz_errors</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ctrls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">qargs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">rest</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply parallel gates by moving ctrl qubits to qarg qubits.</span>
@@ -2461,7 +2463,9 @@ ctrl and the qarg qubits are in ascending order.</p>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deconflict</span><span class="p">(</span><span class="n">ctrls</span><span class="p">,</span> <span class="n">qargs</span><span class="p">)</span>
-    <span class="n">move_duration</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calculate_move_duration</span><span class="p">,</span> <span class="o">*</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">groups</span><span class="p">)))</span>
+    <span class="n">slots</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">assign_gate_slots</span><span class="p">(</span><span class="o">*</span><span class="n">group</span><span class="p">)</span> <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">]</span>
+
+    <span class="n">move_duration</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calculate_move_duration</span><span class="p">,</span> <span class="n">slots</span><span class="p">))</span>
 
     <span class="n">px_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">poisson_pauli_prob</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">move_px_rate</span><span class="p">,</span> <span class="n">move_duration</span><span class="p">)</span>
     <span class="n">py_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">poisson_pauli_prob</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">move_py_rate</span><span class="p">,</span> <span class="n">move_duration</span><span class="p">)</span>
@@ -2587,7 +2591,7 @@ ctrl and the qarg qubits are in ascending order.</p>
     <script id="__config" type="application/json">{"base": "../../../../..", "features": ["announce.dismiss", "content.action.view", "content.action.edit", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow"], "search": "../../../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      <script src="../../../../../assets/javascripts/bundle.c8b220af.min.js"></script>
       
         <script src="../../../../../javascripts/katex.js"></script>
       
