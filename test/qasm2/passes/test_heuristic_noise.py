@@ -1,10 +1,12 @@
 from kirin import ir, types
 from bloqade import qasm2
 from bloqade.noise import native
-from kirin.dialects import ilist
+from kirin.rewrite import walk
+from kirin.dialects import func, ilist
 from bloqade.analysis import address
+from kirin.dialects.py import constant
 from bloqade.test_utils import assert_nodes
-from bloqade.qasm2.dialects import uop, parallel
+from bloqade.qasm2.dialects import uop, core, glob, parallel
 from bloqade.qasm2.rewrite.heuristic_noise import NoiseRewriteRule
 
 
@@ -244,3 +246,55 @@ def test_parallel_cz_gate_noise():
     )
 
     assert_nodes(block, expected_block)
+
+
+def test_global_noise():
+
+    @qasm2.extended
+    def test_method():
+        q = qasm2.qreg(2)
+        glob.UGate([q], 0.1, 0.2, 0.3)
+
+    px = 0.01
+    py = 0.01
+    pz = 0.01
+    p_loss = 0.01
+
+    model = TestNoise(global_loss_prob=p_loss, global_px=px, global_py=py, global_pz=pz)
+    analysis = address.AddressAnalysis(test_method.dialects)
+
+    frame, _ = analysis.run_analysis(test_method)
+
+    rule = NoiseRewriteRule(frame.entries, analysis.qubit_ssa_value, model)
+    test_method.print()
+
+    walk.Walk(rule).rewrite(test_method.code)
+
+    test_method.print()
+
+    expected_block = ir.Block(
+        [
+            n_qubits := constant.Constant(2),
+            q := core.QRegNew(n_qubits.result),
+            one := constant.Constant(1),
+            q1 := core.QRegGet(q.result, one.result),
+            zero := constant.Constant(0),
+            q0 := core.QRegGet(q.result, zero.result),
+            reg_list := ilist.New(values=[q.result]),
+            theta := constant.Constant(0.1),
+            phi := constant.Constant(0.2),
+            lam := constant.Constant(0.3),
+            qargs := ilist.New(values=[q0.result, q1.result]),
+            native.PauliChannel(qargs.result, px=px, py=py, pz=pz),
+            native.AtomLossChannel(qargs.result, prob=p_loss),
+            glob.UGate(reg_list.result, theta.result, phi.result, lam.result),
+            none := func.ConstantNone(),
+            func.Return(none.result),
+        ],
+        argtypes=[types.MethodType[[], types.NoneType]],
+    )
+
+    q.result.name = "q"
+    expected_region = ir.Region([expected_block])
+    expected_region.print()
+    assert_nodes(test_method.callable_region, expected_region)
