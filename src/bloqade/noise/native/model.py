@@ -5,41 +5,9 @@ from dataclasses import field, dataclass
 from collections.abc import Sequence
 
 
-@dataclass
-class NoiseModelABC(abc.ABC):
-    """Abstract base class for noise models.
-
-    This class defines the interface for a noise model. The gate noise is calculated form the parameters
-    provided in this dataclass which can be updated when inheriting from this class. The move error is
-    calculated by implementing the parallel_cz_errors method which takes a set of ctrl and qarg qubits
-    and returns a noise model for all the qubits. The noise model is a dictionary with the keys being the
-    error rates for the qubits and the values being the list of qubits that the error rate applies to.
-
-    Once implemented the class can be used with the NoisePass to analyze a circuit and apply the noise
-    model to the circuit.
-
-    NOTE: This model is not guaranteed to be supported long-term in bloqade. We will be
-    moving towards a more general approach to noise modeling in the future.
-
-    """
-
-    move_px_rate: float = field(default=1e-6, kw_only=True)
-    """The error rate (prob/microsecond) for a Pauli-X error during a move operation."""
-    move_py_rate: float = field(default=1e-6, kw_only=True)
-    """The error rate e (prob/microsecond) for a Pauli-Y error during a move operation."""
-    move_pz_rate: float = field(default=1e-6, kw_only=True)
-    """The error rate e (prob/microsecond) for a Pauli-Z error during a move operation."""
-    move_loss_rate: float = field(default=1e-6, kw_only=True)
-    """The error rate e (prob/microsecond) for a loss during a move operation."""
-
-    pick_px: float = field(default=1e-3, kw_only=True)
-    """The error rate (prob per pick operation)  for a Pauli-X error during a pick operation."""
-    pick_py: float = field(default=1e-3, kw_only=True)
-    """The error rate (prob per pick operation) for a Pauli-Y error during a pick operation."""
-    pick_pz: float = field(default=1e-3, kw_only=True)
-    """The error rate (prob per pick operation) for a Pauli-Z error during a pick operation."""
-    pick_loss_prob: float = field(default=1e-4, kw_only=True)
-    """The error rate for a loss during a pick operation."""
+@dataclass(frozen=True)
+class GateNoiseParams:
+    """Parameters for gate noise."""
 
     local_px: float = field(default=1e-3, kw_only=True)
     """The error probability for a Pauli-X error during a local single qubit gate operation."""
@@ -76,6 +44,43 @@ class NoiseModelABC(abc.ABC):
     """The error probability for Pauli-Z error during CZ gate operation when another qubit is not within blockade radius."""
     cz_unpaired_loss_prob: float = field(default=1e-3, kw_only=True)
     """The error probability for a loss during CZ gate operation when another qubit is not within blockade radius."""
+
+
+@dataclass
+class NoiseModelABC(abc.ABC):
+    """Abstract base class for noise models.
+
+    This class defines the interface for a noise model. The gate noise is calculated form the parameters
+    provided in this dataclass which can be updated when inheriting from this class. The move error is
+    calculated by implementing the parallel_cz_errors method which takes a set of ctrl and qarg qubits
+    and returns a noise model for all the qubits. The noise model is a dictionary with the keys being the
+    error rates for the qubits and the values being the list of qubits that the error rate applies to.
+
+    Once implemented the class can be used with the NoisePass to analyze a circuit and apply the noise
+    model to the circuit.
+
+    NOTE: This model is not guaranteed to be supported long-term in bloqade. We will be
+    moving towards a more general approach to noise modeling in the future.
+
+    """
+
+    move_px_rate: float = field(default=1e-6, kw_only=True)
+    """The error rate (prob/microsecond) for a Pauli-X error during a move operation."""
+    move_py_rate: float = field(default=1e-6, kw_only=True)
+    """The error rate e (prob/microsecond) for a Pauli-Y error during a move operation."""
+    move_pz_rate: float = field(default=1e-6, kw_only=True)
+    """The error rate e (prob/microsecond) for a Pauli-Z error during a move operation."""
+    move_loss_rate: float = field(default=1e-6, kw_only=True)
+    """The error rate e (prob/microsecond) for a loss during a move operation."""
+
+    pick_px: float = field(default=1e-3, kw_only=True)
+    """The error rate (prob per pick operation)  for a Pauli-X error during a pick operation."""
+    pick_py: float = field(default=1e-3, kw_only=True)
+    """The error rate (prob per pick operation) for a Pauli-Y error during a pick operation."""
+    pick_pz: float = field(default=1e-3, kw_only=True)
+    """The error rate (prob per pick operation) for a Pauli-Z error during a pick operation."""
+    pick_loss_prob: float = field(default=1e-4, kw_only=True)
+    """The error rate for a loss during a pick operation."""
 
     move_speed: float = field(default=5e-1, kw_only=True)
     """Maximum speed of the qubits during a move operation."""

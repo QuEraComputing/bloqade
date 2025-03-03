@@ -18,6 +18,7 @@ class NoiseRewriteRule(result_abc.RewriteRule):
 
     address_analysis: Dict[ir.SSAValue, address.Address]
     qubit_ssa_value: Dict[int, ir.SSAValue]
+    noise_params: native.GateNoiseParams = field(default_factory=native.GateNoiseParams)
     noise_model: native.NoiseModelABC = field(default_factory=native.TwoRowZoneModel)
 
     def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
@@ -49,10 +50,10 @@ class NoiseRewriteRule(result_abc.RewriteRule):
 
     def rewrite_single_qubit_gate(self, node: uop.SingleQubitGate):
         probs = (
-            self.noise_model.local_px,
-            self.noise_model.local_py,
-            self.noise_model.local_pz,
-            self.noise_model.local_loss_prob,
+            self.noise_params.local_px,
+            self.noise_params.local_py,
+            self.noise_params.local_pz,
+            self.noise_params.local_loss_prob,
         )
         (qargs := ilist.New(values=(node.qarg,))).insert_before(node)
         return self.insert_single_qubit_noise(node, qargs.result, probs)
@@ -77,10 +78,10 @@ class NoiseRewriteRule(result_abc.RewriteRule):
                 qargs.append(qubit.result)
 
         probs = (
-            self.noise_model.global_px,
-            self.noise_model.global_py,
-            self.noise_model.global_pz,
-            self.noise_model.global_loss_prob,
+            self.noise_params.global_px,
+            self.noise_params.global_py,
+            self.noise_params.global_pz,
+            self.noise_params.global_loss_prob,
         )
         (qargs := ilist.New(values=tuple(qargs))).insert_before(node)
         return self.insert_single_qubit_noise(node, qargs.result, probs)
@@ -94,10 +95,10 @@ class NoiseRewriteRule(result_abc.RewriteRule):
             return result.RewriteResult()
 
         probs = (
-            self.noise_model.local_px,
-            self.noise_model.local_py,
-            self.noise_model.local_pz,
-            self.noise_model.local_loss_prob,
+            self.noise_params.local_px,
+            self.noise_params.local_py,
+            self.noise_params.local_pz,
+            self.noise_params.local_loss_prob,
         )
         assert isinstance(node.qargs, ir.ResultValue)
         assert isinstance(node.qargs.stmt, ilist.New)
@@ -133,27 +134,27 @@ class NoiseRewriteRule(result_abc.RewriteRule):
             native.CZPauliChannel(
                 ctrls,
                 qargs,
-                px_ctrl=self.noise_model.cz_paired_gate_px,
-                py_ctrl=self.noise_model.cz_paired_gate_py,
-                pz_ctrl=self.noise_model.cz_paired_gate_pz,
-                px_qarg=self.noise_model.cz_paired_gate_px,
-                py_qarg=self.noise_model.cz_paired_gate_py,
-                pz_qarg=self.noise_model.cz_paired_gate_pz,
+                px_ctrl=self.noise_params.cz_paired_gate_px,
+                py_ctrl=self.noise_params.cz_paired_gate_py,
+                pz_ctrl=self.noise_params.cz_paired_gate_pz,
+                px_qarg=self.noise_params.cz_paired_gate_px,
+                py_qarg=self.noise_params.cz_paired_gate_py,
+                pz_qarg=self.noise_params.cz_paired_gate_pz,
                 paired=True,
             ),
             native.CZPauliChannel(
                 ctrls,
                 qargs,
-                px_ctrl=self.noise_model.cz_unpaired_gate_px,
-                py_ctrl=self.noise_model.cz_unpaired_gate_py,
-                pz_ctrl=self.noise_model.cz_unpaired_gate_pz,
-                px_qarg=self.noise_model.cz_unpaired_gate_px,
-                py_qarg=self.noise_model.cz_unpaired_gate_py,
-                pz_qarg=self.noise_model.cz_unpaired_gate_pz,
+                px_ctrl=self.noise_params.cz_unpaired_gate_px,
+                py_ctrl=self.noise_params.cz_unpaired_gate_py,
+                pz_ctrl=self.noise_params.cz_unpaired_gate_pz,
+                px_qarg=self.noise_params.cz_unpaired_gate_px,
+                py_qarg=self.noise_params.cz_unpaired_gate_py,
+                pz_qarg=self.noise_params.cz_unpaired_gate_pz,
                 paired=False,
             ),
-            native.AtomLossChannel(ctrls, prob=self.noise_model.cz_gate_loss_prob),
-            native.AtomLossChannel(qargs, prob=self.noise_model.cz_gate_loss_prob),
+            native.AtomLossChannel(ctrls, prob=self.noise_params.cz_gate_loss_prob),
+            native.AtomLossChannel(qargs, prob=self.noise_params.cz_gate_loss_prob),
         ]
 
     def rewrite_cz_gate(self, node: uop.CZ):
