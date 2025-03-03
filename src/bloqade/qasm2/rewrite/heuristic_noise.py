@@ -11,26 +11,14 @@ from bloqade.qasm2.dialects import uop, core, glob, parallel
 
 @dataclass
 class NoiseRewriteRule(result_abc.RewriteRule):
+    """
+    NOTE: This pass is not guaranteed to be supported long-term in bloqade. We will be
+    moving towards a more general approach to noise modeling in the future.
+    """
+
     address_analysis: Dict[ir.SSAValue, address.Address]
     qubit_ssa_value: Dict[int, ir.SSAValue]
     noise_model: native.NoiseModelABC = field(default_factory=native.TwoRowZoneModel)
-
-    def __post_init__(self):
-        for ssa, addr in self.address_analysis.items():
-            if not isinstance(ssa, ir.ResultValue):
-                continue
-            # insert any missing qubit statements
-            if isinstance(addr, address.AddressReg):
-                node = ssa.stmt
-                assert isinstance(node, core.QRegNew)
-                for pos, idx in enumerate(addr.data):
-                    if idx not in self.qubit_ssa_value:
-                        pos_stmt = py.constant.Constant(value=pos)
-                        self.qubit_ssa_value[idx] = (
-                            qubit_stmt := core.QRegGet(node.result, pos_stmt.result)
-                        ).result
-                        qubit_stmt.insert_after(node)
-                        pos_stmt.insert_after(node)
 
     def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
         if isinstance(node, uop.SingleQubitGate):
@@ -76,11 +64,17 @@ class NoiseRewriteRule(result_abc.RewriteRule):
 
         qargs = []
 
-        for addr in addrs.data:
+        assert isinstance(node.registers, ir.ResultValue)
+        assert isinstance(node.registers.owner, ilist.New)
+
+        for addr, reg_ssa in zip(addrs.data, node.registers.owner.values):
             if not isinstance(addr, address.AddressReg):
                 return result.RewriteResult()
 
-            qargs.extend(self.qubit_ssa_value[q] for q in addr.data)
+            for idx_val in range(len(addr.data)):
+                (idx := py.constant.Constant(value=idx_val)).insert_before(node)
+                (qubit := core.QRegGet(reg_ssa, idx.result)).insert_before(node)
+                qargs.append(qubit.result)
 
         probs = (
             self.noise_model.global_px,

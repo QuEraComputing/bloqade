@@ -112,7 +112,7 @@ def test_cz_gate_noise():
         cz_unpaired_gate_px=px,
         cz_unpaired_gate_py=py,
         cz_unpaired_gate_pz=pz,
-        cz_ungate_loss_prob=p_loss,
+        cz_unpaired_loss_prob=p_loss,
     )
 
     ctrl_qubit = ir.TestValue(type=qasm2.QubitType)
@@ -184,7 +184,7 @@ def test_parallel_cz_gate_noise():
         cz_unpaired_gate_px=px,
         cz_unpaired_gate_py=py,
         cz_unpaired_gate_pz=pz,
-        cz_ungate_loss_prob=p_loss,
+        cz_unpaired_loss_prob=p_loss,
     )
 
     ctrl_qubit = ir.TestValue(type=qasm2.QubitType)
@@ -276,14 +276,14 @@ def test_global_noise():
         [
             n_qubits := constant.Constant(2),
             q := core.QRegNew(n_qubits.result),
-            one := constant.Constant(1),
-            q1 := core.QRegGet(q.result, one.result),
-            zero := constant.Constant(0),
-            q0 := core.QRegGet(q.result, zero.result),
             reg_list := ilist.New(values=[q.result]),
             theta := constant.Constant(0.1),
             phi := constant.Constant(0.2),
             lam := constant.Constant(0.3),
+            zero := constant.Constant(0),
+            q0 := core.QRegGet(q.result, zero.result),
+            one := constant.Constant(1),
+            q1 := core.QRegGet(q.result, one.result),
             qargs := ilist.New(values=[q0.result, q1.result]),
             native.PauliChannel(qargs.result, px=px, py=py, pz=pz),
             native.AtomLossChannel(qargs.result, prob=p_loss),
@@ -293,6 +293,8 @@ def test_global_noise():
         ],
         argtypes=[types.MethodType[[], types.NoneType]],
     )
+
+    expected_block.args[0].name = "test_method_self"
 
     q.result.name = "q"
     expected_region = ir.Region([expected_block])
