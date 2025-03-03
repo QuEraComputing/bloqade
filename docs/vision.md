@@ -2,7 +2,7 @@
 
 The vision of bloqade is to empower quantum scientists, from applications development to algorithmic co-design, to build hybrid quantum-classical programs that leverage the strength of neutral atom quantum computers and have a real chance of demonstrating quantum utility. Bloqade is built on top of [Kirin](https://github.com/QuEraComputing/kirin/), an open source compiler infrastructure designed for kernel functions and composable representations.
 
-# Composable quantum programming
+## Composable quantum programming
 
 Today bloqade becomes a namespace package of multiple eDSLs around digital and analog quantum computation. `bloqade.analog` is the module for analog-mode neutral atom computers and includes several handy utilities ranging from building or analyzing analog programs, to emulation or executing on QuEra's cloud-accessible hardware "Aquila". 
 
