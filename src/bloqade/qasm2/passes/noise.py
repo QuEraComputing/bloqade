@@ -19,7 +19,7 @@ class NoisePass(Pass):
 
     noise_model: native.NoiseModelABC = field(default_factory=native.TwoRowZoneModel)
 
-    def generate_rule(self, mt: ir.Method):
+    def unsafe_run(self, mt: ir.Method):
         address_analysis = address.AddressAnalysis(mt.dialects)
         frame, _ = address_analysis.run_analysis(mt)
         first_pass = walk.Walk(
@@ -30,9 +30,5 @@ class NoisePass(Pass):
             )
         )
         second_pass = fixpoint.Fixpoint(walk.Walk(cse.CommonSubexpressionElimination()))
-
         third_pass = fixpoint.Fixpoint(walk.Walk(dce.DeadCodeElimination()))
         return chain.Chain(first_pass, second_pass, third_pass)
-
-    def unsafe_run(self, mt: ir.Method):
-        return self.generate_rule(mt).rewrite(mt.code)
