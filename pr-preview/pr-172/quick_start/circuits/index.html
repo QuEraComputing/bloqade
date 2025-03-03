@@ -1896,9 +1896,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#incremental-compiling" class="md-nav__link">
+  <a href="#progressive-compilation" class="md-nav__link">
     <span class="md-ellipsis">
-      Incremental compiling
+      Progressive compilation
     </span>
   </a>
   
@@ -2035,8 +2035,8 @@ into lower-level intermediate representation (IR) code that can be later interpr
 <li>All compatible Python expressions (e.g <code>sin</code>, arithmetics) are translated into QASM2 expression.</li>
 <li>The QASM2 code is emitted as QASM2 AST for pretty printing.</li>
 </ol>
-<h3 id="incremental-compiling">Incremental compiling</h3>
-<p>As well as writing circuit executions, you can also incrementally transform and compile that circuit. For example, you may want to lower arbitrary single qubit unitaries into hardware-specific unitaries, as is done in <a href="quick_start/circuits/compiler_passes/native_gate_rewrite.md">this example</a>. For more details on the kinds of circuit-level compiler passes and how to write your own, see <a href="quick_start/circuits/compiler_passes/index.md">here</a></p>
+<h3 id="progressive-compilation">Progressive compilation</h3>
+<p>As well as writing circuit executions, you can also progressively transform and compile that circuit. For example, you may want to lower arbitrary single qubit unitaries into hardware-specific unitaries, as is done in <a href="quick_start/circuits/compiler_passes/native_gate_rewrite.md">this example</a>. For more details on the kinds of circuit-level compiler passes and how to write your own, see <a href="quick_start/circuits/compiler_passes/index.md">here</a></p>
 <h2 id="dialect-groups">Dialect groups</h2>
 <p>Bloqade provides a set of <a href="">dialects (missing link)</a> for QASM2 and our custom extensions to model parallel gates in neutral atom architectures. The basic QASM2 functionality can be enabled via</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>qasm2<span class="o">]</span>

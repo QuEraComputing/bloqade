@@ -1859,6 +1859,23 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#composable-quantum-programming" class="md-nav__link">
+    <span class="md-ellipsis">
+      Composable quantum programming
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2028,8 +2045,8 @@
 <h1 id="a-new-journey-for-bloqade">A new journey for Bloqade</h1>
 <p>In 2023 we were excited to introduce bloqade, a python SDK for programming and interfacing with analog mode neutral atom hardware. Today, we introduce the next generation of Bloqade: as well as programming analog-mode computation, our new bloqade-circuits module enables programming digital and gate-based computation, with an eye on near-term NISQ demonstrations and intermediate-term fault tolerant solutions. Don’t worry; all of your favorite features of the previous generation of bloqade are still there under the <code>bloqade.analog</code> namespace, but now you can explore digital-mode computation specialized to reconfigurable neutral atoms.
 Why have we built this new module? There are plenty of incredible quantum programming packages, such as <a href="https://www.ibm.com/quantum/qiskit">qiskit</a> and <a href="https://quantumai.google/cirq">cirq</a>, as well as an entire ecosystem of middleware providers with specialized pipelines to turn abstract problems into circuits. However, these packages may not be everything that is needed for efficient hardware execution on neutral atom hardware: <strong>a circuits-only representation of quantum executions may be the incorrect abstraction for effective hardware-level programs</strong>. This is a challenge: we want to enable everyone to maximally leverage the power of neutral atom quantum computers beyond abstract circuit representations. For this reason, we are building Bloqade to be a hardware-oriented SDK to represent hybrid executions on reconfigurable neutral atom hardware. In this way, bloqade can be integrated into the larger ecosystem—for example, codegen of qasm from a bloqade-circuits program, but be an SDK specialized to our hardware: <strong>THE SDK for neutral atoms</strong>.</p>
-<p>The vision of bloqade is to empower quantum scientists, from applications development to algorithmic co-design, to build hybrid quantum-classical programs that leverage the strength of neutral atom quantum computers and have a real chance of demonstrating quantum utility. Bloqade is built on top of <a href="">Kirin (no link)</a>, an open source compiler toolchain designed for kernel-level programs and composable representations.</p>
-<h1 id="composable-quantum-programming">Composable quantum programming</h1>
+<p>The vision of bloqade is to empower quantum scientists, from applications development to algorithmic co-design, to build hybrid quantum-classical programs that leverage the strength of neutral atom quantum computers and have a real chance of demonstrating quantum utility. Bloqade is built on top of <a href="https://github.com/QuEraComputing/kirin">Kirin</a>, an open source compiler infrastructure designed for kernel functions and embeded domain-specific language (eDSL).</p>
+<h2 id="composable-quantum-programming">Composable quantum programming</h2>
 <p>As of today, bloqade has two components: bloqade-analog and bloqade-circuits. Bloqade-analog is the SDK for analog-mode neutral atom computers and includes several handy utilities ranging from building or analyzing analog programs, to emulation or executing on QuEra's cloud-accessible hardware "Aquila". Bloqade-circuits is the initial iteration to represent digital circuit execution using gate-based quantum computing on reconfigurable neutral atoms. It extends the QASM2 language to include extra annotation of circuits that is important for efficient execution, such as parallelism and global gates. As well as being able to construct quantum programs with the full convenience of typical classical programming-- such as loops and control flow—bloqade-circuits also includes basic compiler transformation passes, emulation, and code generation.</p>
 <p>But bloqade is not done with just these two components. We envision adding new components (called "dialects") which help you write programs which are tuned for optimal performance in an error corrected era, and on neutral atom hardware. Stay tuned and help us build the future of quantum computing as we build out new components, such as QEC and atom moving dialects.</p>
 <h1 id="hardware-oriented-programming-and-co-design">Hardware-oriented programming and co-design</h1>
