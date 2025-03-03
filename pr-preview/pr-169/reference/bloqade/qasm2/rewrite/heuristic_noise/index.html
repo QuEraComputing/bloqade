@@ -1856,6 +1856,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bloqade.qasm2.rewrite.heuristic_noise.NoiseRewriteRule" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;NoiseRewriteRule
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1912,6 +1921,60 @@
 
 
 
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bloqade.qasm2.rewrite.heuristic_noise.NoiseRewriteRule" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">NoiseRewriteRule</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">NoiseRewriteRule</span><span class="p">(</span>
+    <span class="n">address_analysis</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">SSAValue</span><span class="p">,</span> <span class="n">Address</span><span class="p">],</span>
+    <span class="n">qubit_ssa_value</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">SSAValue</span><span class="p">],</span>
+    <span class="n">noise_model</span><span class="p">:</span> <span class="n">NoiseModelABC</span> <span class="o">=</span> <span class="n">native</span><span class="o">.</span><span class="n">TwoRowZoneModel</span><span class="p">(),</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="kirin.rewrite.abc.RewriteRule">RewriteRule</span></code></p>
+
+
+        <p>NOTE: This pass is not guaranteed to be supported long-term in bloqade. We will be
+moving towards a more general approach to noise modeling in the future.</p>
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
 
 
 
