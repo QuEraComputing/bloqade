@@ -18,6 +18,9 @@ class NoiseModelABC(abc.ABC):
     Once implemented the class can be used with the NoisePass to analyze a circuit and apply the noise
     model to the circuit.
 
+    NOTE: This model is not guaranteed to be supported long-term in bloqade. We will be
+    moving towards a more general approach to noise modeling in the future.
+
     """
 
     move_px_rate: float = field(default=1e-6, kw_only=True)
