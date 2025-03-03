@@ -1,4 +1,6 @@
-The vision of bloqade is to empower quantum scientists, from applications development to algorithmic co-design, to build hybrid quantum-classical programs that leverage the strength of neutral atom quantum computers and have a real chance of demonstrating quantum utility. Bloqade is built on top of [Kirin (no link)](), an open source compiler toolchain designed for kernel-level programs and composable representations.
+# The Vision of Bloqade
+
+The vision of bloqade is to empower quantum scientists, from applications development to algorithmic co-design, to build hybrid quantum-classical programs that leverage the strength of neutral atom quantum computers and have a real chance of demonstrating quantum utility. Bloqade is built on top of [Kirin](https://github.com/QuEraComputing/kirin/), an open source compiler infrastructure designed for kernel functions and composable representations.
 
 # Composable quantum programming
 
