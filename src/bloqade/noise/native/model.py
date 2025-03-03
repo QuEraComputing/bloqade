@@ -46,24 +46,8 @@ class GateNoiseParams:
     """The error probability for a loss during CZ gate operation when another qubit is not within blockade radius."""
 
 
-@dataclass
-class MoveNoiseModelABC(abc.ABC):
-    """Abstract base class for noise based on atom movement.
-
-    This class defines the interface for a noise model. The gate noise is calculated form the parameters
-    provided in this dataclass which can be updated when inheriting from this class. The move error is
-    calculated by implementing the parallel_cz_errors method which takes a set of ctrl and qarg qubits
-    and returns a noise model for all the qubits. The noise model is a dictionary with the keys being the
-    error rates for the qubits and the values being the list of qubits that the error rate applies to.
-
-    Once implemented the class can be used with the NoisePass to analyze a circuit and apply the noise
-    model to the circuit.
-
-    NOTE: This model is not guaranteed to be supported long-term in bloqade. We will be
-    moving towards a more general approach to noise modeling in the future.
-
-    """
-
+@dataclass(frozen=True)
+class MoveNoiseParams:
     move_px_rate: float = field(default=1e-6, kw_only=True)
     """The error rate (prob/microsecond) for a Pauli-X error during a move operation."""
     move_py_rate: float = field(default=1e-6, kw_only=True)
@@ -86,6 +70,28 @@ class MoveNoiseModelABC(abc.ABC):
     """Maximum speed of the qubits during a move operation."""
     storage_spacing: float = field(default=4.0, kw_only=True)
     """Spacing between the qubits in the storage zone."""
+
+
+@dataclass
+class MoveNoiseModelABC(abc.ABC):
+    """Abstract base class for noise based on atom movement.
+
+    This class defines the interface for a noise model. The gate noise is calculated form the parameters
+    provided in this dataclass which can be updated when inheriting from this class. The move error is
+    calculated by implementing the parallel_cz_errors method which takes a set of ctrl and qarg qubits
+    and returns a noise model for all the qubits. The noise model is a dictionary with the keys being the
+    error rates for the qubits and the values being the list of qubits that the error rate applies to.
+
+    Once implemented the class can be used with the NoisePass to analyze a circuit and apply the noise
+    model to the circuit.
+
+    NOTE: This model is not guaranteed to be supported long-term in bloqade. We will be
+    moving towards a more general approach to noise modeling in the future.
+
+    """
+
+    params: MoveNoiseParams = field(default_factory=MoveNoiseParams)
+    """Parameters for calculating move noise."""
 
     @classmethod
     @abc.abstractmethod
@@ -198,7 +204,7 @@ class TwoRowZoneModel(MoveNoiseModelABC):
         )
 
         all_addr = sorted(ctrls + qargs)
-        spatial_median = self.storage_spacing * (all_addr[0] + all_addr[-1]) / 2
+        spatial_median = self.params.storage_spacing * (all_addr[0] + all_addr[-1]) / 2
 
         addr_pairs.sort(key=lambda x: abs(x[0] - ctrl_median))
 
@@ -227,11 +233,11 @@ class TwoRowZoneModel(MoveNoiseModelABC):
         for slot, (ctrl, qarg) in slots.items():
             qarg_x_distance = max(
                 qarg_x_distance,
-                abs(qarg * self.storage_spacing - slot * self.gate_spacing),
+                abs(qarg * self.params.storage_spacing - slot * self.gate_spacing),
             )
             ctrl_x_distance = max(
                 ctrl_x_distance,
-                abs(ctrl * self.storage_spacing - slot * self.gate_spacing),
+                abs(ctrl * self.params.storage_spacing - slot * self.gate_spacing),
             )
 
         qarg_max_distance = math.sqrt(qarg_x_distance**2 + self.gate_zone_y_offset**2)
@@ -239,7 +245,7 @@ class TwoRowZoneModel(MoveNoiseModelABC):
             ctrl_x_distance**2 + (self.gate_zone_y_offset - 3) ** 2
         )
 
-        return (qarg_max_distance + ctrl_max_distance) / self.move_speed
+        return (qarg_max_distance + ctrl_max_distance) / self.params.move_speed
 
     def parallel_cz_errors(
         self, ctrls: List[int], qargs: List[int], rest: List[int]
@@ -250,17 +256,17 @@ class TwoRowZoneModel(MoveNoiseModelABC):
 
         move_duration = sum(map(self.calculate_move_duration, slots))
 
-        px_time = self.poisson_pauli_prob(self.move_px_rate, move_duration)
-        py_time = self.poisson_pauli_prob(self.move_py_rate, move_duration)
-        px_time = self.poisson_pauli_prob(self.move_pz_rate, move_duration)
-        p_loss_time = self.poisson_pauli_prob(self.move_loss_rate, move_duration)
+        px_time = self.poisson_pauli_prob(self.params.move_px_rate, move_duration)
+        py_time = self.poisson_pauli_prob(self.params.move_py_rate, move_duration)
+        px_time = self.poisson_pauli_prob(self.params.move_pz_rate, move_duration)
+        p_loss_time = self.poisson_pauli_prob(self.params.move_loss_rate, move_duration)
 
         errors = {(px_time, py_time, px_time, p_loss_time): rest}
 
-        px_moved = self.join_binary_probs(self.pick_px, px_time)
-        py_moved = self.join_binary_probs(self.pick_py, py_time)
-        pz_moved = self.join_binary_probs(self.pick_pz, px_time)
-        p_loss_moved = self.join_binary_probs(self.pick_loss_prob, p_loss_time)
+        px_moved = self.join_binary_probs(self.params.pick_px, px_time)
+        py_moved = self.join_binary_probs(self.params.pick_py, py_time)
+        pz_moved = self.join_binary_probs(self.params.pick_pz, px_time)
+        p_loss_moved = self.join_binary_probs(self.params.pick_loss_prob, p_loss_time)
 
         errors[(px_moved, py_moved, pz_moved, p_loss_moved)] = sorted(ctrls + qargs)
 
