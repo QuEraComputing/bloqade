@@ -2,7 +2,7 @@ from dataclasses import field, dataclass
 
 from kirin import ir
 from bloqade.noise import native
-from kirin.rewrite import cse, dce, walk, fixpoint
+from kirin.rewrite import cse, dce, walk, chain, fixpoint
 from bloqade.analysis import address
 from kirin.passes.abc import Pass
 from bloqade.qasm2.rewrite.heuristic_noise import NoiseRewriteRule
@@ -22,17 +22,17 @@ class NoisePass(Pass):
     def generate_rule(self, mt: ir.Method):
         address_analysis = address.AddressAnalysis(mt.dialects)
         frame, _ = address_analysis.run_analysis(mt)
-        return walk.Walk(
+        first_pass = walk.Walk(
             NoiseRewriteRule(
                 frame.entries,
                 address_analysis.qubit_ssa_value,
                 noise_model=self.noise_model,
             )
         )
+        second_pass = fixpoint.Fixpoint(walk.Walk(cse.CommonSubexpressionElimination()))
+
+        third_pass = fixpoint.Fixpoint(walk.Walk(dce.DeadCodeElimination()))
+        return chain.Chain(first_pass, second_pass, third_pass)
 
     def unsafe_run(self, mt: ir.Method):
-        self.generate_rule(mt).rewrite(mt.code)
-        fixpoint.Fixpoint(walk.Walk(cse.CommonSubexpressionElimination())).rewrite(
-            mt.code
-        )
-        return fixpoint.Fixpoint(walk.Walk(dce.DeadCodeElimination())).rewrite(mt.code)
+        return self.generate_rule(mt).rewrite(mt.code)
