@@ -18,6 +18,7 @@ class NoiseRewriteRule(result_abc.RewriteRule):
 
     address_analysis: Dict[ir.SSAValue, address.Address]
     qubit_ssa_value: Dict[int, ir.SSAValue]
+    num_qubits: int
     gate_noise_params: native.GateNoiseParams = field(
         default_factory=native.GateNoiseParams
     )
@@ -175,7 +176,7 @@ class NoiseRewriteRule(result_abc.RewriteRule):
             return result.RewriteResult()
 
         other_qubits = sorted(
-            set(self.qubit_ssa_value.keys()) - {ctrl_addr.data, qarg_addr.data}
+            set(range(self.num_qubits)) - {ctrl_addr.data, qarg_addr.data}
         )
         errors = self.noise_model.parallel_cz_errors(
             [ctrl_addr.data], [qarg_addr.data], other_qubits

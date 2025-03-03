@@ -29,8 +29,9 @@ class NoisePass(Pass):
         frame, _ = address_analysis.run_analysis(mt)
         first_pass = walk.Walk(
             NoiseRewriteRule(
-                frame.entries,
-                address_analysis.qubit_ssa_value,
+                address_analysis=frame.entries,
+                qubit_ssa_value=address_analysis.qubit_ssa_value,
+                num_qubits=address_analysis.qubit_count,
                 noise_model=self.noise_model,
                 gate_noise_params=self.gate_noise_params,
             )
