@@ -87,9 +87,9 @@ The compilation process is divided into several stages:
    3. All compatible Python expressions (e.g `sin`, arithmetics) are translated into QASM2 expression.
    4. The QASM2 code is emitted as QASM2 AST for pretty printing.
 
-### Incremental compiling
+### Progressive compilation
 
-As well as writing circuit executions, you can also incrementally transform and compile that circuit. For example, you may want to lower arbitrary single qubit unitaries into hardware-specific unitaries, as is done in [this example](quick_start/circuits/compiler_passes/native_gate_rewrite.md). For more details on the kinds of circuit-level compiler passes and how to write your own, see [here](quick_start/circuits/compiler_passes/index.md)
+As well as writing circuit executions, you can also progressively transform and compile that circuit. For example, you may want to lower arbitrary single qubit unitaries into hardware-specific unitaries, as is done in [this example](quick_start/circuits/compiler_passes/native_gate_rewrite.md). For more details on the kinds of circuit-level compiler passes and how to write your own, see [here](quick_start/circuits/compiler_passes/index.md)
 
 ## Dialect groups
 
