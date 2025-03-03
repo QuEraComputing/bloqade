@@ -33,8 +33,8 @@ class AddressMethodTable(interp.MethodTable):
 
         if isinstance(addr, AddressReg):
             global_idx = addr.data[pos]
-            if global_idx not in interp._address_map:
-                interp._address_map[global_idx] = stmt.result
+            if global_idx not in interp.address_map:
+                interp.address_map[global_idx] = stmt.result
 
             return (AddressQubit(global_idx),)
         else:  # this is not reachable

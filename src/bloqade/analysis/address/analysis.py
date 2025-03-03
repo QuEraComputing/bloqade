@@ -1,4 +1,5 @@
 from typing import TypeVar
+from dataclasses import field
 
 from kirin import ir, interp
 from bloqade.types import QubitType
@@ -13,11 +14,13 @@ class AddressAnalysis(Forward[Address]):
 
     keys = ["qubit.address"]
     lattice = Address
+    address_map: dict[int, ir.SSAValue] = field(default_factory=dict, init=False)
+    next_address: int = field(default=0, init=False)
 
     def initialize(self):
         super().initialize()
         self.next_address: int = 0
-        self._address_map: dict[int, ir.SSAValue] = {}
+        self.address_map = {}
         return self
 
     @property
@@ -28,7 +31,7 @@ class AddressAnalysis(Forward[Address]):
     @property
     def qubit_ssa_value(self):
         """Map of global qubit addresses to their SSA values."""
-        return self._address_map
+        return self.address_map
 
     T = TypeVar("T")
 
