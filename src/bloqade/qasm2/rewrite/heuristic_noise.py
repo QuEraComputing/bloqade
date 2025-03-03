@@ -47,7 +47,7 @@ class NoiseRewriteRule(result_abc.RewriteRule):
 
         return result.RewriteResult(has_done_something=True)
 
-    def rewrite_single_qubit_gate(self, node: uop.RZ | uop.UGate):
+    def rewrite_single_qubit_gate(self, node: uop.SingleQubitGate):
         probs = (
             self.noise_model.local_px,
             self.noise_model.local_py,
