@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
     
     
       
@@ -270,7 +270,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="https://queracomputing.github.io/bloqade-analog-examples/latest/" class="md-tabs__link">
+      <a href="https://queracomputing.github.io/bloqade-analog-examples/dev/" class="md-tabs__link">
         
   
     
@@ -1634,7 +1634,7 @@
   
   
     <li class="md-nav__item">
-      <a href="https://queracomputing.github.io/bloqade-analog-examples/latest/" class="md-nav__link">
+      <a href="https://queracomputing.github.io/bloqade-analog-examples/dev/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2345,7 +2345,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=dfa7f03e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=183c6f18">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2366,7 +2366,7 @@ backend from the <code>bloqade.pyqrack</code> module, which can be installed via
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e7ab8292">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=255116f1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2407,7 +2407,7 @@ from bloqade.pyqrack import PyQrack
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=17317488">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=be2f9a07">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2429,28 +2429,28 @@ from bloqade.pyqrack import PyQrack
 
 
 <span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">qft</span><span class="p">(</span><span class="n">qreg</span><span class="p">:</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">QReg</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">qft</span><span class="p">(</span><span class="n">qreg</span><span class="p">:</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">QReg</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="n">n</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">qreg</span>
 
-    <span class="n">qasm2</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-        <span class="n">qasm2</span><span class="o">.</span><span class="n">cu1</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">qreg</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="o">**</span><span class="n">i</span><span class="p">)</span>
-    <span class="n">qft</span><span class="p">(</span><span class="n">qreg</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qasm2</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="n">qasm2</span><span class="o">.</span><span class="n">cu1</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">qreg</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="o">**</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">qft</span><span class="p">(</span><span class="n">qreg</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># recursion</span>
     <span class="k">return</span> <span class="n">qreg</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-2">pi = math.pi
 
 
 @qasm2.extended
-def qft(qreg: qasm2.QReg, n: int):
-    if n == 0:
+def qft(qreg: qasm2.QReg, n: int, k: int):
+    if k == n:
         return qreg
 
-    qasm2.h(qreg[0])
-    for i in range(1, n):
-        qasm2.cu1(qreg[i], qreg[0], 2 * pi / 2**i)
-    qft(qreg, n - 1)
+    qasm2.h(qreg[k])
+    for i in range(k + 1, n):
+        qasm2.cu1(qreg[i], qreg[k], 2 * math.pi / 2**i)
+    qft(qreg, n, k + 1)  # recursion
     return qreg</div>
 </div>
 </div>
@@ -2458,7 +2458,7 @@ def qft(qreg: qasm2.QReg, n: int):
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=21615780">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=48fcb782">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2470,7 +2470,7 @@ the QFT circuit is correctly implemented. We will use a quantum register of size
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f61394af">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=0588217c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2490,18 +2490,18 @@ the QFT circuit is correctly implemented. We will use a quantum register of size
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-    <span class="k">return</span> <span class="n">qft</span><span class="p">(</span><span class="n">qasm2</span><span class="o">.</span><span class="n">qreg</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">qft</span><span class="p">(</span><span class="n">qasm2</span><span class="o">.</span><span class="n">qreg</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-3">@qasm2.extended
 def main():
-    return qft(qasm2.qreg(3), 3)</div>
+    return qft(qasm2.qreg(3), 3, 0)</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=93e1eb08">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f9ff39d7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2513,7 +2513,7 @@ to see the final state of the qubits after applying the QFT circuit.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8c1b3bbd">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e5e64dd2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2544,7 +2544,7 @@ print(qreg)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b8ad0d61">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2927f38c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2556,7 +2556,7 @@ that corresponds to the QFT circuit.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=ac5b8cec">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=fea9e431">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2721,7 +2721,7 @@ pprint(ast)</div>
     <script id="__config" type="application/json">{"base": "../../..", "features": ["announce.dismiss", "content.action.view", "content.action.edit", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c8b220af.min.js"></script>
       
         <script src="../../../javascripts/katex.js"></script>
       

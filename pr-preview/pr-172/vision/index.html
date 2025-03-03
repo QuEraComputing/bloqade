@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
     
     
       
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#composable-quantum-programming" class="md-skip">
+        <a href="#the-vision-of-bloqade" class="md-skip">
           Skip to content
         </a>
       
@@ -270,7 +270,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="https://queracomputing.github.io/bloqade-analog-examples/latest/" class="md-tabs__link">
+      <a href="https://queracomputing.github.io/bloqade-analog-examples/dev/" class="md-tabs__link">
         
   
     
@@ -512,6 +512,18 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Vision
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -522,6 +534,70 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#composable-quantum-programming" class="md-nav__link">
+    <span class="md-ellipsis">
+      Composable quantum programming
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardware-oriented-programming-and-co-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hardware-oriented programming and co-design
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hybrid-computing-beyond-circuits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hybrid computing beyond circuits
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#analog-digital-logical-towards-real-quantum-utility" class="md-nav__link">
+    <span class="md-ellipsis">
+      Analog, digital, logical: towards real quantum utility
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#join-us" class="md-nav__link">
+    <span class="md-ellipsis">
+      Join us!
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1622,7 +1698,7 @@
   
   
     <li class="md-nav__item">
-      <a href="https://queracomputing.github.io/bloqade-analog-examples/latest/" class="md-nav__link">
+      <a href="https://queracomputing.github.io/bloqade-analog-examples/dev/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1867,6 +1943,59 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#composable-quantum-programming" class="md-nav__link">
+    <span class="md-ellipsis">
+      Composable quantum programming
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hardware-oriented-programming-and-co-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hardware-oriented programming and co-design
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hybrid-computing-beyond-circuits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hybrid computing beyond circuits
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#analog-digital-logical-towards-real-quantum-utility" class="md-nav__link">
+    <span class="md-ellipsis">
+      Analog, digital, logical: towards real quantum utility
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#join-us" class="md-nav__link">
+    <span class="md-ellipsis">
+      Join us!
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1897,18 +2026,20 @@
   
 
 
-<p>The vision of bloqade is to empower quantum scientists, from applications development to algorithmic co-design, to build hybrid quantum-classical programs that leverage the strength of neutral atom quantum computers and have a real chance of demonstrating quantum utility. Bloqade is built on top of <a href="">Kirin (no link)</a>, an open source compiler toolchain designed for kernel-level programs and composable representations.</p>
-<h1 id="composable-quantum-programming">Composable quantum programming</h1>
-<p>Today bloqade has two components: bloqade-analog and bloqade-circuits. Bloqade.analog is the SDK for analog-mode neutral atom computers and includes several handy utilities ranging from building or analyzing analog programs, to emulation or executing on QuEra's cloud-accessible hardware "Aquila". Bloqade-circuits is the initial iteration to represent digital circuit execution using gate-based quantum computing on reconfigurable neutral atoms. It extends the QASM2 language to include extra annotation of circuits that is important for efficient execution, such as parallelism and global gates. As well as being able to construct quantum programs with the full convenience of typical classical programming-- such as loops and control flow—bloqade-circuits also includes basic compiler transformation passes, emulation, and code generation.</p>
-<p>But bloqade is not done with just these two components. We envision adding new components (called "dialects") which help you write programs which are tuned for optimal performance in an error corrected era, and on neutral atom hardware. Stay tuned and help us build the future of quantum computing as we build out new components, such as QEC and atom moving dialects.</p>
-<h1 id="hardware-oriented-programming-and-co-design">Hardware-oriented programming and co-design</h1>
+<h1 id="the-vision-of-bloqade">The Vision of Bloqade</h1>
+<p>The vision of bloqade is to empower quantum scientists, from applications development to algorithmic co-design, to build hybrid quantum-classical programs that leverage the strength of neutral atom quantum computers and have a real chance of demonstrating quantum utility. Bloqade is built on top of <a href="https://github.com/QuEraComputing/kirin/">Kirin</a>, an open source compiler infrastructure designed for kernel functions and composable representations.</p>
+<h2 id="composable-quantum-programming">Composable quantum programming</h2>
+<p>Today bloqade becomes a namespace package of multiple eDSLs around digital and analog quantum computation. <code>bloqade.analog</code> is the module for analog-mode neutral atom computers and includes several handy utilities ranging from building or analyzing analog programs, to emulation or executing on QuEra's cloud-accessible hardware "Aquila". </p>
+<p>Other submodules such as <code>bloqade.qasm2</code>, <code>bloqade.pyqrack</code> and <code>bloqade.stim</code> are the initial iteration to represent digital circuit execution using gate-based quantum computing on reconfigurable neutral atoms. It extends the QASM2 language to include extra annotation of circuits that is important for efficient execution, such as parallelism and global gates. As well as being able to construct quantum programs with the full convenience of typical classical programming-- such as loops and control flow—bloqade-circuits also includes basic compiler transformation passes, emulation, and code generation.</p>
+<p>But bloqade is not done with just these modules. We envision adding new modules (called "dialects") which help you write programs which are tuned for optimal performance in an error corrected era, and on neutral atom hardware. Stay tuned and help us build the future of quantum computing as we build out new components, such as QEC and atom moving dialects.</p>
+<h2 id="hardware-oriented-programming-and-co-design">Hardware-oriented programming and co-design</h2>
 <p>At its core, Bloqade strives to be the neutral atom SDK for getting the most out of today's and tomorrows' quantum hardware. It is clear that the circuit-level abstraction is not enough to program real quantum hardware; indeed, tomorrows' quantum demonstrations and applications must program at the hardware level and develop special tooling to compile higher-level abstractions to efficient implementations. We call this process <strong>"co-design"</strong>: designing algorithms specialized to near-term hardware, with an eye on nontrivial demonstrations and scalable solutions. Ultimately, this co-design approach requires hardware-specific DSLs which explicitly represent the native executions on neutral atom hardware: in other words, Bloqade.</p>
-<h1 id="hybrid-computing-beyond-circuits">Hybrid computing beyond circuits</h1>
+<h2 id="hybrid-computing-beyond-circuits">Hybrid computing beyond circuits</h2>
 <p>Many quantum algorithms are hybrid, requiring both classical and quantum resources to work together in a hybrid computation architecture. This could be anything from syndrome extraction and measurement-based computing to variational parameter updates in VQE methods and orbital fragmentation methods in molecular simulation. Through the use of the Kirin compiler infrastructure, Bloqade embraces this philosophy of heterogeneous compute. Kirin programs are written as (compositions of) <a href="https://en.wikipedia.org/wiki/Compute_kernel">kernels</a>-- subroutines that are intended to run on particular hardware (such as QPUs), or orchestrated to run on heterogeneous compute (such as a real-time classical runtime plus a QPU). These subroutines-- plus the built-in hybrid representations-- enable many key primitives, such as error correction.</p>
 <p>Additionally, the ability to compose functions together and to use typical classical programming structures like <code>if</code> and <code>while</code> enables many simplifications in writing raw circuit executions. In fact, <code>while</code> loops and the ability to dynamically allocate new memory (which is not known until runtime) enables many powerful subroutines and is natively enabled with bloqade's kernel-based representation; for example, see <a href="../digital/examples/repeat_until_success/">this implementation</a> of a repeat-until-success program.</p>
-<h1 id="analog-digital-logical-towards-real-quantum-utility">Analog, digital, logical: towards real quantum utility</h1>
+<h2 id="analog-digital-logical-towards-real-quantum-utility">Analog, digital, logical: towards real quantum utility</h2>
 <p>The first step in Bloqade was building out the analog mode SDK, designed to interface with QuEra’s cloud-accessible analog-mode neutral-atom quantum computer Aquila, as well as enable analysis and scientific discovery in analog quantum computing. But the journey should not stop there: real quantum utility is error corrected and requires robust algorithmic exploration and design of quantum primitives, in-depth analysis of near-term hardware performance and benchmarking, and building pipelines and hybrid architectures that are intended not just for today’s demonstrators but also for tomorrow’s utility-scale hardware. By introducing the next generation of Bloqade, we hope to enable this exploration by adding in support for near-term digital and intermediate-term logical representations of hybrid quantum computations.</p>
-<h1 id="join-us">Join us!</h1>
+<h2 id="join-us">Join us!</h2>
 <p>If you are interested in contributing, please see the contribution page <a href="quick_start/contrib.md">here</a>. If you are interested in exploring more about neutral atom quantum computing, check out some analog tutorials <a href="">here</a>, and some circuit tutorials <a href="">here</a>. If you wish to work closer with QuEra, please feel free to reach out!</p>
 
 
@@ -2035,7 +2166,7 @@
     <script id="__config" type="application/json">{"base": "..", "features": ["announce.dismiss", "content.action.view", "content.action.edit", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
       
         <script src="../javascripts/katex.js"></script>
       
