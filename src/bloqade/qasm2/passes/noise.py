@@ -10,6 +10,7 @@ from bloqade.qasm2.rewrite.heuristic_noise import NoiseRewriteRule
 
 @dataclass
 class NoisePass(Pass):
+    """Apply a noise model to a quantum circuit."""
 
     noise_model: native.NoiseModelABC = field(default_factory=native.TwoRowZoneModel)
 
