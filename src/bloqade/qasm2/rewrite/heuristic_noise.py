@@ -47,14 +47,13 @@ class NoiseRewriteRule(result_abc.RewriteRule):
         if not isinstance(addr, address.AddressReg):
             return result.RewriteResult()
 
-        n_qubits = len(addr.data)
         has_done_something = False
-        for idx_val in range(n_qubits):
-            if idx_val not in self.qubit_ssa_value:
+        for idx_val, qid in enumerate(addr.data):
+            if qid not in self.qubit_ssa_value:
                 has_done_something = True
                 idx = py.constant.Constant(value=idx_val)
                 qubit = core.QRegGet(node.result, idx=idx.result)
-                self.qubit_ssa_value[idx_val] = qubit.result
+                self.qubit_ssa_value[qid] = qubit.result
                 qubit.insert_after(node)
                 idx.insert_after(node)
 

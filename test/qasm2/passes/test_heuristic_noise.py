@@ -260,8 +260,9 @@ def test_global_noise():
 
     @qasm2.extended
     def test_method():
-        q = qasm2.qreg(2)
-        glob.UGate([q], 0.1, 0.2, 0.3)
+        q0 = qasm2.qreg(1)
+        q1 = qasm2.qreg(1)
+        glob.UGate([q0, q1], 0.1, 0.2, 0.3)
 
     px = 0.01
     py = 0.01
@@ -286,13 +287,15 @@ def test_global_noise():
 
     expected_block = ir.Block(
         [
-            n_qubits := constant.Constant(2),
-            q := core.QRegNew(n_qubits.result),
-            one := constant.Constant(1),
-            q1 := core.QRegGet(q.result, one.result),
+            n_qubits := constant.Constant(1),
+            reg0 := core.QRegNew(n_qubits.result),
             zero := constant.Constant(0),
-            q0 := core.QRegGet(q.result, zero.result),
-            reg_list := ilist.New(values=[q.result]),
+            q0 := core.QRegGet(reg0.result, zero.result),
+            n_qubits := constant.Constant(1),
+            reg1 := core.QRegNew(n_qubits.result),
+            zero := constant.Constant(0),
+            q1 := core.QRegGet(reg1.result, zero.result),
+            reg_list := ilist.New(values=[reg0.result, reg1.result]),
             theta := constant.Constant(0.1),
             phi := constant.Constant(0.2),
             lam := constant.Constant(0.3),
@@ -308,7 +311,8 @@ def test_global_noise():
 
     expected_block.args[0].name = "test_method_self"
 
-    q.result.name = "q"
+    reg0.result.name = "q0"
+    reg1.result.name = "q1"
     expected_region = ir.Region([expected_block])
     expected_region.print()
     assert_nodes(test_method.callable_region, expected_region)
