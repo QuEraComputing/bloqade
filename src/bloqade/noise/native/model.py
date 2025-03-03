@@ -47,8 +47,8 @@ class GateNoiseParams:
 
 
 @dataclass
-class NoiseModelABC(abc.ABC):
-    """Abstract base class for noise models.
+class MoveNoiseModelABC(abc.ABC):
+    """Abstract base class for noise based on atom movement.
 
     This class defines the interface for a noise model. The gate noise is calculated form the parameters
     provided in this dataclass which can be updated when inheriting from this class. The move error is
@@ -129,7 +129,7 @@ class NoiseModelABC(abc.ABC):
 
 
 @dataclass
-class TwoRowZoneModel(NoiseModelABC):
+class TwoRowZoneModel(MoveNoiseModelABC):
     """This model assumes that the qubits are arranged in a single storage row with a row corresponding to a gate zone below it.
 
     The CZ gate noise is calculated using the following heuristic: The idle error is calculated by the total duration require

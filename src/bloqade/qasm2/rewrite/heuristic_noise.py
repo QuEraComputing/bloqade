@@ -19,7 +19,9 @@ class NoiseRewriteRule(result_abc.RewriteRule):
     address_analysis: Dict[ir.SSAValue, address.Address]
     qubit_ssa_value: Dict[int, ir.SSAValue]
     noise_params: native.GateNoiseParams = field(default_factory=native.GateNoiseParams)
-    noise_model: native.NoiseModelABC = field(default_factory=native.TwoRowZoneModel)
+    noise_model: native.MoveNoiseModelABC = field(
+        default_factory=native.TwoRowZoneModel
+    )
 
     def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
         if isinstance(node, uop.SingleQubitGate):

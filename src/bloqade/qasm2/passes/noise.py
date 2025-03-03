@@ -17,7 +17,9 @@ class NoisePass(Pass):
 
     """
 
-    noise_model: native.NoiseModelABC = field(default_factory=native.TwoRowZoneModel)
+    noise_model: native.MoveNoiseModelABC = field(
+        default_factory=native.TwoRowZoneModel
+    )
 
     def unsafe_run(self, mt: ir.Method):
         address_analysis = address.AddressAnalysis(mt.dialects)

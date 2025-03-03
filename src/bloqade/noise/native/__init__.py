@@ -2,9 +2,9 @@
 moving towards a more general approach to noise modeling in the future. """
 
 from .model import (
-    NoiseModelABC as NoiseModelABC,
     GateNoiseParams as GateNoiseParams,
     TwoRowZoneModel as TwoRowZoneModel,
+    MoveNoiseModelABC as MoveNoiseModelABC,
 )
 from .stmts import (
     PauliChannel as PauliChannel,

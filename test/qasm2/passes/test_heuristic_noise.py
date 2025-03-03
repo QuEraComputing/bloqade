@@ -10,7 +10,7 @@ from bloqade.qasm2.dialects import uop, core, glob, parallel
 from bloqade.qasm2.rewrite.heuristic_noise import NoiseRewriteRule
 
 
-class TestNoise(native.NoiseModelABC):
+class TestNoise(native.MoveNoiseModelABC):
     def parallel_cz_errors(cls, ctrls, qargs, rest):
         return {(0.01, 0.01, 0.01, 0.01): ctrls + qargs + rest}
 
