@@ -17,17 +17,18 @@ class NoiseRewriteRule(result_abc.RewriteRule):
     """
 
     address_analysis: Dict[ir.SSAValue, address.Address]
-    qubit_ssa_value: Dict[int, ir.SSAValue]
-    num_qubits: int
     gate_noise_params: native.GateNoiseParams = field(
         default_factory=native.GateNoiseParams
     )
     noise_model: native.MoveNoiseModelABC = field(
         default_factory=native.TwoRowZoneModel
     )
+    qubit_ssa_value: Dict[int, ir.SSAValue] = field(default_factory=dict, init=False)
 
     def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
-        if isinstance(node, uop.SingleQubitGate):
+        if isinstance(node, core.QRegNew):
+            return self.rewrite_qreg_new(node)
+        elif isinstance(node, uop.SingleQubitGate):
             return self.rewrite_single_qubit_gate(node)
         elif isinstance(node, uop.CZ):
             return self.rewrite_cz_gate(node)
@@ -39,6 +40,25 @@ class NoiseRewriteRule(result_abc.RewriteRule):
             return self.rewrite_global_single_qubit_gate(node)
         else:
             return result.RewriteResult()
+
+    def rewrite_qreg_new(self, node: core.QRegNew):
+
+        addr = self.address_analysis[node.result]
+        if not isinstance(addr, address.AddressReg):
+            return result.RewriteResult()
+
+        n_qubits = len(addr.data)
+        has_done_something = False
+        for idx_val in range(n_qubits):
+            if idx_val not in self.qubit_ssa_value:
+                has_done_something = True
+                idx = py.constant.Constant(value=idx_val)
+                qubit = core.QRegGet(node.result, idx=idx.result)
+                self.qubit_ssa_value[idx_val] = qubit.result
+                qubit.insert_after(node)
+                idx.insert_after(node)
+
+        return result.RewriteResult(has_done_something=has_done_something)
 
     def insert_single_qubit_noise(
         self,
@@ -70,17 +90,12 @@ class NoiseRewriteRule(result_abc.RewriteRule):
 
         qargs = []
 
-        assert isinstance(node.registers, ir.ResultValue)
-        assert isinstance(node.registers.owner, ilist.New)
-
-        for addr, reg_ssa in zip(addrs.data, node.registers.owner.values):
+        for addr in addrs.data:
             if not isinstance(addr, address.AddressReg):
                 return result.RewriteResult()
 
-            for idx_val in range(len(addr.data)):
-                (idx := py.constant.Constant(value=idx_val)).insert_before(node)
-                (qubit := core.QRegGet(reg_ssa, idx.result)).insert_before(node)
-                qargs.append(qubit.result)
+            for qid in addr.data:
+                qargs.append(self.qubit_ssa_value[qid])
 
         probs = (
             self.gate_noise_params.global_px,
@@ -176,7 +191,7 @@ class NoiseRewriteRule(result_abc.RewriteRule):
             return result.RewriteResult()
 
         other_qubits = sorted(
-            set(range(self.num_qubits)) - {ctrl_addr.data, qarg_addr.data}
+            set(self.qubit_ssa_value.keys()) - {ctrl_addr.data, qarg_addr.data}
         )
         errors = self.noise_model.parallel_cz_errors(
             [ctrl_addr.data], [qarg_addr.data], other_qubits

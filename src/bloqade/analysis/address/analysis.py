@@ -14,24 +14,17 @@ class AddressAnalysis(Forward[Address]):
 
     keys = ["qubit.address"]
     lattice = Address
-    address_map: dict[int, ir.SSAValue] = field(default_factory=dict, init=False)
     next_address: int = field(default=0, init=False)
 
     def initialize(self):
         super().initialize()
         self.next_address: int = 0
-        self.address_map = {}
         return self
 
     @property
     def qubit_count(self) -> int:
         """Total number of qubits found by the analysis."""
         return self.next_address
-
-    @property
-    def qubit_ssa_value(self):
-        """Map of global qubit addresses to their SSA values."""
-        return self.address_map
 
     T = TypeVar("T")
 
