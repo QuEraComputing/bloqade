@@ -60,16 +60,5 @@ class AddressAnalysis(Forward[Address]):
         )
 
     def run_method(self, method: ir.Method, args: tuple[Address, ...]):
-        """Run analysis for a method.
-
-        Args:
-            method (ir.Method): The method to run.
-            args (tuple[Address, ...]): The arguments to the method, must
-                be Address lattice values corresponding to the type of the arguments.
-
-        Returns:
-            Tuple[Frame[Address], Address]: The frame after evaluating the method and the result.
-
-        """
         # NOTE: we do not support dynamic calls here, thus no need to propagate method object
         return self.run_callable(method.code, (self.lattice.bottom(),) + args)
