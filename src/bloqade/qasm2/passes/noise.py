@@ -20,6 +20,9 @@ class NoisePass(Pass):
     noise_model: native.MoveNoiseModelABC = field(
         default_factory=native.TwoRowZoneModel
     )
+    gate_noise_params: native.GateNoiseParams = field(
+        default_factory=native.GateNoiseParams
+    )
 
     def unsafe_run(self, mt: ir.Method):
         address_analysis = address.AddressAnalysis(mt.dialects)
@@ -29,6 +32,7 @@ class NoisePass(Pass):
                 frame.entries,
                 address_analysis.qubit_ssa_value,
                 noise_model=self.noise_model,
+                gate_noise_params=self.gate_noise_params,
             )
         )
         second_pass = fixpoint.Fixpoint(walk.Walk(cse.CommonSubexpressionElimination()))
