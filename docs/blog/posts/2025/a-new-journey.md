@@ -14,7 +14,7 @@ Why have we built this new module? There are plenty of incredible quantum progra
 
 The vision of bloqade is to empower quantum scientists, from applications development to algorithmic co-design, to build hybrid quantum-classical programs that leverage the strength of neutral atom quantum computers and have a real chance of demonstrating quantum utility. Bloqade is built on top of [Kirin (no link)](), an open source compiler toolchain designed for kernel-level programs and composable representations.
 
-# Composable quantum programming
+## Composable quantum programming
 
 As of today, bloqade has two components: bloqade-analog and bloqade-circuits. Bloqade-analog is the SDK for analog-mode neutral atom computers and includes several handy utilities ranging from building or analyzing analog programs, to emulation or executing on QuEra's cloud-accessible hardware "Aquila". Bloqade-circuits is the initial iteration to represent digital circuit execution using gate-based quantum computing on reconfigurable neutral atoms. It extends the QASM2 language to include extra annotation of circuits that is important for efficient execution, such as parallelism and global gates. As well as being able to construct quantum programs with the full convenience of typical classical programming-- such as loops and control flow—bloqade-circuits also includes basic compiler transformation passes, emulation, and code generation.
 
