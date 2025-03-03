@@ -23,6 +23,6 @@ Additionally, the ability to compose functions together and to use typical class
 ## Analog, digital, logical: towards real quantum utility
 The first step in Bloqade was building out the analog mode SDK, designed to interface with QuEra’s cloud-accessible analog-mode neutral-atom quantum computer Aquila, as well as enable analysis and scientific discovery in analog quantum computing. But the journey should not stop there: real quantum utility is error corrected and requires robust algorithmic exploration and design of quantum primitives, in-depth analysis of near-term hardware performance and benchmarking, and building pipelines and hybrid architectures that are intended not just for today’s demonstrators but also for tomorrow’s utility-scale hardware. By introducing the next generation of Bloqade, we hope to enable this exploration by adding in support for near-term digital and intermediate-term logical representations of hybrid quantum computations.
 
-# Join us!
+## Join us!
 
 If you are interested in contributing, please see the contribution page [here](quick_start/contrib.md). If you are interested in exploring more about neutral atom quantum computing, check out some analog tutorials [here](), and some circuit tutorials [here](). If you wish to work closer with QuEra, please feel free to reach out!
