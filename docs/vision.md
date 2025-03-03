@@ -8,7 +8,7 @@ Today bloqade becomes a namespace package of multiple eDSLs around digital and a
 
 Other submodules such as `bloqade.qasm2`, `bloqade.pyqrack` and `bloqade.stim` are the initial iteration to represent digital circuit execution using gate-based quantum computing on reconfigurable neutral atoms. It extends the QASM2 language to include extra annotation of circuits that is important for efficient execution, such as parallelism and global gates. As well as being able to construct quantum programs with the full convenience of typical classical programming-- such as loops and control flow—bloqade-circuits also includes basic compiler transformation passes, emulation, and code generation.
 
-But bloqade is not done with just these two components. We envision adding new components (called "dialects") which help you write programs which are tuned for optimal performance in an error corrected era, and on neutral atom hardware. Stay tuned and help us build the future of quantum computing as we build out new components, such as QEC and atom moving dialects.
+But bloqade is not done with just these modules. We envision adding new modules (called "dialects") which help you write programs which are tuned for optimal performance in an error corrected era, and on neutral atom hardware. Stay tuned and help us build the future of quantum computing as we build out new components, such as QEC and atom moving dialects.
 
 
 # Hardware-oriented programming and co-design
