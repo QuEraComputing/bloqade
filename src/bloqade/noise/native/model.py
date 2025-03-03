@@ -77,7 +77,7 @@ class TwoRowZoneModel(NoiseModelABC):
     ) -> List[Tuple[Tuple[int, ...], Tuple[int, ...]]]:
 
         # sort by ctrl qubit first to guarantee that they will be in ascending order
-        sorted_pairs = sorted(zip(ctrls, qargs), key=lambda x: x[0])
+        sorted_pairs = sorted(zip(ctrls, qargs))
 
         groups = []
         # group by qarg only putting it in a group if the qarg is greater than the last qarg in the group
@@ -123,14 +123,13 @@ class TwoRowZoneModel(NoiseModelABC):
         )
 
         all_addr = sorted(ctrls + qargs)
-        spatial_median = (
-            self.storage_spacing * (all_addr[n_ctrls - 1] + all_addr[n_ctrls]) / 2
-        )
+        spatial_median = self.storage_spacing * (all_addr[0] + all_addr[-1]) / 2
 
         addr_pairs.sort(key=lambda x: abs(x[0] - ctrl_median))
 
         slots = {}
-        med_slot = int(spatial_median / self.gate_spacing)
+        med_slot = round(spatial_median / self.gate_spacing)
+
         left_slot = med_slot
         right_slot = med_slot
         slots[med_slot] = addr_pairs.pop(0)
