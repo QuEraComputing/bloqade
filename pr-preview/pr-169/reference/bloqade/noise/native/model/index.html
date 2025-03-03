@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../../../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
     
     
       
@@ -2282,8 +2282,7 @@ as evenly as possible over the gate zone.</p>
 <span class="normal">141</span>
 <span class="normal">142</span>
 <span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assign_gate_slots</span><span class="p">(</span>
+<span class="normal">144</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">assign_gate_slots</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ctrls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">qargs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Allocate slots for the qubits to move to. start from middle of atoms and move outwards</span>
@@ -2310,14 +2309,13 @@ as evenly as possible over the gate zone.</p>
     <span class="p">)</span>
 
     <span class="n">all_addr</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">ctrls</span> <span class="o">+</span> <span class="n">qargs</span><span class="p">)</span>
-    <span class="n">spatial_median</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">storage_spacing</span> <span class="o">*</span> <span class="p">(</span><span class="n">all_addr</span><span class="p">[</span><span class="n">n_ctrls</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">all_addr</span><span class="p">[</span><span class="n">n_ctrls</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
-    <span class="p">)</span>
+    <span class="n">spatial_median</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_spacing</span> <span class="o">*</span> <span class="p">(</span><span class="n">all_addr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">all_addr</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
 
     <span class="n">addr_pairs</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">ctrl_median</span><span class="p">))</span>
 
     <span class="n">slots</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">med_slot</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">spatial_median</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">gate_spacing</span><span class="p">)</span>
+    <span class="n">med_slot</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">spatial_median</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">gate_spacing</span><span class="p">)</span>
+
     <span class="n">left_slot</span> <span class="o">=</span> <span class="n">med_slot</span>
     <span class="n">right_slot</span> <span class="o">=</span> <span class="n">med_slot</span>
     <span class="n">slots</span><span class="p">[</span><span class="n">med_slot</span><span class="p">]</span> <span class="o">=</span> <span class="n">addr_pairs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -2355,7 +2353,8 @@ as evenly as possible over the gate zone.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/bloqade/noise/native/model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">147</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">146</span>
+<span class="normal">147</span>
 <span class="normal">148</span>
 <span class="normal">149</span>
 <span class="normal">150</span>
@@ -2375,8 +2374,7 @@ as evenly as possible over the gate zone.</p>
 <span class="normal">164</span>
 <span class="normal">165</span>
 <span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">calculate_move_duration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slots</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="normal">167</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">calculate_move_duration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slots</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the time it takes to move the qubits from the ctrl to the qarg qubits.&quot;&quot;&quot;</span>
 
     <span class="n">qarg_x_distance</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;-inf&quot;</span><span class="p">)</span>
@@ -2425,7 +2423,8 @@ ctrl and the qarg qubits are in ascending order.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/bloqade/noise/native/model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">170</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">169</span>
+<span class="normal">170</span>
 <span class="normal">171</span>
 <span class="normal">172</span>
 <span class="normal">173</span>
@@ -2452,8 +2451,7 @@ ctrl and the qarg qubits are in ascending order.</p>
 <span class="normal">194</span>
 <span class="normal">195</span>
 <span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parallel_cz_errors</span><span class="p">(</span>
+<span class="normal">197</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parallel_cz_errors</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">ctrls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">qargs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">rest</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply parallel gates by moving ctrl qubits to qarg qubits.</span>
