@@ -20,7 +20,7 @@ Many quantum algorithms are hybrid, requiring both classical and quantum resourc
 
 Additionally, the ability to compose functions together and to use typical classical programming structures like `if` and `while` enables many simplifications in writing raw circuit executions. In fact, `while` loops and the ability to dynamically allocate new memory (which is not known until runtime) enables many powerful subroutines and is natively enabled with bloqade's kernel-based representation; for example, see [this implementation](digital/examples/repeat_until_success.py) of a repeat-until-success program.
 
-# Analog, digital, logical: towards real quantum utility
+## Analog, digital, logical: towards real quantum utility
 The first step in Bloqade was building out the analog mode SDK, designed to interface with QuEra’s cloud-accessible analog-mode neutral-atom quantum computer Aquila, as well as enable analysis and scientific discovery in analog quantum computing. But the journey should not stop there: real quantum utility is error corrected and requires robust algorithmic exploration and design of quantum primitives, in-depth analysis of near-term hardware performance and benchmarking, and building pipelines and hybrid architectures that are intended not just for today’s demonstrators but also for tomorrow’s utility-scale hardware. By introducing the next generation of Bloqade, we hope to enable this exploration by adding in support for near-term digital and intermediate-term logical representations of hybrid quantum computations.
 
 # Join us!
