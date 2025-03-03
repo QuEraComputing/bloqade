@@ -11,7 +11,7 @@ Other submodules such as `bloqade.qasm2`, `bloqade.pyqrack` and `bloqade.stim` a
 But bloqade is not done with just these modules. We envision adding new modules (called "dialects") which help you write programs which are tuned for optimal performance in an error corrected era, and on neutral atom hardware. Stay tuned and help us build the future of quantum computing as we build out new components, such as QEC and atom moving dialects.
 
 
-# Hardware-oriented programming and co-design
+## Hardware-oriented programming and co-design
 At its core, Bloqade strives to be the neutral atom SDK for getting the most out of today's and tomorrows' quantum hardware. It is clear that the circuit-level abstraction is not enough to program real quantum hardware; indeed, tomorrows' quantum demonstrations and applications must program at the hardware level and develop special tooling to compile higher-level abstractions to efficient implementations. We call this process **"co-design"**: designing algorithms specialized to near-term hardware, with an eye on nontrivial demonstrations and scalable solutions. Ultimately, this co-design approach requires hardware-specific DSLs which explicitly represent the native executions on neutral atom hardware: in other words, Bloqade.
 
 
