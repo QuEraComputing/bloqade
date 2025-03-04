@@ -14,7 +14,7 @@ class AddressAnalysis(Forward[Address]):
 
     keys = ["qubit.address"]
     lattice = Address
-    next_address: int = field(default=0, init=False)
+    next_address: int = field(init=False)
 
     def initialize(self):
         super().initialize()
