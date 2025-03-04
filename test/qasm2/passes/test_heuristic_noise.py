@@ -1,12 +1,12 @@
 from kirin import ir, types
 from bloqade import qasm2
 from bloqade.noise import native
-from kirin.rewrite import walk
 from kirin.dialects import func, ilist
 from bloqade.analysis import address
 from kirin.dialects.py import constant
 from bloqade.test_utils import assert_nodes
 from bloqade.qasm2.dialects import uop, core, glob, parallel
+from bloqade.qasm2.passes.noise import NoisePass
 from bloqade.qasm2.rewrite.heuristic_noise import NoiseRewriteRule
 
 
@@ -274,16 +274,12 @@ def test_global_noise():
     )
 
     model = TestNoise()
-    analysis = address.AddressAnalysis(test_method.dialects)
-
-    frame, _ = analysis.run_analysis(test_method)
-
-    rule = NoiseRewriteRule(frame.entries, noise_params, model)
-    test_method.print()
-
-    walk.Walk(rule).rewrite(test_method.code)
 
     test_method.print()
+
+    NoisePass(test_method.dialects, noise_model=model, gate_noise_params=noise_params)(
+        test_method
+    )
 
     expected_block = ir.Block(
         [
@@ -291,9 +287,7 @@ def test_global_noise():
             reg0 := core.QRegNew(n_qubits.result),
             zero := constant.Constant(0),
             q0 := core.QRegGet(reg0.result, zero.result),
-            n_qubits := constant.Constant(1),
             reg1 := core.QRegNew(n_qubits.result),
-            zero := constant.Constant(0),
             q1 := core.QRegGet(reg1.result, zero.result),
             reg_list := ilist.New(values=[reg0.result, reg1.result]),
             theta := constant.Constant(0.1),
@@ -314,5 +308,4 @@ def test_global_noise():
     reg0.result.name = "q0"
     reg1.result.name = "q1"
     expected_region = ir.Region([expected_block])
-    expected_region.print()
     assert_nodes(test_method.callable_region, expected_region)

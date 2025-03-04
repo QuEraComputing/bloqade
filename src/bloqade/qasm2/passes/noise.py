@@ -36,4 +36,4 @@ class NoisePass(Pass):
         )
         second_pass = fixpoint.Fixpoint(walk.Walk(cse.CommonSubexpressionElimination()))
         third_pass = fixpoint.Fixpoint(walk.Walk(dce.DeadCodeElimination()))
-        return chain.Chain(first_pass, second_pass, third_pass)
+        return chain.Chain(first_pass, second_pass, third_pass).rewrite(mt.code)
