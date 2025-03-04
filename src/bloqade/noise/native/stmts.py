@@ -22,7 +22,6 @@ NumQubits = types.TypeVar("NumQubits")
 
 @statement(dialect=dialect)
 class CZPauliChannel(ir.Statement):
-    name = "cz_pauli_channel"
 
     traits = frozenset({ir.FromPythonCall()})
 
