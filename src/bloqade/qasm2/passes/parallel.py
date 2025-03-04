@@ -4,7 +4,7 @@ converting multiple single gates to parallel gates.
 """
 
 from typing import Type
-from dataclasses import field, dataclass
+from dataclasses import dataclass
 
 from kirin import ir
 from kirin.rewrite import (
@@ -16,7 +16,6 @@ from kirin.rewrite import (
     CommonSubexpressionElimination,
     result,
 )
-from kirin.analysis import const
 from bloqade.analysis import address, schedule
 from kirin.passes.abc import Pass
 from bloqade.qasm2.rewrite import (
@@ -56,8 +55,6 @@ class ParallelToUOp(Pass):
     ```
 
     """
-
-    constprop: const.Propagate = field(init=False)
 
     def generate_rule(self, mt: ir.Method) -> ParallelToUOpRule:
         frame, _ = address.AddressAnalysis(mt.dialects).run_analysis(mt)
