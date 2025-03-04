@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://special-engine-kg8jlr7.pages.github.io/dev/reference/bloqade/analysis/address/analysis/">
+        <link rel="canonical" href="https://special-engine-kg8jlr7.pages.github.io/dev/reference/bloqade/qasm2/rewrite/heuristic_noise/">
       
       
       
@@ -20,7 +20,7 @@
     
     
       
-        <title>Analysis - The Neutral Atom SDK</title>
+        <title>Heuristic noise - The Neutral Atom SDK</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#bloqade.analysis.address.analysis" class="md-skip">
+        <a href="#bloqade.qasm2.rewrite.heuristic_noise" class="md-skip">
           Skip to content
         </a>
       
@@ -115,7 +115,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Analysis
+              Heuristic noise
             
           </span>
         </div>
@@ -1848,35 +1848,20 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#bloqade.analysis.address.analysis" class="md-nav__link">
+  <a href="#bloqade.qasm2.rewrite.heuristic_noise" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;analysis
+      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;heuristic_noise
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#bloqade.analysis.address.analysis.AddressAnalysis" class="md-nav__link">
+  <a href="#bloqade.qasm2.rewrite.heuristic_noise.NoiseRewriteRule" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AddressAnalysis
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;NoiseRewriteRule
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label=" AddressAnalysis">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#bloqade.analysis.address.analysis.AddressAnalysis.qubit_count" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;qubit_count
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1896,7 +1881,7 @@
 
 
   
-    <a href="https://github.com/QuEraComputing/bloqade/edit/main/src/bloqade/analysis/address/analysis.py" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/QuEraComputing/bloqade/edit/main/src/bloqade/qasm2/rewrite/heuristic_noise.py" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1905,20 +1890,20 @@
     
       
     
-    <a href="https://github.com/QuEraComputing/bloqade/raw/main/src/bloqade/analysis/address/analysis.py" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/QuEraComputing/bloqade/raw/main/src/bloqade/qasm2/rewrite/heuristic_noise.py" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
     </a>
   
 
 
-  <h1>Analysis</h1>
+  <h1>Heuristic noise</h1>
 
 <div class="doc doc-object doc-module">
 
 
 
-<a id="bloqade.analysis.address.analysis"></a>
+<a id="bloqade.qasm2.rewrite.heuristic_noise"></a>
     <div class="doc doc-contents first">
 
 
@@ -1941,19 +1926,29 @@
 
 
 
-<h2 id="bloqade.analysis.address.analysis.AddressAnalysis" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">AddressAnalysis</span>
+<h2 id="bloqade.qasm2.rewrite.heuristic_noise.NoiseRewriteRule" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">NoiseRewriteRule</span>
 
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
 
 </h2>
-
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">NoiseRewriteRule</span><span class="p">(</span>
+    <span class="n">address_analysis</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">SSAValue</span><span class="p">,</span> <span class="n">Address</span><span class="p">],</span>
+    <span class="n">gate_noise_params</span><span class="p">:</span> <span class="n">GateNoiseParams</span> <span class="o">=</span> <span class="n">native</span><span class="o">.</span><span class="n">GateNoiseParams</span><span class="p">(),</span>
+    <span class="n">noise_model</span><span class="p">:</span> <span class="n">MoveNoiseModelABC</span> <span class="o">=</span> <span class="n">native</span><span class="o">.</span><span class="n">TwoRowZoneModel</span><span class="p">(),</span>
+<span class="p">)</span>
+</code></pre></div>
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="kirin.analysis.Forward">Forward</span>[<span title="bloqade.analysis.address.lattice.Address">Address</span>]</code></p>
+              Bases: <code><span title="kirin.rewrite.abc.RewriteRule">RewriteRule</span></code></p>
 
 
-        <p>This analysis pass can be used to track the global addresses of qubits.</p>
+        <p>NOTE: This pass is not guaranteed to be supported long-term in bloqade. We will be
+moving towards a more general approach to noise modeling in the future.</p>
 
 
 
@@ -1970,29 +1965,6 @@
 
 
 
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h3 id="bloqade.analysis.address.analysis.AddressAnalysis.qubit_count" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">qubit_count</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-property"><code>property</code></small>
-  </span>
-
-</h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">qubit_count</span><span class="p">:</span> <span class="nb">int</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Total number of qubits found by the analysis.</p>
-    </div>
-
-</div>
 
 
 
