@@ -45,9 +45,6 @@ class IList(interp.MethodTable):
         frame: interp.Frame,
         stmt: ilist.New,
     ):
-
-        stmt.print()
-
         return (AddressTuple(frame.get_values(stmt.values)),)
 
 
