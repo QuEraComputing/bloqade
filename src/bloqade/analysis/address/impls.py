@@ -45,7 +45,10 @@ class IList(interp.MethodTable):
         frame: interp.Frame,
         stmt: ilist.New,
     ):
-        return (AddressTuple(frame.get_values(stmt.args)),)
+
+        stmt.print()
+
+        return (AddressTuple(frame.get_values(stmt.values)),)
 
 
 @py.list.dialect.register(key="qubit.address")

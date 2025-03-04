@@ -171,6 +171,7 @@ class SimpleMergePolicy(MergePolicyABC):
         # and the index statement before the current node, we do not need
         # to move the register because the current node has some dependency
         # on it.
+        new_qubits = []
         for qarg in qubits:
             if (
                 isinstance(qarg, ir.ResultValue)
@@ -178,12 +179,11 @@ class SimpleMergePolicy(MergePolicyABC):
                 and isinstance(qarg.owner.idx, ir.ResultValue)
             ):
                 idx = qarg.owner.idx
-                idx.owner.delete(safe=False)
-                idx.owner.insert_before(node)
-                qarg.owner.delete(safe=False)
-                qarg.owner.insert_before(node)
+                idx.owner.from_stmt(idx.owner).insert_before(node)
+                new_qubits.append((qarg := qarg.owner.from_stmt(qarg.owner)).result)
+                qarg.insert_before(node)
 
-        return tuple(qubits)
+        return tuple(new_qubits)
 
     def rewrite_group_cz(self, node: ir.Statement, group: List[ir.Statement]):
         ctrls = []

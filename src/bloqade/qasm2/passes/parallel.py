@@ -4,10 +4,20 @@ converting multiple single gates to parallel gates.
 """
 
 from typing import Type
-from dataclasses import dataclass
+from dataclasses import field, dataclass
 
 from kirin import ir
-from kirin.rewrite import dce, walk, chain, result, fixpoint
+from kirin.rewrite import (
+    Walk,
+    Chain,
+    Fixpoint,
+    WrapConst,
+    ConstantFold,
+    DeadCodeElimination,
+    CommonSubexpressionElimination,
+    result,
+)
+from kirin.analysis import const
 from bloqade.analysis import address, schedule
 from kirin.passes.abc import Pass
 from bloqade.qasm2.rewrite import (
@@ -48,6 +58,8 @@ class ParallelToUOp(Pass):
 
     """
 
+    constprop: const.Propagate = field(init=False)
+
     def generate_rule(self, mt: ir.Method) -> ParallelToUOpRule:
         frame, _ = address.AddressAnalysis(mt.dialects).run_analysis(mt)
 
@@ -72,11 +84,20 @@ class ParallelToUOp(Pass):
         return ParallelToUOpRule(id_map=id_map, address_analysis=frame.entries)
 
     def unsafe_run(self, mt: ir.Method) -> result.RewriteResult:
-        return fixpoint.Fixpoint(
-            chain.Chain(
-                walk.Walk(self.generate_rule(mt)), walk.Walk(dce.DeadCodeElimination())
-            )
-        ).rewrite(mt.code)
+        rule = self.generate_rule(mt)
+        result = Walk(rule).rewrite(mt.code)
+
+        frame, _ = self.constprop.run_analysis(mt)
+        result = Walk(WrapConst(frame)).rewrite(mt.code).join(result)
+
+        rule = Chain(
+            ConstantFold(),
+            DeadCodeElimination(),
+            CommonSubexpressionElimination(),
+        )
+        result = Fixpoint(Walk(rule)).rewrite(mt.code).join(result)
+
+        return result
 
 
 @dataclass
@@ -135,8 +156,4 @@ class UOpToParallel(Pass):
         )
 
     def unsafe_run(self, mt: ir.Method) -> result.RewriteResult:
-        return fixpoint.Fixpoint(
-            chain.Chain(
-                walk.Walk(self.generate_rule(mt)), walk.Walk(dce.DeadCodeElimination())
-            )
-        ).rewrite(mt.code)
+        return Walk(self.generate_rule(mt)).rewrite(mt.code)
