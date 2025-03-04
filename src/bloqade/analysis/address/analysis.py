@@ -54,5 +54,4 @@ class AddressAnalysis(Forward[Address]):
 
     def run_method(self, method: ir.Method, args: tuple[Address, ...]):
         # NOTE: we do not support dynamic calls here, thus no need to propagate method object
-        res = self.run_callable(method.code, (self.lattice.bottom(),) + args)
-        return res
+        return self.run_callable(method.code, (self.lattice.bottom(),) + args)
