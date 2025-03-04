@@ -11,7 +11,6 @@ from kirin.rewrite import (
     Walk,
     Chain,
     Fixpoint,
-    WrapConst,
     ConstantFold,
     DeadCodeElimination,
     CommonSubexpressionElimination,
@@ -84,20 +83,13 @@ class ParallelToUOp(Pass):
         return ParallelToUOpRule(id_map=id_map, address_analysis=frame.entries)
 
     def unsafe_run(self, mt: ir.Method) -> result.RewriteResult:
-        rule = self.generate_rule(mt)
-        result = Walk(rule).rewrite(mt.code)
-
-        frame, _ = self.constprop.run_analysis(mt)
-        result = Walk(WrapConst(frame)).rewrite(mt.code).join(result)
-
+        result = Walk(self.generate_rule(mt)).rewrite(mt.code)
         rule = Chain(
             ConstantFold(),
             DeadCodeElimination(),
             CommonSubexpressionElimination(),
         )
-        result = Fixpoint(Walk(rule)).rewrite(mt.code).join(result)
-
-        return result
+        return Fixpoint(Walk(rule)).rewrite(mt.code).join(result)
 
 
 @dataclass
@@ -156,4 +148,11 @@ class UOpToParallel(Pass):
         )
 
     def unsafe_run(self, mt: ir.Method) -> result.RewriteResult:
-        return Walk(self.generate_rule(mt)).rewrite(mt.code)
+        result = Walk(self.generate_rule(mt)).rewrite(mt.code)
+
+        rule = Chain(
+            ConstantFold(),
+            DeadCodeElimination(),
+            CommonSubexpressionElimination(),
+        )
+        return Fixpoint(Walk(rule)).rewrite(mt.code).join(result)
