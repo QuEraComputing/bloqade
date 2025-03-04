@@ -1,10 +1,18 @@
 from dataclasses import field, dataclass
 
 from kirin import ir
+from kirin.passes import Pass
 from bloqade.noise import native
-from kirin.rewrite import cse, dce, walk, chain, fixpoint
+from kirin.rewrite import (
+    Walk,
+    Chain,
+    Fixpoint,
+    ConstantFold,
+    DeadCodeElimination,
+    CommonSubexpressionElimination,
+)
 from bloqade.analysis import address
-from kirin.passes.abc import Pass
+from kirin.rewrite.result import RewriteResult
 from bloqade.qasm2.rewrite.heuristic_noise import NoiseRewriteRule
 
 
@@ -23,17 +31,30 @@ class NoisePass(Pass):
     gate_noise_params: native.GateNoiseParams = field(
         default_factory=native.GateNoiseParams
     )
+    address_analysis: address.AddressAnalysis = field(init=False)
+
+    def __post_init__(self):
+        self.address_analysis = address.AddressAnalysis(self.dialects)
 
     def unsafe_run(self, mt: ir.Method):
-        address_analysis = address.AddressAnalysis(mt.dialects)
-        frame, _ = address_analysis.run_analysis(mt)
-        first_pass = walk.Walk(
-            NoiseRewriteRule(
-                address_analysis=frame.entries,
-                noise_model=self.noise_model,
-                gate_noise_params=self.gate_noise_params,
+        result = RewriteResult()
+
+        frame, res = self.address_analysis.run_analysis(mt, no_raise=False)
+        result = (
+            Walk(
+                NoiseRewriteRule(
+                    address_analysis=frame.entries,
+                    noise_model=self.noise_model,
+                    gate_noise_params=self.gate_noise_params,
+                )
             )
+            .rewrite(mt.code)
+            .join(result)
         )
-        second_pass = fixpoint.Fixpoint(walk.Walk(cse.CommonSubexpressionElimination()))
-        third_pass = fixpoint.Fixpoint(walk.Walk(dce.DeadCodeElimination()))
-        return chain.Chain(first_pass, second_pass, third_pass).rewrite(mt.code)
+        rule = Chain(
+            ConstantFold(),
+            DeadCodeElimination(),
+            CommonSubexpressionElimination(),
+        )
+        result = Fixpoint(Walk(rule)).rewrite(mt.code).join(result)
+        return result

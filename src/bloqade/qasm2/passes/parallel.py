@@ -7,7 +7,15 @@ from typing import Type
 from dataclasses import dataclass
 
 from kirin import ir
-from kirin.rewrite import dce, walk, chain, result, fixpoint
+from kirin.rewrite import (
+    Walk,
+    Chain,
+    Fixpoint,
+    ConstantFold,
+    DeadCodeElimination,
+    CommonSubexpressionElimination,
+    result,
+)
 from bloqade.analysis import address, schedule
 from kirin.passes.abc import Pass
 from bloqade.qasm2.rewrite import (
@@ -72,11 +80,13 @@ class ParallelToUOp(Pass):
         return ParallelToUOpRule(id_map=id_map, address_analysis=frame.entries)
 
     def unsafe_run(self, mt: ir.Method) -> result.RewriteResult:
-        return fixpoint.Fixpoint(
-            chain.Chain(
-                walk.Walk(self.generate_rule(mt)), walk.Walk(dce.DeadCodeElimination())
-            )
-        ).rewrite(mt.code)
+        result = Walk(self.generate_rule(mt)).rewrite(mt.code)
+        rule = Chain(
+            ConstantFold(),
+            DeadCodeElimination(),
+            CommonSubexpressionElimination(),
+        )
+        return Fixpoint(Walk(rule)).rewrite(mt.code).join(result)
 
 
 @dataclass
@@ -135,8 +145,11 @@ class UOpToParallel(Pass):
         )
 
     def unsafe_run(self, mt: ir.Method) -> result.RewriteResult:
-        return fixpoint.Fixpoint(
-            chain.Chain(
-                walk.Walk(self.generate_rule(mt)), walk.Walk(dce.DeadCodeElimination())
-            )
-        ).rewrite(mt.code)
+        result = Walk(self.generate_rule(mt)).rewrite(mt.code)
+
+        rule = Chain(
+            ConstantFold(),
+            DeadCodeElimination(),
+            CommonSubexpressionElimination(),
+        )
+        return Fixpoint(Walk(rule)).rewrite(mt.code).join(result)
