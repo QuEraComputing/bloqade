@@ -33,13 +33,14 @@ class _QASM2Py(RewriteRule):
         if isinstance(node, (expr.ConstInt, expr.ConstFloat)):
             node.replace_by(py.Constant(value=node.value))
             return RewriteResult(has_done_something=True)
-        elif isinstance(
-            node, (expr.Neg, expr.Sin, expr.Cos, expr.Tan, expr.Exp, expr.Sqrt)
-        ):
+        elif isinstance(node, expr.Neg):
             node.replace_by(self.UNARY_OPS[type(node)](value=node.value))
             return RewriteResult(has_done_something=True)
+        elif isinstance(node, (expr.Sin, expr.Cos, expr.Tan, expr.Exp, expr.Sqrt)):
+            node.replace_by(self.UNARY_OPS[type(node)](x=node.value))
+            return RewriteResult(has_done_something=True)
         elif isinstance(node, (expr.Add, expr.Sub, expr.Mul, expr.Div, expr.Pow)):
-            node.replace_by(self.BINARY_OPS[type(node)](lhs=node.lhs, right=node.rhs))
+            node.replace_by(self.BINARY_OPS[type(node)](lhs=node.lhs, rhs=node.rhs))
             return RewriteResult(has_done_something=True)
         elif isinstance(node, core.CRegEq):
             node.replace_by(py.cmp.Eq(node.lhs, node.rhs))
