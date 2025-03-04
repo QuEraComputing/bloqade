@@ -8,7 +8,6 @@ from ._dialect import dialect
 
 @statement(dialect=dialect)
 class PauliChannel(ir.Statement):
-    name = "pauli_channel"
 
     traits = frozenset({ir.FromPythonCall()})
 
