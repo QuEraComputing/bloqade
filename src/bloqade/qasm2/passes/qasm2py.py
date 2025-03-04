@@ -48,7 +48,7 @@ class _QASM2Py(RewriteRule):
             return RewriteResult()
 
 
-class Py2QASM(Pass):
+class QASM2Py(Pass):
 
     def unsafe_run(self, mt: ir.Method) -> RewriteResult:
         return Fixpoint(Walk(_QASM2Py())).rewrite(mt.code)
