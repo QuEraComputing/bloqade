@@ -22,8 +22,9 @@ class AddressMethodTable(interp.MethodTable):
         stmt: QRegNew,
     ):
         n_qubits = interp.get_const_value(int, stmt.n_qubits)
+        addr = AddressReg(range(interp.next_address, interp.next_address + n_qubits))
         interp.next_address += n_qubits
-        return (AddressReg(range(interp.next_address, interp.next_address + n_qubits)),)
+        return (addr,)
 
     @interp.impl(QRegGet)
     def get(self, interp: AddressAnalysis, frame: interp.Frame[Address], stmt: QRegGet):
