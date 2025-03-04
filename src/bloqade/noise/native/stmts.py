@@ -40,7 +40,6 @@ class CZPauliChannel(ir.Statement):
 
 @statement(dialect=dialect)
 class AtomLossChannel(ir.Statement):
-    name = "atom_loss_channel"
 
     traits = frozenset({ir.FromPythonCall()})
 
