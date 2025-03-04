@@ -24,7 +24,3 @@ def test_round_trip():
 
     test = test.similar(qasm2.main)
     assert_methods(test, test_original)
-
-
-if __name__ == "__main__":
-    test_round_trip()
