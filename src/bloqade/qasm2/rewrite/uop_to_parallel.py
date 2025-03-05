@@ -133,7 +133,7 @@ class SimpleMergePolicy(MergePolicyABC):
 
         for group in merge_groups:
             group.sort(key=lambda stmt: dag.stmt_index[stmt])
-            
+
         return cls(
             address_analysis=address_analysis,
             merge_groups=merge_groups,
