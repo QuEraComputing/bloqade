@@ -164,4 +164,4 @@ measure q[0] -> c[0];
 measure q[1] -> c[1];
 ```
 
-Note that the `return` values are all ignore due to lack of equivalent in QASM2.
+Note that the `return` values are all ignored due to lack of equivalent in QASM2.
