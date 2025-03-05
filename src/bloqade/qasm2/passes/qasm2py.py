@@ -10,7 +10,7 @@ from bloqade.qasm2.dialects import core, expr
 
 
 class _QASM2Py(RewriteRule):
-    """Rewrite py dialects into qasm dialects."""
+    """Rewrite qasm dialects into py dialects."""
 
     UNARY_OPS = {
         expr.Neg: py.USub,
