@@ -11,7 +11,7 @@ authors = [
 ]
 requires-python = ">=3.10"
 dependencies = [
-    "numpy>=1.26.4",
+    "numpy>=1.22.0",
     "scipy>=1.13.1",
     "kirin-toolchain~=0.14.0",
     "rich>=13.9.4",
@@ -33,7 +33,7 @@ qbraid = [
     "qbraid>=0.9.3",
 ]
 cirq = [
-    "cirq>=1.4.1",
+    "cirq-core>=1.4.1",
     "cirq-core[contrib]>=1.4.1",
 ]
 
