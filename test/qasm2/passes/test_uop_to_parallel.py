@@ -52,3 +52,5 @@ def test_two():
 
     parallel.UOpToParallel(test.dialects, SimpleOptimalMergePolicy)(test)
     test.print()
+
+test_one()

@@ -60,10 +60,12 @@ class StmtDag(graph.Graph[ir.Statement]):
     stmts: Dict[str, ir.Statement] = field(default_factory=OrderedDict)
     out_edges: Dict[str, Set[str]] = field(default_factory=OrderedDict)
     inc_edges: Dict[str, Set[str]] = field(default_factory=OrderedDict)
+    stmt_index: Dict[ir.Statement, int] = field(default_factory=OrderedDict)
 
     def add_node(self, node: ir.Statement):
         node_id = self.id_table[node]
         self.stmts[node_id] = node
+        self.stmt_index[node] = len(self.stmt_index)
         self.out_edges.setdefault(node_id, set())
         self.inc_edges.setdefault(node_id, set())
         return node_id

@@ -131,6 +131,9 @@ class SimpleMergePolicy(MergePolicyABC):
                 for stmt in gate_group:
                     group_numbers[stmt] = group_number
 
+        for group in merge_groups:
+            group.sort(key=lambda stmt: dag.stmt_index[stmt])
+            
         return cls(
             address_analysis=address_analysis,
             merge_groups=merge_groups,
@@ -142,7 +145,7 @@ class SimpleMergePolicy(MergePolicyABC):
             return result.RewriteResult()
 
         group = self.merge_groups[self.group_numbers[node]]
-        if node is group[0]:
+        if node is group[-1]:
             method = getattr(self, f"rewrite_group_{node.name}")
             method(node, group)
 
@@ -167,23 +170,7 @@ class SimpleMergePolicy(MergePolicyABC):
                 assert isinstance(qarg.stmt, ilist.New)
                 qubits.extend(qarg.stmt.values)
 
-        # for qubits coming from QRegGet, move both the get statement
-        # and the index statement before the current node, we do not need
-        # to move the register because the current node has some dependency
-        # on it.
-        new_qubits = []
-        for qarg in qubits:
-            if (
-                isinstance(qarg, ir.ResultValue)
-                and isinstance(qarg.owner, core.QRegGet)
-                and isinstance(qarg.owner.idx, ir.ResultValue)
-            ):
-                idx = qarg.owner.idx
-                idx.owner.from_stmt(idx.owner).insert_before(node)
-                new_qubits.append((qarg := qarg.owner.from_stmt(qarg.owner)).result)
-                qarg.insert_before(node)
-
-        return tuple(new_qubits)
+        return tuple(qubits)
 
     def rewrite_group_cz(self, node: ir.Statement, group: List[ir.Statement]):
         ctrls = []
