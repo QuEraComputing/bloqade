@@ -214,8 +214,7 @@ class DagScheduleAnalysis(Forward[GateSchedule]):
                 self._update_dag(stmt, sub_addr)
 
     def update_dag(self, stmt: ir.Statement, args: Sequence[ir.SSAValue]):
-        if stmt not in self.stmt_dag.stmt_index:
-            self.stmt_dag.add_node(stmt)
+        self.stmt_dag.update_index(stmt)
 
         for arg in args:
             self._update_dag(
