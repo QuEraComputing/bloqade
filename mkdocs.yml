@@ -61,6 +61,8 @@ theme:
   name: material
   favicon: assets/favicon.ico
   logo: assets/logo-dark.svg
+  font:
+    text: Lato
   palette:
     - scheme: default
       primary: custom
