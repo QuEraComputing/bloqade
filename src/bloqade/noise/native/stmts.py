@@ -8,7 +8,6 @@ from ._dialect import dialect
 
 @statement(dialect=dialect)
 class PauliChannel(ir.Statement):
-    name = "native.pauli_channel"
 
     traits = frozenset({ir.FromPythonCall()})
 
@@ -23,7 +22,6 @@ NumQubits = types.TypeVar("NumQubits")
 
 @statement(dialect=dialect)
 class CZPauliChannel(ir.Statement):
-    name = "native.pauli_channel.cz_pauli_channel"
 
     traits = frozenset({ir.FromPythonCall()})
 
@@ -40,7 +38,6 @@ class CZPauliChannel(ir.Statement):
 
 @statement(dialect=dialect)
 class AtomLossChannel(ir.Statement):
-    name = "native.atom_loss_channel"
 
     traits = frozenset({ir.FromPythonCall()})
 
