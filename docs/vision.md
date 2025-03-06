@@ -4,7 +4,7 @@ The vision of bloqade is to empower quantum scientists, from applications develo
 
 ## Composable quantum programming
 
-Today bloqade becomes a namespace package of multiple eDSLs around digital and analog quantum computation. `bloqade.analog` is the module for analog-mode neutral atom computers and includes several handy utilities ranging from building or analyzing analog programs, to emulation or executing on QuEra's cloud-accessible hardware "Aquila". 
+Today bloqade becomes a [namespace package](https://packaging.python.org/en/latest/guides/packaging-namespace-packages/) of multiple eDSLs around digital and analog quantum computation. `bloqade.analog` is the module for analog-mode neutral atom computers and includes several handy utilities ranging from building or analyzing analog programs, to emulation or executing on QuEra's cloud-accessible hardware "Aquila". 
 
 Other submodules such as `bloqade.qasm2`, `bloqade.pyqrack` and `bloqade.stim` are the initial iteration to represent digital circuit execution using gate-based quantum computing on reconfigurable neutral atoms. It extends the QASM2 language to include extra annotation of circuits that is important for efficient execution, such as parallelism and global gates. As well as being able to construct quantum programs with the full convenience of typical classical programming-- such as loops and control flow—bloqade-circuits also includes basic compiler transformation passes, emulation, and code generation.
 

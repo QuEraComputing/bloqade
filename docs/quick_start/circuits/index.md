@@ -1,6 +1,6 @@
 # Digital Quantum Computing with circuits
 
-This section provides the quick start guide for programming quantum executions represented by circuits using Bloqade. Circuits are a general-purpose and powerful way of representing arbitrary computations. For a few examples please refer to our [examples](digital/index.md).
+This section provides the quick start guide for developing quantum programs represented by circuits using Bloqade. Circuits are a general-purpose and powerful way of representing arbitrary computations. For a few examples please refer to our [examples](digital/index.md).
 
 
 ## Open Quantum Assembly Language (QASM2) and beyond
@@ -9,9 +9,9 @@ We have chosen to closely mirror the semantics of the Open Quantum Assembly Lang
 
 For example, there is a separation of **gate routines** declared with `gate` and main program written as a sequence of gate applications. While the gate routine is similar to a function in many ways, it does not support high-level features such as recursion (due to lack of `if` statement support inside) or control flows.
 
-Indeed, bloqade.circuits is designed with the notion of [kernels (no link)]() in mind by decorating functions with a `@qasm2.extended` decorator. The python code is interpreted and parsed by the [Kirin (no link)]() compiler toolchain and lowered to an abstract representation of the program. These kernels can include classical computation and the usual programming structures-- if/else, for and while loops, function inputs, and the like, as one is used to in Python.
+Indeed, bloqade.circuits is designed with the notion of [kernels](https://queracomputing.github.io/kirin/latest/blog/2025/02/28/introducing-kirin-a-new-open-source-software-development-tool-for-fault-tolerant-quantum-computing/?h=kernel#what-are-kernel-functions) in mind by decorating functions with a `@qasm2.extended` decorator. The python code is interpreted and parsed by the [Kirin](https://queracomputing.github.io/kirin/latest/) compiler toolchain and lowered to an abstract representation of the program. These kernels can include classical computation and the usual programming structures-- if/else, for and while loops, function inputs, and the like, as one is used to in Python.
 
-Additionally, the qasm2 representations of bloqade.circuits have been extended to include a key advantage of reconfigurable neutral atom hardware: parallelism. For example, one can represent a CZ gate applied to many qubit pairs at once as
+Additionally, the QASM2 representations of bloqade.circuits have been extended to include a key advantage of reconfigurable neutral atom hardware: parallelism. For example, one can represent a CZ gate applied to many qubit pairs at once as
 
 ```python
 @qasm2.extended
@@ -19,15 +19,15 @@ def parallel_cz(controls:ilist[qasm2.Qubit],targets:ilist[qasm2.Qubit]):
     for ctr in range(len(controls)):
         qasm2.cz(ctrl=controls[0],qarg=controls[1])
 ```
-or equivalently use a SIMD (single instruction multiple dispatch)-like instruction to explicitly flag the parallelism
+or equivalently use a SIMD (single instruction multiple data)-like instruction to explicitly flag the parallelism
 ```python
 @qasm2.extended
 def simd_cz(controls:ilist[qasm2.Qubit],targets:ilist[qasm2.Qubit]):
     qasm2.parallel.cz(ctrls=controls,qargs=targets)
 ```
-Both will ultimately emit the exact same qasm code, but the latter snippet represents the kind of parallelism that can be leveraged by reconfigurable neutral atom hardware to more efficiently execute a program.
+Both will ultimately emit the exact same QASM code, but the latter snippet represents the kind of parallelism that can be leveraged by reconfigurable neutral atom hardware to more efficiently execute a program.
 
-While in our initial release, we support QASM2 as the first eDSL, we plan to use it as a compile target instead of a programming language for long-term development. We are working on a more expressive language that will be more suitable for quantum programming in the error-corrected era.
+While in our initial release we support QASM2 as the first eDSL, we plan to use it as a compilation target instead of a programming language for long-term development. We are working on a more expressive language that will be more suitable for quantum programming in the error-corrected era.
 
 
 ## Quick Example
@@ -51,7 +51,7 @@ def qft(qreg: qasm2.QReg, n: int):
 ```
 
 While the syntax is similar to Python, the `qasm2.extended` decorator actually compiles the `qft` function
-into lower-level intermediate representation (IR) code that can be later interpreted, analyzed, or executed on quantum hardware. Observe that this function cannot immediately compile down to QASM as it takes variable inputs, and is called recursively.
+into lower-level intermediate representation (IR) code that can be later interpreted, analyzed, or executed on quantum hardware. Observe that this function cannot immediately compile down to QASM as it takes parametrized inputs, and is called recursively.
 
 You can inspect the initial IR code by calling the pretty printer:
 
