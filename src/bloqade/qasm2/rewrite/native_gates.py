@@ -4,6 +4,7 @@ from functools import cached_property
 from dataclasses import field, dataclass
 
 import cirq
+import numpy as np
 import cirq.transformers
 import cirq.contrib.qasm_import
 import cirq.transformers.target_gatesets
@@ -68,12 +69,15 @@ class CU(cirq.Gate):
         return "*", "CU"
 
 
+def around(val):
+    return float(np.around(val, 14))
+
+
 def one_qubit_gate_to_u3_angles(op: cirq.Operation) -> tuple[float, float, float]:
     lam, theta, phi = (  # Z angle, Y angle, then Z angle
         cirq.deconstruct_single_qubit_matrix_into_angles(cirq.unitary(op))
     )
-
-    return theta, phi, lam
+    return tuple(map(around, (theta, phi, lam)))
 
 
 @dataclass

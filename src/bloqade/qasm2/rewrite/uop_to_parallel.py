@@ -7,7 +7,7 @@ from kirin.rewrite import abc as rewrite_abc, result
 from kirin.dialects import ilist
 from bloqade.analysis import address
 from kirin.analysis.const import lattice
-from bloqade.qasm2.dialects import uop, core, parallel
+from bloqade.qasm2.dialects import uop, parallel
 from bloqade.analysis.schedule import StmtDag
 
 
@@ -96,7 +96,6 @@ class SimpleMergePolicy(MergePolicyABC):
                 | (uop.RZ(), parallel.RZ())
                 | (parallel.RZ(), uop.RZ())
             ):
-
                 return cls.check_equiv_args(stmt1.args[1:], stmt2.args[1:])
             case (
                 (parallel.CZ(), parallel.CZ())
@@ -120,9 +119,7 @@ class SimpleMergePolicy(MergePolicyABC):
         group_numbers = {}
 
         for group in dag.topological_groups():
-
             gate_groups = cls.merge_gates(map(dag.stmts.__getitem__, group))
-
             gate_groups_iter = (group for group in gate_groups if len(group) > 1)
 
             for gate_group in gate_groups_iter:
@@ -154,7 +151,7 @@ class SimpleMergePolicy(MergePolicyABC):
         return result.RewriteResult(has_done_something=True)
 
     def move_and_collect_qubit_list(
-        self, node: ir.Statement, qargs: List[ir.SSAValue]
+        self, qargs: List[ir.SSAValue]
     ) -> Tuple[ir.SSAValue, ...]:
 
         qubits = []
@@ -186,8 +183,8 @@ class SimpleMergePolicy(MergePolicyABC):
             else:
                 raise RuntimeError(f"Unexpected statement {stmt}")
 
-        ctrls_values = self.move_and_collect_qubit_list(node, ctrls)
-        qargs_values = self.move_and_collect_qubit_list(node, qargs)
+        ctrls_values = self.move_and_collect_qubit_list(ctrls)
+        qargs_values = self.move_and_collect_qubit_list(qargs)
 
         new_ctrls = ilist.New(values=ctrls_values)
         new_qargs = ilist.New(values=qargs_values)
@@ -212,8 +209,7 @@ class SimpleMergePolicy(MergePolicyABC):
                 raise RuntimeError(f"Unexpected statement {stmt}")
 
         assert isinstance(node, (uop.UGate, parallel.UGate))
-
-        qargs_values = self.move_and_collect_qubit_list(node, qargs)
+        qargs_values = self.move_and_collect_qubit_list(qargs)
 
         new_qargs = ilist.New(values=qargs_values)
         new_gate = parallel.UGate(
@@ -238,7 +234,7 @@ class SimpleMergePolicy(MergePolicyABC):
 
         assert isinstance(node, (uop.RZ, parallel.RZ))
 
-        qargs_values = self.move_and_collect_qubit_list(node, qargs)
+        qargs_values = self.move_and_collect_qubit_list(qargs)
         new_qargs = ilist.New(values=qargs_values)
         new_gate = parallel.RZ(
             qargs=new_qargs.result,

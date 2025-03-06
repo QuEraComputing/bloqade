@@ -22,7 +22,7 @@ from bloqade.qasm2.rewrite import (
     MergePolicyABC,
     ParallelToUOpRule,
     UOpToParallelRule,
-    SimpleGreedyMergePolicy,
+    SimpleOptimalMergePolicy,
 )
 
 
@@ -129,7 +129,7 @@ class UOpToParallel(Pass):
 
     """
 
-    merge_policy_type: Type[MergePolicyABC] = SimpleGreedyMergePolicy
+    merge_policy_type: Type[MergePolicyABC] = SimpleOptimalMergePolicy
 
     def generate_rule(self, mt: ir.Method):
         frame, _ = address.AddressAnalysis(mt.dialects).run_analysis(mt)
@@ -145,11 +145,4 @@ class UOpToParallel(Pass):
         )
 
     def unsafe_run(self, mt: ir.Method) -> result.RewriteResult:
-        result = Walk(self.generate_rule(mt)).rewrite(mt.code)
-
-        rule = Chain(
-            ConstantFold(),
-            DeadCodeElimination(),
-            CommonSubexpressionElimination(),
-        )
-        return Fixpoint(Walk(rule)).rewrite(mt.code).join(result)
+        return Walk(self.generate_rule(mt)).rewrite(mt.code)
