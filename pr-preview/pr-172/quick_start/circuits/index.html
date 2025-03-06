@@ -10,10 +10,10 @@
       
       
       
-        <link rel="canonical" href="https://special-engine-kg8jlr7.pages.github.io/quick_start/circuits/">
+        <link rel="canonical" href="https://bloqade.quera.com/quick_start/circuits/">
       
       
-        <link rel="prev" href="../../vision/">
+        <link rel="prev" href="../../manifesto/">
       
       
         <link rel="next" href="../../digital/examples/qft/">
@@ -503,11 +503,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../vision/" class="md-nav__link">
+      <a href="../../manifesto/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Vision
+    Manifesto
     
   </span>
   
@@ -1285,8 +1285,6 @@
     
       
         
-          
-        
       
     
     
@@ -1303,10 +1301,8 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5_3" >
         
           
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../qourier/" class="md-nav__link ">
-              
+          <label class="md-nav__link" for="__nav_1_5_3" id="__nav_1_5_3_label" tabindex="0">
+            
   
   <span class="md-ellipsis">
     Qourier
@@ -1314,9 +1310,8 @@
   </span>
   
 
-            </a>
-            
-          </div>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
         
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_5_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_5_3">
@@ -1325,6 +1320,26 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../qourier/index.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    None
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
               
             
           </ul>
@@ -1975,24 +1990,24 @@
 
 
 <h1 id="digital-quantum-computing-with-circuits">Digital Quantum Computing with circuits</h1>
-<p>This section provides the quick start guide for programming quantum executions represented by circuits using Bloqade. Circuits are a general-purpose and powerful way of representing arbitrary computations. For a few examples please refer to our <a href="digital/index.md">examples</a>.</p>
+<p>This section provides the quick start guide for developing quantum programs represented by circuits using Bloqade. Circuits are a general-purpose and powerful way of representing arbitrary computations. For a few examples please refer to our <a href="digital/index.md">examples</a>.</p>
 <h2 id="open-quantum-assembly-language-qasm2-and-beyond">Open Quantum Assembly Language (QASM2) and beyond</h2>
 <p>We have chosen to closely mirror the semantics of the Open Quantum Assembly Language (QASM2) in bloqade.circuits. The QASM2 dialect is a simple quantum assembly language that allows you to write quantum circuits in a human-readable format. However, one should note that QASM2 is a very restricted language and does not support all the features of a high-level language.</p>
 <p>For example, there is a separation of <strong>gate routines</strong> declared with <code>gate</code> and main program written as a sequence of gate applications. While the gate routine is similar to a function in many ways, it does not support high-level features such as recursion (due to lack of <code>if</code> statement support inside) or control flows.</p>
-<p>Indeed, bloqade.circuits is designed with the notion of <a href="">kernels (no link)</a> in mind by decorating functions with a <code>@qasm2.extended</code> decorator. The python code is interpreted and parsed by the <a href="">Kirin (no link)</a> compiler toolchain and lowered to an abstract representation of the program. These kernels can include classical computation and the usual programming structures-- if/else, for and while loops, function inputs, and the like, as one is used to in Python.</p>
-<p>Additionally, the qasm2 representations of bloqade.circuits have been extended to include a key advantage of reconfigurable neutral atom hardware: parallelism. For example, one can represent a CZ gate applied to many qubit pairs at once as</p>
+<p>Indeed, bloqade.circuits is designed with the notion of <a href="https://queracomputing.github.io/kirin/latest/blog/2025/02/28/introducing-kirin-a-new-open-source-software-development-tool-for-fault-tolerant-quantum-computing/?h=kernel#what-are-kernel-functions">kernels</a> in mind by decorating functions with a <code>@qasm2.extended</code> decorator. The python code is interpreted and parsed by the <a href="https://queracomputing.github.io/kirin/latest/">Kirin</a> compiler toolchain and lowered to an abstract representation of the program. These kernels can include classical computation and the usual programming structures-- if/else, for and while loops, function inputs, and the like, as one is used to in Python.</p>
+<p>Additionally, the QASM2 representations of bloqade.circuits have been extended to include a key advantage of reconfigurable neutral atom hardware: parallelism. For example, one can represent a CZ gate applied to many qubit pairs at once as</p>
 <p><div class="highlight"><pre><span></span><code><span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">parallel_cz</span><span class="p">(</span><span class="n">controls</span><span class="p">:</span><span class="n">ilist</span><span class="p">[</span><span class="n">qasm2</span><span class="o">.</span><span class="n">Qubit</span><span class="p">],</span><span class="n">targets</span><span class="p">:</span><span class="n">ilist</span><span class="p">[</span><span class="n">qasm2</span><span class="o">.</span><span class="n">Qubit</span><span class="p">]):</span>
     <span class="k">for</span> <span class="n">ctr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">controls</span><span class="p">)):</span>
         <span class="n">qasm2</span><span class="o">.</span><span class="n">cz</span><span class="p">(</span><span class="n">ctrl</span><span class="o">=</span><span class="n">controls</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">qarg</span><span class="o">=</span><span class="n">controls</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 </code></pre></div>
-or equivalently use a SIMD (single instruction multiple dispatch)-like instruction to explicitly flag the parallelism
+or equivalently use a SIMD (single instruction multiple data)-like instruction to explicitly flag the parallelism
 <div class="highlight"><pre><span></span><code><span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">simd_cz</span><span class="p">(</span><span class="n">controls</span><span class="p">:</span><span class="n">ilist</span><span class="p">[</span><span class="n">qasm2</span><span class="o">.</span><span class="n">Qubit</span><span class="p">],</span><span class="n">targets</span><span class="p">:</span><span class="n">ilist</span><span class="p">[</span><span class="n">qasm2</span><span class="o">.</span><span class="n">Qubit</span><span class="p">]):</span>
     <span class="n">qasm2</span><span class="o">.</span><span class="n">parallel</span><span class="o">.</span><span class="n">cz</span><span class="p">(</span><span class="n">ctrls</span><span class="o">=</span><span class="n">controls</span><span class="p">,</span><span class="n">qargs</span><span class="o">=</span><span class="n">targets</span><span class="p">)</span>
 </code></pre></div>
-Both will ultimately emit the exact same qasm code, but the latter snippet represents the kind of parallelism that can be leveraged by reconfigurable neutral atom hardware to more efficiently execute a program.</p>
-<p>While in our initial release, we support QASM2 as the first eDSL, we plan to use it as a compile target instead of a programming language for long-term development. We are working on a more expressive language that will be more suitable for quantum programming in the error-corrected era.</p>
+Both will ultimately emit the exact same QASM code, but the latter snippet represents the kind of parallelism that can be leveraged by reconfigurable neutral atom hardware to more efficiently execute a program.</p>
+<p>While in our initial release we support QASM2 as the first eDSL, we plan to use it as a compilation target instead of a programming language for long-term development. We are working on a more expressive language that will be more suitable for quantum programming in the error-corrected era.</p>
 <h2 id="quick-example">Quick Example</h2>
 <p>You can program kernels and quantum programs using the <code>qasm2.extended</code> decorator, such as the following Quantum Fourier Transform (QFT) circuit:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
@@ -2010,7 +2025,7 @@ Both will ultimately emit the exact same qasm code, but the latter snippet repre
     <span class="k">return</span> <span class="n">qreg</span>
 </code></pre></div>
 <p>While the syntax is similar to Python, the <code>qasm2.extended</code> decorator actually compiles the <code>qft</code> function
-into lower-level intermediate representation (IR) code that can be later interpreted, analyzed, or executed on quantum hardware. Observe that this function cannot immediately compile down to QASM as it takes variable inputs, and is called recursively.</p>
+into lower-level intermediate representation (IR) code that can be later interpreted, analyzed, or executed on quantum hardware. Observe that this function cannot immediately compile down to QASM as it takes parametrized inputs, and is called recursively.</p>
 <p>You can inspect the initial IR code by calling the pretty printer:</p>
 <div class="highlight"><pre><span></span><code><span class="n">qft</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
 </code></pre></div>
@@ -2088,7 +2103,7 @@ cx q[0], q[1];
 measure q[0] -&gt; c[0];
 measure q[1] -&gt; c[1];
 </code></pre></div>
-<p>Note that the <code>return</code> values are all ignore due to lack of equivalent in QASM2.</p>
+<p>Note that the <code>return</code> values are all ignored due to lack of equivalent in QASM2.</p>
 
 
 
@@ -2124,7 +2139,7 @@ measure q[1] -&gt; c[1];
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../vision/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Vision">
+          <a href="../../manifesto/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Manifesto">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2134,7 +2149,7 @@ measure q[1] -&gt; c[1];
                 Previous
               </span>
               <div class="md-ellipsis">
-                Vision
+                Manifesto
               </div>
             </div>
           </a>

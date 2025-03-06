@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://special-engine-kg8jlr7.pages.github.io/digital/examples/pauli_exponentiation/">
+        <link rel="canonical" href="https://bloqade.quera.com/digital/examples/pauli_exponentiation/">
       
       
         <link rel="prev" href="../ghz/">
@@ -498,11 +498,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../vision/" class="md-nav__link">
+      <a href="../../../manifesto/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Vision
+    Manifesto
     
   </span>
   
@@ -1283,8 +1283,6 @@
     
       
         
-          
-        
       
     
     
@@ -1301,10 +1299,8 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5_3" >
         
           
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../../quick_start/qourier/" class="md-nav__link ">
-              
+          <label class="md-nav__link" for="__nav_1_5_3" id="__nav_1_5_3_label" tabindex="0">
+            
   
   <span class="md-ellipsis">
     Qourier
@@ -1312,9 +1308,8 @@
   </span>
   
 
-            </a>
-            
-          </div>
+            <span class="md-nav__icon md-icon"></span>
+          </label>
         
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_5_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_5_3">
@@ -1323,6 +1318,26 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../quick_start/qourier/index.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    None
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
               
             
           </ul>
@@ -2345,7 +2360,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7691a8e3">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=bc51ff11">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2356,7 +2371,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2f2c15cb">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b232b88f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2387,7 +2402,7 @@ from bloqade import qasm2</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9e8c7e0b">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ab4bdb4c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2399,7 +2414,7 @@ with a parameterized angle <code>gamma</code>.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=87602960">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=36946651">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2442,7 +2457,7 @@ def zzzz_gadget(targets: tuple[qasm2.Qubit, ...], gamma: float):
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=470435ca">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8aa0795c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2454,7 +2469,7 @@ with a parameterized start and end Pauli basis.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=70ae46cc">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9039db4c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2539,7 +2554,7 @@ def pauli_basis_change(targets: tuple[qasm2.Qubit, ...], start: str, end: str):
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=15ebccbc">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1ad3e1ad">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2551,7 +2566,7 @@ with a parameterized Pauli basis and angle <code>gamma</code>.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f9d857d7">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=358da219">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2590,7 +2605,7 @@ def pauli_exponential(targets: tuple[qasm2.Qubit, ...], pauli: str, gamma: float
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f7fdc533">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d4433771">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2601,7 +2616,7 @@ def pauli_exponential(targets: tuple[qasm2.Qubit, ...], pauli: str, gamma: float
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4a9f5875">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e8cecbb1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2634,7 +2649,7 @@ def main():
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=758d5ec8">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8a66fa45">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2645,7 +2660,7 @@ def main():
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=ed912431">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=873fcc1d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
