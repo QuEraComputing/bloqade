@@ -12,7 +12,7 @@ nav:
       - index.md
       - Installation: install.md
       - Background: background.md
-      - Vision: vision.md
+      - Manifesto: manifesto.md
       - Quick Start:
         - Circuits:
           - quick_start/circuits/index.md
