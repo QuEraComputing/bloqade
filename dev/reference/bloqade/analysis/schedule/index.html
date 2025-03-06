@@ -1972,6 +1972,7 @@
     <span class="n">stmts</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Statement</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(),</span>
     <span class="n">out_edges</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(),</span>
     <span class="n">inc_edges</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(),</span>
+    <span class="n">stmt_index</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Statement</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(),</span>
 <span class="p">)</span>
 </code></pre></div>
 
@@ -2068,13 +2069,7 @@ have a cyclic dependency.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/bloqade/analysis/schedule.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">116</span>
 <span class="normal">117</span>
 <span class="normal">118</span>
 <span class="normal">119</span>
@@ -2109,7 +2104,13 @@ have a cyclic dependency.</p>
 <span class="normal">148</span>
 <span class="normal">149</span>
 <span class="normal">150</span>
-<span class="normal">151</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">topological_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">topological_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Split the dag into topological groups where each group</span>
 <span class="sd">    contains nodes that have no dependencies on each other, but</span>
 <span class="sd">    have dependencies on nodes in one or more previous groups.</span>
