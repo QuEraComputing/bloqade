@@ -4,7 +4,7 @@ repo_url: https://github.com/QuEraComputing/bloqade
 site_description: >-
   Bloqade - the neutral atom SDK
 edit_uri: "edit/main/docs/"
-site_url: https://special-engine-kg8jlr7.pages.github.io/
+site_url: https://bloqade.quera.com/
 
 # Page tree
 nav:
