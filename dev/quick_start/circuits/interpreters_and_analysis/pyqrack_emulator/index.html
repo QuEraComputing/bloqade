@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://special-engine-kg8jlr7.pages.github.io/dev/quick_start/circuits/interpreters_and_analysis/pyqrack_emulator/">
+        <link rel="canonical" href="https://bloqade.quera.com/dev/quick_start/circuits/interpreters_and_analysis/pyqrack_emulator/">
       
       
         <link rel="prev" href="../qasm2_codegen/">
@@ -80,6 +80,11 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#running-simulations" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -498,11 +503,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../vision/" class="md-nav__link">
+      <a href="../../../../manifesto/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Vision
+    Manifesto
     
   </span>
   
@@ -1041,6 +1046,18 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    PyQrack emulator
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1051,6 +1068,32 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#running-simulations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running simulations
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1879,6 +1922,23 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#running-simulations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running simulations
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1917,6 +1977,20 @@
 on <a href="https://github.com/QuEraComputing/bloqade/issues/new">GitHub</a> if you need help or want to
 contribute.</p>
 </div>
+<h2 id="running-simulations">Running simulations</h2>
+<p>The program can be executed via a simulator backend, e.g. PyQrack, you can install it via</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>pyqrack<span class="o">]</span>
+<span class="c1"># or if you want to use the CPU only version</span>
+pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>pyqrack-cpu<span class="o">]</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">qft</span><span class="p">(</span><span class="n">qasm2</span><span class="o">.</span><span class="n">qreg</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="n">device</span> <span class="o">=</span> <span class="n">PyQrack</span><span class="p">()</span>
+<span class="n">qreg</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">qreg</span><span class="p">)</span>
+</code></pre></div>
 
 
 

@@ -10,10 +10,10 @@
       
       
       
-        <link rel="canonical" href="https://special-engine-kg8jlr7.pages.github.io/dev/quick_start/circuits/">
+        <link rel="canonical" href="https://bloqade.quera.com/dev/quick_start/circuits/">
       
       
-        <link rel="prev" href="../../vision/">
+        <link rel="prev" href="../../manifesto/">
       
       
         <link rel="next" href="../../digital/examples/qft/">
@@ -24,7 +24,7 @@
     
     
       
-        <title>Index - The Neutral Atom SDK</title>
+        <title>Digital Quantum Computing with circuits - The Neutral Atom SDK</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#digital-quantum-computing" class="md-skip">
+        <a href="#digital-quantum-computing-with-circuits" class="md-skip">
           Skip to content
         </a>
       
@@ -119,7 +119,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Index
+              Digital Quantum Computing with circuits
             
           </span>
         </div>
@@ -503,11 +503,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../vision/" class="md-nav__link">
+      <a href="../../manifesto/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Vision
+    Manifesto
     
   </span>
   
@@ -1883,11 +1883,77 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#open-quantum-assembly-language-qasm2" class="md-nav__link">
+  <a href="#open-quantum-assembly-language-qasm2-and-beyond" class="md-nav__link">
     <span class="md-ellipsis">
-      Open Quantum Assembly Language (QASM2)
+      Open Quantum Assembly Language (QASM2) and beyond
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-the-compilation-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding the compilation process
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding the compilation process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#progressive-compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Progressive compilation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dialect-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dialect groups
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dialect groups">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extended-qasm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extended QASM
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strict-qasm2-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Strict QASM2 mode
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1923,30 +1989,27 @@
   
 
 
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This page is under construction. The content may be incomplete or incorrect. Submit an issue
-on <a href="https://github.com/QuEraComputing/bloqade/issues/new">GitHub</a> if you need help or want to
-contribute.</p>
-</div>
-<h1 id="digital-quantum-computing">Digital Quantum Computing</h1>
-<p>This section provides the quick start guide for programming digital quantum circuits using Bloqade.</p>
-<h2 id="open-quantum-assembly-language-qasm2">Open Quantum Assembly Language (QASM2)</h2>
-<p>Bloqade provides a set of dialects for QASM2 and our custom extensions to model parallel gates in neutral atom architectures. The QASM2 dialect is a simple quantum assembly language that allows you to write quantum circuits in a human-readable format. However, one should note that QASM2 is a very restricted language and does not support all the features of a high-level language.</p>
-<p>For example, there is a separation of <strong>gate routines</strong> declared with <code>gate</code> and main program written as a sequence of gate applications. While the gate routine is similar to a function in many ways, it does not support high-level features such as recursions (due to lack of <code>if</code> statement support inside) or control flows.</p>
-<p>While in our initial release, we support QASM2 as the first eDSL, we plan to use it as a compile target instead of a programming language for long-term development. We are working on a more expressive language that will be more suitable for quantum programming at error-corrected era.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This page is under construction. The content may be incomplete or incorrect. Submit an issue
-on <a href="https://github.com/QuEraComputing/bloqade/issues/new">GitHub</a> if you need help or want to
-contribute.</p>
-</div>
-<h1 id="qasm2-and-its-extensions">QASM2 and its extensions</h1>
-<p>Bloqade provides a set of <a href="">dialects (missing link)</a> for QASM2 and our custom extensions to model parallel gates in neutral atom architectures. The basic QASM2 functionality can be enabled via</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>qasm2<span class="o">]</span>
+<h1 id="digital-quantum-computing-with-circuits">Digital Quantum Computing with circuits</h1>
+<p>This section provides the quick start guide for developing quantum programs represented by circuits using Bloqade. Circuits are a general-purpose and powerful way of representing arbitrary computations. For a few examples please refer to our <a href="digital/index.md">examples</a>.</p>
+<h2 id="open-quantum-assembly-language-qasm2-and-beyond">Open Quantum Assembly Language (QASM2) and beyond</h2>
+<p>We have chosen to closely mirror the semantics of the Open Quantum Assembly Language (QASM2) in bloqade.circuits. The QASM2 dialect is a simple quantum assembly language that allows you to write quantum circuits in a human-readable format. However, one should note that QASM2 is a very restricted language and does not support all the features of a high-level language.</p>
+<p>For example, there is a separation of <strong>gate routines</strong> declared with <code>gate</code> and main program written as a sequence of gate applications. While the gate routine is similar to a function in many ways, it does not support high-level features such as recursion (due to lack of <code>if</code> statement support inside) or control flows.</p>
+<p>Indeed, bloqade.circuits is designed with the notion of <a href="https://queracomputing.github.io/kirin/latest/blog/2025/02/28/introducing-kirin-a-new-open-source-software-development-tool-for-fault-tolerant-quantum-computing/?h=kernel#what-are-kernel-functions">kernels</a> in mind by decorating functions with a <code>@qasm2.extended</code> decorator. The python code is interpreted and parsed by the <a href="https://queracomputing.github.io/kirin/latest/">Kirin</a> compiler toolchain and lowered to an abstract representation of the program. These kernels can include classical computation and the usual programming structures-- if/else, for and while loops, function inputs, and the like, as one is used to in Python.</p>
+<p>Additionally, the QASM2 representations of bloqade.circuits have been extended to include a key advantage of reconfigurable neutral atom hardware: parallelism. For example, one can represent a CZ gate applied to many qubit pairs at once as</p>
+<p><div class="highlight"><pre><span></span><code><span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parallel_cz</span><span class="p">(</span><span class="n">controls</span><span class="p">:</span><span class="n">ilist</span><span class="p">[</span><span class="n">qasm2</span><span class="o">.</span><span class="n">Qubit</span><span class="p">],</span><span class="n">targets</span><span class="p">:</span><span class="n">ilist</span><span class="p">[</span><span class="n">qasm2</span><span class="o">.</span><span class="n">Qubit</span><span class="p">]):</span>
+    <span class="k">for</span> <span class="n">ctr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">controls</span><span class="p">)):</span>
+        <span class="n">qasm2</span><span class="o">.</span><span class="n">cz</span><span class="p">(</span><span class="n">ctrl</span><span class="o">=</span><span class="n">controls</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">qarg</span><span class="o">=</span><span class="n">controls</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 </code></pre></div>
+or equivalently use a SIMD (single instruction multiple data)-like instruction to explicitly flag the parallelism
+<div class="highlight"><pre><span></span><code><span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">simd_cz</span><span class="p">(</span><span class="n">controls</span><span class="p">:</span><span class="n">ilist</span><span class="p">[</span><span class="n">qasm2</span><span class="o">.</span><span class="n">Qubit</span><span class="p">],</span><span class="n">targets</span><span class="p">:</span><span class="n">ilist</span><span class="p">[</span><span class="n">qasm2</span><span class="o">.</span><span class="n">Qubit</span><span class="p">]):</span>
+    <span class="n">qasm2</span><span class="o">.</span><span class="n">parallel</span><span class="o">.</span><span class="n">cz</span><span class="p">(</span><span class="n">ctrls</span><span class="o">=</span><span class="n">controls</span><span class="p">,</span><span class="n">qargs</span><span class="o">=</span><span class="n">targets</span><span class="p">)</span>
+</code></pre></div>
+Both will ultimately emit the exact same QASM code, but the latter snippet represents the kind of parallelism that can be leveraged by reconfigurable neutral atom hardware to more efficiently execute a program.</p>
+<p>While in our initial release we support QASM2 as the first eDSL, we plan to use it as a compilation target instead of a programming language for long-term development. We are working on a more expressive language that will be more suitable for quantum programming in the error-corrected era.</p>
 <h2 id="quick-example">Quick Example</h2>
-<p>When programming with QASM2, the most common usage is via the <code>qasm2.extended</code> decorator, e.g the following Quantum Fourier Transform (QFT) circuit:</p>
+<p>You can program kernels and quantum programs using the <code>qasm2.extended</code> decorator, such as the following Quantum Fourier Transform (QFT) circuit:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">qasm2</span>
 
@@ -1962,27 +2025,12 @@ contribute.</p>
     <span class="k">return</span> <span class="n">qreg</span>
 </code></pre></div>
 <p>While the syntax is similar to Python, the <code>qasm2.extended</code> decorator actually compiles the <code>qft</code> function
-into lower-level intermediate representation (IR) code that can be later executed on a simulator (available via PyQrack) or a quantum computer.</p>
+into lower-level intermediate representation (IR) code that can be later interpreted, analyzed, or executed on quantum hardware. Observe that this function cannot immediately compile down to QASM as it takes parametrized inputs, and is called recursively.</p>
 <p>You can inspect the initial IR code by calling the pretty printer:</p>
 <div class="highlight"><pre><span></span><code><span class="n">qft</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
 </code></pre></div>
 <p><img alt="QFT IR" src="qft-pprint.png" /></p>
-<h2 id="running-simulations">Running simulations</h2>
-<p>The program can be executed via a simulator backend, e.g. PyQrack, you can install it via</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>pyqrack<span class="o">]</span>
-<span class="c1"># or if you want to use the CPU only version</span>
-pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>pyqrack-cpu<span class="o">]</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-    <span class="k">return</span> <span class="n">qft</span><span class="p">(</span><span class="n">qasm2</span><span class="o">.</span><span class="n">qreg</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
-
-<span class="n">device</span> <span class="o">=</span> <span class="n">PyQrack</span><span class="p">()</span>
-<span class="n">qreg</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">qreg</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="emitting-qasm2-code">Emitting QASM2 code</h2>
-<p>You can also emit QASM2 code from the IR code:</p>
+<p>And emit QASM2 code</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.qasm2.emit</span><span class="w"> </span><span class="kn">import</span> <span class="n">QASM2</span> <span class="c1"># the QASM2 target</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.qasm2.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">pprint</span> <span class="c1"># the QASM2 pretty printer</span>
 
@@ -1994,7 +2042,7 @@ pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o"
 <h2 id="understanding-the-compilation-process">Understanding the compilation process</h2>
 <p>The compilation process is divided into several stages:</p>
 <ol>
-<li><strong>Lowering</strong>: the decorator <code>qasm2.extended</code> takes Python Abstract Syntax Tree (AST) and lowers it into Kirin IR in the Static Single Assignment (SSA) form.</li>
+<li><strong>Lowering</strong>: the decorator <code>qasm2.extended</code> takes the Python Abstract Syntax Tree (AST) and lowers it into Kirin IR in the Static Single Assignment (SSA) form.</li>
 <li><strong>Interpretation</strong>: when invoking the PyQrack backend, the IR code is interpreted via Kirin's IR interpreter (missing link) with the PyQrack runtime backend.</li>
 <li><strong>Target code generation</strong>: when emitting QASM2 code:</li>
 <li>The IR code gets aggressively inlined and all constant expressions are evaluated.</li>
@@ -2002,7 +2050,14 @@ pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o"
 <li>All compatible Python expressions (e.g <code>sin</code>, arithmetics) are translated into QASM2 expression.</li>
 <li>The QASM2 code is emitted as QASM2 AST for pretty printing.</li>
 </ol>
-<p>In fact, the decorator <code>qasm2.extended</code> is a group of smaller dialects:</p>
+<h3 id="progressive-compilation">Progressive compilation</h3>
+<p>As well as writing circuit executions, you can also progressively transform and compile that circuit. For example, you may want to lower arbitrary single qubit unitaries into hardware-specific unitaries, as is done in <a href="quick_start/circuits/compiler_passes/native_gate_rewrite.md">this example</a>. For more details on the kinds of circuit-level compiler passes and how to write your own, see <a href="quick_start/circuits/compiler_passes/index.md">here</a></p>
+<h2 id="dialect-groups">Dialect groups</h2>
+<p>Bloqade provides a set of <a href="">dialects (missing link)</a> for QASM2 and our custom extensions to model parallel gates in neutral atom architectures. The basic QASM2 functionality can be enabled via</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>qasm2<span class="o">]</span>
+</code></pre></div>
+<h3 id="extended-qasm">Extended QASM</h3>
+<p>The decorator <code>qasm2.extended</code> is a group of smaller dialects:</p>
 <div class="highlight"><pre><span></span><code><span class="n">extended</span> <span class="o">=</span> <span class="n">structural_no_opt</span><span class="o">.</span><span class="n">union</span><span class="p">(</span>
      <span class="p">[</span>
          <span class="n">inline</span><span class="p">,</span>
@@ -2026,7 +2081,7 @@ pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o"
 <li><code>parallel</code> provides the parallel gate support (Rydberg specific).</li>
 <li><code>inline</code> dialect provides the inline QASM string</li>
 </ul>
-<h2 id="strict-qasm2-mode">Strict QASM2 mode</h2>
+<h3 id="strict-qasm2-mode">Strict QASM2 mode</h3>
 <p>While the <code>qasm2.extended</code> decorator provides a lot of high-level features as an extension of QASM2, you may want to program in strict QASM2 mode for compatibility reasons. You can do this by using the <code>qasm2.main</code> and <code>qasm2.gate</code> decorators:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@qasm2</span><span class="o">.</span><span class="n">main</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
@@ -2084,7 +2139,7 @@ measure q[1] -&gt; c[1];
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../vision/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Vision">
+          <a href="../../manifesto/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Manifesto">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2094,7 +2149,7 @@ measure q[1] -&gt; c[1];
                 Previous
               </span>
               <div class="md-ellipsis">
-                Vision
+                Manifesto
               </div>
             </div>
           </a>

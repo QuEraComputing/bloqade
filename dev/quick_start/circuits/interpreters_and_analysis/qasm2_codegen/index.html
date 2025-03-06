@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://special-engine-kg8jlr7.pages.github.io/dev/quick_start/circuits/interpreters_and_analysis/qasm2_codegen/">
+        <link rel="canonical" href="https://bloqade.quera.com/dev/quick_start/circuits/interpreters_and_analysis/qasm2_codegen/">
       
       
         <link rel="prev" href="../">
@@ -80,6 +80,11 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#emitting-qasm2-code" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -498,11 +503,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../vision/" class="md-nav__link">
+      <a href="../../../../manifesto/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Vision
+    Manifesto
     
   </span>
   
@@ -1019,6 +1024,18 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    QASM2 Codegen
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1029,6 +1046,32 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#emitting-qasm2-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Emitting QASM2 code
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1879,6 +1922,23 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#emitting-qasm2-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Emitting QASM2 code
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1917,6 +1977,16 @@
 on <a href="https://github.com/QuEraComputing/bloqade/issues/new">GitHub</a> if you need help or want to
 contribute.</p>
 </div>
+<h2 id="emitting-qasm2-code">Emitting QASM2 code</h2>
+<p>You can also emit QASM2 code from the IR code:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.qasm2.emit</span><span class="w"> </span><span class="kn">import</span> <span class="n">QASM2</span> <span class="c1"># the QASM2 target</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.qasm2.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">pprint</span> <span class="c1"># the QASM2 pretty printer</span>
+
+<span class="n">target</span> <span class="o">=</span> <span class="n">QASM2</span><span class="p">()</span>
+<span class="n">ast</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+<span class="n">pprint</span><span class="p">(</span><span class="n">ast</span><span class="p">)</span>
+</code></pre></div>
+<p><img alt="QFT QASM2" src="qft-qasm2.png" /></p>
 
 
 
