@@ -60,10 +60,16 @@ class StmtDag(graph.Graph[ir.Statement]):
     stmts: Dict[str, ir.Statement] = field(default_factory=OrderedDict)
     out_edges: Dict[str, Set[str]] = field(default_factory=OrderedDict)
     inc_edges: Dict[str, Set[str]] = field(default_factory=OrderedDict)
+    stmt_index: Dict[ir.Statement, int] = field(default_factory=OrderedDict)
+
+    def update_index(self, node: ir.Statement):
+        if node not in self.stmt_index:
+            self.stmt_index[node] = len(self.stmt_index)
 
     def add_node(self, node: ir.Statement):
         node_id = self.id_table[node]
         self.stmts[node_id] = node
+        self.update_index(node)
         self.out_edges.setdefault(node_id, set())
         self.inc_edges.setdefault(node_id, set())
         return node_id
@@ -208,6 +214,8 @@ class DagScheduleAnalysis(Forward[GateSchedule]):
                 self._update_dag(stmt, sub_addr)
 
     def update_dag(self, stmt: ir.Statement, args: Sequence[ir.SSAValue]):
+        self.stmt_dag.add_node(stmt)
+
         for arg in args:
             self._update_dag(
                 stmt, self.address_analysis.get(arg, address.Address.bottom())

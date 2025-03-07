@@ -87,7 +87,7 @@ class QASM2:
         # make a cloned instance of kernel
         entry = entry.similar()
         QASM2Fold(entry.dialects, inline_gate_subroutine=not self.custom_gate).fixpoint(
-            entry, max_iter=2
+            entry
         )
 
         if not self.allow_global:

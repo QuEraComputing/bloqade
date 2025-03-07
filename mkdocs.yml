@@ -4,7 +4,7 @@ repo_url: https://github.com/QuEraComputing/bloqade
 site_description: >-
   Bloqade - the neutral atom SDK
 edit_uri: "edit/main/docs/"
-site_url: https://special-engine-kg8jlr7.pages.github.io/
+site_url: https://bloqade.quera.com/
 
 # Page tree
 nav:
@@ -12,7 +12,7 @@ nav:
       - index.md
       - Installation: install.md
       - Background: background.md
-      - Vision: vision.md
+      - Manifesto: manifesto.md
       - Quick Start:
         - Circuits:
           - quick_start/circuits/index.md
@@ -49,7 +49,7 @@ nav:
       - Pauli Exponential: "digital/examples/pauli_exponentiation.py"
       - Repeat Until Success: "digital/examples/repeat_until_success.py"
       - QAOA: "digital/examples/qaoa.py"
-  - Analog Tutorial: 'https://queracomputing.github.io/bloqade-analog-examples/latest/'
+  - Analog Tutorial: 'https://queracomputing.github.io/bloqade-analog-examples/dev/'
   - Bloqade Analog: 'https://queracomputing.github.io/bloqade-analog/latest/'
   - Blog:
     - blog/index.md
@@ -61,6 +61,8 @@ theme:
   name: material
   favicon: assets/favicon.ico
   logo: assets/logo-dark.svg
+  font:
+    text: Lato
   palette:
     - scheme: default
       primary: custom

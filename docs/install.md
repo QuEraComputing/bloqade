@@ -56,7 +56,7 @@ pip install bloqade[qasm2]
 Analog quantum computing eDSL for neutral atom quantum computing (previously `bloqade-python`). Available via:
 
 ```bash
-pip install bloqade[analog]
+pip install bloqade-analog
 ```
 
 ### `bloqade.pyqrack`
@@ -64,7 +64,7 @@ pip install bloqade[analog]
 Support of the PyQrack simulator as a runtime backend for QASM2 and extensions.
 
 ```bash
-pip install bloqade[pyqrack]
+pip install bloqade-pyqrack
 ```
 
 ### `bloqade.qbraid`

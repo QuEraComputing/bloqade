@@ -1,4 +1,5 @@
 from typing import TypeVar
+from dataclasses import field
 
 from kirin import ir, interp
 from bloqade.types import QubitType
@@ -9,8 +10,11 @@ from .lattice import Address
 
 
 class AddressAnalysis(Forward[Address]):
+    """This analysis pass can be used to track the global addresses of qubits."""
+
     keys = ["qubit.address"]
     lattice = Address
+    next_address: int = field(init=False)
 
     def initialize(self):
         super().initialize()
@@ -19,6 +23,7 @@ class AddressAnalysis(Forward[Address]):
 
     @property
     def qubit_count(self) -> int:
+        """Total number of qubits found by the analysis."""
         return self.next_address
 
     T = TypeVar("T")

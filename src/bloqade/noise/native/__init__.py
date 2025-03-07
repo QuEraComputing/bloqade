@@ -1,3 +1,11 @@
+"""NOTE: This module is not guaranteed to be supported long-term in bloqade. We will be
+moving towards a more general approach to noise modeling in the future."""
+
+from .model import (
+    GateNoiseParams as GateNoiseParams,
+    TwoRowZoneModel as TwoRowZoneModel,
+    MoveNoiseModelABC as MoveNoiseModelABC,
+)
 from .stmts import (
     PauliChannel as PauliChannel,
     CZPauliChannel as CZPauliChannel,

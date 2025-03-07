@@ -21,6 +21,23 @@ Bloqade is a Python SDK for neutral atom quantum computing. It provides a set of
 uv add bloqade
 ```
 
+## Documentation
+
+The documentation is available at [https://bloqade.quera.com/latest/](https://bloqade.quera.com/latest/). We are at an early stage of completing the documentation with more details and examples, so comments and contributions are most welcome!
+
+## Roadmap
+
+We use github issues to track the roadmap. There are more feature requests and proposals in the issues. Here are some of the most wanted features we wish to implement by 2025 summer (July):
+
+- [x] QASM2 dialect (dialect, parser, pyqrack backend, ast, codegen)
+- [x] QASM2 extensions (e.g. parallel gates, noise, etc.)
+- [x] STIM dialect (dialect, codegen)
+- [ ] structural gate dialect (language proposal, dialect, passes)
+- [ ] atom-move dialect (language proposal, dialect, passes)
+- [ ] atom move animation backend
+
+Proposal for the roadmap and feature requests are welcome!
+
 ## License
 
 Apache License 2.0 with LLVM Exceptions

@@ -111,14 +111,19 @@ def z_phase_gate_loop(target: qasm2.Qubit, theta: float, attempts: int):
     qasm2.x(target)
 
 
-# %% [markdown] Before we analyze these circuits, we must declare a main function
+# %% [markdown]
+# Before we analyze these circuits, we must declare a main function
 # which takes no inputs, as qasm2 does not support parameterized circuits or
 # subcircuits.
 
+# %%
 theta = 0.1  # Specify some Z rotation angle. Note that this is being defined
 
-
+# %% [markdown]
 # outside the main function and being used inside the function via closure.
+
+
+# %%
 @qasm2.extended
 def postselect_main():
     target = qasm2.qreg(1)
@@ -137,7 +142,8 @@ def loop_main():
     z_phase_gate_loop(target[0], theta, 5)
 
 
-# %% [markdown] Now lets explore running some interpreters on these circuits.
+# %% [markdown]
+# Now lets explore running some interpreters on these circuits.
 # We support the quantum emulation backend PyQrack, which simulates quantum
 # circuits using state vectors.
 
@@ -170,5 +176,8 @@ pprint(qasm_postselect)
 print("\n\n--- Loop ---")
 pprint(qasm_loop)
 
+# %% [markdown]
 # We can also get qasm out as a string
+
+# %%
 payload = target.emit_str(postselect_main)

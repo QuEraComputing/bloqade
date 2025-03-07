@@ -156,6 +156,7 @@ def ghz_log_simd(n: int):
 # </p>
 # </div>
 
+# %%
 target = qasm2.emit.QASM2(
     allow_parallel=True,
 )

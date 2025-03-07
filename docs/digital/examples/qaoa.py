@@ -3,6 +3,7 @@
 # solving the MaxCut problem. For more details, see [arXiv:1411.4028](https://arxiv.org/abs/1411.4028)
 # and the considerable literature that has developed around this algorithm.
 
+# %%
 import math
 from typing import Any
 
@@ -17,6 +18,8 @@ pi = math.pi
 # MaxCut is a combinatorial graph problem that seeks to bi-partition the nodes of some
 # graph G such that the number of edges between the two partitions is maximized.
 # Here, we choose a random 3 regular graph with 32 nodes [ref](https://journals.aps.org/pra/abstract/10.1103/PhysRevA.103.042612)
+
+# %%
 N = 32
 G = nx.random_regular_graph(3, N, seed=42)
 
@@ -34,6 +37,7 @@ G = nx.random_regular_graph(3, N, seed=42)
 # does not inform any parallelism to the compiler.
 
 
+# %%
 def qaoa_sequential(G: nx.Graph) -> kirin.ir.Method:
 
     edges = list(G.edges)
@@ -78,6 +82,7 @@ def qaoa_sequential(G: nx.Graph) -> kirin.ir.Method:
 # using an equitable coloring of the line graph.
 
 
+# %%
 def qaoa_simd(G: nx.Graph) -> kirin.ir.Method:
 
     nodes = list(G.nodes)

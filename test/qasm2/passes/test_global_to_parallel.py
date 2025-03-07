@@ -4,37 +4,8 @@ from kirin import ir, types
 from bloqade import qasm2
 from kirin.rewrite import Walk, Fixpoint, CommonSubexpressionElimination
 from kirin.dialects import py, func, ilist
+from bloqade.test_utils import assert_methods
 from bloqade.qasm2.passes.glob import GlobalToParallel
-
-
-def assert_with_print(expected_mt: ir.Method, mt: ir.Method):
-    import io
-    import difflib
-
-    from rich.console import Console
-
-    try:
-        assert expected_mt.code.is_equal(mt.code)
-    except AssertionError as e:
-
-        gn_con = Console(record=True, file=io.StringIO())
-        mt.print(console=gn_con)
-
-        gn = gn_con.export_text()
-
-        expected_con = Console(record=True, file=io.StringIO())
-        expected_mt.print(console=expected_con)
-
-        expected = expected_con.export_text()
-
-        diff = difflib.Differ().compare(
-            expected.splitlines(),
-            gn.splitlines(),
-        )
-
-        print("\n".join(diff))
-
-        raise e
 
 
 def as_int(value: int):
@@ -102,7 +73,7 @@ def test_global2para_rewrite():
     )
     qasm2.extended.run_pass(expected_method)  # type: ignore
     Fixpoint(Walk(CommonSubexpressionElimination())).rewrite(expected_method.code)
-    assert_with_print(expected_method, main)
+    assert_methods(expected_method, main)
 
 
 def test_global2para_rewrite2():
@@ -173,4 +144,4 @@ def test_global2para_rewrite2():
     )
     qasm2.extended.run_pass(expected_method)  # type: ignore
     Fixpoint(Walk(CommonSubexpressionElimination())).rewrite(expected_method.code)
-    assert_with_print(expected_method, main)
+    assert_methods(expected_method, main)
