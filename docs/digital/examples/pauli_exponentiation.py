@@ -78,11 +78,11 @@ def pauli_exponential(targets: tuple[qasm2.Qubit, ...], pauli: str, gamma: float
 # %% [markdown]
 # Finally, we define the `main` function as the entry point of the program.
 
-#<div align="center">
-#<picture>
+# <div align="center">
+# <picture>
 #    <img src="/digital/examples/pauli_exponentiation.svg" >
-#</picture>
-#</div>
+# </picture>
+# </div>
 
 
 # %%

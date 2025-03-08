@@ -55,11 +55,11 @@ def main():
 # %% [markdown]
 # Finally, we will run the `main` function on the `PyQrack` backend and print the quantum register
 # to see the final state of the qubits after applying the QFT circuit.
-#<div align="center">
-#<picture>
+# <div align="center">
+# <picture>
 #    <img src="/digital/examples/qft.svg" >
-#</picture>
-#</div>
+# </picture>
+# </div>
 
 
 # %%
