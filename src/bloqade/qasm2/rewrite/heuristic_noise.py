@@ -182,67 +182,65 @@ class NoiseRewriteRule(result_abc.RewriteRule):
 
     def rewrite_cz_gate(self, node: uop.CZ):
 
-        (ctrls := ilist.New([node.ctrl])).insert_before(node)
-        (qargs := ilist.New([node.qarg])).insert_before(node)
-        gate_noise_nodes = self.cz_gate_noise(ctrls.result, qargs.result)
-
         has_done_something = False
-
-        for new_node in gate_noise_nodes:
-            has_done_something = True
-            new_node.insert_before(node)
 
         qarg_addr = self.address_analysis[node.qarg]
         ctrl_addr = self.address_analysis[node.ctrl]
 
-        if not isinstance(qarg_addr, address.AddressQubit) or not isinstance(
+        (ctrls := ilist.New([node.ctrl])).insert_before(node)
+        (qargs := ilist.New([node.qarg])).insert_before(node)
+
+        if isinstance(qarg_addr, address.AddressQubit) and isinstance(
             ctrl_addr, address.AddressQubit
         ):
-            return result.RewriteResult(has_done_something=has_done_something)
+            other_qubits = sorted(
+                set(self.qubit_ssa_value.keys()) - {ctrl_addr.data, qarg_addr.data}
+            )
+            errors = self.noise_model.parallel_cz_errors(
+                [ctrl_addr.data], [qarg_addr.data], other_qubits
+            )
 
-        other_qubits = sorted(
-            set(self.qubit_ssa_value.keys()) - {ctrl_addr.data, qarg_addr.data}
-        )
-        errors = self.noise_model.parallel_cz_errors(
-            [ctrl_addr.data], [qarg_addr.data], other_qubits
-        )
+            move_noise_nodes = self.move_noise_stmts(errors)
 
-        move_noise_nodes = self.move_noise_stmts(errors)
+            for new_node in move_noise_nodes:
+                new_node.insert_before(node)
+                has_done_something = True
 
-        for new_node in move_noise_nodes:
-            new_node.insert_before(node)
+        gate_noise_nodes = self.cz_gate_noise(ctrls.result, qargs.result)
 
-        return result.RewriteResult(has_done_something=True)
-
-    def rewrite_parallel_cz_gate(self, node: parallel.CZ):
-
-        gate_noise_nodes = self.cz_gate_noise(node.ctrls, node.qargs)
-
-        has_done_something = False
         for new_node in gate_noise_nodes:
             new_node.insert_before(node)
             has_done_something = True
 
+        return result.RewriteResult(has_done_something=has_done_something)
+
+    def rewrite_parallel_cz_gate(self, node: parallel.CZ):
         ctrls = self.address_analysis[node.ctrls]
         qargs = self.address_analysis[node.qargs]
 
-        if not isinstance(ctrls, address.AddressTuple) or not isinstance(
-            qargs, address.AddressTuple
+        has_done_something = False
+        if (
+            isinstance(ctrls, address.AddressTuple)
+            and all(isinstance(addr, address.AddressQubit) for addr in ctrls.data)
+            and isinstance(qargs, address.AddressTuple)
+            and all(isinstance(addr, address.AddressQubit) for addr in qargs.data)
         ):
-            return result.RewriteResult(has_done_something=has_done_something)
+            ctrl_qubits = list(map(lambda addr: addr.data, ctrls.data))
+            qarg_qubits = list(map(lambda addr: addr.data, qargs.data))
+            rest = sorted(
+                set(self.qubit_ssa_value.keys()) - set(ctrl_qubits + qarg_qubits)
+            )
+            errors = self.noise_model.parallel_cz_errors(ctrl_qubits, qarg_qubits, rest)
+            move_noise_nodes = self.move_noise_stmts(errors)
 
-        if not all(
-            isinstance(addr, address.AddressQubit) for addr in ctrls.data
-        ) or not all(isinstance(addr, address.AddressQubit) for addr in qargs.data):
-            return result.RewriteResult(has_done_something=has_done_something)
+            for new_node in move_noise_nodes:
+                new_node.insert_before(node)
+                has_done_something = True
 
-        ctrl_qubits = list(map(lambda addr: addr.data, ctrls.data))
-        qarg_qubits = list(map(lambda addr: addr.data, qargs.data))
-        rest = sorted(set(self.qubit_ssa_value.keys()) - set(ctrl_qubits + qarg_qubits))
-        errors = self.noise_model.parallel_cz_errors(ctrl_qubits, qarg_qubits, rest)
-        move_noise_nodes = self.move_noise_stmts(errors)
+        gate_noise_nodes = self.cz_gate_noise(node.ctrls, node.qargs)
 
-        for new_node in move_noise_nodes:
+        for new_node in gate_noise_nodes:
             new_node.insert_before(node)
+            has_done_something = True
 
-        return result.RewriteResult(has_done_something=True)
+        return result.RewriteResult(has_done_something=has_done_something)
