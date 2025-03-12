@@ -4,23 +4,26 @@ converting multiple single gates to parallel gates.
 """
 
 from typing import Type
-from dataclasses import dataclass
+from dataclasses import field, dataclass
 
 from kirin import ir
+from kirin.passes import Pass
 from kirin.rewrite import (
     Walk,
     Chain,
     Fixpoint,
+    WrapConst,
     ConstantFold,
     DeadCodeElimination,
     CommonSubexpressionElimination,
     result,
 )
+from kirin.analysis import const
 from bloqade.analysis import address, schedule
-from kirin.passes.abc import Pass
 from bloqade.qasm2.rewrite import (
     MergePolicyABC,
     ParallelToUOpRule,
+    RaiseRegisterRule,
     UOpToParallelRule,
     SimpleOptimalMergePolicy,
 )
@@ -130,19 +133,42 @@ class UOpToParallel(Pass):
     """
 
     merge_policy_type: Type[MergePolicyABC] = SimpleOptimalMergePolicy
+    constprop: const.Propagate = field(init=False)
 
-    def generate_rule(self, mt: ir.Method):
+    def __post_init__(self):
+        self.constprop = const.Propagate(self.dialects)
+
+    def unsafe_run(self, mt: ir.Method) -> result.RewriteResult:
+        result = Walk(RaiseRegisterRule()).rewrite(mt.code)
+
+        # do not run the parallelization because registers are not at the top
+        if not result.has_done_something:
+            return result
+
+        frame, _ = self.constprop.run_analysis(mt)
+        result = Walk(WrapConst(frame)).rewrite(mt.code).join(result)
+
         frame, _ = address.AddressAnalysis(mt.dialects).run_analysis(mt)
         dags = schedule.DagScheduleAnalysis(
             mt.dialects, address_analysis=frame.entries
         ).get_dags(mt)
 
-        return UOpToParallelRule(
-            {
-                block: self.merge_policy_type.from_analysis(dag, frame.entries)
-                for block, dag in dags.items()
-            }
+        result = (
+            Walk(
+                UOpToParallelRule(
+                    {
+                        block: self.merge_policy_type.from_analysis(dag, frame.entries)
+                        for block, dag in dags.items()
+                    }
+                )
+            )
+            .rewrite(mt.code)
+            .join(result)
         )
 
-    def unsafe_run(self, mt: ir.Method) -> result.RewriteResult:
-        return Walk(self.generate_rule(mt)).rewrite(mt.code)
+        rule = Chain(
+            ConstantFold(),
+            DeadCodeElimination(),
+            CommonSubexpressionElimination(),
+        )
+        return Fixpoint(Walk(rule)).rewrite(mt.code).join(result)

@@ -1,19 +1,19 @@
 import abc
 from typing import Dict, List, Tuple, Iterable
-from dataclasses import dataclass
+from dataclasses import field, dataclass
 
 from kirin import ir
-from kirin.rewrite import abc as rewrite_abc, result
-from kirin.dialects import ilist
+from kirin.rewrite import abc as rewrite_abc
+from kirin.dialects import py, ilist
 from bloqade.analysis import address
 from kirin.analysis.const import lattice
-from bloqade.qasm2.dialects import uop, parallel
+from bloqade.qasm2.dialects import uop, core, parallel
 from bloqade.analysis.schedule import StmtDag
 
 
 class MergePolicyABC(abc.ABC):
     @abc.abstractmethod
-    def __call__(self, node: ir.Statement) -> result.RewriteResult:
+    def __call__(self, node: ir.Statement) -> rewrite_abc.RewriteResult:
         pass
 
     @classmethod
@@ -54,6 +54,8 @@ class SimpleMergePolicy(MergePolicyABC):
     """List of groups of statements that can be merged together"""
     group_numbers: Dict[ir.Statement, int]
     """Mapping from statements to their group number"""
+    group_has_merged: Dict[int, bool] = field(default_factory=dict)
+    """Mapping from group number to whether the group has been merged"""
 
     @staticmethod
     def same_id_checker(ssa1: ir.SSAValue, ssa2: ir.SSAValue):
@@ -102,6 +104,7 @@ class SimpleMergePolicy(MergePolicyABC):
                 | (parallel.CZ(), uop.CZ())
                 | (uop.CZ(), parallel.CZ())
                 | (uop.CZ(), uop.CZ())
+                | (uop.Barrier(), uop.Barrier())
             ):
                 return True
 
@@ -137,24 +140,31 @@ class SimpleMergePolicy(MergePolicyABC):
             group_numbers=group_numbers,
         )
 
-    def __call__(self, node: ir.Statement) -> result.RewriteResult:
+    def __call__(self, node: ir.Statement) -> rewrite_abc.RewriteResult:
+
         if node not in self.group_numbers:
-            return result.RewriteResult()
+            return rewrite_abc.RewriteResult()
 
-        group = self.merge_groups[self.group_numbers[node]]
-        if node is group[-1]:
-            method = getattr(self, f"rewrite_group_{node.name}")
-            method(node, group)
+        group_number = self.group_numbers[node]
+        group = self.merge_groups[group_number]
+        if node is group[0]:
+            result = getattr(self, f"rewrite_group_{node.name}")(node, group)
 
-        node.delete()
+            self.group_has_merged[group_number] = result.has_done_something
+            return result
 
-        return result.RewriteResult(has_done_something=True)
+        if self.group_has_merged[group_number]:
+            node.delete()
+
+        return rewrite_abc.RewriteResult(
+            has_done_something=self.group_has_merged[group_number]
+        )
 
     def move_and_collect_qubit_list(
-        self, qargs: List[ir.SSAValue]
-    ) -> Tuple[ir.SSAValue, ...]:
+        self, qargs: List[ir.SSAValue], node: ir.Statement
+    ) -> Tuple[ir.SSAValue, ...] | None:
 
-        qubits = []
+        qubits: List[ir.SSAValue] = []
         # collect references to qubits
         for qarg in qargs:
             addr = self.address_analysis[qarg]
@@ -166,8 +176,35 @@ class SimpleMergePolicy(MergePolicyABC):
                 assert isinstance(qarg, ir.ResultValue)
                 assert isinstance(qarg.stmt, ilist.New)
                 qubits.extend(qarg.stmt.values)
+            else:
+                # give up if we cannot determine the address
+                return None
 
-        return tuple(qubits)
+        new_qubits = []
+
+        # the registers must be moved to the top of the block
+        # before this pass can be applied
+        for qubit_ref in qubits:
+            qubit = qubit_ref.owner
+            match qubit:
+                case ir.BlockArgument():  # do not need to move the qubit
+                    new_qubits.append(qubit)
+                case core.QRegGet(reg=reg, idx=ir.BlockArgument() as idx):
+                    new_qubit = core.QRegGet(reg=reg, idx=idx)
+                    new_qubit.insert_before(node)
+                    new_qubits.append(new_qubit.result)
+                case core.QRegGet(
+                    reg=reg, idx=ir.ResultValue(stmt=py.Constant() as idx)
+                ):
+                    (new_idx := idx.from_stmt(idx)).insert_before(node)
+                    (
+                        new_qubit := core.QRegGet(reg=reg, idx=new_idx.result)
+                    ).insert_before(node)
+                    new_qubits.append(new_qubit.result)
+                case _:
+                    return None
+
+        return tuple(new_qubits)
 
     def rewrite_group_cz(self, node: ir.Statement, group: List[ir.Statement]):
         ctrls = []
@@ -181,10 +218,14 @@ class SimpleMergePolicy(MergePolicyABC):
                 ctrls.append(stmt.ctrls)
                 qargs.append(stmt.qargs)
             else:
-                raise RuntimeError(f"Unexpected statement {stmt}")
+                return rewrite_abc.RewriteResult(has_done_something=False)
 
-        ctrls_values = self.move_and_collect_qubit_list(ctrls)
-        qargs_values = self.move_and_collect_qubit_list(qargs)
+        ctrls_values = self.move_and_collect_qubit_list(ctrls, node)
+        qargs_values = self.move_and_collect_qubit_list(qargs, node)
+
+        if ctrls_values is None or qargs_values is None:
+            # give up if we cannot determine the address or cannot move the qubits
+            return rewrite_abc.RewriteResult(has_done_something=False)
 
         new_ctrls = ilist.New(values=ctrls_values)
         new_qargs = ilist.New(values=qargs_values)
@@ -194,8 +235,12 @@ class SimpleMergePolicy(MergePolicyABC):
         new_qargs.insert_before(node)
         new_gate.insert_before(node)
 
+        node.delete()
+
+        return rewrite_abc.RewriteResult(has_done_something=True)
+
     def rewrite_group_U(self, node: ir.Statement, group: List[ir.Statement]):
-        self.rewrite_group_u(node, group)
+        return self.rewrite_group_u(node, group)
 
     def rewrite_group_u(self, node: ir.Statement, group: List[ir.Statement]):
         qargs = []
@@ -206,10 +251,13 @@ class SimpleMergePolicy(MergePolicyABC):
             elif isinstance(stmt, parallel.UGate):
                 qargs.append(stmt.qargs)
             else:
-                raise RuntimeError(f"Unexpected statement {stmt}")
+                return rewrite_abc.RewriteResult(has_done_something=False)
 
         assert isinstance(node, (uop.UGate, parallel.UGate))
-        qargs_values = self.move_and_collect_qubit_list(qargs)
+        qargs_values = self.move_and_collect_qubit_list(qargs, node)
+
+        if qargs_values is None:
+            return rewrite_abc.RewriteResult(has_done_something=False)
 
         new_qargs = ilist.New(values=qargs_values)
         new_gate = parallel.UGate(
@@ -220,6 +268,9 @@ class SimpleMergePolicy(MergePolicyABC):
         )
         new_qargs.insert_before(node)
         new_gate.insert_before(node)
+        node.delete()
+
+        return rewrite_abc.RewriteResult(has_done_something=True)
 
     def rewrite_group_rz(self, node: ir.Statement, group: List[ir.Statement]):
         qargs = []
@@ -230,11 +281,15 @@ class SimpleMergePolicy(MergePolicyABC):
             elif isinstance(stmt, parallel.RZ):
                 qargs.append(stmt.qargs)
             else:
-                raise RuntimeError(f"Unexpected statement {stmt}")
+                return rewrite_abc.RewriteResult(has_done_something=False)
 
         assert isinstance(node, (uop.RZ, parallel.RZ))
 
-        qargs_values = self.move_and_collect_qubit_list(qargs)
+        qargs_values = self.move_and_collect_qubit_list(qargs, node)
+
+        if qargs_values is None:
+            return rewrite_abc.RewriteResult(has_done_something=False)
+
         new_qargs = ilist.New(values=qargs_values)
         new_gate = parallel.RZ(
             qargs=new_qargs.result,
@@ -242,6 +297,25 @@ class SimpleMergePolicy(MergePolicyABC):
         )
         new_qargs.insert_before(node)
         new_gate.insert_before(node)
+        node.delete()
+
+        return rewrite_abc.RewriteResult(has_done_something=True)
+
+    def rewrite_group_barrier(self, node: uop.Barrier, group: List[uop.Barrier]):
+        qargs = []
+        for stmt in group:
+            qargs.extend(stmt.qargs)
+
+        qargs_values = self.move_and_collect_qubit_list(qargs, node)
+
+        if qargs_values is None:
+            return rewrite_abc.RewriteResult(has_done_something=False)
+
+        new_node = uop.Barrier(qargs=qargs_values)
+        new_node.insert_before(node)
+        node.delete()
+
+        return rewrite_abc.RewriteResult(has_done_something=True)
 
 
 class GreedyMixin(MergePolicyABC):
@@ -313,8 +387,8 @@ class SimpleOptimalMergePolicy(OptimalMixIn, SimpleMergePolicy):
 class UOpToParallelRule(rewrite_abc.RewriteRule):
     merge_rewriters: Dict[ir.Block | None, MergePolicyABC]
 
-    def rewrite_Statement(self, node: ir.Statement) -> result.RewriteResult:
+    def rewrite_Statement(self, node: ir.Statement) -> rewrite_abc.RewriteResult:
         merge_rewriter = self.merge_rewriters.get(
-            node.parent_block, lambda _: result.RewriteResult()
+            node.parent_block, lambda _: rewrite_abc.RewriteResult()
         )
         return merge_rewriter(node)

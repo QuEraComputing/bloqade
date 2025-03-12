@@ -75,3 +75,25 @@ def test_two():
 
     # add this to raise error if there are broken ssa references
     _, _ = address.AddressAnalysis(test.dialects).run_analysis(test, no_raise=False)
+
+
+def test_three():
+
+    @qasm2.extended
+    def test():
+        q1 = qasm2.qreg(1)
+        qasm2.u(q1[0], 0.1, 0.2, 0.3)
+
+        q2 = qasm2.qreg(1)
+        qasm2.u(q2[0], 0.1, 0.2, 0.3)
+        qasm2.cz(q2[0], q1[0])
+
+        q3 = qasm2.qreg(1)
+        qasm2.u(q3[0], 0.1, 0.2, 0.3)
+        qasm2.cz(q3[0], q2[0])
+
+    parallel.UOpToParallel(test.dialects)(test)
+    test.print()
+
+    # add this to raise error if there are broken ssa references
+    _, _ = address.AddressAnalysis(test.dialects).run_analysis(test, no_raise=False)
