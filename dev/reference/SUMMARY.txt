@@ -59,6 +59,7 @@
             * [heuristic_noise](bloqade/qasm2/rewrite/heuristic_noise.md)
             * [native_gates](bloqade/qasm2/rewrite/native_gates.md)
             * [parallel_to_uop](bloqade/qasm2/rewrite/parallel_to_uop.md)
+            * [register](bloqade/qasm2/rewrite/register.md)
             * [uop_to_parallel](bloqade/qasm2/rewrite/uop_to_parallel.md)
         * [types](bloqade/qasm2/types.md)
     * [qbraid](bloqade/qbraid/index.md)

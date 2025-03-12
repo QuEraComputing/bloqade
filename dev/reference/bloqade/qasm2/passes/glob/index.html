@@ -1970,6 +1970,7 @@ which converts global gates to single qubit gates.</p>
 
 
 
+
   <div class="doc doc-children">
 
 
@@ -2019,6 +2020,7 @@ GlobalToParallel(main.dialects)(main)
 <p>The <code>qasm2.glob.u</code> statement has been rewritten to individual gates:</p>
 <div class="highlight"><pre><span></span><code>qasm2.parallel.u(theta=theta, phi=phi, lam=lam, qargs=[q1[0], q2[0], q2[1]])
 </code></pre></div>
+
 
 
 
@@ -2089,6 +2091,7 @@ GlobalToUOP(main.dialects)(main)
 qasm2.uop.u(q2[0], theta, phi, lam)
 qasm2.uop.u(q2[1], theta, phi, lam)
 </code></pre></div>
+
 
 
 

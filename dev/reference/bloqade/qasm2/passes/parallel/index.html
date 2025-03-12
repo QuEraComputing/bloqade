@@ -1970,6 +1970,7 @@ converting multiple single gates to parallel gates.</p>
 
 
 
+
   <div class="doc doc-children">
 
 
@@ -1997,7 +1998,7 @@ converting multiple single gates to parallel gates.</p>
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="kirin.passes.abc.Pass">Pass</span></code></p>
+              Bases: <code><span title="kirin.passes.Pass">Pass</span></code></p>
 
 
         <p>Pass to convert parallel gates into single gates.</p>
@@ -2019,6 +2020,7 @@ ParallelToUOp(main.dialects)(main)
 <div class="highlight"><pre><span></span><code>qasm2.uop.cz(ctrl=q[0], qarg=q[1])
 qasm2.uop.cz(ctrl=q[2], qarg=q[3])
 </code></pre></div>
+
 
 
 
@@ -2068,7 +2070,7 @@ qasm2.uop.cz(ctrl=q[2], qarg=q[3])
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="kirin.passes.abc.Pass">Pass</span></code></p>
+              Bases: <code><span title="kirin.passes.Pass">Pass</span></code></p>
 
 
         <p>Pass to convert single gates into parallel gates.</p>
@@ -2100,6 +2102,7 @@ into a single <code>qasm2.parallel.u</code> statement.</p>
 qasm2.uop.CX(q[1], q[3])
 qasm2.uop.CX(q[0], q[2])
 </code></pre></div>
+
 
 
 

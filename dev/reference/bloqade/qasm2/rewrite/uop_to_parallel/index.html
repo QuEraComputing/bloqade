@@ -1909,6 +1909,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#bloqade.qasm2.rewrite.uop_to_parallel.SimpleMergePolicy.group_has_merged" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;group_has_merged
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#bloqade.qasm2.rewrite.uop_to_parallel.SimpleMergePolicy.group_numbers" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;group_numbers
@@ -1979,6 +1988,7 @@
 
 
 
+
   <div class="doc doc-children">
 
 
@@ -2008,6 +2018,7 @@
 <p>The <code>merge_gates</code> method will merge policy will try greedily merge gates together.
 This policy has a worst case complexity of O(n) where n is the
 number of gates in the input iterable.</p>
+
 
 
 
@@ -2065,6 +2076,7 @@ in the input iterable.</p>
 
 
 
+
   <div class="doc doc-children">
 
 
@@ -2100,6 +2112,7 @@ in the input iterable.</p>
     <span class="n">address_analysis</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">SSAValue</span><span class="p">,</span> <span class="n">Address</span><span class="p">],</span>
     <span class="n">merge_groups</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Statement</span><span class="p">]],</span>
     <span class="n">group_numbers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Statement</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+    <span class="n">group_has_merged</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(),</span>
 <span class="p">)</span>
 </code></pre></div>
 
@@ -2114,6 +2127,7 @@ in the input iterable.</p>
 of groups of statements that can be merged together. There are two mix-in classes
 that can be used to implement the <code>merge_gates</code> method. The <code>GreedyMixin</code> will merge
 gates together greedily, while the <code>OptimalMixIn</code> will merge gates together optimally.</p>
+
 
 
 
@@ -2150,6 +2164,34 @@ gates together greedily, while the <code>OptimalMixIn</code> will merge gates to
     <div class="doc doc-contents ">
 
         <p>Mapping from SSA values to their address analysis results. Needed for rewrites</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="bloqade.qasm2.rewrite.uop_to_parallel.SimpleMergePolicy.group_has_merged" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">group_has_merged</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">group_has_merged</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+    <span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Mapping from group number to whether the group has been merged</p>
+
     </div>
 
 </div>
@@ -2173,6 +2215,7 @@ gates together greedily, while the <code>OptimalMixIn</code> will merge gates to
     <div class="doc doc-contents ">
 
         <p>Mapping from statements to their group number</p>
+
     </div>
 
 </div>
@@ -2196,6 +2239,7 @@ gates together greedily, while the <code>OptimalMixIn</code> will merge gates to
     <div class="doc doc-contents ">
 
         <p>List of groups of statements that can be merged together</p>
+
     </div>
 
 </div>
