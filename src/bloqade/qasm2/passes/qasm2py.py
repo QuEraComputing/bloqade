@@ -1,5 +1,7 @@
 """Rewrite qasm dialects into py dialects."""
 
+import math as pymath
+
 from kirin import ir
 from kirin.passes import Pass
 from kirin.rewrite import Walk, Fixpoint
@@ -44,6 +46,9 @@ class _QASM2Py(RewriteRule):
             return RewriteResult(has_done_something=True)
         elif isinstance(node, core.CRegEq):
             node.replace_by(py.cmp.Eq(node.lhs, node.rhs))
+            return RewriteResult(has_done_something=True)
+        elif isinstance(node, expr.ConstPI):
+            node.replace_by(py.Constant(value=pymath.pi))
             return RewriteResult(has_done_something=True)
         else:
             return RewriteResult()
