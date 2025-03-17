@@ -49,12 +49,13 @@ def gate(self):
 
 @ir.dialect_group(
     [
-        uop,
-        expr,
-        core,
-        scf,
+        uop,  # dispatch uop, handle 2 vs 3 qubit gates and run address analysis to get qubit ids
+        expr,  # ignore for now
+        core,  # ignore (unless Reset/Measurement)
+        scf,  # do not allow, throw an error (no pass through!)
         indexing,
-        func,
+        func,  # use func to initialize list to store strings
+        # Ignore, just for lowering dialect components
         lowering.func,
         lowering.call,
     ]
