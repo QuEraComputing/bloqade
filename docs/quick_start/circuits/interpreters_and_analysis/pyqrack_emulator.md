@@ -11,6 +11,7 @@ The program can be executed via a simulator backend, e.g. PyQrack, you can insta
 ```bash
 pip install bloqade-pyqrack[backend]
 ```
+
 with the `backend` being one of ` pyqrack`, `pyqrack-cpu`, `pyqrack-cuda` depending on
 the hardware and OS you have. See [README](https://github.com/QuEraComputing/bloqade-pyqrack?tab=readme-ov-file#which-extra-do-i-install) for mote details.
 
