@@ -7,11 +7,12 @@
 
 The program can be executed via a simulator backend, e.g. PyQrack, you can install it via
 
+
 ```bash
-pip install bloqade[pyqrack]
-# or if you want to use the CPU only version
-pip install bloqade[pyqrack-cpu]
+pip install bloqade-pyqrack[backend]
 ```
+with the `backend` being one of ` pyqrack`, `pyqrack-cpu`, `pyqrack-cuda` depending on
+the hardware and OS you have. See [README](https://github.com/QuEraComputing/bloqade-pyqrack?tab=readme-ov-file#which-extra-do-i-install) for mote details.
 
 ```python
 @qasm2.extended

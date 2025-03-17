@@ -8,13 +8,11 @@
 # backend from the `bloqade.pyqrack` module, which can be installed via
 #
 # ```bash
-# pip install bloqade[pyqrack]
+# pip install bloqade-pyqrack[backend]
 # ```
-# or
-# ```bash
-# pip install bloqade[pyqrack-cpu]
-# ```
-# depending on the hardware and OS you have.
+# with the `backend` being one of ` pyqrack`, `pyqrack-cpu`, `pyqrack-cuda` depending on
+# the hardware and OS you have. see [README](https://github.com/QuEraComputing/bloqade-pyqrack?tab=readme-ov-file#which-extra-do-i-install)
+# for mote details.
 # %%
 import math
 
