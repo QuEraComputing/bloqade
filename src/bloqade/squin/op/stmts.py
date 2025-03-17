@@ -2,7 +2,7 @@ from kirin import ir, types
 from kirin.decl import info, statement
 
 from .types import OpType
-from .traits import Unitary, MaybeUnitary
+from .traits import Sized, HasSize, Unitary, MaybeUnitary
 from ._dialect import dialect
 
 
@@ -31,27 +31,36 @@ class BinaryOp(CompositeOp):
 @statement(dialect=dialect)
 class Kron(BinaryOp):
     traits = frozenset({ir.Pure(), ir.FromPythonCall(), MaybeUnitary()})
-    is_unitary: bool = info.attribute()
+    is_unitary: bool = info.attribute(default=False)
 
 
 @statement(dialect=dialect)
 class Mult(BinaryOp):
     traits = frozenset({ir.Pure(), ir.FromPythonCall(), MaybeUnitary()})
-    is_unitary: bool = info.attribute()
+    is_unitary: bool = info.attribute(default=False)
 
 
 @statement(dialect=dialect)
 class Adjoint(CompositeOp):
     traits = frozenset({ir.Pure(), ir.FromPythonCall(), MaybeUnitary()})
-    is_unitary: bool = info.attribute()
+    is_unitary: bool = info.attribute(default=False)
     op: ir.SSAValue = info.argument(OpType)
+    result: ir.ResultValue = info.result(OpType)
+
+
+@statement(dialect=dialect)
+class Scale(CompositeOp):
+    traits = frozenset({ir.Pure(), ir.FromPythonCall(), MaybeUnitary()})
+    is_unitary: bool = info.attribute(default=False)
+    op: ir.SSAValue = info.argument(OpType)
+    factor: ir.SSAValue = info.argument(types.Complex)
     result: ir.ResultValue = info.result(OpType)
 
 
 @statement(dialect=dialect)
 class Control(CompositeOp):
     traits = frozenset({ir.Pure(), ir.FromPythonCall(), MaybeUnitary()})
-    is_unitary: bool = info.attribute()
+    is_unitary: bool = info.attribute(default=False)
     op: ir.SSAValue = info.argument(OpType)
     n_controls: int = info.attribute()
     result: ir.ResultValue = info.result(OpType)
@@ -61,26 +70,28 @@ class Control(CompositeOp):
 class Rot(CompositeOp):
     traits = frozenset({ir.Pure(), ir.FromPythonCall(), Unitary()})
     axis: ir.SSAValue = info.argument(OpType)
-    angle: ir.SSAValue = info.attribute(types.Float)
+    angle: ir.SSAValue = info.argument(types.Float)
     result: ir.ResultValue = info.result(OpType)
 
 
 @statement(dialect=dialect)
 class Identity(CompositeOp):
-    traits = frozenset({ir.Pure(), ir.FromPythonCall(), Unitary()})
+    traits = frozenset({ir.Pure(), ir.FromPythonCall(), Unitary(), HasSize()})
     size: int = info.attribute()
     result: ir.ResultValue = info.result(OpType)
 
 
 @statement
 class ConstantOp(PrimitiveOp):
-    traits = frozenset({ir.Pure(), ir.FromPythonCall(), ir.ConstantLike()})
+    traits = frozenset({ir.Pure(), ir.FromPythonCall(), ir.ConstantLike(), Sized(1)})
     result: ir.ResultValue = info.result(OpType)
 
 
 @statement
 class ConstantUnitary(ConstantOp):
-    traits = frozenset({ir.Pure(), ir.FromPythonCall(), ir.ConstantLike(), Unitary()})
+    traits = frozenset(
+        {ir.Pure(), ir.FromPythonCall(), ir.ConstantLike(), Unitary(), Sized(1)}
+    )
 
 
 @statement(dialect=dialect)
@@ -93,13 +104,13 @@ class PhaseOp(PrimitiveOp):
     $$
     """
 
-    traits = frozenset({ir.Pure(), ir.FromPythonCall(), Unitary()})
+    traits = frozenset({ir.Pure(), ir.FromPythonCall(), Unitary(), Sized(1)})
     theta: ir.SSAValue = info.argument(types.Float)
     result: ir.ResultValue = info.result(OpType)
 
 
 @statement(dialect=dialect)
-class Shift(PrimitiveOp):
+class ShiftOp(PrimitiveOp):
     """
     A phase shift operator.
 
@@ -108,7 +119,7 @@ class Shift(PrimitiveOp):
     $$
     """
 
-    traits = frozenset({ir.Pure(), ir.FromPythonCall(), Unitary()})
+    traits = frozenset({ir.Pure(), ir.FromPythonCall(), Unitary(), Sized(1)})
     theta: ir.SSAValue = info.argument(types.Float)
     result: ir.ResultValue = info.result(OpType)
 

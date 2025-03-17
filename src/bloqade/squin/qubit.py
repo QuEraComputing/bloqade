@@ -25,17 +25,10 @@ class New(ir.Statement):
     n_qubits: ir.SSAValue = info.argument(types.Int)
     result: ir.ResultValue = info.result(ilist.IListType[QubitType, types.Any])
 
-    def __init__(self, n_qubits: int):
-        super().__init__(
-            attributes={"n_qubits": ir.PyAttr(n_qubits)},
-            # NOTE: we don't have dependent types in Python, this might be removed
-            #     in the future, if we end up supporting dependent types in Kirin.
-            result_types=(ilist.IListType[QubitType, types.Literal(n_qubits)],),
-        )
-
 
 @statement(dialect=dialect)
 class Apply(ir.Statement):
+    traits = frozenset({ir.FromPythonCall()})
     operator: ir.SSAValue = info.argument(OpType)
     qubits: ir.SSAValue = info.argument(ilist.IListType[QubitType])
 
@@ -74,7 +67,7 @@ def new(n_qubits: int) -> ilist.IList[Qubit, Any]:
 
 
 @wraps(Apply)
-def apply(operator: Op, qubits: ilist.IList[Qubit, Any]) -> None:
+def apply(operator: Op, qubits: ilist.IList[Qubit, Any] | list[Qubit]) -> None:
     """Apply an operator to a list of qubits.
 
     Args:
