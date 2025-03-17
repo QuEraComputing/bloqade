@@ -68,6 +68,7 @@
         * [simulation_result](bloqade/qbraid/simulation_result.md)
         * [target](bloqade/qbraid/target.md)
     * [squin](bloqade/squin/index.md)
+        * [groups](bloqade/squin/groups.md)
         * [op](bloqade/squin/op/index.md)
             * [stmts](bloqade/squin/op/stmts.md)
             * [traits](bloqade/squin/op/traits.md)
