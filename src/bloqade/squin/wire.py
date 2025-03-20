@@ -31,7 +31,7 @@ WireType = types.PyClass(Wire)
 class Wrap(ir.Statement):
     traits = frozenset({ir.FromPythonCall(), WireTerminator()})
     wire: ir.SSAValue = info.argument(WireType)
-    qubit: ir.ResultValue = info.result(QubitType)
+    qubit: ir.SSAValue = info.argument(QubitType)
 
 
 @statement(dialect=dialect)
