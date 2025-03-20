@@ -20,7 +20,7 @@ class Qubit2WireRule(abc.RewriteRule):
     2. The qubit reference is passed into a subroutine.
     3. There is a container of qubit references as an argument of a function
 
-    Cases 1 and 2 are supported but case 3 is not supported yet.
+    Cases 1 and 2 are supported. Case 3 supported if the container size is known at compile time.
 
     """
 
