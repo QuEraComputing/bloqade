@@ -29,7 +29,7 @@ def kernel(self):
     return run_pass
 
 
-@ir.dialect_group(structural_no_opt.union([op, wire]))
+@ir.dialect_group(structural_no_opt.union([op, wire, qubit]))
 def wired(self):
     def run_pass(method):
         pass
