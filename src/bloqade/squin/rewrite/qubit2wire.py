@@ -90,8 +90,7 @@ class Qubit2WireRule(abc.RewriteRule):
             return None
 
     def get_wires(self, value: ir.SSAValue) -> tuple[ir.SSAValue, ...] | None:
-        """Take a container of qubits and return a tuple of wires. If any of the
-        qubits can't generate a wire, return None. If the container is an argument return None.
+        """Take a container of qubits and return a tuple of wires. If the container size is not known at compile time, return None.
 
         Currently this function only handles the IListType of qubits.
 
