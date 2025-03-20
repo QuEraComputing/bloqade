@@ -8,6 +8,7 @@ dialect.
 
 from kirin import ir, types
 from kirin.decl import info, statement
+from bloqade.types import QubitType
 
 from .op.types import OpType
 
@@ -26,9 +27,17 @@ WireType = types.PyClass(Wire)
 
 
 @statement(dialect=dialect)
-class New(ir.Statement):
+class Wrap(ir.Statement):
     traits = frozenset({ir.FromPythonCall()})
+    qubit: ir.SSAValue = info.argument(QubitType)
     result: ir.ResultValue = info.result(WireType)
+
+
+@statement(dialect=dialect)
+class Unwrap(ir.Statement):
+    traits = frozenset({ir.FromPythonCall()})
+    wire: ir.SSAValue = info.argument(WireType)
+    result: ir.ResultValue = info.result(QubitType)
 
 
 @statement(dialect=dialect)
