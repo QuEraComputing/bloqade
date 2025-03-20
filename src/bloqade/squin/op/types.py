@@ -8,3 +8,4 @@ class Op:
 
 
 OpType = types.PyClass(Op)
+Complex = types.PyClass(complex)
