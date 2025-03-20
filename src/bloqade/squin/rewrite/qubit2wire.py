@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import field, dataclass
 
 from kirin import ir, types
 from bloqade.squin import wire, qubit
@@ -16,20 +16,32 @@ class Qubit2WireRule(abc.RewriteRule):
 
     During the rewrite, there are some notable edge cases:
 
-    1. The qubit value is an argument of the function.
-    2. The qubit reference is passed into a subroutine.
-    3. There is a container of qubit references as an argument of a function
+    [x] The qubit value is an argument of the function.
+    [x] The qubit reference is passed into a subroutine.
+    [x] There is a container of qubit references as an argument of a function
+    [x] All wires must be unwrapped before a return statement.
+    [ ] All wires associated with a register must be wrapped before an invoke/call statement.
 
     Cases 1 and 2 are supported. Case 3 supported if the container size is known at compile time.
 
     """
 
-    defs: dict[ir.SSAValue, ir.SSAValue]
-    inv_defs: dict[ir.SSAValue, ir.SSAValue]
-    SUPPORTED_STMTS = frozenset({func.Invoke, func.Call, qubit.Apply})
+    qubits_to_wires: dict[ir.SSAValue, ir.SSAValue] = field(default_factory=dict)
+    wires_to_qubits: dict[ir.SSAValue, ir.SSAValue] = field(default_factory=dict)
 
     @staticmethod
-    def infer_qubit_ilist_size(typ: types.TypeAttribute) -> int | None:
+    def infer_qubit_container_size(value: ir.SSAValue) -> int | None:
+        if isinstance(value.owner, qubit.New):
+            n_qubits = value.owner.n_qubits.owner
+            if not isinstance(n_qubits, py.Constant) or not isinstance(
+                n_qubits.value, int
+            ):
+                return None
+
+            return n_qubits.value
+
+        typ = value.type
+
         """Given a type attribute, infer the size of the container of qubits."""
         if typ.is_subseteq(ilist.IListType[qubit.QubitType, types.Any]):
             assert isinstance(typ, types.Generic)
@@ -51,29 +63,33 @@ class Qubit2WireRule(abc.RewriteRule):
 
 
         """
-        assert old_wire in self.inv_defs, "old_wire is not attached to any qubit"
-        assert new_wire not in self.defs, "new_wire is already attached to a qubit"
+        assert old_wire in self.wires_to_qubits, "old_wire is not attached to any qubit"
+        assert (
+            new_wire not in self.qubits_to_wires
+        ), "new_wire is already attached to a qubit"
 
-        self.defs[(qubit_ref := self.inv_defs[old_wire])] = new_wire
-        self.inv_defs[new_wire] = qubit_ref
+        self.qubits_to_wires[qubit_ref := self.wires_to_qubits.pop(old_wire)] = new_wire
+        self.wires_to_qubits[new_wire] = qubit_ref
 
-    def get_wire(self, value: ir.SSAValue) -> ir.SSAValue | None:
+    def get_wire(self, qubit_ref: ir.SSAValue) -> ir.SSAValue | None:
         """Get the wire associated with the ssa value. If it doesn't exist, create a new wire and insert it into the IR.
 
         Args:
-            value (ir.SSAValue): The qubit value for which we want to get the wire.
+            qubit_ref (ir.SSAValue): The qubit value for which we want to get the wire.
 
         Returns:
             ir.SSAValue | None: The wire associated with the qubit value, or None if the value is not a qubit.
 
 
         """
-        if value.type.is_subseteq(qubit.QubitType):
-            if value in self.defs:
-                return self.defs[value]
+        if qubit_ref.type.is_subseteq(qubit.QubitType):
+            wire_value = self.qubits_to_wires.get(qubit_ref, None)
+            if wire_value is not None:
+                return wire_value
 
-            owner = value.owner
-            new_wire = wire.Unwrap(value)
+            # create a new wire
+            owner = qubit_ref.owner
+            new_wire = wire.Unwrap(qubit_ref)
             if isinstance(owner, ir.Block):
                 if owner.first_stmt is None:
                     owner.stmts.append(new_wire)
@@ -82,8 +98,8 @@ class Qubit2WireRule(abc.RewriteRule):
             else:
                 new_wire.insert_after(owner)
 
-            self.defs[value] = (result := new_wire.result)
-            self.inv_defs[result] = value
+            self.qubits_to_wires[qubit_ref] = (result := new_wire.result)
+            self.wires_to_qubits[result] = qubit_ref
 
             return result
         else:
@@ -101,9 +117,19 @@ class Qubit2WireRule(abc.RewriteRule):
             tuple[ir.SSAValue, ...] | None: A tuple of wires if all qubits can be converted, otherwise None.
 
         """
-        value_type = value.type
-        size = self.infer_qubit_ilist_size(value_type)
+        owner = value.owner
+        if isinstance(owner, ilist.New):
+            wires = []
 
+            for value in owner.values:
+                wire_value = self.get_wire(value)
+                if wire_value is None:
+                    return None
+                wires.append(wire_value)
+
+            return tuple(wires)
+
+        size = self.infer_qubit_container_size(value)
         if size is None:
             return None
 
@@ -114,11 +140,12 @@ class Qubit2WireRule(abc.RewriteRule):
             new_stmts.append(index := py.Constant(i))
             new_stmts.append(get_qubit := py.GetItem(value, index.result))
             new_stmts.append(unpwrapped := wire.Unwrap(get_qubit.result))
-            self.defs[get_qubit.result] = unpwrapped.result
-            self.inv_defs[unpwrapped.result] = get_qubit.result
-            wires.append(unpwrapped.result)
+            get_qubit.result.type = qubit.QubitType
+            wires.append(wire_value := unpwrapped.result)
+            qubit_ref = get_qubit.result
+            self.qubits_to_wires[qubit_ref] = wire_value
+            self.wires_to_qubits[wire_value] = qubit_ref
 
-        owner = value.owner
         if isinstance(owner, ir.Block):
             # is argument
             if owner.first_stmt is None:
@@ -127,20 +154,26 @@ class Qubit2WireRule(abc.RewriteRule):
                 for stmt in new_stmts:
                     stmt.insert_before(owner.first_stmt)
         else:
-            for stmt in new_stmts:
+            for stmt in reversed(new_stmts):
                 stmt.insert_after(owner)
 
-        return tuple(wires)
+    def wrap_before(self, node: ir.Statement, wire_value: ir.SSAValue):
+        """Wrap wire before return node. updates defs and inv_defs."""
+        self.qubits_to_wires.pop(qubit_ref := self.wires_to_qubits.pop(wire_value))
+        wire.Wrap(wire_value, qubit_ref).insert_before(node)
 
     def rewrite_Statement(self, node: ir.Statement):
-        if type(node) not in self.SUPPORTED_STMTS:
+        if isinstance(node, qubit.Apply):
+            return self.write_Apply(node)
+        elif isinstance(node, (func.Call, func.Invoke)):
+            return self.rewrite_call_like(node)
+        elif isinstance(node, func.Return):
+            return self.rewrite_return(node)
+        else:
             return abc.RewriteResult()
 
-        return getattr(self, f"rewrite_{type(node).__name__}")(node)
-
     def write_Apply(self, node: qubit.Apply):
-        wires = self.get_wires(node.operator)
-
+        wires = self.get_wires(node.qubits)
         if wires is None:
             return abc.RewriteResult()
 
@@ -151,21 +184,29 @@ class Qubit2WireRule(abc.RewriteRule):
         for old_wire, new_wire in zip(wires, new_apply.results):
             self.replace_wire(old_wire, new_wire)
 
-    def _rewrite_call_like(self, node: func.Call | func.Invoke):
+        return abc.RewriteResult(has_done_something=True)
+
+    def rewrite_call_like(self, node: func.Call | func.Invoke):
         """Wrap wire before call-like node."""
         has_done_something = False
         for arg in node.inputs:
-            w = self.get_wire(arg)
-            if w is None:
+
+            if (wire_value := self.get_wire(arg)) is not None:
+                has_done_something = True
+                self.wrap_before(node, wire_value=wire_value)
                 continue
 
-            has_done_something = True
-            wire.Wrap(w, arg).insert_before(node)
+            if (wire_values := self.get_wires(arg)) is not None:
+                has_done_something = True
+                for wire_value in wire_values:
+                    self.wrap_before(node, wire_value=wire_value)
+                continue
 
         return abc.RewriteResult(has_done_something=has_done_something)
 
-    def rewrite_Invoke(self, node: func.Invoke):
-        return self._rewrite_call_like(node)
+    def rewrite_return(self, node: func.Return):
+        """Wrap all wires before return node."""
+        for wire_value in list(self.qubits_to_wires.values()):
+            self.wrap_before(node, wire_value)
 
-    def rewrite_Call(self, node: func.Call):
-        return self._rewrite_call_like(node)
+        return abc.RewriteResult(has_done_something=True)
