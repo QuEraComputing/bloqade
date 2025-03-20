@@ -1900,18 +1900,36 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bloqade.squin.rewrite.qubit2wire.Qubit2WireRule.infer_qubit_ilist_size" class="md-nav__link">
+  <a href="#bloqade.squin.rewrite.qubit2wire.Qubit2WireRule.replace_wire" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;infer_qubit_ilist_size
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;replace_wire
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#bloqade.squin.rewrite.qubit2wire.Qubit2WireRule.replace_wire" class="md-nav__link">
+  <a href="#bloqade.squin.rewrite.qubit2wire.Qubit2WireRule.rewrite_call_like" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;replace_wire
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;rewrite_call_like
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloqade.squin.rewrite.qubit2wire.Qubit2WireRule.rewrite_return" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;rewrite_return
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloqade.squin.rewrite.qubit2wire.Qubit2WireRule.wrap_before" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;wrap_before
     </span>
   </a>
   
@@ -1994,8 +2012,8 @@
 
 </h2>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">Qubit2WireRule</span><span class="p">(</span>
-    <span class="n">defs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">SSAValue</span><span class="p">,</span> <span class="n">SSAValue</span><span class="p">],</span>
-    <span class="n">inv_defs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">SSAValue</span><span class="p">,</span> <span class="n">SSAValue</span><span class="p">],</span>
+    <span class="n">qubits_to_wires</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">SSAValue</span><span class="p">,</span> <span class="n">SSAValue</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(),</span>
+    <span class="n">wires_to_qubits</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">SSAValue</span><span class="p">,</span> <span class="n">SSAValue</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(),</span>
 <span class="p">)</span>
 </code></pre></div>
 
@@ -2008,11 +2026,11 @@
 <p>The pass keeps track of the map using the <code>defs</code> and <code>inv_defs</code>
 dictionaries keep track of the mapping between the qubit reference and wire values.</p>
 <p>During the rewrite, there are some notable edge cases:</p>
-<ol>
-<li>The qubit value is an argument of the function.</li>
-<li>The qubit reference is passed into a subroutine.</li>
-<li>There is a container of qubit references as an argument of a function</li>
-</ol>
+<p>[x] The qubit value is an argument of the function.
+[x] The qubit reference is passed into a subroutine.
+[x] There is a container of qubit references as an argument of a function
+[x] All wires must be unwrapped before a return statement.
+[ ] All wires associated with a register must be wrapped before an invoke/call statement.</p>
 <p>Cases 1 and 2 are supported. Case 3 supported if the container size is known at compile time.</p>
 
 
@@ -2042,7 +2060,7 @@ dictionaries keep track of the mapping between the qubit reference and wire valu
 
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_wire</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">SSAValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span> <span class="o">|</span> <span class="kc">None</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_wire</span><span class="p">(</span><span class="n">qubit_ref</span><span class="p">:</span> <span class="n">SSAValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span> <span class="o">|</span> <span class="kc">None</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2063,7 +2081,7 @@ dictionaries keep track of the mapping between the qubit reference and wire valu
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>value</code>
+                <code>qubit_ref</code>
             </td>
             <td>
                   <code><span title="kirin.ir.SSAValue">SSAValue</span></code>
@@ -2106,53 +2124,57 @@ dictionaries keep track of the mapping between the qubit reference and wire valu
 
             <details class="quote">
               <summary>Source code in <code>src/bloqade/squin/rewrite/qubit2wire.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_wire</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_wire</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qubit_ref</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the wire associated with the ssa value. If it doesn&#39;t exist, create a new wire and insert it into the IR.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        value (ir.SSAValue): The qubit value for which we want to get the wire.</span>
+<span class="sd">        qubit_ref (ir.SSAValue): The qubit value for which we want to get the wire.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        ir.SSAValue | None: The wire associated with the qubit value, or None if the value is not a qubit.</span>
 
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">is_subseteq</span><span class="p">(</span><span class="n">qubit</span><span class="o">.</span><span class="n">QubitType</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">value</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">qubit_ref</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">is_subseteq</span><span class="p">(</span><span class="n">qubit</span><span class="o">.</span><span class="n">QubitType</span><span class="p">):</span>
+        <span class="n">wire_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qubits_to_wires</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">qubit_ref</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">wire_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">wire_value</span>
 
-        <span class="n">owner</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">owner</span>
-        <span class="n">new_wire</span> <span class="o">=</span> <span class="n">wire</span><span class="o">.</span><span class="n">Unwrap</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="c1"># create a new wire</span>
+        <span class="n">owner</span> <span class="o">=</span> <span class="n">qubit_ref</span><span class="o">.</span><span class="n">owner</span>
+        <span class="n">new_wire</span> <span class="o">=</span> <span class="n">wire</span><span class="o">.</span><span class="n">Unwrap</span><span class="p">(</span><span class="n">qubit_ref</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">ir</span><span class="o">.</span><span class="n">Block</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">owner</span><span class="o">.</span><span class="n">first_stmt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">owner</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_wire</span><span class="p">)</span>
@@ -2161,8 +2183,8 @@ dictionaries keep track of the mapping between the qubit reference and wire valu
         <span class="k">else</span><span class="p">:</span>
             <span class="n">new_wire</span><span class="o">.</span><span class="n">insert_after</span><span class="p">(</span><span class="n">owner</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span> <span class="o">:=</span> <span class="n">new_wire</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inv_defs</span><span class="p">[</span><span class="n">result</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qubits_to_wires</span><span class="p">[</span><span class="n">qubit_ref</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span> <span class="o">:=</span> <span class="n">new_wire</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wires_to_qubits</span><span class="p">[</span><span class="n">result</span><span class="p">]</span> <span class="o">=</span> <span class="n">qubit_ref</span>
 
         <span class="k">return</span> <span class="n">result</span>
     <span class="k">else</span><span class="p">:</span>
@@ -2188,8 +2210,7 @@ dictionaries keep track of the mapping between the qubit reference and wire valu
 
     <div class="doc doc-contents ">
 
-        <p>Take a container of qubits and return a tuple of wires. If any of the
-qubits can't generate a wire, return None. If the container is an argument return None.</p>
+        <p>Take a container of qubits and return a tuple of wires. If the container size is not known at compile time, return None.</p>
 <p>Currently this function only handles the IListType of qubits.</p>
 
 
@@ -2249,23 +2270,7 @@ qubits can't generate a wire, return None. If the container is an argument retur
 
             <details class="quote">
               <summary>Source code in <code>src/bloqade/squin/rewrite/qubit2wire.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">108</span>
 <span class="normal">109</span>
 <span class="normal">110</span>
 <span class="normal">111</span>
@@ -2291,9 +2296,32 @@ qubits can't generate a wire, return None. If the container is an argument retur
 <span class="normal">131</span>
 <span class="normal">132</span>
 <span class="normal">133</span>
-<span class="normal">134</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_wires</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Take a container of qubits and return a tuple of wires. If any of the</span>
-<span class="sd">    qubits can&#39;t generate a wire, return None. If the container is an argument return None.</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_wires</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Take a container of qubits and return a tuple of wires. If the container size is not known at compile time, return None.</span>
 
 <span class="sd">    Currently this function only handles the IListType of qubits.</span>
 
@@ -2304,9 +2332,19 @@ qubits can't generate a wire, return None. If the container is an argument retur
 <span class="sd">        tuple[ir.SSAValue, ...] | None: A tuple of wires if all qubits can be converted, otherwise None.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">value_type</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">type</span>
-    <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">infer_qubit_ilist_size</span><span class="p">(</span><span class="n">value_type</span><span class="p">)</span>
+    <span class="n">owner</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">owner</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">ilist</span><span class="o">.</span><span class="n">New</span><span class="p">):</span>
+        <span class="n">wires</span> <span class="o">=</span> <span class="p">[]</span>
 
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">owner</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+            <span class="n">wire_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_wire</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">wire_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">wires</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wire_value</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">wires</span><span class="p">)</span>
+
+    <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">infer_qubit_container_size</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
 
@@ -2317,11 +2355,12 @@ qubits can't generate a wire, return None. If the container is an argument retur
         <span class="n">new_stmts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span> <span class="o">:=</span> <span class="n">py</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
         <span class="n">new_stmts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_qubit</span> <span class="o">:=</span> <span class="n">py</span><span class="o">.</span><span class="n">GetItem</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">index</span><span class="o">.</span><span class="n">result</span><span class="p">))</span>
         <span class="n">new_stmts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">unpwrapped</span> <span class="o">:=</span> <span class="n">wire</span><span class="o">.</span><span class="n">Unwrap</span><span class="p">(</span><span class="n">get_qubit</span><span class="o">.</span><span class="n">result</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[</span><span class="n">get_qubit</span><span class="o">.</span><span class="n">result</span><span class="p">]</span> <span class="o">=</span> <span class="n">unpwrapped</span><span class="o">.</span><span class="n">result</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inv_defs</span><span class="p">[</span><span class="n">unpwrapped</span><span class="o">.</span><span class="n">result</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_qubit</span><span class="o">.</span><span class="n">result</span>
-        <span class="n">wires</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">unpwrapped</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="n">get_qubit</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">qubit</span><span class="o">.</span><span class="n">QubitType</span>
+        <span class="n">wires</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wire_value</span> <span class="o">:=</span> <span class="n">unpwrapped</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="n">qubit_ref</span> <span class="o">=</span> <span class="n">get_qubit</span><span class="o">.</span><span class="n">result</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qubits_to_wires</span><span class="p">[</span><span class="n">qubit_ref</span><span class="p">]</span> <span class="o">=</span> <span class="n">wire_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wires_to_qubits</span><span class="p">[</span><span class="n">wire_value</span><span class="p">]</span> <span class="o">=</span> <span class="n">qubit_ref</span>
 
-    <span class="n">owner</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">owner</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">ir</span><span class="o">.</span><span class="n">Block</span><span class="p">):</span>
         <span class="c1"># is argument</span>
         <span class="k">if</span> <span class="n">owner</span><span class="o">.</span><span class="n">first_stmt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -2330,61 +2369,8 @@ qubits can't generate a wire, return None. If the container is an argument retur
             <span class="k">for</span> <span class="n">stmt</span> <span class="ow">in</span> <span class="n">new_stmts</span><span class="p">:</span>
                 <span class="n">stmt</span><span class="o">.</span><span class="n">insert_before</span><span class="p">(</span><span class="n">owner</span><span class="o">.</span><span class="n">first_stmt</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">stmt</span> <span class="ow">in</span> <span class="n">new_stmts</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">stmt</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">new_stmts</span><span class="p">):</span>
             <span class="n">stmt</span><span class="o">.</span><span class="n">insert_after</span><span class="p">(</span><span class="n">owner</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">wires</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="bloqade.squin.rewrite.qubit2wire.Qubit2WireRule.infer_qubit_ilist_size" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">infer_qubit_ilist_size</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
-  </span>
-
-</h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">infer_qubit_ilist_size</span><span class="p">(</span><span class="n">typ</span><span class="p">:</span> <span class="n">TypeAttribute</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Given a type attribute, infer the size of the container of qubits.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>src/bloqade/squin/rewrite/qubit2wire.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">infer_qubit_ilist_size</span><span class="p">(</span><span class="n">typ</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">TypeAttribute</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a type attribute, infer the size of the container of qubits.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">typ</span><span class="o">.</span><span class="n">is_subseteq</span><span class="p">(</span><span class="n">ilist</span><span class="o">.</span><span class="n">IListType</span><span class="p">[</span><span class="n">qubit</span><span class="o">.</span><span class="n">QubitType</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Any</span><span class="p">]):</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Generic</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">size_hint</span> <span class="o">:=</span> <span class="n">typ</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">types</span><span class="o">.</span><span class="n">Literal</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
-            <span class="n">size</span> <span class="o">:=</span> <span class="n">size_hint</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="nb">int</span>
-        <span class="p">):</span>
-            <span class="k">return</span> <span class="n">size</span>
-
-    <span class="k">return</span> <span class="kc">None</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2457,21 +2443,23 @@ defs/inv_defs dictionaries. Note that the new wire can't be assigned to a qubit.
 
             <details class="quote">
               <summary>Source code in <code>src/bloqade/squin/rewrite/qubit2wire.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
 <span class="normal">57</span>
-<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">replace_wire</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_wire</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">,</span> <span class="n">new_wire</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">):</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">replace_wire</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_wire</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">,</span> <span class="n">new_wire</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This function is used to replace an old wire with a new wire in the</span>
 <span class="sd">    defs/inv_defs dictionaries. Note that the new wire can&#39;t be assigned to a qubit.</span>
 
@@ -2481,11 +2469,136 @@ defs/inv_defs dictionaries. Note that the new wire can't be assigned to a qubit.
 
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">assert</span> <span class="n">old_wire</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">inv_defs</span><span class="p">,</span> <span class="s2">&quot;old_wire is not attached to any qubit&quot;</span>
-    <span class="k">assert</span> <span class="n">new_wire</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">,</span> <span class="s2">&quot;new_wire is already attached to a qubit&quot;</span>
+    <span class="k">assert</span> <span class="n">old_wire</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">wires_to_qubits</span><span class="p">,</span> <span class="s2">&quot;old_wire is not attached to any qubit&quot;</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="n">new_wire</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">qubits_to_wires</span>
+    <span class="p">),</span> <span class="s2">&quot;new_wire is already attached to a qubit&quot;</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">defs</span><span class="p">[(</span><span class="n">qubit_ref</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inv_defs</span><span class="p">[</span><span class="n">old_wire</span><span class="p">])]</span> <span class="o">=</span> <span class="n">new_wire</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">inv_defs</span><span class="p">[</span><span class="n">new_wire</span><span class="p">]</span> <span class="o">=</span> <span class="n">qubit_ref</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">qubits_to_wires</span><span class="p">[</span><span class="n">qubit_ref</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wires_to_qubits</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">old_wire</span><span class="p">)]</span> <span class="o">=</span> <span class="n">new_wire</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">wires_to_qubits</span><span class="p">[</span><span class="n">new_wire</span><span class="p">]</span> <span class="o">=</span> <span class="n">qubit_ref</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.rewrite.qubit2wire.Qubit2WireRule.rewrite_call_like" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">rewrite_call_like</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">rewrite_call_like</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">Call</span> <span class="o">|</span> <span class="n">Invoke</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Wrap wire before call-like node.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/bloqade/squin/rewrite/qubit2wire.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rewrite_call_like</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">func</span><span class="o">.</span><span class="n">Call</span> <span class="o">|</span> <span class="n">func</span><span class="o">.</span><span class="n">Invoke</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap wire before call-like node.&quot;&quot;&quot;</span>
+    <span class="n">has_done_something</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">wire_value</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_wire</span><span class="p">(</span><span class="n">arg</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">has_done_something</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wrap_before</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">wire_value</span><span class="o">=</span><span class="n">wire_value</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">wire_values</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_wires</span><span class="p">(</span><span class="n">arg</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">has_done_something</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">wire_value</span> <span class="ow">in</span> <span class="n">wire_values</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">wrap_before</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">wire_value</span><span class="o">=</span><span class="n">wire_value</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+    <span class="k">return</span> <span class="n">abc</span><span class="o">.</span><span class="n">RewriteResult</span><span class="p">(</span><span class="n">has_done_something</span><span class="o">=</span><span class="n">has_done_something</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.rewrite.qubit2wire.Qubit2WireRule.rewrite_return" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">rewrite_return</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">rewrite_return</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">Return</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Wrap all wires before return node.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/bloqade/squin/rewrite/qubit2wire.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rewrite_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">func</span><span class="o">.</span><span class="n">Return</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap all wires before return node.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">wire_value</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qubits_to_wires</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wrap_before</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">wire_value</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">abc</span><span class="o">.</span><span class="n">RewriteResult</span><span class="p">(</span><span class="n">has_done_something</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.rewrite.qubit2wire.Qubit2WireRule.wrap_before" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">wrap_before</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">wrap_before</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">Statement</span><span class="p">,</span> <span class="n">wire_value</span><span class="p">:</span> <span class="n">SSAValue</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Wrap wire before return node. updates defs and inv_defs.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/bloqade/squin/rewrite/qubit2wire.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wrap_before</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Statement</span><span class="p">,</span> <span class="n">wire_value</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap wire before return node. updates defs and inv_defs.&quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">qubits_to_wires</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">qubit_ref</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wires_to_qubits</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">wire_value</span><span class="p">))</span>
+    <span class="n">wire</span><span class="o">.</span><span class="n">Wrap</span><span class="p">(</span><span class="n">wire_value</span><span class="p">,</span> <span class="n">qubit_ref</span><span class="p">)</span><span class="o">.</span><span class="n">insert_before</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
