@@ -3,29 +3,24 @@ from dataclasses import dataclass
 from kirin import ir, types
 from bloqade.squin import wire, qubit
 from kirin.rewrite import abc
-from kirin.dialects import func, ilist
+from kirin.dialects import py, func, ilist
 
 
 @dataclass
 class Qubit2WireRule(abc.RewriteRule):
     """
-    This rewrite rule is intended to replace qubit dialect with the wire dialect.
+    This rewrite rule is intended to replace the qubit dialect with the wire dialect.
 
-    In most cases this pass keeps track of the this map using the `defs` dictionary.
-    The `defs` dictionary maps the qubit SSA values to the corresponding wire SSA values.
+    The pass keeps track of the map using the `defs` and `inv_defs`
+    dictionaries keep track of the mapping between the qubit reference and wire values.
 
-    There are some notable edge cases related to:
+    During the rewrite, there are some notable edge cases:
 
     1. The qubit value is an argument of the function.
     2. The qubit reference is passed into a subroutine.
-    3. The ilist of qubits as a block argument.
+    3. There is a container of qubit references as an argument of a function
 
-    This rewrite rule will handle those cases as well.
-
-    Case 1: The argument is unwrapped at the top level of the function and added to the dictionary.
-    Case 2: The wire is wrapped and the qubit reference is passed into the invoke.
-
-    Case 3: The qubits can't be unwrapped currently without the ability to unwrap the entire list.
+    Cases 1 and 2 are supported but case 3 is not supported yet.
 
     """
 
@@ -33,15 +28,46 @@ class Qubit2WireRule(abc.RewriteRule):
     inv_defs: dict[ir.SSAValue, ir.SSAValue]
     SUPPORTED_STMTS = frozenset({func.Invoke, func.Call, qubit.Apply})
 
+    @staticmethod
+    def infer_qubit_ilist_size(typ: types.TypeAttribute) -> int | None:
+        """Given a type attribute, infer the size of the container of qubits."""
+        if typ.is_subseteq(ilist.IListType[qubit.QubitType, types.Any]):
+            assert isinstance(typ, types.Generic)
+
+            if isinstance(size_hint := typ.vars[1], types.Literal) and isinstance(
+                size := size_hint.data, int
+            ):
+                return size
+
+        return None
+
     def replace_wire(self, old_wire: ir.SSAValue, new_wire: ir.SSAValue):
-        assert old_wire in self.inv_defs
-        assert new_wire not in self.defs
+        """This function is used to replace an old wire with a new wire in the
+        defs/inv_defs dictionaries. Note that the new wire can't be assigned to a qubit.
+
+        Args:
+            old_wire (ir.SSAValue): The old wire that needs to be replaced.
+            new_wire (ir.SSAValue): The new wire that will replace the old wire.
+
+
+        """
+        assert old_wire in self.inv_defs, "old_wire is not attached to any qubit"
+        assert new_wire not in self.defs, "new_wire is already attached to a qubit"
 
         self.defs[(qubit_ref := self.inv_defs[old_wire])] = new_wire
         self.inv_defs[new_wire] = qubit_ref
 
     def get_wire(self, value: ir.SSAValue) -> ir.SSAValue | None:
+        """Get the wire associated with the ssa value. If it doesn't exist, create a new wire and insert it into the IR.
 
+        Args:
+            value (ir.SSAValue): The qubit value for which we want to get the wire.
+
+        Returns:
+            ir.SSAValue | None: The wire associated with the qubit value, or None if the value is not a qubit.
+
+
+        """
         if value.type.is_subseteq(qubit.QubitType):
             if value in self.defs:
                 return self.defs[value]
@@ -64,26 +90,48 @@ class Qubit2WireRule(abc.RewriteRule):
             return None
 
     def get_wires(self, value: ir.SSAValue) -> tuple[ir.SSAValue, ...] | None:
+        """Take a container of qubits and return a tuple of wires. If any of the
+        qubits can't generate a wire, return None. If the container is an argument return None.
+
+        Currently this function only handles the IListType of qubits.
+
+        Args:
+            value (ir.SSAValue): The ssa value pointing to the container of qubits.
+
+        Returns:
+            tuple[ir.SSAValue, ...] | None: A tuple of wires if all qubits can be converted, otherwise None.
+
+        """
         value_type = value.type
+        size = self.infer_qubit_ilist_size(value_type)
 
-        if value_type.is_subseteq(ilist.IListType[qubit.QubitType, types.Any]):
-            owner = value.owner
-            if isinstance(owner, ir.Block):
-                return None
-            else:
-                assert isinstance(owner, ilist.New)
-                wires: list[ir.SSAValue] = []
-                for value in owner.values:
-                    w = self.get_wire(value)
-                    if w is None:
-                        return None
-
-                    wires.append(w)
-
-                return tuple(wires)
-
-        else:
+        if size is None:
             return None
+
+        wires: list[ir.SSAValue] = []
+        new_stmts: list[ir.Statement] = []
+        for i in range(size):
+
+            new_stmts.append(index := py.Constant(i))
+            new_stmts.append(get_qubit := py.GetItem(value, index.result))
+            new_stmts.append(unpwrapped := wire.Unwrap(get_qubit.result))
+            self.defs[get_qubit.result] = unpwrapped.result
+            self.inv_defs[unpwrapped.result] = get_qubit.result
+            wires.append(unpwrapped.result)
+
+        owner = value.owner
+        if isinstance(owner, ir.Block):
+            # is argument
+            if owner.first_stmt is None:
+                owner.stmts.extend(new_stmts)
+            else:
+                for stmt in new_stmts:
+                    stmt.insert_before(owner.first_stmt)
+        else:
+            for stmt in new_stmts:
+                stmt.insert_after(owner)
+
+        return tuple(wires)
 
     def rewrite_Statement(self, node: ir.Statement):
         if type(node) not in self.SUPPORTED_STMTS:
