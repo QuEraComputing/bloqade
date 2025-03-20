@@ -153,6 +153,7 @@ class Qubit2WireRule(abc.RewriteRule):
             self.replace_wire(old_wire, new_wire)
 
     def _rewrite_call_like(self, node: func.Call | func.Invoke):
+        """Wrap wire before call-like node."""
         has_done_something = False
         for arg in node.inputs:
             w = self.get_wire(arg)
