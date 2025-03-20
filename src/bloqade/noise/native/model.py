@@ -48,6 +48,15 @@ class GateNoiseParams:
 
 @dataclass(frozen=True)
 class MoveNoiseParams:
+    idle_px_rate: float = field(default=1e-6, kw_only=True)
+    """The error rate (prob/microsecond) for a Pauli-X error during an idle operation."""
+    idle_py_rate: float = field(default=1e-6, kw_only=True)
+    """The error rate (prob/microsecond) for a Pauli-Y error during an idle operation."""
+    idle_pz_rate: float = field(default=1e-6, kw_only=True)
+    """The error rate (prob/microsecond) for a Pauli-Z error during an idle operation."""
+    idle_loss_rate: float = field(default=1e-6, kw_only=True)
+    """The error rate (prob/microsecond) for a loss during an idle operation."""
+
     move_px_rate: float = field(default=1e-6, kw_only=True)
     """The error rate (prob/microsecond) for a Pauli-X error during a move operation."""
     move_py_rate: float = field(default=1e-6, kw_only=True)
@@ -259,14 +268,79 @@ class TwoRowZoneModel(MoveNoiseModelABC):
         px_time = self.poisson_pauli_prob(self.params.move_px_rate, move_duration)
         py_time = self.poisson_pauli_prob(self.params.move_py_rate, move_duration)
         px_time = self.poisson_pauli_prob(self.params.move_pz_rate, move_duration)
-        p_loss_time = self.poisson_pauli_prob(self.params.move_loss_rate, move_duration)
+        move_p_loss_time = self.poisson_pauli_prob(
+            self.params.move_loss_rate, move_duration
+        )
 
-        errors = {(px_time, py_time, px_time, p_loss_time): rest}
+        errors = {(px_time, py_time, px_time, move_p_loss_time): rest}
 
         px_moved = self.join_binary_probs(self.params.pick_px, px_time)
         py_moved = self.join_binary_probs(self.params.pick_py, py_time)
         pz_moved = self.join_binary_probs(self.params.pick_pz, px_time)
-        p_loss_moved = self.join_binary_probs(self.params.pick_loss_prob, p_loss_time)
+        p_loss_moved = self.join_binary_probs(
+            self.params.pick_loss_prob, move_p_loss_time
+        )
+
+        errors[(px_moved, py_moved, pz_moved, p_loss_moved)] = sorted(ctrls + qargs)
+
+        return errors
+
+
+@dataclass
+class SingleZoneLayoutABC(MoveNoiseModelABC):
+    gate_noise_params: GateNoiseParams = field(
+        default_factory=GateNoiseParams, kw_only=True
+    )
+
+    @abc.abstractmethod
+    def calculate_move_duration(self, ctrls: List[int], qargs: List[int]) -> float:
+        """Calculate the time it takes to reconfigure the atom for executing the CZ gates."""
+
+    def parallel_cz_errors(
+        self, ctrls: List[int], qargs: List[int], rest: List[int]
+    ) -> Dict[Tuple[float, float, float, float], List[int]]:
+        """Apply parallel gates by moving ctrl qubits to qarg qubits."""
+
+        move_duration = self.calculate_move_duration(ctrls, qargs)
+
+        # idle errors during atom moves
+        idle_px_time = self.poisson_pauli_prob(self.params.idle_px_rate, move_duration)
+        idle_py_time = self.poisson_pauli_prob(self.params.idle_py_rate, move_duration)
+        idle_pz_time = self.poisson_pauli_prob(self.params.idle_pz_rate, move_duration)
+        idle_p_loss_time = self.poisson_pauli_prob(
+            self.params.idle_loss_rate, move_duration
+        )
+
+        # even qubits not involved in the gate can still experience unpaired errors
+        idle_px = self.join_binary_probs(
+            self.gate_noise_params.cz_unpaired_gate_px, idle_px_time
+        )
+        idle_py = self.join_binary_probs(
+            self.gate_noise_params.cz_unpaired_gate_py, idle_py_time
+        )
+        idle_pz = self.join_binary_probs(
+            self.gate_noise_params.cz_unpaired_gate_pz, idle_pz_time
+        )
+        idle_p_loss = self.join_binary_probs(
+            self.gate_noise_params.cz_unpaired_loss_prob, idle_p_loss_time
+        )
+
+        errors = {(idle_px, idle_py, idle_pz, idle_p_loss): rest}
+
+        # error during the move
+        move_px_time = self.poisson_pauli_prob(self.params.move_px_rate, move_duration)
+        move_py_time = self.poisson_pauli_prob(self.params.move_py_rate, move_duration)
+        move_pz_time = self.poisson_pauli_prob(self.params.move_pz_rate, move_duration)
+        move_p_loss_time = self.poisson_pauli_prob(
+            self.params.move_loss_rate, move_duration
+        )
+        # error coming from picking up the qubits
+        px_moved = self.join_binary_probs(self.params.pick_px, move_px_time)
+        py_moved = self.join_binary_probs(self.params.pick_py, move_py_time)
+        pz_moved = self.join_binary_probs(self.params.pick_pz, move_pz_time)
+        p_loss_moved = self.join_binary_probs(
+            self.params.pick_loss_prob, move_p_loss_time
+        )
 
         errors[(px_moved, py_moved, pz_moved, p_loss_moved)] = sorted(ctrls + qargs)
 
