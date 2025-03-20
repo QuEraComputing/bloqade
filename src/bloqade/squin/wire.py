@@ -26,18 +26,19 @@ class Wire:
 WireType = types.PyClass(Wire)
 
 
+# no return value for `wrap`
 @statement(dialect=dialect)
 class Wrap(ir.Statement):
-    traits = frozenset({ir.FromPythonCall()})
-    qubit: ir.SSAValue = info.argument(QubitType)
-    result: ir.ResultValue = info.result(WireType)
+    traits = frozenset({ir.FromPythonCall(), WireTerminator()})
+    wire: ir.SSAValue = info.argument(WireType)
+    qubit: ir.ResultValue = info.result(QubitType)
 
 
 @statement(dialect=dialect)
 class Unwrap(ir.Statement):
-    traits = frozenset({ir.FromPythonCall()})
-    wire: ir.SSAValue = info.argument(WireType)
-    result: ir.ResultValue = info.result(QubitType)
+    traits = frozenset({ir.FromPythonCall(), ir.Pure()})
+    qubit: ir.SSAValue = info.argument(QubitType)
+    result: ir.ResultValue = info.result(WireType)
 
 
 @statement(dialect=dialect)
