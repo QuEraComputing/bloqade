@@ -1,5 +1,4 @@
-from kirin import passes, rewrite
-from kirin.passes import aggressive
+from kirin import rewrite
 from bloqade.squin import op, qubit
 from bloqade.squin.groups import wired, kernel
 from bloqade.squin.rewrite.qubit2wire import Qubit2WireRule, wid
@@ -26,7 +25,7 @@ test_1.print()
 
 for stmt in test_1.callable_region.blocks[0].stmts:
     print(", ".join(wid(result) for result in stmt.results), ":", stmt)
-        
+
 
 rewrite.Walk(rewrite.DeadCodeElimination(), region_first=False).rewrite(test_1.code)
 
