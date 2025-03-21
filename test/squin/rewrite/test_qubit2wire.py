@@ -19,14 +19,14 @@ rewrite.Fixpoint(rewrite.Walk(rewrite.CommonSubexpressionElimination())).rewrite
     test_1.code
 )
 
-rewrite.Walk(Qubit2WireRule(), region_first=True, reverse=False).rewrite(test_1.code)
+rewrite.Walk(Qubit2WireRule(), region_first=True).rewrite(test_1.code)
 
 
 test_1.print()
 
 for stmt in test_1.callable_region.blocks[0].stmts:
     print(", ".join(wid(result) for result in stmt.results), ":", stmt)
-
+        
 
 rewrite.Walk(rewrite.DeadCodeElimination(), region_first=False).rewrite(test_1.code)
 
