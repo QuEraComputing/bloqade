@@ -2,7 +2,7 @@ from kirin import passes, rewrite
 from kirin.passes import aggressive
 from bloqade.squin import op, qubit
 from bloqade.squin.groups import wired, kernel
-from bloqade.squin.rewrite import Qubit2WireRule
+from bloqade.squin.rewrite.qubit2wire import Qubit2WireRule, wid
 
 
 @kernel(fold=True)
@@ -13,13 +13,22 @@ def test_1(flag: bool):
         qubit.apply(op.x(), [qs[0]])
 
 
-test_1.print()
+# test_1.print()
 
 rewrite.Fixpoint(rewrite.Walk(rewrite.CommonSubexpressionElimination())).rewrite(
     test_1.code
 )
-rewrite.Walk(Qubit2WireRule()).rewrite(test_1.code)
-rewrite.Walk(rewrite.DeadCodeElimination()).rewrite(test_1.code)
+
+rewrite.Walk(Qubit2WireRule(), region_first=True, reverse=False).rewrite(test_1.code)
+
+
+test_1.print()
+
+for stmt in test_1.callable_region.blocks[0].stmts:
+    print(", ".join(wid(result) for result in stmt.results), ":", stmt)
+
+
+rewrite.Walk(rewrite.DeadCodeElimination(), region_first=False).rewrite(test_1.code)
 
 test_wired = test_1.similar(wired)
 
