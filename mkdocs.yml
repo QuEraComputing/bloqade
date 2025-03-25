@@ -51,6 +51,7 @@ nav:
       - QAOA: "digital/examples/qaoa.py"
   - Analog Tutorial: 'https://queracomputing.github.io/bloqade-analog-examples/dev/'
   - Bloqade Analog: 'https://queracomputing.github.io/bloqade-analog/latest/'
+  - Analog Reference: 'https://queracomputing.github.io/bloqade-analog/latest/reference/overview/'
   - Blog:
     - blog/index.md
   - QuEra Computing: 'https://quera.com'
