@@ -3,6 +3,7 @@ from kirin.decl import info, statement
 
 from .types import OpType
 from .traits import Sized, HasSize, Unitary, MaybeUnitary
+from .complex import Complex
 from ._dialect import dialect
 
 
@@ -53,7 +54,7 @@ class Scale(CompositeOp):
     traits = frozenset({ir.Pure(), ir.FromPythonCall(), MaybeUnitary()})
     is_unitary: bool = info.attribute(default=False)
     op: ir.SSAValue = info.argument(OpType)
-    factor: ir.SSAValue = info.argument(types.Complex)
+    factor: ir.SSAValue = info.argument(Complex)
     result: ir.ResultValue = info.result(OpType)
 
 
