@@ -3,6 +3,7 @@ qubit.address method table for a few builtin dialects.
 """
 
 from kirin import interp
+from bloqade import squin
 from kirin.analysis import ForwardFrame, const
 from kirin.dialects import cf, py, scf, func, ilist
 
@@ -147,3 +148,17 @@ class Scf(scf.absint.Methods):
             return  # if terminate is Return, there is no result
 
         return loop_vars
+
+
+# Address lattice elements we can work with:
+## NotQubit (bottom), AnyAddress (top)
+## AddressTuple -> data: tuple[Address, ...]
+## AddressReg -> data: Sequence[int]
+## AddressQubit -> data: int
+
+
+## Note: Roger did mention *possibility* of needing more elements of the lattice,
+##       Keep an eye out!
+@squin.wire.dialect.register(key="qubit.address")
+class WireMethodTable(interp.MethodTable):
+    pass
