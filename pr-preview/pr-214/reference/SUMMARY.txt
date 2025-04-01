@@ -70,6 +70,7 @@
     * [squin](bloqade/squin/index.md)
         * [groups](bloqade/squin/groups.md)
         * [op](bloqade/squin/op/index.md)
+            * [complex](bloqade/squin/op/complex.md)
             * [stmts](bloqade/squin/op/stmts.md)
             * [traits](bloqade/squin/op/traits.md)
             * [types](bloqade/squin/op/types.md)
