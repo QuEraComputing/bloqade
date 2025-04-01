@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://bloqade.quera.com/reference/bloqade/squin/analysis/">
+        <link rel="canonical" href="https://bloqade.quera.com/reference/bloqade/analysis/schedule/">
       
       
       
@@ -20,7 +20,7 @@
     
     
       
-        <title>Index - The Neutral Atom SDK</title>
+        <title>Schedule - The Neutral Atom SDK</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#bloqade.squin.analysis" class="md-skip">
+        <a href="#bloqade.analysis.schedule" class="md-skip">
           Skip to content
         </a>
       
@@ -115,7 +115,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Index
+              Schedule
             
           </span>
         </div>
@@ -1967,11 +1967,35 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#bloqade.squin.analysis" class="md-nav__link">
+  <a href="#bloqade.analysis.schedule" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;analysis
+      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;schedule
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bloqade.analysis.schedule.StmtDag" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;StmtDag
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" StmtDag">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bloqade.analysis.schedule.StmtDag.topological_groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;topological_groups
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1991,7 +2015,7 @@
 
 
   
-    <a href="https://github.com/QuEraComputing/bloqade/edit/main/src/bloqade/squin/analysis/__init__.py" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/QuEraComputing/bloqade/edit/main/src/bloqade/analysis/schedule.py" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2000,20 +2024,20 @@
     
       
     
-    <a href="https://github.com/QuEraComputing/bloqade/raw/main/src/bloqade/squin/analysis/__init__.py" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/QuEraComputing/bloqade/raw/main/src/bloqade/analysis/schedule.py" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
     </a>
   
 
 
-  <h1>Index</h1>
+  <h1>Schedule</h1>
 
 <div class="doc doc-object doc-module">
 
 
 
-<a id="bloqade.squin.analysis"></a>
+<a id="bloqade.analysis.schedule"></a>
     <div class="doc doc-contents first">
 
 
@@ -2032,6 +2056,222 @@
 
 
 
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bloqade.analysis.schedule.StmtDag" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">StmtDag</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">StmtDag</span><span class="p">(</span>
+    <span class="n">id_table</span><span class="p">:</span> <span class="n">IdTable</span><span class="p">[</span>
+        <span class="n">Statement</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">idtable</span><span class="o">.</span><span class="n">IdTable</span><span class="p">()(),</span>
+    <span class="n">stmts</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Statement</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(),</span>
+    <span class="n">out_edges</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(),</span>
+    <span class="n">inc_edges</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(),</span>
+    <span class="n">stmt_index</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Statement</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(),</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="kirin.graph.Graph">Graph</span>[<span title="kirin.ir.Statement">Statement</span>]</code></p>
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.analysis.schedule.StmtDag.topological_groups" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">topological_groups</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">topological_groups</span><span class="p">()</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Split the dag into topological groups where each group
+contains nodes that have no dependencies on each other, but
+have dependencies on nodes in one or more previous groups.</p>
+
+
+    <p><span class="doc-section-title">Yields:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List[str]: A list of node ids in a topological group</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If a cyclic dependency is detected</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+        <p>The idea is to yield all nodes with no dependencies, then remove
+those nodes from the graph repeating until no nodes are left
+or we reach some upper limit. Worse case is a linear dag,
+so we can use len(dag.stmts) as the upper limit</p>
+<p>If we reach the limit and there are still nodes left, then we
+have a cyclic dependency.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/bloqade/analysis/schedule.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">topological_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Split the dag into topological groups where each group</span>
+<span class="sd">    contains nodes that have no dependencies on each other, but</span>
+<span class="sd">    have dependencies on nodes in one or more previous groups.</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        List[str]: A list of node ids in a topological group</span>
+
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If a cyclic dependency is detected</span>
+
+
+<span class="sd">    The idea is to yield all nodes with no dependencies, then remove</span>
+<span class="sd">    those nodes from the graph repeating until no nodes are left</span>
+<span class="sd">    or we reach some upper limit. Worse case is a linear dag,</span>
+<span class="sd">    so we can use len(dag.stmts) as the upper limit</span>
+
+<span class="sd">    If we reach the limit and there are still nodes left, then we</span>
+<span class="sd">    have a cyclic dependency.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">inc_edges</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">set</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">inc_edges</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+    <span class="n">check_next</span> <span class="o">=</span> <span class="n">inc_edges</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stmts</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inc_edges</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="n">group</span> <span class="o">=</span> <span class="p">[</span><span class="n">node_id</span> <span class="k">for</span> <span class="n">node_id</span> <span class="ow">in</span> <span class="n">check_next</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inc_edges</span><span class="p">[</span><span class="n">node_id</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">yield</span> <span class="n">group</span>
+
+        <span class="n">check_next</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">group</span><span class="p">:</span>
+            <span class="n">inc_edges</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_edges</span><span class="p">[</span><span class="n">n</span><span class="p">]:</span>
+                <span class="n">check_next</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+                <span class="n">inc_edges</span><span class="p">[</span><span class="n">m</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">inc_edges</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cyclic dependency detected&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
 
 
 
