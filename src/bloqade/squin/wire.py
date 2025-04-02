@@ -8,9 +8,10 @@ dialect.
 
 from kirin import ir, types
 from kirin.decl import info, statement
-from bloqade.types import QubitType
+from bloqade.types import Qubit, QubitType
+from kirin.lowering import wraps
 
-from .op.types import OpType
+from .op.types import Op, OpType
 
 dialect = ir.Dialect("squin.wire")
 
@@ -85,3 +86,27 @@ class MeasureAndReset(ir.Statement):
 class Reset(ir.Statement):
     traits = frozenset({ir.FromPythonCall(), WireTerminator()})
     wire: ir.SSAValue = info.argument(WireType)
+
+
+@wraps(Wrap)
+def wrap(wire: Wire, qubit: Qubit) -> None: ...
+
+
+@wraps(Unwrap)
+def unwrap(qubit: Qubit) -> Wire: ...
+
+
+@wraps(Apply)
+def apply(operator: Op, inputs: tuple[Wire]) -> None: ...
+
+
+@wraps(Measure)
+def measure(wire: Wire) -> int: ...
+
+
+@wraps(MeasureAndReset)
+def measure_and_reset(wire: Wire) -> tuple[int, Wire]: ...
+
+
+@wraps(Reset)
+def reset(wire: Wire) -> None: ...

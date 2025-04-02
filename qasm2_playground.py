@@ -6,7 +6,7 @@ from bloqade.analysis import address
 
 
 @qasm2.extended
-def test_qubit_init_program():
+def complex_address_program():
     qreg = qasm2.qreg(10)  # 10 qubits, this gives an AddressReg
     # These become indivdiual address qubits
     q1 = qreg[0]
@@ -26,11 +26,30 @@ def test_qubit_init_program():
     return y
 
 
-test_qubit_init_program.print()
-frame, _ = address.AddressAnalysis(test_qubit_init_program.dialects).run_analysis(
-    test_qubit_init_program
+complex_address_program.print()
+frame, _ = address.AddressAnalysis(complex_address_program.dialects).run_analysis(
+    complex_address_program
 )
 
 # print(frame)
 for ssa_val, addr in frame.entries.items():
     print(f"SSA Value: {ssa_val}\nAddress Type: {addr}")
+
+
+@qasm2.extended
+def gate_behavior():
+    qreg = qasm2.qreg(10)
+    q = qreg[0]
+
+    # apply gates, I just want to see what the behavior is like
+
+    qasm2.h(q)
+    qasm2.x(q)
+    qasm2.y(q)
+    qasm2.t(q)
+
+    return q
+
+
+gate_behavior.print()
+# In the output the uops have no return values
