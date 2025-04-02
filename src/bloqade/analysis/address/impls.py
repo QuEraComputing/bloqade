@@ -11,6 +11,8 @@ from .lattice import Address, NotQubit, AddressReg, AddressQubit, AddressTuple
 from .analysis import AddressAnalysis
 
 
+# Why does add have to be accounted for here?
+# Is it to handle something like [qubit] + [qubit]?
 @py.binop.dialect.register(key="qubit.address")
 class PyBinOp(interp.MethodTable):
 
@@ -65,10 +67,17 @@ class PyList(interp.MethodTable):
 class PyIndexing(interp.MethodTable):
     @interp.impl(py.GetItem)
     def getitem(self, interp: AddressAnalysis, frame: interp.Frame, stmt: py.GetItem):
+        # Integer index into the thing being indexed
         idx = interp.get_const_value(int, stmt.index)
+        # The object being indexed into
         obj = frame.get(stmt.obj)
+
+        # The `data` attributes holds onto other Address types
+        # so we just extract that here
         if isinstance(obj, AddressTuple):
             return (obj.data[idx],)
+        # an AddressReg is guaranteed to just have some sequence
+        # of integers which is directly pluggable to AddressQubit
         elif isinstance(obj, AddressReg):
             return (AddressQubit(obj.data[idx]),)
         else:
@@ -152,13 +161,45 @@ class Scf(scf.absint.Methods):
 
 # Address lattice elements we can work with:
 ## NotQubit (bottom), AnyAddress (top)
+
 ## AddressTuple -> data: tuple[Address, ...]
+### Recursive type, could contain itself or other variants
+### This pops up in cases where you can have an IList/Tuple
+### That contains elements that could be other Address types
+
 ## AddressReg -> data: Sequence[int]
+### specific to creation of a register of qubits
+
 ## AddressQubit -> data: int
+### Base qubit address type
+
+# The only real statement in wire that could conceivably spit
+# a result is Wrap but that has the qubit as an argument,
+# not a result. -> This is to be expected, the other examples
+# in the QASM2 analysis do not explicitly return but the
+# statement itself is indicative of the creation of/accessing of
+# qubit(s)
 
 
 ## Note: Roger did mention *possibility* of needing more elements of the lattice,
 ##       Keep an eye out!
 @squin.wire.dialect.register(key="qubit.address")
-class WireMethodTable(interp.MethodTable):
+class SquinWireMethodTable(interp.MethodTable):
     pass
+
+
+@squin.qubit.dialect.register(key="qubit.address")
+class SquinQubitMethodTable(interp.MethodTable):
+
+    # This can be treated like a QRegNew impl
+    @interp.impl(squin.qubit.New)
+    def new(
+        self,
+        interp_: AddressAnalysis,
+        frame: ForwardFrame[Address],
+        stmt: squin.qubit.New,
+    ):
+        n_qubits = interp_.get_const_value(int, stmt.n_qubits)
+        addr = AddressReg(range(interp_.next_address, interp_.next_address + n_qubits))
+        interp_.next_address += n_qubits
+        return (addr,)
