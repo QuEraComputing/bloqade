@@ -8,7 +8,7 @@ from kirin.dialects import py, ilist
 from bloqade.analysis import address
 from kirin.analysis.const import lattice
 from bloqade.qasm2.dialects import uop, core, parallel
-from bloqade.analysis.schedule import StmtDag
+from bloqade.squin.analysis.schedule import StmtDag
 
 
 class MergePolicyABC(abc.ABC):
