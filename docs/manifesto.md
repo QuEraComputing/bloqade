@@ -27,4 +27,4 @@ The first step in Bloqade was building out the analog mode SDK, designed to inte
 
 ## Join us!
 
-If you are interested in contributing, please see the contribution page [here](quick_start/contrib.md). If you are interested in exploring more about neutral atom quantum computing, check out some analog tutorials [here](https://queracomputing.github.io/bloqade-analog-examples/dev/), and some circuit tutorials [here](https://bloqade.quera.com/latest/digital/). If you wish to work closer with QuEra, please feel free to reach out!
+If you are interested in contributing, please see the contribution page [here](contrib.md). If you are interested in exploring more about neutral atom quantum computing, check out some analog tutorials [here](https://queracomputing.github.io/bloqade-analog-examples/dev/), and some circuit tutorials [here](https://bloqade.quera.com/latest/digital/). If you wish to work closer with QuEra, please feel free to reach out!
