@@ -182,7 +182,7 @@ class Scf(scf.absint.Methods):
 
 
 ## Note: Roger did mention *possibility* of needing more elements of the lattice,
-##       Keep an eye out!
+##       Keep an eye out! -> Shouldn't be the case
 @squin.wire.dialect.register(key="qubit.address")
 class SquinWireMethodTable(interp.MethodTable):
     pass
@@ -203,3 +203,19 @@ class SquinQubitMethodTable(interp.MethodTable):
         addr = AddressReg(range(interp_.next_address, interp_.next_address + n_qubits))
         interp_.next_address += n_qubits
         return (addr,)
+
+
+## think this through for wire, everything I need has been exercised in past week
+## take a look at constant propagation, should be very similar
+
+"""
+...
+w1 = unwrap(q)
+w2 = gate(w1)
+w3 = gate(w2)
+
+dict[SSAValue, Address]
+## Qubit, Tuple, Reg
+## Why do we need this addresses from the wires
+
+"""

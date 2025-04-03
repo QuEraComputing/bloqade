@@ -52,7 +52,9 @@ class Apply(ir.Statement):
     operator: ir.SSAValue = info.argument(OpType)
     inputs: tuple[ir.SSAValue] = info.argument(WireType)
 
-    def __init__(self, operator: ir.SSAValue, *args: ir.SSAValue):
+    def __init__(
+        self, operator: ir.SSAValue, *args: ir.SSAValue
+    ):  # apply(op, w1, w2, ...)
         result_types = tuple(WireType for _ in args)
         super().__init__(
             args=(operator,) + args,
@@ -62,6 +64,7 @@ class Apply(ir.Statement):
                 "inputs": slice(1, None),
             },  # pretty printing + syntax sugar
         )
+        # custom lowering required for wrapper to work here,
 
 
 # NOTE: measurement cannot be pure because they will collapse the state
@@ -88,6 +91,7 @@ class Reset(ir.Statement):
     wire: ir.SSAValue = info.argument(WireType)
 
 
+# Avoid using frontend for testing purposes
 @wraps(Wrap)
 def wrap(wire: Wire, qubit: Qubit) -> None: ...
 
@@ -97,7 +101,7 @@ def unwrap(qubit: Qubit) -> Wire: ...
 
 
 @wraps(Apply)
-def apply(operator: Op, inputs: tuple[Wire]) -> None: ...
+def apply(operator: Op, *args: Wire) -> tuple[Wire, ...]: ...
 
 
 @wraps(Measure)

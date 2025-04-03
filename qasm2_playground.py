@@ -26,6 +26,9 @@ def complex_address_program():
     return y
 
 
+# Take a look at tests for qasm2 analysis, should explain _why_ the lattice is structured the way it is
+
+
 complex_address_program.print()
 frame, _ = address.AddressAnalysis(complex_address_program.dialects).run_analysis(
     complex_address_program

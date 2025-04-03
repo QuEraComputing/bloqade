@@ -50,25 +50,33 @@ for ssa_val, addr_type in frame.entries.items():
 """
 
 
+## Avoid using frontend
+# squin.qubit.New()
+
+
 @squin_dialect
 def simple_squin_program():
-
-    qreg = squin.qubit.new(1)  # list of qubits
-    q = qreg[0]  # get qubit out of list (Get)
-
-    # Unwrap qubit to get wire
-    w = squin.wire.unwrap(q)
-    ## need to respect the init
-    squin.wire.apply(operator=squin.op.h(), inputs=w)
-    squin.wire.apply(operator=squin.op.x(), inputs=w)
-    squin.wire.apply(operator=squin.op.y(), inputs=w)
 
     # Now we wrap to get the qubit back
     ## Can I just reuse the original qubit in the wrapping op?
     ## -> Yes! That's how it's done in Quake
-    squin.wire.wrap(wire=w, qubit=q)
+    # squin.wire.wrap(wire=w, qubit=q)
 
     return
 
 
 simple_squin_program.print()
+
+
+def test(*args: int):
+    print(args)
+    return args
+    pass
+
+
+test(1, 2, 3, 4)
+
+
+# from kirin.ir import Statement
+
+# Statement(result_types=)
