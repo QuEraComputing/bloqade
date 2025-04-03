@@ -8,22 +8,25 @@ from bloqade.analysis import address
 @qasm2.extended
 def complex_address_program():
     qreg = qasm2.qreg(10)  # 10 qubits, this gives an AddressReg
-    # These become indivdiual address qubits
+    # These become individual address qubits
     q1 = qreg[0]
-    q2 = qreg[1]
+    # q2 = qreg[1]
 
-    y = [q1, q2] + [q1, q2]
+    # y = [q1, q2] + [q1, q2]
 
-    creg1 = qasm2.creg(1)
-    creg2 = qasm2.creg(1)
-    qasm2.measure(q1, creg1[0])
-    qasm2.measure(q2, creg2[0])
+    # handle Alias
+    q_alias = q1
 
-    creg3 = qasm2.creg(1)
-    q3 = qreg[2]
-    qasm2.measure(q3, creg3[0])
+    # creg1 = qasm2.creg(1)
+    # creg2 = qasm2.creg(1)
+    # qasm2.measure(q1, creg1[0])
+    # qasm2.measure(q2, creg2[0])
 
-    return y
+    # creg3 = qasm2.creg(1)
+    # q3 = qreg[2]
+    # qasm2.measure(q3, creg3[0])
+
+    return q_alias
 
 
 # Take a look at tests for qasm2 analysis, should explain _why_ the lattice is structured the way it is
@@ -38,7 +41,7 @@ frame, _ = address.AddressAnalysis(complex_address_program.dialects).run_analysi
 for ssa_val, addr in frame.entries.items():
     print(f"SSA Value: {ssa_val}\nAddress Type: {addr}")
 
-
+"""
 @qasm2.extended
 def gate_behavior():
     qreg = qasm2.qreg(10)
@@ -56,3 +59,4 @@ def gate_behavior():
 
 gate_behavior.print()
 # In the output the uops have no return values
+"""

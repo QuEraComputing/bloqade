@@ -92,7 +92,11 @@ stmts = [
     (v2 := squin.wire.Apply(squin.op.stmts.H().result, v1.results[0])),
     (v3 := squin.wire.Apply(squin.op.stmts.X().result, v2.results[0])),
     # Wrap so the wire goes back "into" the qubit
-    (wrapped := squin.wire.Wrap(wire=v3.results[0], qubit=q.result)),
+    # There's no assigned necessary here because Wrap doesn't even
+    # return anything
+    (squin.wire.Wrap(wire=v3.results[0], qubit=q.result)),
+    # Can use the qubit with standard qasm2 semantics
+    (qasm2.uop.H(qarg=q.result)),
 ]
 
 block = ir.Block(stmts)
