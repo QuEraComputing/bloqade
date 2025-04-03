@@ -1,13 +1,13 @@
 from kirin import ir, types, passes
-from bloqade import squin
+from bloqade import qasm2, squin
 from kirin.ir import dialect_group
 from kirin.prelude import basic
-from kirin.dialects import py, func, ilist
+from kirin.dialects import py, func
 
 # from bloqade.analysis import address
 
 
-@dialect_group(basic.add(squin.wire).add(squin.op).add(squin.qubit).add(ilist))
+@dialect_group(basic.add(squin.wire).add(squin.op).add(squin.qubit).add(qasm2.core))
 def squin_dialect(self):
     # Const prop analysis runs first, then fold pass takes
     # ConstantFold puts in the type hints! Need that for the
@@ -78,11 +78,19 @@ def as_int(value: int):
 
 stmts = [
     # Create register
+    ## I'm going to circumvent the fact that it's not clear to me how to
+    ## index into a squin register (or if it's even desirable) and use one from the qasm2.core
     (n_qubits := as_int(1)),
-    (reg := squin.qubit.New(n_qubits=n_qubits.result)),  # access .result to get ilist
-    # Get the single qubit
-    ## How do you do this when ilist doesn't have a "Get" statement?
-    # (idx := as_int(0)),
+    (qreg := qasm2.core.QRegNew(n_qubits=n_qubits.result)),
+    # Get one qubit out
+    (idx0 := as_int(0)),
+    (q := qasm2.core.QRegGet(reg=qreg.result, idx=idx0.result)),
+    # Unwrap to get wire
+    (w := squin.wire.Unwrap(qubit=q.result)),
+    # Use value semantics, keep things simple with operator
+    (v1 := squin.wire.Apply(squin.op.stmts.T().result, w.result)),
+    (v2 := squin.wire.Apply(squin.op.stmts.H().result, *v1.results)),
+    (v3 := squin.wire.Apply(squin.op.stmts.X().result, *v2.results)),
 ]
 
 block = ir.Block(stmts)
