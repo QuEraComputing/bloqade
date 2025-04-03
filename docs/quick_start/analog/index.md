@@ -443,5 +443,5 @@ emulation_results = load("emulation_results.json")
 hardware_results = load("hardware_results.json")
 ```
 
-[local-control]: background.md#local-control
-[rydberg-hamiltonian]: background.md#rydberg-many-body-hamiltonian
+[local-control]: ../../background.md#local-control
+[rydberg-hamiltonian]: ../../background.md#rydberg-many-body-hamiltonian

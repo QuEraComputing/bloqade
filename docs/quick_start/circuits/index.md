@@ -1,6 +1,6 @@
 # Digital Quantum Computing with circuits
 
-This section provides the quick start guide for developing quantum programs represented by circuits using Bloqade. Circuits are a general-purpose and powerful way of representing arbitrary computations. For a few examples please refer to our [examples](digital/index.md).
+This section provides the quick start guide for developing quantum programs represented by circuits using Bloqade. Circuits are a general-purpose and powerful way of representing arbitrary computations. For a few examples please refer to our [examples](../../digital/index.md).
 
 
 ## Open Quantum Assembly Language (QASM2) and beyond
@@ -89,7 +89,7 @@ The compilation process is divided into several stages:
 
 ### Progressive compilation
 
-As well as writing circuit executions, you can also progressively transform and compile that circuit. For example, you may want to lower arbitrary single qubit unitaries into hardware-specific unitaries, as is done in [this example](quick_start/circuits/compiler_passes/native_gate_rewrite.md). For more details on the kinds of circuit-level compiler passes and how to write your own, see [here](quick_start/circuits/compiler_passes/index.md)
+As well as writing circuit executions, you can also progressively transform and compile that circuit. For example, you may want to lower arbitrary single qubit unitaries into hardware-specific unitaries, as is done in [this example](../circuits/compiler_passes/native_gate_rewrite.md). For more details on the kinds of circuit-level compiler passes and how to write your own, see [here](../circuits/compiler_passes/index.md)
 
 ## Dialect groups
 

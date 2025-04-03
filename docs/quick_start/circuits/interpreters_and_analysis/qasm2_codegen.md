@@ -16,4 +16,4 @@ ast = target.emit(main)
 pprint(ast)
 ```
 
-![QFT QASM2](qft-qasm2.png)
+![QFT QASM2](../qft-qasm2.png)
