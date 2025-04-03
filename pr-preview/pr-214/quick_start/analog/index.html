@@ -2160,10 +2160,10 @@ contribute.</p>
 <ul>
 <li>Specify which level coupling to drive: <code>rydberg</code> or <code>hyperfine</code></li>
 <li>Specify <code>detuning</code>, <code>rabi.amplitude</code> or <code>rabi.phase</code></li>
-<li>Specify the <a href="background.md#local-control">spatial modulation</a></li>
+<li>Specify the <a href="../../background/#local-control">spatial modulation</a></li>
 </ul>
 <p>Which then leads you to the ability to specify a waveform of interest and begin constructing your pulse sequence.
-In the example below, we target the ground-Rydberg level coupling to drive with uniform <a href="background.md#local-control">spatial modulation</a> for the Rabi amplitude. Our waveform is a piecewise linear one which ramps from <span class="arithmatex">\(0\)</span> to <span class="arithmatex">\(5 \,\text{rad/us}\)</span>, holds that value for <span class="arithmatex">\(1 \,\text{us}\)</span> and then ramps back down to <span class="arithmatex">\(0 \,\text{rad/us}\)</span>.</p>
+In the example below, we target the ground-Rydberg level coupling to drive with uniform <a href="../../background/#local-control">spatial modulation</a> for the Rabi amplitude. Our waveform is a piecewise linear one which ramps from <span class="arithmatex">\(0\)</span> to <span class="arithmatex">\(5 \,\text{rad/us}\)</span>, holds that value for <span class="arithmatex">\(1 \,\text{us}\)</span> and then ramps back down to <span class="arithmatex">\(0 \,\text{rad/us}\)</span>.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.analog</span><span class="w"> </span><span class="kn">import</span> <span class="n">start</span>
 
 <span class="n">geometry</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">add_position</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
@@ -2272,7 +2272,7 @@ In the example below, we target the ground-Rydberg level coupling to drive with 
 </code></pre></div>
 <h2 id="emulation">Emulation</h2>
 <p>When you've completed the definition of your program you can use Bloqade's own emulator to get results.
-The emulation performs the <a href="background.md#rydberg-many-body-hamiltonian">time evolution</a> of the <a href="background.md#rydberg-many-body-hamiltonian">analog Rydberg Hamiltonian</a>.
+The emulation performs the <a href="../../background/#rydberg-many-body-hamiltonian">time evolution</a> of the <a href="../../background/#rydberg-many-body-hamiltonian">analog Rydberg Hamiltonian</a>.
 Here we say we want to the program to be run and measurements obtained 1000 times.</p>
 <div class="highlight"><pre><span></span><code><span class="n">results</span> <span class="o">=</span> <span class="n">your_program</span><span class="o">.</span><span class="n">bloqade</span><span class="o">.</span><span class="n">python</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
 </code></pre></div>
