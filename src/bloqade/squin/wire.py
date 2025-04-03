@@ -10,6 +10,8 @@ from kirin import ir, types
 from kirin.decl import info, statement
 from bloqade.types import QubitType
 
+from .op.types import OpType
+
 # from kirin.lowering import wraps
 
 # from .op.types import Op, OpType
