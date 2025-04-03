@@ -8,10 +8,10 @@ dialect.
 
 from kirin import ir, types
 from kirin.decl import info, statement
-from bloqade.types import Qubit, QubitType
-from kirin.lowering import wraps
+from bloqade.types import QubitType
+# from kirin.lowering import wraps
 
-from .op.types import Op, OpType
+# from .op.types import Op, OpType
 
 dialect = ir.Dialect("squin.wire")
 
