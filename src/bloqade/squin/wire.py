@@ -12,6 +12,10 @@ from bloqade.types import QubitType
 
 from .op.types import OpType
 
+# from kirin.lowering import wraps
+
+# from .op.types import Op, OpType
+
 dialect = ir.Dialect("squin.wire")
 
 
@@ -34,6 +38,8 @@ class Wrap(ir.Statement):
     qubit: ir.SSAValue = info.argument(QubitType)
 
 
+# "Unwrap the quantum references to expose wires" -> From Quake Dialect documentation
+# Unwrap(Qubit) -> Wire
 @statement(dialect=dialect)
 class Unwrap(ir.Statement):
     traits = frozenset({ir.FromPythonCall(), ir.Pure()})
@@ -41,19 +47,27 @@ class Unwrap(ir.Statement):
     result: ir.ResultValue = info.result(WireType)
 
 
+# In Quake, you put a wire in and get a wire out when you "apply" an operator
+# In this case though we just need to indicate that an operator is applied to list[wires]
 @statement(dialect=dialect)
 class Apply(ir.Statement):
     traits = frozenset({ir.FromPythonCall(), ir.Pure()})
     operator: ir.SSAValue = info.argument(OpType)
     inputs: tuple[ir.SSAValue] = info.argument(WireType)
 
-    def __init__(self, operator: ir.SSAValue, *args: ir.SSAValue):
+    def __init__(
+        self, operator: ir.SSAValue, *args: ir.SSAValue
+    ):  # apply(op, w1, w2, ...)
         result_types = tuple(WireType for _ in args)
         super().__init__(
             args=(operator,) + args,
-            result_types=result_types,
-            args_slice={"operator": 0, "inputs": slice(1, None)},
+            result_types=result_types,  # result types of the Apply statement, should all be WireTypes
+            args_slice={
+                "operator": 0,
+                "inputs": slice(1, None),
+            },  # pretty printing + syntax sugar
         )
+        # custom lowering required for wrapper to work here,
 
 
 # NOTE: measurement cannot be pure because they will collapse the state
@@ -78,3 +92,31 @@ class MeasureAndReset(ir.Statement):
 class Reset(ir.Statement):
     traits = frozenset({ir.FromPythonCall(), WireTerminator()})
     wire: ir.SSAValue = info.argument(WireType)
+
+
+# Avoid using frontend for now
+"""
+@wraps(Wrap)
+def wrap(wire: Wire, qubit: Qubit) -> None: ...
+
+
+@wraps(Unwrap)
+def unwrap(qubit: Qubit) -> Wire: ...
+
+# From talking with Roger, wrapped `Apply` does not
+# work the way it should
+@wraps(Apply)
+def apply(operator: Op, *args: Wire) -> tuple[Wire, ...]: ...
+
+
+@wraps(Measure)
+def measure(wire: Wire) -> int: ...
+
+
+@wraps(MeasureAndReset)
+def measure_and_reset(wire: Wire) -> tuple[int, Wire]: ...
+
+
+@wraps(Reset)
+def reset(wire: Wire) -> None: ...
+"""

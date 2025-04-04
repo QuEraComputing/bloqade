@@ -4,7 +4,7 @@ from kirin.dialects import ilist
 from bloqade.qasm2.parse import ast
 from bloqade.qasm2.types import QRegType
 from bloqade.qasm2.emit.gate import EmitQASM2Gate, EmitQASM2Frame
-from bloqade.analysis.schedule import DagScheduleAnalysis
+from bloqade.squin.analysis.schedule import DagScheduleAnalysis
 
 dialect = ir.Dialect("qasm2.glob")
 
