@@ -9,6 +9,14 @@ authors = [
     { name = "weinbe58", email="pweinberg@quera.com"},
     { name = "johnzl-777", email="jlong@quera.com"},
 ]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12"
+]
 requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.22.0",
@@ -18,6 +26,7 @@ dependencies = [
     "pydantic>=1.3.0",
     "pandas>=2.2.3",
     "bloqade-circuit[cirq,qasm2,qbraid,vis]~=0.1.0",
+    "bloqade-analog>=0.16.3",
 ]
 
 [project.optional-dependencies]
