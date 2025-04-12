@@ -92,7 +92,7 @@ profile = "black"
 combine_as_imports = true
 multi_line_output = 3
 length_sort = true
-src_paths = ["src/kirin"]
+src_paths = ["src/bloqade"]
 
 [tool.black]
 line-length = 88
@@ -127,6 +127,3 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.coverage.run]
 include = ["src/bloqade/*"]
-
-[tool.uv.sources]
-bloqade-circuit = { workspace = true }
