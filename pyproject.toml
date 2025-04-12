@@ -19,32 +19,8 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 dependencies = [
-    "numpy>=1.22.0",
-    "scipy>=1.13.1",
-    "kirin-toolchain~=0.14.0",
-    "rich>=13.9.4",
-    "pydantic>=1.3.0",
-    "pandas>=2.2.3",
     "bloqade-circuit[cirq,qasm2,qbraid,vis]~=0.1.0",
     "bloqade-analog~=0.16.3",
-]
-
-[project.optional-dependencies]
-qasm2 = [
-    "lark>=1.2.2",
-]
-vis = [
-    "tqdm>=4.66.5",
-    "matplotlib>=3.9.2",
-    "pyqt5>=5.15.11",
-    "ffmpeg>=1.4",
-]
-qbraid = [
-    "qbraid>=0.9.3",
-]
-cirq = [
-    "cirq-core>=1.4.1",
-    "cirq-core[contrib]>=1.4.1",
 ]
 
 [build-system]
