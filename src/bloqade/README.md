@@ -1,6 +1,6 @@
 # Surprise! Where are all the source codes?!
 
-the `bloqade` repository is a Python namespace package[^1,^2] that does not contain any source code. This repository only contains the examples and documentation for the `bloqade` package. This allows us to provide better installation experience for new users (they just install everything in bloqade universe), and also allows us to have a more modularized codebase.
+the `bloqade` repository is a Python namespace package[^1] [^2] that does not contain any source code. This repository only contains the examples and documentation for the `bloqade` package. This allows us to provide better installation experience for new users (they just install everything in bloqade universe), and also allows us to have a more modularized codebase.
 
 See also the discussion in [#213](https://github.com/QuEraComputing/bloqade/issues/213) regarding the design decision of using namespace package vs. mono-repo.
 
