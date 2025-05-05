@@ -1,0 +1,74 @@
+name: Documentation
+on:
+  schedule:
+  - cron: 24 4 * * *
+concurrency:
+  group: ${{ github.workflow }}-${{ github.headref }}
+  cancel-in-progress: true
+
+jobs:
+  documentation:
+    name: Deploy documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          # Install a specific version of uv.
+          version: "0.5.1"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+      - name: Install Documentation dependencies
+        run: uv sync --group doc
+
+        # get latest dependencies from git directly
+      - name: clone the latest bloqade-circuit
+        id: clone_bloqade_circuit
+        uses: actions/checkout@v4
+        with:
+          repository: https://github.com/QuEraComputing/bloqade-circuit
+          path: '../bloqade-circuit'
+      
+      - name: clone the latest bloqade-analog
+        id: clone_bloqade_analog
+        uses: actions/checkout@v4
+        with:
+          repository: https://github.com/QuEraComputing/bloqade-analog
+          path: '../bloqade-analog'
+      
+      - name: assign commit hashes to variables
+        run: |
+          echo "BC_COMMIT=${{ steps.clone_bloqade_circuit.commit }}" >> $GITHUB_ENV
+          echo "BA_COMMIT=${{ steps.clone_bloqade_analog.commit }}" >> $GITHUB_ENV
+
+      # TODO: check commits against previous runs and cancel if they are the same
+
+      - name: add local repos as dependencies
+        run: uv add ../bloqade-circuit ../bloqade-analog
+        
+      - name: Set up build cache
+        uses: actions/cache@v4
+        id: cache
+        with:
+          key: mkdocs-material-nightly-dev-${{ github.headref }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+      - name: Depoly documentation
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          uv run mkdocs build
+      # derived from:
+      # https://github.com/RemoteCloud/public-documentation/blob/dev/.github/workflows/build_docs.yml
+      - name: Configure Git user
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+      - name: Deploy documentation
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          git fetch origin gh-pages --depth=1
+          uv run mike deploy -p dev
