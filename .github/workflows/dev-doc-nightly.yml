@@ -42,7 +42,20 @@ jobs:
           echo "BC_COMMIT=${{ steps.clone_bloqade_circuit.commit }}" >> $GITHUB_ENV
           echo "BA_COMMIT=${{ steps.clone_bloqade_analog.commit }}" >> $GITHUB_ENV
 
-      # TODO: check commits against previous runs and cancel if they are the same
+      - name: get previous commits from github variables
+        run: |
+          echo "BC_PREV_COMMIT=$(gh variable get DEV_DOC_NIGHTLY_BC_COMMIT)" >> $GITHUB_ENV
+          echo "BA_PREV_COMMIT=$(gh variable get DEV_DOC_NIGHTLY_BA_COMMIT)" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        
+      - name: cancel job if commits are equal
+        if: ${{ env.BC_COMMIT == env.BC_PREV_COMMIT && env.BA_COMMIT == env.BA_PREV_COMMIT }}
+        run: |
+          gh run cancel ${{ github.run_id }}
+          gh run watch ${{ github.run_id }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: add local repos as dependencies
         run: uv add ../bloqade-circuit ../bloqade-analog
@@ -71,4 +84,11 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           git fetch origin gh-pages --depth=1
-          uv run mike deploy -p dev
+          uv run mike deploy -p dev-nightly
+
+      - name: Set variables to new commits after build
+        run: |
+          gh variable set DEV_DOC_NIGHTLY_BC_COMMIT --body "${{ env.BC_COMMIT }}"
+          gh variable set DEV_DOC_NIGHTLY_BA_COMMIT --body "${{ env.BA_COMMIT }}"
+        env:  # TODO: this may need a token with more permissions
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
