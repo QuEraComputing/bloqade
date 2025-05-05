@@ -42,15 +42,8 @@ jobs:
           echo "BC_COMMIT=${{ steps.clone_bloqade_circuit.commit }}" >> $GITHUB_ENV
           echo "BA_COMMIT=${{ steps.clone_bloqade_analog.commit }}" >> $GITHUB_ENV
 
-      - name: get previous commits from github variables
-        run: |
-          echo "BC_PREV_COMMIT=$(gh variable get DEV_DOC_NIGHTLY_BC_COMMIT)" >> $GITHUB_ENV
-          echo "BA_PREV_COMMIT=$(gh variable get DEV_DOC_NIGHTLY_BA_COMMIT)" >> $GITHUB_ENV
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        
       - name: cancel job if commits are equal
-        if: ${{ env.BC_COMMIT == env.BC_PREV_COMMIT && env.BA_COMMIT == env.BA_PREV_COMMIT }}
+        if: ${{ env.BC_COMMIT == vars.DEV_DOC_NIGHTLY_BC_COMMIT && env.BA_COMMIT == vars.DEV_DOC_NIGHTLY_BA_COMMIT }}
         run: |
           gh run cancel ${{ github.run_id }}
           gh run watch ${{ github.run_id }}
