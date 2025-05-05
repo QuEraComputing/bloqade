@@ -15,8 +15,9 @@ coverage-open:
 
 coverage: coverage-run coverage-xml coverage-report
 
-doc:
-    mkdocs serve
+doc FLAGS="":
+    mkdocs serve {{FLAGS}}
 
-doc-build:
-    mkdocs build
+doc-build FLAGS="":
+    mkdocs build {{FLAGS}}
+
