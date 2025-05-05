@@ -130,6 +130,7 @@ plugins:
   - mkdocs-jupyter:
       execute: !ENV ["EXECUTE_NOTEBOOKS", true]
       allow_errors: false
+      ignore: ["scripts/*"]
 
 extra_javascript:
   - javascripts/katex.js
