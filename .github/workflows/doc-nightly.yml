@@ -34,3 +34,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           uv run mkdocs build
+      - name: Deploy docs
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./site
