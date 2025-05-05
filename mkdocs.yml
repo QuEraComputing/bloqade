@@ -128,7 +128,7 @@ plugins:
       minify_html: false
   - blog
   - mkdocs-jupyter:
-      execute: true
+      execute: !ENV ["EXECUTE_NOTEBOOKS", true]
       allow_errors: false
       #include: ["examples/ghz.py"]
       #ignore: []
