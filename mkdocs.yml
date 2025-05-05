@@ -130,8 +130,6 @@ plugins:
   - mkdocs-jupyter:
       execute: !ENV ["EXECUTE_NOTEBOOKS", true]
       allow_errors: false
-      #include: ["examples/ghz.py"]
-      #ignore: []
 
 extra_javascript:
   - javascripts/katex.js
