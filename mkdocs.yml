@@ -128,8 +128,9 @@ plugins:
       minify_html: false
   - blog
   - mkdocs-jupyter:
-      #include: ["examples/ghz.py"]
-      #ignore: []
+      execute: !ENV ["EXECUTE_NOTEBOOKS", false]
+      allow_errors: false
+      ignore: ["scripts/*"]
 
 extra_javascript:
   - javascripts/katex.js
