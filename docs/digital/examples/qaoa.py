@@ -9,8 +9,9 @@ from typing import Any
 
 import kirin
 import networkx as nx
+from kirin.dialects import ilist
+
 from bloqade import qasm2
-from kirin.dialects import py, ilist
 
 pi = math.pi
 
@@ -47,9 +48,9 @@ def qaoa_sequential(G: nx.Graph) -> kirin.ir.Method:
     @qasm2.extended
     def kernel(gamma: ilist.IList[float, Any], beta: ilist.IList[float, Any]):
         # Initialize the register in the |+> state
-        qreg = qasm2.qreg(N)
+        q = qasm2.qreg(N)
         for i in range(N):  # structural control flow is native to the Kirin compiler
-            qasm2.h(qreg[i])
+            qasm2.h(q[i])
 
         # Repeat the cost and mixer layers
         for i in range(len(gamma)):
@@ -57,15 +58,15 @@ def qaoa_sequential(G: nx.Graph) -> kirin.ir.Method:
             # to each edge of the graph
             for j in range(len(edges)):
                 edge = edges[j]
-                qasm2.cx(qreg[edge[0]], qreg[edge[1]])
-                qasm2.rz(qreg[edge[1]], gamma[i])
-                qasm2.cx(qreg[edge[0]], qreg[edge[1]])
+                qasm2.cx(q[edge[0]], q[edge[1]])
+                qasm2.rz(q[edge[1]], gamma[i])
+                qasm2.cx(q[edge[0]], q[edge[1]])
             # The mixer layer, which corresponds to a X(phase) gate applied
             # to each node of the graph
             for j in range(N):
-                qasm2.rx(qreg[j], beta[i])
+                qasm2.rx(q[j], beta[i])
 
-        return qreg
+        return q
 
     return kernel
 
@@ -136,11 +137,11 @@ def qaoa_simd(G: nx.Graph) -> kirin.ir.Method:
     @qasm2.extended
     def kernel(gamma: ilist.IList[float, Any], beta: ilist.IList[float, Any]):
         # Declare the register and set it to the |+> state
-        qreg = qasm2.qreg(len(nodes))
-        # qasm2.glob.u(theta=pi / 2, phi=0.0, lam=pi,registers=[qreg])
+        q = qasm2.qreg(len(nodes))
+        # qasm2.glob.u(theta=pi / 2, phi=0.0, lam=pi,registers=[q])
 
         def get_qubit(x: int):
-            return qreg[x]
+            return q[x]
 
         all_qubits = ilist.map(fn=get_qubit, collection=range(N))
 
@@ -157,10 +158,10 @@ def qaoa_simd(G: nx.Graph) -> kirin.ir.Method:
             # ...then, do an X phase gate. Observe that because this happens on every
             # qubit, we can do a global rotation, which is higher fidelity than
             # parallel local rotations.
-            # qasm2.glob.u(theta=beta[i],phi=0.0,lam=0.0,registers=[qreg])
+            # qasm2.glob.u(theta=beta[i],phi=0.0,lam=0.0,registers=[q])
             qasm2.parallel.u(qargs=all_qubits, theta=beta[i], phi=0.0, lam=0.0)
 
-        return qreg
+        return q
 
     return kernel
 
@@ -183,10 +184,6 @@ def main():
 
 
 # %%
-target = qasm2.emit.QASM2(
-    main_target=qasm2.main.union(
-        [qasm2.dialects.parallel, qasm2.dialects.glob, ilist, py.constant]
-    )
-)
+target = qasm2.emit.QASM2()
 ast = target.emit(main)
 qasm2.parse.pprint(ast)
