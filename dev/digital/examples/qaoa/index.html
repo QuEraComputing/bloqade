@@ -2455,7 +2455,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=19fe43b1">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b9972e43">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2468,7 +2468,7 @@ and the considerable literature that has developed around this algorithm.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=21919e54">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4dc190e4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2491,8 +2491,9 @@ and the considerable literature that has developed around this algorithm.</p>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">kirin</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kirin.dialects</span><span class="w"> </span><span class="kn">import</span> <span class="n">ilist</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">qasm2</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">kirin.dialects</span><span class="w"> </span><span class="kn">import</span> <span class="n">py</span><span class="p">,</span> <span class="n">ilist</span>
 
 <span class="n">pi</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
 </pre></div>
@@ -2501,8 +2502,9 @@ from typing import Any
 
 import kirin
 import networkx as nx
+from kirin.dialects import ilist
+
 from bloqade import qasm2
-from kirin.dialects import py, ilist
 
 pi = math.pi</div>
 </div>
@@ -2511,7 +2513,7 @@ pi = math.pi</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ddd3c39e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a1d18283">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2524,7 +2526,7 @@ Here, we choose a random 3 regular graph with 32 nodes <a href="https://journals
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=92b1d431">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b5006743">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2553,7 +2555,7 @@ G = nx.random_regular_graph(3, N, seed=42)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=71f621d8">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ba934ecd">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2571,7 +2573,7 @@ does not inform any parallelism to the compiler.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9d209716">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=68654f4e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2598,9 +2600,9 @@ does not inform any parallelism to the compiler.</p>
     <span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">kernel</span><span class="p">(</span><span class="n">gamma</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">beta</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
         <span class="c1"># Initialize the register in the |+&gt; state</span>
-        <span class="n">qreg</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">qreg</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">qreg</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>  <span class="c1"># structural control flow is native to the Kirin compiler</span>
-            <span class="n">qasm2</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">qasm2</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
         <span class="c1"># Repeat the cost and mixer layers</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gamma</span><span class="p">)):</span>
@@ -2608,15 +2610,15 @@ does not inform any parallelism to the compiler.</p>
             <span class="c1"># to each edge of the graph</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">edges</span><span class="p">)):</span>
                 <span class="n">edge</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
-                <span class="n">qasm2</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">qreg</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
-                <span class="n">qasm2</span><span class="o">.</span><span class="n">rz</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">gamma</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-                <span class="n">qasm2</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">qreg</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+                <span class="n">qasm2</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">q</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+                <span class="n">qasm2</span><span class="o">.</span><span class="n">rz</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">gamma</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">qasm2</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">q</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
             <span class="c1"># The mixer layer, which corresponds to a X(phase) gate applied</span>
             <span class="c1"># to each node of the graph</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-                <span class="n">qasm2</span><span class="o">.</span><span class="n">rx</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">beta</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">qasm2</span><span class="o">.</span><span class="n">rx</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">beta</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">qreg</span>
+        <span class="k">return</span> <span class="n">q</span>
 
     <span class="k">return</span> <span class="n">kernel</span>
 </pre></div>
@@ -2629,9 +2631,9 @@ does not inform any parallelism to the compiler.</p>
     @qasm2.extended
     def kernel(gamma: ilist.IList[float, Any], beta: ilist.IList[float, Any]):
         # Initialize the register in the |+&gt; state
-        qreg = qasm2.qreg(N)
+        q = qasm2.qreg(N)
         for i in range(N):  # structural control flow is native to the Kirin compiler
-            qasm2.h(qreg[i])
+            qasm2.h(q[i])
 
         # Repeat the cost and mixer layers
         for i in range(len(gamma)):
@@ -2639,15 +2641,15 @@ does not inform any parallelism to the compiler.</p>
             # to each edge of the graph
             for j in range(len(edges)):
                 edge = edges[j]
-                qasm2.cx(qreg[edge[0]], qreg[edge[1]])
-                qasm2.rz(qreg[edge[1]], gamma[i])
-                qasm2.cx(qreg[edge[0]], qreg[edge[1]])
+                qasm2.cx(q[edge[0]], q[edge[1]])
+                qasm2.rz(q[edge[1]], gamma[i])
+                qasm2.cx(q[edge[0]], q[edge[1]])
             # The mixer layer, which corresponds to a X(phase) gate applied
             # to each node of the graph
             for j in range(N):
-                qasm2.rx(qreg[j], beta[i])
+                qasm2.rx(q[j], beta[i])
 
-        return qreg
+        return q
 
     return kernel</div>
 </div>
@@ -2656,7 +2658,7 @@ does not inform any parallelism to the compiler.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b107cde8">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d837f298">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2675,7 +2677,7 @@ using an equitable coloring of the line graph.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=27df40d4">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=7c5ffc89">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2746,11 +2748,11 @@ using an equitable coloring of the line graph.</p>
     <span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">kernel</span><span class="p">(</span><span class="n">gamma</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">beta</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
         <span class="c1"># Declare the register and set it to the |+&gt; state</span>
-        <span class="n">qreg</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">qreg</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">))</span>
-        <span class="c1"># qasm2.glob.u(theta=pi / 2, phi=0.0, lam=pi,registers=[qreg])</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">qreg</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">))</span>
+        <span class="c1"># qasm2.glob.u(theta=pi / 2, phi=0.0, lam=pi,registers=[q])</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">get_qubit</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">qreg</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">q</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
 
         <span class="n">all_qubits</span> <span class="o">=</span> <span class="n">ilist</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">get_qubit</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
 
@@ -2767,10 +2769,10 @@ using an equitable coloring of the line graph.</p>
             <span class="c1"># ...then, do an X phase gate. Observe that because this happens on every</span>
             <span class="c1"># qubit, we can do a global rotation, which is higher fidelity than</span>
             <span class="c1"># parallel local rotations.</span>
-            <span class="c1"># qasm2.glob.u(theta=beta[i],phi=0.0,lam=0.0,registers=[qreg])</span>
+            <span class="c1"># qasm2.glob.u(theta=beta[i],phi=0.0,lam=0.0,registers=[q])</span>
             <span class="n">qasm2</span><span class="o">.</span><span class="n">parallel</span><span class="o">.</span><span class="n">u</span><span class="p">(</span><span class="n">qargs</span><span class="o">=</span><span class="n">all_qubits</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="n">beta</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">phi</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">qreg</span>
+        <span class="k">return</span> <span class="n">q</span>
 
     <span class="k">return</span> <span class="n">kernel</span>
 </pre></div>
@@ -2827,11 +2829,11 @@ using an equitable coloring of the line graph.</p>
     @qasm2.extended
     def kernel(gamma: ilist.IList[float, Any], beta: ilist.IList[float, Any]):
         # Declare the register and set it to the |+&gt; state
-        qreg = qasm2.qreg(len(nodes))
-        # qasm2.glob.u(theta=pi / 2, phi=0.0, lam=pi,registers=[qreg])
+        q = qasm2.qreg(len(nodes))
+        # qasm2.glob.u(theta=pi / 2, phi=0.0, lam=pi,registers=[q])
 
         def get_qubit(x: int):
-            return qreg[x]
+            return q[x]
 
         all_qubits = ilist.map(fn=get_qubit, collection=range(N))
 
@@ -2848,10 +2850,10 @@ using an equitable coloring of the line graph.</p>
             # ...then, do an X phase gate. Observe that because this happens on every
             # qubit, we can do a global rotation, which is higher fidelity than
             # parallel local rotations.
-            # qasm2.glob.u(theta=beta[i],phi=0.0,lam=0.0,registers=[qreg])
+            # qasm2.glob.u(theta=beta[i],phi=0.0,lam=0.0,registers=[q])
             qasm2.parallel.u(qargs=all_qubits, theta=beta[i], phi=0.0, lam=0.0)
 
-        return qreg
+        return q
 
     return kernel</div>
 </div>
@@ -2860,7 +2862,7 @@ using an equitable coloring of the line graph.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=359ab5a0">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=77c3166b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2889,7 +2891,7 @@ qaoa_sequential(G).code.print()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=0f225605">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8cd15edf">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2922,7 +2924,7 @@ kernel.print()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2cfdb414">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e7477fef">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2953,7 +2955,7 @@ def main():
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a611547f">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9addc33a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2971,19 +2973,11 @@ def main():
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">emit</span><span class="o">.</span><span class="n">QASM2</span><span class="p">(</span>
-    <span class="n">main_target</span><span class="o">=</span><span class="n">qasm2</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">union</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">qasm2</span><span class="o">.</span><span class="n">dialects</span><span class="o">.</span><span class="n">parallel</span><span class="p">,</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">dialects</span><span class="o">.</span><span class="n">glob</span><span class="p">,</span> <span class="n">ilist</span><span class="p">,</span> <span class="n">py</span><span class="o">.</span><span class="n">constant</span><span class="p">]</span>
-    <span class="p">)</span>
-<span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">emit</span><span class="o">.</span><span class="n">QASM2</span><span class="p">()</span>
 <span class="n">ast</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
 <span class="n">qasm2</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">ast</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-8">target = qasm2.emit.QASM2(
-    main_target=qasm2.main.union(
-        [qasm2.dialects.parallel, qasm2.dialects.glob, ilist, py.constant]
-    )
-)
+<div class="clipboard-copy-txt" id="cell-8">target = qasm2.emit.QASM2()
 ast = target.emit(main)
 qasm2.parse.pprint(ast)</div>
 </div>
