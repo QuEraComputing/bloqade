@@ -1,5 +1,5 @@
 ---
-title: Sstim
+title: stim
 ---
 
 # ::: bloqade.stim
