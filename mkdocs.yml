@@ -43,6 +43,10 @@ nav:
       - Contributing: contrib.md
   - Digital Tutorials:
     - digital/index.md
+    - digital/dialects_and_kernels.md
+    - Simulator Device:
+      - digital/simulator_device/simulator_device.md
+      - digital/simulator_device/tasks.md
     - Circuits:
       - Quantum Fourier Transform: "digital/examples/qft.py"
       - GHZ state preparation: "digital/examples/ghz.py"
@@ -52,10 +56,23 @@ nav:
   - Analog Tutorials: 'https://queracomputing.github.io/bloqade-analog-examples/dev/'
   - Bloqade Analog: 'https://queracomputing.github.io/bloqade-analog/latest/'
   - Analog Reference: 'https://queracomputing.github.io/bloqade-analog/latest/reference/overview/'
+  - API Reference:
+    - reference/index.md
+    - reference/analog.md
+    - reference/analysis.md
+    - reference/device.md
+    - reference/noise.md
+    - reference/pyqrack.md
+    - reference/qasm2.md
+    - reference/qbraid.md
+    - reference/squin.md
+    - reference/stim.md
+    - reference/task.md
+    - reference/types.md
+    - reference/visual.md
   - Blog:
     - blog/index.md
   - QuEra Computing: 'https://quera.com'
-  # - API Reference:
   #     - QASM2: reference/bloqade/qasm2/
 
 theme:
@@ -104,7 +121,6 @@ plugins:
   - mkdocstrings:
       handlers:
         python:
-          paths: [src]
           options:
             show_if_no_docstring: false
             separate_signature: true
