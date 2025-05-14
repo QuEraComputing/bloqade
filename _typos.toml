@@ -12,3 +12,6 @@ AttributeIDSupressMenu = "AttributeIDSupressMenu"
 Braket = "Braket"
 mch = "mch"
 IY = "IY"
+
+[files]
+extend-exclude = [".github/workflows/*"]

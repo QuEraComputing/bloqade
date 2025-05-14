@@ -1,3 +1,5 @@
+# This workflow builds & deploys the documentation using the latest release versions of dependent packages
+# Main use is to detect issues / accidental breaking changes with patch releases of e.g. bloqade-circuit
 name: Documentation
 on:
   schedule:
@@ -40,7 +42,7 @@ jobs:
         uses: actions/cache@v4
         id: cache
         with:
-          key: mkdocs-material-nigthly-${{ github.headref }}
+          key: mkdocs-material-nightly-${{ github.headref }}
           path: .cache
           restore-keys: |
             mkdocs-material-

@@ -1,3 +1,5 @@
+# This workflow pulls in the latest main branches of dependent packages and tries to build the documentation
+# so we can stay on top of issues with the examples when introducing changes
 name: Documentation
 on:
   schedule:
@@ -29,14 +31,14 @@ jobs:
         with:
           repository: https://github.com/QuEraComputing/bloqade-circuit
           path: '../bloqade-circuit'
-      
+
       - name: clone the latest bloqade-analog
         id: clone_bloqade_analog
         uses: actions/checkout@v4
         with:
           repository: https://github.com/QuEraComputing/bloqade-analog
           path: '../bloqade-analog'
-      
+
       - name: assign commit hashes to variables
         run: |
           echo "BC_COMMIT=${{ steps.clone_bloqade_circuit.commit }}" >> $GITHUB_ENV
@@ -52,7 +54,7 @@ jobs:
 
       - name: add local repos as dependencies
         run: uv add ../bloqade-circuit ../bloqade-analog
-        
+
       - name: Set up build cache
         uses: actions/cache@v4
         id: cache
