@@ -151,33 +151,4 @@ def loop_main():
 from bloqade.pyqrack import PyQrack  # noqa: E402
 
 device = PyQrack()
-qreg = device.run(postselect_main)
-print(qreg)
-
-# %% [markdown]
-# Now lets generate the QASM2 code for these circuits! This is an example of code generation,
-# where we go from one DSL and translate to another.
-
-# %%
-from bloqade.qasm2.emit import QASM2  # noqa: E402
-from bloqade.qasm2.parse import pprint  # noqa: E402
-
-target = QASM2()
-qasm_postselect = target.emit(postselect_main)
-qasm_loop = target.emit(loop_main)
-
-try:  # The recursion version has no qasm representation.
-    qasm_recursive = target.emit(recursion_main)
-except Exception:
-    print("Whoops! We cannot emit calls with return value. This is expected.")
-
-print("\n\n--- Postselect ---")
-pprint(qasm_postselect)
-print("\n\n--- Loop ---")
-pprint(qasm_loop)
-
-# %% [markdown]
-# We can also get qasm out as a string
-
-# %%
-payload = target.emit_str(postselect_main)
+device.run(postselect_main)
