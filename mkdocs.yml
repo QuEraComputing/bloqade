@@ -62,7 +62,6 @@ nav:
     - reference/analog.md
     - reference/analysis.md
     - reference/device.md
-    - reference/noise.md
     - reference/pyqrack.md
     - reference/qasm2.md
     - reference/qbraid.md
