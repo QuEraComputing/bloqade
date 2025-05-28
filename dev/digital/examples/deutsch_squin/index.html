@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://bloqade.quera.com/dev/digital/examples/qft/">
+        <link rel="canonical" href="https://bloqade.quera.com/dev/digital/examples/deutsch_squin/">
       
       
-        <link rel="prev" href="../../simulator_device/tasks/">
+        <link rel="prev" href="../qaoa/">
       
       
-        <link rel="next" href="../ghz/">
+        <link rel="next" href="../../../reference/">
       
       
       <link rel="icon" href="../../../assets/favicon.ico">
@@ -24,7 +24,7 @@
     
     
       
-        <title>Quantum Fourier Transform - The Neutral Atom SDK</title>
+        <title>Deutsch-Jozsa Algorithm - The Neutral Atom SDK</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#quantum-fourier-transform" class="md-skip">
+        <a href="#deutsch-jozsa-algorithm" class="md-skip">
           Skip to content
         </a>
       
@@ -119,7 +119,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Quantum Fourier Transform
+              Deutsch-Jozsa Algorithm
             
           </span>
         </div>
@@ -749,19 +749,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../qft/" class="md-nav__link">
         
   
   
@@ -772,7 +763,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -1737,19 +1727,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../qft/" class="md-nav__link">
         
   
   
@@ -1760,7 +1741,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -1862,10 +1842,19 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../deutsch_squin/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1876,6 +1865,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -2532,7 +2522,7 @@
 
 
   
-    <a href="https://github.com/QuEraComputing/bloqade/edit/main/docs/digital/examples/qft.py" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/QuEraComputing/bloqade/edit/main/docs/digital/examples/deutsch_squin.py" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2541,7 +2531,7 @@
     
       
     
-    <a href="https://github.com/QuEraComputing/bloqade/raw/main/docs/digital/examples/qft.py" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/QuEraComputing/bloqade/raw/main/docs/digital/examples/deutsch_squin.py" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
     </a>
@@ -2984,27 +2974,29 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f4149e56">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8fe33f57">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="quantum-fourier-transform">Quantum Fourier Transform<a class="anchor-link" href="#quantum-fourier-transform">¶</a></h1><p>In this example, we will explore the Quantum Fourier Transform (QFT) circuit using
-recursion and iteration -- a convenient way to implement the QFT circuit using
-our high-level programming features.</p>
-<p>To begin, we will import the <code>qasm2</code> module from the <code>bloqade</code> package and the <code>PyQrack</code>
-backend from the <code>bloqade.pyqrack</code> module, which can be installed via</p>
-<div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>bloqade-pyqrack<span class="o">[</span>backend<span class="o">]</span>
-</pre></div>
-<p>with the <code>backend</code> being one of <code> pyqrack</code>, <code>pyqrack-cpu</code>, <code>pyqrack-cuda</code> depending on
-the hardware and OS you have. see <a href="https://github.com/QuEraComputing/bloqade-pyqrack?tab=readme-ov-file#which-extra-do-i-install">README</a>
-for mote details.</p>
+<h1 id="deutsch-jozsa-algorithm">Deutsch-Jozsa Algorithm<a class="anchor-link" href="#deutsch-jozsa-algorithm">¶</a></h1><p>In this example, we will implement a version of the <a href="https://en.wikipedia.org/wiki/Deutsch%E2%80%93Jozsa_algorithm">Deutsch-Josza algorithm</a> using bloqade's squin dialect.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d5e8a07d">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>We start by loading in some stuff and defining some parameters.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=7724bcb0">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=03a91414">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3022,35 +3014,64 @@ for mote details.</p>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">qasm2</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.pyqrack</span><span class="w"> </span><span class="kn">import</span> <span class="n">PyQrack</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qubit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kirin.dialects</span><span class="w"> </span><span class="kn">import</span> <span class="n">ilist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.pyqrack</span><span class="w"> </span><span class="kn">import</span> <span class="n">StackMemorySimulator</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
+
+<span class="n">n_bits</span> <span class="o">=</span> <span class="mi">2</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1">import math
+<div class="clipboard-copy-txt" id="cell-1">import random
+from typing import Any
 
-from bloqade import qasm2
-from bloqade.pyqrack import PyQrack</div>
+from bloqade.types import Qubit
+from kirin.dialects import ilist
+from bloqade.pyqrack import StackMemorySimulator
+
+from bloqade import squin
+
+n_bits = 2</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a8b22ca7">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6e335f99">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>In the following, we will define the Quantum Fourier Transform (QFT) circuit using recursion
-inside a kernel function <code>qft</code>. The <code>qft</code> function takes two arguments: a quantum register <code>qreg</code>
-and an integer <code>n</code> representing the number of qubits we want to apply the QFT circuit to.</p>
+<p>Now, before we can implement the actual algorithm, we need to define the oracles, i.e. the functions we want to check for.</p>
+<p>The problem is defined as follows:
+Given a bit string of length $n$, $x \in \{0, 1\}^\otimes n$, we have a function that is either constant or balanced.</p>
+<p>A constant function is defined as $f_\text{const}(x) = c \forall x$, where $c \in \{0, 1\}$ is some constant value.</p>
+<p>A balanced function, on the other hand, is defined by</p>
+<p>$f_\text{balanced}(x) = \begin{cases} 0 \, \forall x \in S(x), \\ 1 \text{ else,} \end{cases}$</p>
+<p>where $S(x)$ is an arbitrarily chosen half of all possible bit strings, i.e. $|S(x)| = 2^{n-1}$.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=98be8dd9">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>For our example, we will be using $n + 1$ qubits, where $n$ store the bitstring $x$ and the result is stored in the last qubit.
+We'll be writing our oracle functions as squin kernels, which we can then later use in the actual algorithm implementation.</p>
+<p>In order to define our oracle functions, we can simply choose for the constant function to always return $1$, which we achieve by flipping the final qubit using an $X$ gate.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e3d50b00">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a564cfd6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3068,52 +3089,38 @@ and an integer <code>n</code> representing the number of qubits we want to apply
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">pi</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">f_constant</span><span class="p">(</span><span class="n">q</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">x</span><span class="p">()</span>
 
-
-<span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">qft</span><span class="p">(</span><span class="n">qreg</span><span class="p">:</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">QReg</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="n">n</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">qreg</span>
-
-    <span class="n">qasm2</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-        <span class="n">qasm2</span><span class="o">.</span><span class="n">cu1</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">qreg</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="o">**</span><span class="n">i</span><span class="p">)</span>
-    <span class="n">qft</span><span class="p">(</span><span class="n">qreg</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># recursion</span>
-    <span class="k">return</span> <span class="n">qreg</span>
+    <span class="c1"># flip the final (result) qubit -- every bit string is mapped to 1</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2">pi = math.pi
+<div class="clipboard-copy-txt" id="cell-2">@squin.kernel
+def f_constant(q: ilist.IList[Qubit, Any]):
+    x = squin.op.x()
 
-
-@qasm2.extended
-def qft(qreg: qasm2.QReg, n: int, k: int):
-    if k == n:
-        return qreg
-
-    qasm2.h(qreg[k])
-    for i in range(k + 1, n):
-        qasm2.cu1(qreg[i], qreg[k], 2 * math.pi / 2**i)
-    qft(qreg, n, k + 1)  # recursion
-    return qreg</div>
+    # flip the final (result) qubit -- every bit string is mapped to 1
+    squin.qubit.apply(x, [q[-1]])</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=bd0404fb">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=077cee2e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Next, we will call this kernel function <code>qft</code> inside a <code>main</code> function to check if
-the QFT circuit is correctly implemented. We will use a quantum register of size 3.</p>
+<p>For the balanced oracle we use the following approach: we use the first qubit as control in a $CX$ gate, which is applied to the resulting qubit.
+This means that the result will be $1$ in exactly half the cases.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9e333b0a">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=7560594f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3131,37 +3138,36 @@ the QFT circuit is correctly implemented. We will use a quantum register of size
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-    <span class="k">return</span> <span class="n">qft</span><span class="p">(</span><span class="n">qasm2</span><span class="o">.</span><span class="n">qreg</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">f_balanced</span><span class="p">(</span><span class="n">q</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">x</span><span class="p">()</span>
+    <span class="n">cn_x</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">control</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n_controls</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">cn_x</span><span class="p">,</span> <span class="p">[</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3">@qasm2.extended
-def main():
-    return qft(qasm2.qreg(3), 3, 0)</div>
+<div class="clipboard-copy-txt" id="cell-3">@squin.kernel
+def f_balanced(q: ilist.IList[Qubit, Any]):
+    x = squin.op.x()
+    cn_x = squin.op.control(x, n_controls=1)
+    squin.qubit.apply(cn_x, [q[0], q[-1]])</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4ff56d39">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ce05609b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Finally, we will run the <code>main</code> function on the <code>PyQrack</code> backend and print the quantum register
-to see the final state of the qubits after applying the QFT circuit.</p>
-<div align="center">
-<picture>
-<img alt="No description has been provided for this image" src="/digital/examples/qft.svg"/>
-</picture>
-</div>
+<p>Now, we define the actual algorithm as a kernel, which simply takes one of the other kernels as input.
+In the end, we can infer which function was provided by looking at the resulting measurement of the result qubit.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2edf54a2">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=eaa3d3fd">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3179,32 +3185,63 @@ to see the final state of the qubits after applying the QFT circuit.</p>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">device</span> <span class="o">=</span> <span class="n">PyQrack</span><span class="p">()</span>
-<span class="n">qreg</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">qreg</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">deutsch_algorithm</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">n_qubits</span><span class="o">=</span><span class="n">n_bits</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">x</span><span class="p">()</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+
+    <span class="n">h</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">h</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="p">)):</span>
+        <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="p">[</span><span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+
+    <span class="c1"># apply the oracle function</span>
+    <span class="n">f</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_bits</span><span class="p">):</span>
+        <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="p">[</span><span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+
+    <span class="k">return</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">q</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4">device = PyQrack()
-qreg = device.run(main)
-print(qreg)</div>
+<div class="clipboard-copy-txt" id="cell-4">@squin.kernel
+def deutsch_algorithm(f):
+    q = squin.qubit.new(n_qubits=n_bits + 1)
+
+    x = squin.op.x()
+    squin.qubit.apply(x, [q[-1]])
+
+    h = squin.op.h()
+    for i in range(len(q)):
+        squin.qubit.apply(h, [q[i]])
+
+    # apply the oracle function
+    f(q)
+
+    for i in range(n_bits):
+        squin.qubit.apply(h, [q[i]])
+
+    return squin.qubit.measure(q[:-1])</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3b9072c2">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=643d5e93">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>we can also emit the QASM2 code for the <code>main</code> function and print it to see the QASM2 code
-that corresponds to the QFT circuit.</p>
+<p>Finally, we actually run the result.
+To do so, we use the <code>PyQrack</code> simulation backend in bloqade.</p>
+<p>To make things a bit more interesting, we randomly select which function we are running the algorithm with.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9cd1b511">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=21a186b1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3222,19 +3259,59 @@ that corresponds to the QFT circuit.</p>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.qasm2.emit</span><span class="w"> </span><span class="kn">import</span> <span class="n">QASM2</span>  <span class="c1"># noqa: E402</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.qasm2.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">pprint</span>  <span class="c1"># noqa: E402</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">sim</span> <span class="o">=</span> <span class="n">StackMemorySimulator</span><span class="p">(</span><span class="n">min_qubits</span><span class="o">=</span><span class="n">n_bits</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
-<span class="n">target</span> <span class="o">=</span> <span class="n">QASM2</span><span class="p">()</span>
-<span class="n">ast</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
-<span class="n">pprint</span><span class="p">(</span><span class="n">ast</span><span class="p">)</span>
+<span class="n">f_choice_idx</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">f_choice</span> <span class="o">=</span> <span class="p">(</span><span class="n">f_constant</span><span class="p">,</span> <span class="n">f_balanced</span><span class="p">)[</span><span class="n">f_choice_idx</span><span class="p">]</span>
+
+<span class="c1"># result = sim.run(deutsch_algorithm, args=(f_balanced, n))</span>
+<span class="n">result0</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">n_shots</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_shots</span><span class="p">):</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">deutsch_algorithm</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">f_choice</span><span class="p">,))</span>
+    <span class="n">result0</span> <span class="o">+=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">n_shots</span>
+
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">"Oh magic Deutsch-Jozsa algorithm, tell us if our function is constant or balanced:"</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"*drumroll*"</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">result0</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"It's constant!"</span><span class="p">)</span>
+
+    <span class="c1"># let's make sure we actually did the right thing here</span>
+    <span class="k">assert</span> <span class="n">f_choice_idx</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"It's balanced!"</span><span class="p">)</span>
+
+    <span class="c1"># let's make sure we actually did the right thing here</span>
+    <span class="k">assert</span> <span class="n">f_choice_idx</span> <span class="o">==</span> <span class="mi">1</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5">from bloqade.qasm2.emit import QASM2  # noqa: E402
-from bloqade.qasm2.parse import pprint  # noqa: E402
+<div class="clipboard-copy-txt" id="cell-5">sim = StackMemorySimulator(min_qubits=n_bits + 1)
 
-target = QASM2()
-ast = target.emit(main)
-pprint(ast)</div>
+f_choice_idx = random.randint(0, 1)
+f_choice = (f_constant, f_balanced)[f_choice_idx]
+
+# result = sim.run(deutsch_algorithm, args=(f_balanced, n))
+result0 = 0.0
+n_shots = 100
+for _ in range(n_shots):
+    res = sim.run(deutsch_algorithm, args=(f_choice,))
+    result0 += res[0] / n_shots
+
+print(
+    "Oh magic Deutsch-Jozsa algorithm, tell us if our function is constant or balanced:"
+)
+print("*drumroll*")
+if result0 == 0:
+    print("It's constant!")
+
+    # let's make sure we actually did the right thing here
+    assert f_choice_idx == 0
+else:
+    print("It's balanced!")
+
+    # let's make sure we actually did the right thing here
+    assert f_choice_idx == 1</div>
 </div>
 </div>
 </div>
@@ -3279,7 +3356,7 @@ pprint(ast)</div>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../simulator_device/tasks/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Tasks">
+          <a href="../qaoa/" class="md-footer__link md-footer__link--prev" aria-label="Previous: QAOA">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -3289,20 +3366,20 @@ pprint(ast)</div>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Tasks
+                QAOA
               </div>
             </div>
           </a>
         
         
           
-          <a href="../ghz/" class="md-footer__link md-footer__link--next" aria-label="Next: GHZ State Preparation with Parallelism">
+          <a href="../../../reference/" class="md-footer__link md-footer__link--next" aria-label="Next: API Reference">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                GHZ State Preparation with Parallelism
+                API Reference
               </div>
             </div>
             <div class="md-footer__button md-icon">
