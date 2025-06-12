@@ -94,20 +94,15 @@ Usually, you don't want to write noise statements directly.
 Instead, use a [NoisePass][bloqade.qasm2.passes.NoisePass] in order to inject noise statements automatically according to a specific noise model.
 
 !!! note
-    Right now, only the `qasm2` dialects fully support noise.
+    Right now, only the `qasm2.extended` dialect fully support noise.
 
 For example, you may want to do something like this:
 
 ```python
 from bloqade import qasm2
-from bloqade.noise import native
 from bloqade.qasm2.passes import NoisePass
 
-
-# Add the noise dialect to qasm2.extended
-noise_dialect = qasm2.extended.add(native.dialect)
-
-@noise_dialect
+@qasm2.extended
 def main():
     n = 2
     q = qasm2.qreg(n)
@@ -124,7 +119,7 @@ def main():
 noise_pass = NoisePass(main.dialects)  # just use the default noise model for now
 
 # Inject the noise - note that the main method will be updated in-place
-noise_pass.unsafe_run(main)
+noise_pass(main)
 
 # Look at the IR and all the glorious noise in there
 main.print()
