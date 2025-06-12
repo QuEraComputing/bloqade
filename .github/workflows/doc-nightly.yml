@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   documentation:
-    name: Deploy documentation
+    name: Build documentation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,7 +37,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
-
       - name: Set up build cache
         uses: actions/cache@v4
         id: cache
@@ -46,19 +45,6 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - name: Depoly documentation
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Build documentation
         run: |
           uv run mkdocs build
-      - name: Deploy docs
-        uses: rossjrw/pr-preview-action@v1
-        with:
-          source-dir: ./site
-
-      - name: Set variables to new versions after build
-        run: |
-          gh variable set DOC_NIGHTLY_BC_VERSION --body "${{ env.BC_VERSION }}"
-          gh variable set DOC_NIGHTLY_BA_VERSION --body "${{ env.BA_VERSION }}"
-        env:  # TODO: this may need a token with more permissions
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}

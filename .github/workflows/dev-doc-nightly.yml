@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   documentation:
-    name: Deploy documentation
+    name: Build documentation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -39,19 +39,6 @@ jobs:
           repository: https://github.com/QuEraComputing/bloqade-analog
           path: '../bloqade-analog'
 
-      - name: assign commit hashes to variables
-        run: |
-          echo "BC_COMMIT=${{ steps.clone_bloqade_circuit.commit }}" >> $GITHUB_ENV
-          echo "BA_COMMIT=${{ steps.clone_bloqade_analog.commit }}" >> $GITHUB_ENV
-
-      - name: cancel job if commits are equal
-        if: ${{ env.BC_COMMIT == vars.DEV_DOC_NIGHTLY_BC_COMMIT && env.BA_COMMIT == vars.DEV_DOC_NIGHTLY_BA_COMMIT }}
-        run: |
-          gh run cancel ${{ github.run_id }}
-          gh run watch ${{ github.run_id }}
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
       - name: add local repos as dependencies
         run: uv add ../bloqade-circuit ../bloqade-analog
 
@@ -63,27 +50,6 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - name: Depoly documentation
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Build documentation
         run: |
           uv run mkdocs build
-      # derived from:
-      # https://github.com/RemoteCloud/public-documentation/blob/dev/.github/workflows/build_docs.yml
-      - name: Configure Git user
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-      - name: Deploy documentation
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          git fetch origin gh-pages --depth=1
-          uv run mike deploy -p dev-nightly
-
-      - name: Set variables to new commits after build
-        run: |
-          gh variable set DEV_DOC_NIGHTLY_BC_COMMIT --body "${{ env.BC_COMMIT }}"
-          gh variable set DEV_DOC_NIGHTLY_BA_COMMIT --body "${{ env.BA_COMMIT }}"
-        env:  # TODO: this may need a token with more permissions
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
