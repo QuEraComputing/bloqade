@@ -1672,6 +1672,8 @@
       
         
       
+        
+      
     
     
     
@@ -1823,6 +1825,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/examples/deutsch_squin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Deutsch-Jozsa Algorithm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1917,8 +1942,6 @@
       
         
           
-        
-      
         
       
         
@@ -2050,29 +2073,6 @@
   
   <span class="md-ellipsis">
     device
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../noise/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    noise
     
   </span>
   
@@ -2852,6 +2852,550 @@ have a cyclic dependency.</p>
 
 
 
+<h1 id="bloqade.squin.cirq" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">cirq</span>
+
+
+</h1>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bloqade.squin.cirq.load_circuit" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">load_circuit</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">load_circuit</span><span class="p">(</span>
+    <span class="n">circuit</span><span class="p">:</span> <span class="n">Circuit</span><span class="p">,</span>
+    <span class="n">kernel_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;main&quot;</span><span class="p">,</span>
+    <span class="n">dialects</span><span class="p">:</span> <span class="n">DialectGroup</span> <span class="o">=</span> <span class="n">kernel</span><span class="p">,</span>
+    <span class="nb">globals</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">lineno_offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">col_offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">compactify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Converts a cirq.Circuit object into a squin kernel.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>circuit</code>
+            </td>
+            <td>
+                  <code><span title="cirq.Circuit">Circuit</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The circuit to load.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Other Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>kernel_name</code></td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the kernel to load. Defaults to "main".</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>dialects</code></td>
+            <td>
+                  <code><span title="kirin.ir.DialectGroup">DialectGroup</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The dialects to use. Defaults to <code>squin.kernel</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>globals</code></td>
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>] | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The global variables to use. Defaults to None.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>file</code></td>
+            <td>
+                  <code><span title="str">str</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The file name for error reporting. Defaults to None.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>lineno_offset</code></td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The line number offset for error reporting. Defaults to 0.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>col_offset</code></td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The column number offset for error reporting. Defaults to 0.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>compactify</code></td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether to compactify the output. Defaults to True.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+        <p>Example:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># from cirq&#39;s &quot;hello qubit&quot; example</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cirq</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
+
+<span class="c1"># Pick a qubit.</span>
+<span class="n">qubit</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">GridQubit</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Create a circuit.</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">(</span>
+    <span class="n">cirq</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="n">qubit</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span>  <span class="c1"># Square root of NOT.</span>
+    <span class="n">cirq</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">qubit</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>  <span class="c1"># Measurement.</span>
+<span class="p">)</span>
+
+<span class="c1"># load the circuit as squin</span>
+<span class="n">main</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">load_circuit</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+
+<span class="c1"># print the resulting IR</span>
+<span class="n">main</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+</code></pre></div>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/cirq/__init__.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load_circuit</span><span class="p">(</span>
+    <span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span>
+    <span class="n">kernel_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;main&quot;</span><span class="p">,</span>
+    <span class="n">dialects</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">DialectGroup</span> <span class="o">=</span> <span class="n">kernel</span><span class="p">,</span>
+    <span class="nb">globals</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">lineno_offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">col_offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">compactify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a cirq.Circuit object into a squin kernel.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        circuit (cirq.Circuit): The circuit to load.</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        kernel_name (str): The name of the kernel to load. Defaults to &quot;main&quot;.</span>
+<span class="sd">        dialects (ir.DialectGroup | None): The dialects to use. Defaults to `squin.kernel`.</span>
+<span class="sd">        globals (dict[str, Any] | None): The global variables to use. Defaults to None.</span>
+<span class="sd">        file (str | None): The file name for error reporting. Defaults to None.</span>
+<span class="sd">        lineno_offset (int): The line number offset for error reporting. Defaults to 0.</span>
+<span class="sd">        col_offset (int): The column number offset for error reporting. Defaults to 0.</span>
+<span class="sd">        compactify (bool): Whether to compactify the output. Defaults to True.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">    ```python</span>
+<span class="sd">    # from cirq&#39;s &quot;hello qubit&quot; example</span>
+<span class="sd">    import cirq</span>
+<span class="sd">    from bloqade import squin</span>
+
+<span class="sd">    # Pick a qubit.</span>
+<span class="sd">    qubit = cirq.GridQubit(0, 0)</span>
+
+<span class="sd">    # Create a circuit.</span>
+<span class="sd">    circuit = cirq.Circuit(</span>
+<span class="sd">        cirq.X(qubit)**0.5,  # Square root of NOT.</span>
+<span class="sd">        cirq.measure(qubit, key=&#39;m&#39;)  # Measurement.</span>
+<span class="sd">    )</span>
+
+<span class="sd">    # load the circuit as squin</span>
+<span class="sd">    main = squin.load_circuit(circuit)</span>
+
+<span class="sd">    # print the resulting IR</span>
+<span class="sd">    main.print()</span>
+<span class="sd">    ```</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">target</span> <span class="o">=</span> <span class="n">Squin</span><span class="p">(</span><span class="n">dialects</span><span class="o">=</span><span class="n">dialects</span><span class="p">,</span> <span class="n">circuit</span><span class="o">=</span><span class="n">circuit</span><span class="p">)</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="n">circuit</span><span class="p">,</span>
+        <span class="n">source</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">circuit</span><span class="p">),</span>  <span class="c1"># TODO: proper source string</span>
+        <span class="n">file</span><span class="o">=</span><span class="n">file</span><span class="p">,</span>
+        <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">,</span>
+        <span class="n">lineno_offset</span><span class="o">=</span><span class="n">lineno_offset</span><span class="p">,</span>
+        <span class="n">col_offset</span><span class="o">=</span><span class="n">col_offset</span><span class="p">,</span>
+        <span class="n">compactify</span><span class="o">=</span><span class="n">compactify</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># NOTE: no return value</span>
+    <span class="n">return_value</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">ConstantNone</span><span class="p">()</span>
+    <span class="n">body</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">return_value</span><span class="p">)</span>
+    <span class="n">body</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">value_or_stmt</span><span class="o">=</span><span class="n">return_value</span><span class="p">))</span>
+
+    <span class="n">code</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
+        <span class="n">sym_name</span><span class="o">=</span><span class="n">kernel_name</span><span class="p">,</span>
+        <span class="n">signature</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">Signature</span><span class="p">((),</span> <span class="n">types</span><span class="o">.</span><span class="n">NoneType</span><span class="p">),</span>
+        <span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">(</span>
+        <span class="n">mod</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">py_func</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">sym_name</span><span class="o">=</span><span class="n">kernel_name</span><span class="p">,</span>
+        <span class="n">arg_names</span><span class="o">=</span><span class="p">[],</span>
+        <span class="n">dialects</span><span class="o">=</span><span class="n">dialects</span><span class="p">,</span>
+        <span class="n">code</span><span class="o">=</span><span class="n">code</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="bloqade.squin.cirq.lowering" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">lowering</span>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="bloqade.squin.cirq.lowering.Squin" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">Squin</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">Squin</span><span class="p">(</span><span class="n">circuit</span><span class="p">:</span> <span class="n">Circuit</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="kirin.lowering.LoweringABC">LoweringABC</span>[<span title="bloqade.squin.cirq.lowering.CirqNode">CirqNode</span>]</code></p>
+
+
+        <p>Lower a cirq.Circuit object to a squin kernel</p>
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h1 id="bloqade.squin.lowering" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">lowering</span>
+
+
+</h1>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bloqade.squin.lowering.ApplyAnyCallLowering" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ApplyAnyCallLowering</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">ApplyAnyCallLowering</span><span class="p">()</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="kirin.lowering.FromPythonCall">FromPythonCall</span>[&#39;qubit.ApplyAny&#39;]</code></p>
+
+
+        <p>Custom lowering for ApplyAny that collects vararg qubits into a single tuple argument</p>
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
 <h1 id="bloqade.squin.noise" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">noise</span>
 
@@ -2878,6 +3422,44 @@ have a cyclic dependency.</p>
 
 
 
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="bloqade.squin.noise.rewrite" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">rewrite</span>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
 
 <div class="doc doc-object doc-module">
 
@@ -2924,8 +3506,7 @@ have a cyclic dependency.</p>
               Bases: <code><span title="bloqade.squin.noise.stmts.NoiseChannel">NoiseChannel</span></code></p>
 
 
-        <p>Apply n-qubit depolaize error to qubits
-NOTE For Stim, this can only accept 1 or 2 qubits</p>
+        <p>Apply depolarize error to qubit</p>
 
 
 
@@ -3045,380 +3626,6 @@ NOTE For Stim, this can only accept 1 or 2 qubits</p>
 
 
 
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.op.ch" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">ch</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">ch</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Control H gate.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/op/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@op</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">ch</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Control H gate.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">control</span><span class="p">(</span><span class="n">h</span><span class="p">(),</span> <span class="n">n_controls</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.op.control" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">control</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">control</span><span class="p">(</span><span class="n">op</span><span class="p">:</span> <span class="n">Op</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_controls</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Create a controlled operator.</p>
-<p>Note, that when considering atom loss, the operator will not be applied if
-any of the controls has been lost.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>operator</code>
-            </td>
-            <td>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The operator to apply under the control.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>n_controls</code>
-            </td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The number qubits to be used as control.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="bloqade.squin.op.types.Op">Op</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Operator</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/op/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@_wraps</span><span class="p">(</span><span class="n">stmts</span><span class="o">.</span><span class="n">Control</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">control</span><span class="p">(</span><span class="n">op</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_controls</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a controlled operator.</span>
-
-<span class="sd">    Note, that when considering atom loss, the operator will not be applied if</span>
-<span class="sd">    any of the controls has been lost.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        operator: The operator to apply under the control.</span>
-<span class="sd">        n_controls: The number qubits to be used as control.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        Operator</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="o">...</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.op.cphase" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">cphase</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">cphase</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Control Phase gate.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/op/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@op</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">cphase</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Control Phase gate.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">control</span><span class="p">(</span><span class="n">phase</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">n_controls</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.op.cx" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">cx</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">cx</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Controlled X gate.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/op/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@op</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">cx</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Controlled X gate.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">control</span><span class="p">(</span><span class="n">x</span><span class="p">(),</span> <span class="n">n_controls</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.op.cy" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">cy</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">cy</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Controlled Y gate.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/op/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@op</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">cy</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Controlled Y gate.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">control</span><span class="p">(</span><span class="n">y</span><span class="p">(),</span> <span class="n">n_controls</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.op.cz" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">cz</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">cz</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Control Z gate.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/op/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@op</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">cz</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Control Z gate.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">control</span><span class="p">(</span><span class="n">z</span><span class="p">(),</span> <span class="n">n_controls</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.op.rx" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">rx</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">rx</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Rotation X gate.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/op/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@op</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">rx</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotation X gate.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">rot</span><span class="p">(</span><span class="n">x</span><span class="p">(),</span> <span class="n">theta</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.op.ry" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">ry</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">ry</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Rotation Y gate.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/op/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@op</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">ry</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotation Y gate.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">rot</span><span class="p">(</span><span class="n">y</span><span class="p">(),</span> <span class="n">theta</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.op.rz" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">rz</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">rz</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Rotation Z gate.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/op/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@op</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">rz</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotation Z gate.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">rot</span><span class="p">(</span><span class="n">z</span><span class="p">(),</span> <span class="n">theta</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
 
 <div class="doc doc-object doc-module">
 
@@ -3451,6 +3658,292 @@ any of the controls has been lost.</p>
 
 
 
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="bloqade.squin.op.stdlib" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">stdlib</span>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.op.stdlib.ch" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">ch</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">ch</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Control H gate.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/op/stdlib.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@op</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ch</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Control H gate.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">control</span><span class="p">(</span><span class="n">h</span><span class="p">(),</span> <span class="n">n_controls</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.op.stdlib.cphase" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">cphase</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">cphase</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Control Phase gate.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/op/stdlib.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@op</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cphase</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Control Phase gate.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">control</span><span class="p">(</span><span class="n">phase</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">n_controls</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.op.stdlib.cx" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">cx</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">cx</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Controlled X gate.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/op/stdlib.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@op</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cx</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Controlled X gate.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">control</span><span class="p">(</span><span class="n">x</span><span class="p">(),</span> <span class="n">n_controls</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.op.stdlib.cy" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">cy</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">cy</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Controlled Y gate.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/op/stdlib.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@op</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cy</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Controlled Y gate.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">control</span><span class="p">(</span><span class="n">y</span><span class="p">(),</span> <span class="n">n_controls</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.op.stdlib.cz" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">cz</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">cz</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Control Z gate.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/op/stdlib.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@op</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cz</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Control Z gate.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">control</span><span class="p">(</span><span class="n">z</span><span class="p">(),</span> <span class="n">n_controls</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.op.stdlib.rx" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">rx</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">rx</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Rotation X gate.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/op/stdlib.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@op</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rx</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotation X gate.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">rot</span><span class="p">(</span><span class="n">x</span><span class="p">(),</span> <span class="n">theta</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.op.stdlib.ry" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">ry</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">ry</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Rotation Y gate.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/op/stdlib.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@op</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ry</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotation Y gate.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">rot</span><span class="p">(</span><span class="n">y</span><span class="p">(),</span> <span class="n">theta</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.op.stdlib.rz" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">rz</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">rz</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Rotation Z gate.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/op/stdlib.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@op</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rz</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Op</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotation Z gate.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">rot</span><span class="p">(</span><span class="n">z</span><span class="p">(),</span> <span class="n">theta</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 
@@ -3605,6 +4098,51 @@ P1 = \begin{bmatrix} 0 &amp; 0 \\ 0 &amp; 1 \end{bmatrix}
 <div class="arithmatex">\[
 PhaseOp(theta) = e^{i       heta} I
 \]</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="bloqade.squin.op.stmts.Reset" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">Reset</span>
+
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="bloqade.squin.op.stmts.PrimitiveOp">PrimitiveOp</span></code></p>
+
+
+        <p>Reset operator for qubits or wires.</p>
 
 
 
@@ -3920,133 +4458,6 @@ Sp = \frac{1}{2} (S_x + i S_y) = \frac{1}{2}\begin{bmatrix} 0 &amp; 1 \\ 0 &amp;
 <div class="doc doc-object doc-function">
 
 
-<h2 id="bloqade.squin.qubit.apply" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">apply</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">apply</span><span class="p">(</span>
-    <span class="n">operator</span><span class="p">:</span> <span class="n">Op</span><span class="p">,</span> <span class="n">qubits</span><span class="p">:</span> <span class="n">IList</span><span class="p">[</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Qubit</span><span class="p">]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Apply an operator to a list of qubits.</p>
-<p>Note, that when considering atom loss, lost qubits will be skipped.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>operator</code>
-            </td>
-            <td>
-                  <code><span title="bloqade.squin.op.types.Op">Op</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The operator to apply.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>qubits</code>
-            </td>
-            <td>
-                  <code><span title="kirin.dialects.ilist.IList">IList</span>[<a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;Qubit&lt;/span&gt; (&lt;code&gt;bloqade.types.Qubit&lt;/code&gt;)" href="../types/#bloqade.types.Qubit">Qubit</a>, <span title="typing.Any">Any</span>] | <span title="list">list</span>[<a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;Qubit&lt;/span&gt; (&lt;code&gt;bloqade.types.Qubit&lt;/code&gt;)" href="../types/#bloqade.types.Qubit">Qubit</a>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The list of qubits to apply the operator to. The size of the list
-must be inferable and match the number of qubits expected by the operator.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code>None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>None</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/qubit.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@wraps</span><span class="p">(</span><span class="n">Apply</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="n">operator</span><span class="p">:</span> <span class="n">Op</span><span class="p">,</span> <span class="n">qubits</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Qubit</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply an operator to a list of qubits.</span>
-
-<span class="sd">    Note, that when considering atom loss, lost qubits will be skipped.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        operator: The operator to apply.</span>
-<span class="sd">        qubits: The list of qubits to apply the operator to. The size of the list</span>
-<span class="sd">            must be inferable and match the number of qubits expected by the operator.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="o">...</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
 <h2 id="bloqade.squin.qubit.broadcast" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">broadcast</span>
 
@@ -4144,25 +4555,7 @@ must be inferable and match the number of qubits expected by the operator.</p>
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/qubit.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">154</span>
 <span class="normal">155</span>
 <span class="normal">156</span>
 <span class="normal">157</span>
@@ -4171,7 +4564,25 @@ must be inferable and match the number of qubits expected by the operator.</p>
 <span class="normal">160</span>
 <span class="normal">161</span>
 <span class="normal">162</span>
-<span class="normal">163</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@wraps</span><span class="p">(</span><span class="n">Broadcast</span><span class="p">)</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@wraps</span><span class="p">(</span><span class="n">Broadcast</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">broadcast</span><span class="p">(</span><span class="n">operator</span><span class="p">:</span> <span class="n">Op</span><span class="p">,</span> <span class="n">qubits</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Qubit</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Broadcast and apply an operator to a list of qubits. For example, an operator</span>
 <span class="sd">    that expects 2 qubits can be applied to a list of 2n qubits, where n is an integer &gt; 0.</span>
@@ -4285,19 +4696,19 @@ is returned.</p>
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/qubit.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@wraps</span><span class="p">(</span><span class="n">MeasureAny</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@wraps</span><span class="p">(</span><span class="n">MeasureAny</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">measure</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Measure a qubit or qubits in the list.</span>
 
@@ -4308,107 +4719,6 @@ is returned.</p>
 <span class="sd">        bool | list[bool]: The result of the measurement. If a single qubit is measured,</span>
 <span class="sd">            a single boolean is returned. If a list of qubits is measured, a list of booleans</span>
 <span class="sd">            is returned.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="o">...</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.qubit.measure_and_reset" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">measure_and_reset</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">measure_and_reset</span><span class="p">(</span>
-    <span class="n">qubits</span><span class="p">:</span> <span class="n">IList</span><span class="p">[</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Measure the qubits in the list and reset them."</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>qubits</code>
-            </td>
-            <td>
-                  <code><span title="kirin.dialects.ilist.IList">IList</span>[<a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;Qubit&lt;/span&gt; (&lt;code&gt;bloqade.types.Qubit&lt;/code&gt;)" href="../types/#bloqade.types.Qubit">Qubit</a>, <span title="typing.Any">Any</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The list of qubits to measure and reset.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="kirin.dialects.ilist.IList">IList</span>[<span title="bool">bool</span>, <span title="typing.Any">Any</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>list[bool]: The result of the measurement.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/qubit.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span>
-<span class="normal">175</span>
-<span class="normal">176</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@wraps</span><span class="p">(</span><span class="n">MeasureAndReset</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">measure_and_reset</span><span class="p">(</span><span class="n">qubits</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Measure the qubits in the list and reset them.&quot;</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        qubits: The list of qubits to measure and reset.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        list[bool]: The result of the measurement.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="o">...</span>
 </code></pre></div></td></tr></table></div>
@@ -4488,17 +4798,17 @@ is returned.</p>
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/qubit.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">85</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
 <span class="normal">86</span>
 <span class="normal">87</span>
 <span class="normal">88</span>
 <span class="normal">89</span>
 <span class="normal">90</span>
 <span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@wraps</span><span class="p">(</span><span class="n">New</span><span class="p">)</span>
+<span class="normal">92</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@wraps</span><span class="p">(</span><span class="n">New</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">new</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a new list of qubits.</span>
 
@@ -4507,76 +4817,6 @@ is returned.</p>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        (ilist.IList[Qubit, n_qubits]) A list of qubits.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="o">...</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.qubit.reset" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">reset</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">reset</span><span class="p">(</span><span class="n">qubits</span><span class="p">:</span> <span class="n">IList</span><span class="p">[</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Reset the qubits in the list."</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>qubits</code>
-            </td>
-            <td>
-                  <code><span title="kirin.dialects.ilist.IList">IList</span>[<a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;Qubit&lt;/span&gt; (&lt;code&gt;bloqade.types.Qubit&lt;/code&gt;)" href="../types/#bloqade.types.Qubit">Qubit</a>, <span title="typing.Any">Any</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The list of qubits to reset.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/qubit.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span>
-<span class="normal">185</span>
-<span class="normal">186</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@wraps</span><span class="p">(</span><span class="n">Reset</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="n">qubits</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset the qubits in the list.&quot;</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        qubits: The list of qubits to reset.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="o">...</span>
 </code></pre></div></td></tr></table></div>
@@ -4628,8 +4868,8 @@ is returned.</p>
 
 
 
-<h2 id="bloqade.squin.rewrite.measure_desugar" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">measure_desugar</span>
+<h2 id="bloqade.squin.rewrite.desugar" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">desugar</span>
 
 
 </h2>
@@ -4657,7 +4897,52 @@ is returned.</p>
 
 
 
-<h3 id="bloqade.squin.rewrite.measure_desugar.MeasureDesugarRule" class="doc doc-heading">
+<h3 id="bloqade.squin.rewrite.desugar.ApplyDesugarRule" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ApplyDesugarRule</span>
+
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="kirin.rewrite.abc.RewriteRule">RewriteRule</span></code></p>
+
+
+        <p>Desugar apply operators in the kernel.</p>
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="bloqade.squin.rewrite.desugar.MeasureDesugarRule" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">MeasureDesugarRule</span>
 
 
@@ -4689,6 +4974,898 @@ is returned.</p>
 
 
 
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="bloqade.squin.rewrite.qubit_to_stim" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">qubit_to_stim</span>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="bloqade.squin.rewrite.qubit_to_stim.SquinQubitToStim" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">SquinQubitToStim</span>
+
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="kirin.rewrite.abc.RewriteRule">RewriteRule</span></code></p>
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bloqade.squin.rewrite.qubit_to_stim.SquinQubitToStim.rewrite_Apply_and_Broadcast" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">rewrite_Apply_and_Broadcast</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">rewrite_Apply_and_Broadcast</span><span class="p">(</span>
+    <span class="n">stmt</span><span class="p">:</span> <span class="n">Apply</span> <span class="o">|</span> <span class="n">Broadcast</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RewriteResult</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Rewrite Apply and Broadcast nodes to their stim equivalent statements.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/rewrite/qubit_to_stim.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rewrite_Apply_and_Broadcast</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">stmt</span><span class="p">:</span> <span class="n">qubit</span><span class="o">.</span><span class="n">Apply</span> <span class="o">|</span> <span class="n">qubit</span><span class="o">.</span><span class="n">Broadcast</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RewriteResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Rewrite Apply and Broadcast nodes to their stim equivalent statements.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># this is an SSAValue, need it to be the actual operator</span>
+    <span class="n">applied_op</span> <span class="o">=</span> <span class="n">stmt</span><span class="o">.</span><span class="n">operator</span><span class="o">.</span><span class="n">owner</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">applied_op</span><span class="p">,</span> <span class="n">op</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">Operator</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">applied_op</span><span class="p">,</span> <span class="n">op</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">Control</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">rewrite_Control</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span>
+
+    <span class="c1"># need to handle Control through separate means</span>
+    <span class="c1"># but we can handle X, Y, Z, H, and S here just fine</span>
+    <span class="n">stim_1q_op</span> <span class="o">=</span> <span class="n">SQUIN_STIM_GATE_MAPPING</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">applied_op</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">stim_1q_op</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">()</span>
+
+    <span class="n">address_attr</span> <span class="o">=</span> <span class="n">stmt</span><span class="o">.</span><span class="n">qubits</span><span class="o">.</span><span class="n">hints</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;address&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">address_attr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">address_attr</span><span class="p">,</span> <span class="n">AddressAttribute</span><span class="p">)</span>
+    <span class="n">qubit_idx_ssas</span> <span class="o">=</span> <span class="n">insert_qubit_idx_from_address</span><span class="p">(</span>
+        <span class="n">address</span><span class="o">=</span><span class="n">address_attr</span><span class="p">,</span> <span class="n">stmt_to_insert_before</span><span class="o">=</span><span class="n">stmt</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">qubit_idx_ssas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">()</span>
+
+    <span class="n">stim_1q_stmt</span> <span class="o">=</span> <span class="n">stim_1q_op</span><span class="p">(</span><span class="n">targets</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">qubit_idx_ssas</span><span class="p">))</span>
+    <span class="n">stmt</span><span class="o">.</span><span class="n">replace_by</span><span class="p">(</span><span class="n">stim_1q_stmt</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">(</span><span class="n">has_done_something</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="bloqade.squin.rewrite.squin_measure" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">squin_measure</span>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="bloqade.squin.rewrite.squin_measure.SquinMeasureToStim" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">SquinMeasureToStim</span>
+
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="kirin.rewrite.abc.RewriteRule">RewriteRule</span></code></p>
+
+
+        <p>Rewrite squin measure-related statements to stim statements.</p>
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bloqade.squin.rewrite.squin_measure.SquinMeasureToStim.get_qubit_idx_ssas" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">get_qubit_idx_ssas</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_qubit_idx_ssas</span><span class="p">(</span>
+    <span class="n">measure_stmt</span><span class="p">:</span> <span class="n">MeasureQubit</span> <span class="o">|</span> <span class="n">MeasureQubitList</span> <span class="o">|</span> <span class="n">Measure</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Extract the address attribute and insert qubit indices for the given measure statement.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/rewrite/squin_measure.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_qubit_idx_ssas</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">measure_stmt</span><span class="p">:</span> <span class="n">qubit</span><span class="o">.</span><span class="n">MeasureQubit</span> <span class="o">|</span> <span class="n">qubit</span><span class="o">.</span><span class="n">MeasureQubitList</span> <span class="o">|</span> <span class="n">wire</span><span class="o">.</span><span class="n">Measure</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract the address attribute and insert qubit indices for the given measure statement.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">match</span> <span class="n">measure_stmt</span><span class="p">:</span>
+        <span class="k">case</span> <span class="n">qubit</span><span class="o">.</span><span class="n">MeasureQubit</span><span class="p">():</span>
+            <span class="n">address_attr</span> <span class="o">=</span> <span class="n">measure_stmt</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">hints</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;address&quot;</span><span class="p">)</span>
+        <span class="k">case</span> <span class="n">qubit</span><span class="o">.</span><span class="n">MeasureQubitList</span><span class="p">():</span>
+            <span class="n">address_attr</span> <span class="o">=</span> <span class="n">measure_stmt</span><span class="o">.</span><span class="n">qubits</span><span class="o">.</span><span class="n">hints</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;address&quot;</span><span class="p">)</span>
+        <span class="k">case</span> <span class="n">wire</span><span class="o">.</span><span class="n">Measure</span><span class="p">():</span>
+            <span class="n">address_attr</span> <span class="o">=</span> <span class="n">measure_stmt</span><span class="o">.</span><span class="n">wire</span><span class="o">.</span><span class="n">hints</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;address&quot;</span><span class="p">)</span>
+        <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">address_attr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">address_attr</span><span class="p">,</span> <span class="n">AddressAttribute</span><span class="p">)</span>
+
+    <span class="n">qubit_idx_ssas</span> <span class="o">=</span> <span class="n">insert_qubit_idx_from_address</span><span class="p">(</span>
+        <span class="n">address</span><span class="o">=</span><span class="n">address_attr</span><span class="p">,</span> <span class="n">stmt_to_insert_before</span><span class="o">=</span><span class="n">measure_stmt</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">qubit_idx_ssas</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="bloqade.squin.rewrite.stim_rewrite_util" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">stim_rewrite_util</span>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.rewrite.stim_rewrite_util.insert_qubit_idx_after_apply" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">insert_qubit_idx_after_apply</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">insert_qubit_idx_after_apply</span><span class="p">(</span>
+    <span class="n">stmt</span><span class="p">:</span> <span class="n">Apply</span> <span class="o">|</span> <span class="n">Apply</span> <span class="o">|</span> <span class="n">Broadcast</span> <span class="o">|</span> <span class="n">Broadcast</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Extract qubit indices from Apply or Broadcast statements.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/rewrite/stim_rewrite_util.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">insert_qubit_idx_after_apply</span><span class="p">(</span>
+    <span class="n">stmt</span><span class="p">:</span> <span class="n">wire</span><span class="o">.</span><span class="n">Apply</span> <span class="o">|</span> <span class="n">qubit</span><span class="o">.</span><span class="n">Apply</span> <span class="o">|</span> <span class="n">wire</span><span class="o">.</span><span class="n">Broadcast</span> <span class="o">|</span> <span class="n">qubit</span><span class="o">.</span><span class="n">Broadcast</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract qubit indices from Apply or Broadcast statements.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stmt</span><span class="p">,</span> <span class="p">(</span><span class="n">qubit</span><span class="o">.</span><span class="n">Apply</span><span class="p">,</span> <span class="n">qubit</span><span class="o">.</span><span class="n">Broadcast</span><span class="p">)):</span>
+        <span class="n">qubits</span> <span class="o">=</span> <span class="n">stmt</span><span class="o">.</span><span class="n">qubits</span>
+        <span class="n">address_attribute</span> <span class="o">=</span> <span class="n">qubits</span><span class="o">.</span><span class="n">hints</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;address&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">address_attribute</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">address_attribute</span><span class="p">,</span> <span class="n">AddressAttribute</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">insert_qubit_idx_from_address</span><span class="p">(</span>
+            <span class="n">address</span><span class="o">=</span><span class="n">address_attribute</span><span class="p">,</span> <span class="n">stmt_to_insert_before</span><span class="o">=</span><span class="n">stmt</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stmt</span><span class="p">,</span> <span class="p">(</span><span class="n">wire</span><span class="o">.</span><span class="n">Apply</span><span class="p">,</span> <span class="n">wire</span><span class="o">.</span><span class="n">Broadcast</span><span class="p">)):</span>
+        <span class="n">wire_ssas</span> <span class="o">=</span> <span class="n">stmt</span><span class="o">.</span><span class="n">inputs</span>
+        <span class="k">return</span> <span class="n">insert_qubit_idx_from_wire_ssa</span><span class="p">(</span>
+            <span class="n">wire_ssas</span><span class="o">=</span><span class="n">wire_ssas</span><span class="p">,</span> <span class="n">stmt_to_insert_before</span><span class="o">=</span><span class="n">stmt</span>
+        <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.rewrite.stim_rewrite_util.insert_qubit_idx_from_address" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">insert_qubit_idx_from_address</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">insert_qubit_idx_from_address</span><span class="p">(</span>
+    <span class="n">address</span><span class="p">:</span> <span class="n">AddressAttribute</span><span class="p">,</span>
+    <span class="n">stmt_to_insert_before</span><span class="p">:</span> <span class="n">Statement</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Extract qubit indices from an AddressAttribute and insert them into the SSA form.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/rewrite/stim_rewrite_util.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">insert_qubit_idx_from_address</span><span class="p">(</span>
+    <span class="n">address</span><span class="p">:</span> <span class="n">AddressAttribute</span><span class="p">,</span> <span class="n">stmt_to_insert_before</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Statement</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract qubit indices from an AddressAttribute and insert them into the SSA form.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">address_data</span> <span class="o">=</span> <span class="n">address</span><span class="o">.</span><span class="n">address</span>
+    <span class="n">qubit_idx_ssas</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">address_data</span><span class="p">,</span> <span class="n">AddressTuple</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">address_qubit</span> <span class="ow">in</span> <span class="n">address_data</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">address_qubit</span><span class="p">,</span> <span class="n">AddressQubit</span><span class="p">):</span>
+                <span class="k">return</span>
+            <span class="n">qubit_idx</span> <span class="o">=</span> <span class="n">address_qubit</span><span class="o">.</span><span class="n">data</span>
+            <span class="n">qubit_idx_stmt</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="n">qubit_idx</span><span class="p">)</span>
+            <span class="n">qubit_idx_stmt</span><span class="o">.</span><span class="n">insert_before</span><span class="p">(</span><span class="n">stmt_to_insert_before</span><span class="p">)</span>
+            <span class="n">qubit_idx_ssas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qubit_idx_stmt</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">address_data</span><span class="p">,</span> <span class="n">AddressWire</span><span class="p">):</span>
+        <span class="n">address_qubit</span> <span class="o">=</span> <span class="n">address_data</span><span class="o">.</span><span class="n">origin_qubit</span>
+        <span class="n">qubit_idx</span> <span class="o">=</span> <span class="n">address_qubit</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">qubit_idx_stmt</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="n">qubit_idx</span><span class="p">)</span>
+        <span class="n">qubit_idx_stmt</span><span class="o">.</span><span class="n">insert_before</span><span class="p">(</span><span class="n">stmt_to_insert_before</span><span class="p">)</span>
+        <span class="n">qubit_idx_ssas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qubit_idx_stmt</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">qubit_idx_ssas</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.rewrite.stim_rewrite_util.insert_qubit_idx_from_wire_ssa" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">insert_qubit_idx_from_wire_ssa</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">insert_qubit_idx_from_wire_ssa</span><span class="p">(</span>
+    <span class="n">wire_ssas</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SSAValue</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+    <span class="n">stmt_to_insert_before</span><span class="p">:</span> <span class="n">Statement</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Extract qubit indices from wire SSA values and insert them into the SSA form.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/rewrite/stim_rewrite_util.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">insert_qubit_idx_from_wire_ssa</span><span class="p">(</span>
+    <span class="n">wire_ssas</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">stmt_to_insert_before</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Statement</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ir</span><span class="o">.</span><span class="n">SSAValue</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract qubit indices from wire SSA values and insert them into the SSA form.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">qubit_idx_ssas</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">wire_ssa</span> <span class="ow">in</span> <span class="n">wire_ssas</span><span class="p">:</span>
+        <span class="n">address_attribute</span> <span class="o">=</span> <span class="n">wire_ssa</span><span class="o">.</span><span class="n">hints</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;address&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">address_attribute</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">address_attribute</span><span class="p">,</span> <span class="n">AddressAttribute</span><span class="p">)</span>
+        <span class="n">wire_address</span> <span class="o">=</span> <span class="n">address_attribute</span><span class="o">.</span><span class="n">address</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wire_address</span><span class="p">,</span> <span class="n">AddressWire</span><span class="p">)</span>
+        <span class="n">qubit_idx</span> <span class="o">=</span> <span class="n">wire_address</span><span class="o">.</span><span class="n">origin_qubit</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">qubit_idx_stmt</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="n">qubit_idx</span><span class="p">)</span>
+        <span class="n">qubit_idx_ssas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qubit_idx_stmt</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+        <span class="n">qubit_idx_stmt</span><span class="o">.</span><span class="n">insert_before</span><span class="p">(</span><span class="n">stmt_to_insert_before</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">qubit_idx_ssas</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.rewrite.stim_rewrite_util.is_measure_result_used" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">is_measure_result_used</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">is_measure_result_used</span><span class="p">(</span>
+    <span class="n">stmt</span><span class="p">:</span> <span class="n">MeasureQubit</span> <span class="o">|</span> <span class="n">MeasureQubitList</span> <span class="o">|</span> <span class="n">Measure</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Check if the result of a measure statement is used in the program.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/rewrite/stim_rewrite_util.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">is_measure_result_used</span><span class="p">(</span>
+    <span class="n">stmt</span><span class="p">:</span> <span class="n">qubit</span><span class="o">.</span><span class="n">MeasureQubit</span> <span class="o">|</span> <span class="n">qubit</span><span class="o">.</span><span class="n">MeasureQubitList</span> <span class="o">|</span> <span class="n">wire</span><span class="o">.</span><span class="n">Measure</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if the result of a measure statement is used in the program.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">stmt</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">uses</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.rewrite.stim_rewrite_util.rewrite_Control" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">rewrite_Control</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">rewrite_Control</span><span class="p">(</span>
+    <span class="n">stmt_with_ctrl</span><span class="p">:</span> <span class="n">Apply</span> <span class="o">|</span> <span class="n">Apply</span> <span class="o">|</span> <span class="n">Broadcast</span> <span class="o">|</span> <span class="n">Broadcast</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RewriteResult</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Handle control gates for Apply and Broadcast statements.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/rewrite/stim_rewrite_util.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rewrite_Control</span><span class="p">(</span>
+    <span class="n">stmt_with_ctrl</span><span class="p">:</span> <span class="n">qubit</span><span class="o">.</span><span class="n">Apply</span> <span class="o">|</span> <span class="n">wire</span><span class="o">.</span><span class="n">Apply</span> <span class="o">|</span> <span class="n">qubit</span><span class="o">.</span><span class="n">Broadcast</span> <span class="o">|</span> <span class="n">wire</span><span class="o">.</span><span class="n">Broadcast</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RewriteResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handle control gates for Apply and Broadcast statements.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ctrl_op</span> <span class="o">=</span> <span class="n">stmt_with_ctrl</span><span class="o">.</span><span class="n">operator</span><span class="o">.</span><span class="n">owner</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ctrl_op</span><span class="p">,</span> <span class="n">op</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">Control</span><span class="p">)</span>
+
+    <span class="n">ctrl_op_target_gate</span> <span class="o">=</span> <span class="n">ctrl_op</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">owner</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ctrl_op_target_gate</span><span class="p">,</span> <span class="n">op</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">Operator</span><span class="p">)</span>
+
+    <span class="n">qubit_idx_ssas</span> <span class="o">=</span> <span class="n">insert_qubit_idx_after_apply</span><span class="p">(</span><span class="n">stmt</span><span class="o">=</span><span class="n">stmt_with_ctrl</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">qubit_idx_ssas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">()</span>
+
+    <span class="c1"># Separate control and target qubits</span>
+    <span class="n">target_qubits</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ctrl_qubits</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">qubit_idx_ssas</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ctrl_qubits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qubit_idx_ssas</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">target_qubits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qubit_idx_ssas</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="n">target_qubits</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">target_qubits</span><span class="p">)</span>
+    <span class="n">ctrl_qubits</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">ctrl_qubits</span><span class="p">)</span>
+
+    <span class="n">supported_gate_mapping</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">X</span><span class="p">:</span> <span class="n">gate</span><span class="o">.</span><span class="n">CX</span><span class="p">,</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">Y</span><span class="p">:</span> <span class="n">gate</span><span class="o">.</span><span class="n">CY</span><span class="p">,</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">Z</span><span class="p">:</span> <span class="n">gate</span><span class="o">.</span><span class="n">CZ</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">stim_gate</span> <span class="o">=</span> <span class="n">supported_gate_mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">ctrl_op_target_gate</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">stim_gate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">()</span>
+
+    <span class="n">stim_stmt</span> <span class="o">=</span> <span class="n">stim_gate</span><span class="p">(</span><span class="n">controls</span><span class="o">=</span><span class="n">ctrl_qubits</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="n">target_qubits</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stmt_with_ctrl</span><span class="p">,</span> <span class="p">(</span><span class="n">wire</span><span class="o">.</span><span class="n">Apply</span><span class="p">,</span> <span class="n">wire</span><span class="o">.</span><span class="n">Broadcast</span><span class="p">)):</span>
+        <span class="c1"># have to &quot;reroute&quot; the input of these statements to directly plug in</span>
+        <span class="c1"># to subsequent statements, remove dependency on the current statement</span>
+        <span class="k">for</span> <span class="n">input_wire</span><span class="p">,</span> <span class="n">output_wire</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+            <span class="n">stmt_with_ctrl</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">stmt_with_ctrl</span><span class="o">.</span><span class="n">results</span>
+        <span class="p">):</span>
+            <span class="n">output_wire</span><span class="o">.</span><span class="n">replace_by</span><span class="p">(</span><span class="n">input_wire</span><span class="p">)</span>
+
+    <span class="n">stmt_with_ctrl</span><span class="o">.</span><span class="n">replace_by</span><span class="p">(</span><span class="n">stim_stmt</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">(</span><span class="n">has_done_something</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="bloqade.squin.rewrite.wire_identity_elimination" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">wire_identity_elimination</span>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="bloqade.squin.rewrite.wire_identity_elimination.SquinWireIdentityElimination" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">SquinWireIdentityElimination</span>
+
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="kirin.rewrite.abc.RewriteRule">RewriteRule</span></code></p>
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bloqade.squin.rewrite.wire_identity_elimination.SquinWireIdentityElimination.rewrite_Statement" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">rewrite_Statement</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">rewrite_Statement</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">Statement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RewriteResult</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Handle the case where an unwrap feeds a wire directly into a wrap,
+equivalent to nothing happening/identity operation</p>
+<p>w = unwrap(qubit)
+wrap(qubit, w)</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/rewrite/wire_identity_elimination.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rewrite_Statement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Statement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RewriteResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handle the case where an unwrap feeds a wire directly into a wrap,</span>
+<span class="sd">    equivalent to nothing happening/identity operation</span>
+
+<span class="sd">    w = unwrap(qubit)</span>
+<span class="sd">    wrap(qubit, w)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">wire</span><span class="o">.</span><span class="n">Wrap</span><span class="p">):</span>
+        <span class="n">wire_origin_stmt</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">wire</span><span class="o">.</span><span class="n">owner</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wire_origin_stmt</span><span class="p">,</span> <span class="n">wire</span><span class="o">.</span><span class="n">Unwrap</span><span class="p">):</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>  <span class="c1"># get rid of wrap</span>
+            <span class="n">wire_origin_stmt</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>  <span class="c1"># get rid of the unwrap</span>
+            <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">(</span><span class="n">has_done_something</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 

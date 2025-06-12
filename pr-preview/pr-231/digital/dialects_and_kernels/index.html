@@ -1690,6 +1690,8 @@
       
         
       
+        
+      
     
     
     
@@ -1844,6 +1846,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/deutsch_squin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Deutsch-Jozsa Algorithm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1936,8 +1961,6 @@
       
         
           
-        
-      
         
       
         
@@ -2066,29 +2089,6 @@
   
   <span class="md-ellipsis">
     device
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/noise/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    noise
     
   </span>
   
@@ -2614,18 +2614,13 @@ Instead, use a <a class="autorefs autorefs-internal" title="&lt;code class=&quot
   &lt;/span&gt;" href="../../reference/qasm2/#bloqade.qasm2.passes.noise.NoisePass">NoisePass</a> in order to inject noise statements automatically according to a specific noise model.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Right now, only the <code>qasm2</code> dialects fully support noise.</p>
+<p>Right now, only the <code>qasm2.extended</code> dialect fully support noise.</p>
 </div>
 <p>For example, you may want to do something like this:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">qasm2</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.noise</span><span class="w"> </span><span class="kn">import</span> <span class="n">native</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.qasm2.passes</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoisePass</span>
 
-
-<span class="c1"># Add the noise dialect to qasm2.extended</span>
-<span class="n">noise_dialect</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">extended</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">native</span><span class="o">.</span><span class="n">dialect</span><span class="p">)</span>
-
-<span class="nd">@noise_dialect</span>
+<span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">q</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">qreg</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
@@ -2642,7 +2637,7 @@ Instead, use a <a class="autorefs autorefs-internal" title="&lt;code class=&quot
 <span class="n">noise_pass</span> <span class="o">=</span> <span class="n">NoisePass</span><span class="p">(</span><span class="n">main</span><span class="o">.</span><span class="n">dialects</span><span class="p">)</span>  <span class="c1"># just use the default noise model for now</span>
 
 <span class="c1"># Inject the noise - note that the main method will be updated in-place</span>
-<span class="n">noise_pass</span><span class="o">.</span><span class="n">unsafe_run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+<span class="n">noise_pass</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
 
 <span class="c1"># Look at the IR and all the glorious noise in there</span>
 <span class="n">main</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>

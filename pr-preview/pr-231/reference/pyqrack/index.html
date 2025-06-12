@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://bloqade.quera.com/reference/pyqrack/">
       
       
-        <link rel="prev" href="../noise/">
+        <link rel="prev" href="../device/">
       
       
         <link rel="next" href="../qasm2/">
@@ -1672,6 +1672,8 @@
       
         
       
+        
+      
     
     
     
@@ -1823,6 +1825,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/examples/deutsch_squin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Deutsch-Jozsa Algorithm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1917,8 +1942,6 @@
       
         
           
-        
-      
         
       
         
@@ -2050,29 +2073,6 @@
   
   <span class="md-ellipsis">
     device
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../noise/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    noise
     
   </span>
   
@@ -3351,7 +3351,9 @@ expectation_vals = sim.pauli_expectation([Pauli.PauliX, Pauli.PauliI], qubits)</
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/pyqrack/device.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">232</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
 <span class="normal">233</span>
 <span class="normal">234</span>
 <span class="normal">235</span>
@@ -3373,9 +3375,7 @@ expectation_vals = sim.pauli_expectation([Pauli.PauliX, Pauli.PauliI], qubits)</
 <span class="normal">251</span>
 <span class="normal">252</span>
 <span class="normal">253</span>
-<span class="normal">254</span>
-<span class="normal">255</span>
-<span class="normal">256</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">task</span><span class="p">(</span>
+<span class="normal">254</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">task</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">kernel</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">[</span><span class="n">Params</span><span class="p">,</span> <span class="n">RetType</span><span class="p">],</span>
     <span class="n">args</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
@@ -3592,7 +3592,9 @@ expectation_vals = sim.pauli_expectation([Pauli.PauliX, Pauli.PauliI], qubits)</
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/pyqrack/device.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 71</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
 <span class="normal"> 72</span>
 <span class="normal"> 73</span>
 <span class="normal"> 74</span>
@@ -3622,9 +3624,7 @@ expectation_vals = sim.pauli_expectation([Pauli.PauliX, Pauli.PauliI], qubits)</
 <span class="normal"> 98</span>
 <span class="normal"> 99</span>
 <span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">101</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">pauli_expectation</span><span class="p">(</span><span class="n">pauli</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Pauli</span><span class="p">],</span> <span class="n">qubits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">PyQrackQubit</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the expectation value of the given Pauli operator given a list of Pauli operators and qubits.</span>
 
@@ -3692,18 +3692,14 @@ expectation_vals = sim.pauli_expectation([Pauli.PauliX, Pauli.PauliI], qubits)</
 <span class="normal">64</span>
 <span class="normal">65</span>
 <span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">state_vector</span><span class="p">(</span>
+<span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">state_vector</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">kernel</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">[</span><span class="n">Params</span><span class="p">,</span> <span class="n">RetType</span><span class="p">],</span>
     <span class="n">args</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
     <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Runs task and returns the state vector.&quot;&quot;&quot;</span>
-    <span class="n">task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
-    <span class="n">task</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">task</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">sim_reg</span><span class="o">.</span><span class="n">out_ket</span><span class="p">()</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">state_vector</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3904,7 +3900,9 @@ expectation_vals = sim.pauli_expectation([Pauli.PauliX, Pauli.PauliI], qubits)
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/pyqrack/device.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
 <span class="normal">149</span>
 <span class="normal">150</span>
 <span class="normal">151</span>
@@ -3942,9 +3940,7 @@ expectation_vals = sim.pauli_expectation([Pauli.PauliX, Pauli.PauliI], qubits)
 <span class="normal">183</span>
 <span class="normal">184</span>
 <span class="normal">185</span>
-<span class="normal">186</span>
-<span class="normal">187</span>
-<span class="normal">188</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">task</span><span class="p">(</span>
+<span class="normal">186</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">task</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">kernel</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">[</span><span class="n">Params</span><span class="p">,</span> <span class="n">RetType</span><span class="p">],</span>
     <span class="n">args</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
@@ -4542,6 +4538,61 @@ expectation_vals = sim.pauli_expectation([Pauli.PauliX, Pauli.PauliI], qubits)
 
 </div>
 
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="bloqade.pyqrack.squin.runtime.ResetRuntime" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ResetRuntime</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">ResetRuntime</span><span class="p">()</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;OperatorRuntimeABC&lt;/span&gt;
+
+
+  &lt;span class=&quot;doc doc-labels&quot;&gt;
+      &lt;small class=&quot;doc doc-label doc-label-dataclass&quot;&gt;&lt;code&gt;dataclass&lt;/code&gt;&lt;/small&gt;
+  &lt;/span&gt; (&lt;code&gt;bloqade.pyqrack.squin.runtime.OperatorRuntimeABC&lt;/code&gt;)" href="#bloqade.pyqrack.squin.runtime.OperatorRuntimeABC">OperatorRuntimeABC</a></code></p>
+
+
+        <p>Reset the qubit to |0&gt; state</p>
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
 
 
 
@@ -5015,12 +5066,49 @@ Useful when address analysis fails to determine the number of qubits.</p>
 <span class="normal">23</span>
 <span class="normal">24</span>
 <span class="normal">25</span>
-<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RetType</span><span class="p">:</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pyqrack_interp</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">,</span>
-        <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span>
-        <span class="n">kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RetType</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span>
+        <span class="n">RetType</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pyqrack_interp</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span>
+            <span class="n">kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">),</span>
     <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.pyqrack.task.PyQrackSimulatorTask.state_vector" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">state_vector</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">state_vector</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Returns the state vector of the simulator.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/pyqrack/task.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">state_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the state vector of the simulator.&quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">sim_reg</span><span class="o">.</span><span class="n">out_ket</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -5088,7 +5176,7 @@ Useful when address analysis fails to determine the number of qubits.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../noise/" class="md-footer__link md-footer__link--prev" aria-label="Previous: noise">
+          <a href="../device/" class="md-footer__link md-footer__link--prev" aria-label="Previous: device">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -5098,7 +5186,7 @@ Useful when address analysis fails to determine the number of qubits.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                noise
+                device
               </div>
             </div>
           </a>

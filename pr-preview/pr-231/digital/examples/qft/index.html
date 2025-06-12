@@ -1692,6 +1692,8 @@
       
         
       
+        
+      
     
     
     
@@ -1856,6 +1858,29 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deutsch_squin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Deutsch-Jozsa Algorithm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1948,8 +1973,6 @@
       
         
           
-        
-      
         
       
         
@@ -2078,29 +2101,6 @@
   
   <span class="md-ellipsis">
     device
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../reference/noise/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    noise
     
   </span>
   
@@ -2984,7 +2984,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=90c8b65e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=33ab0147">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3004,7 +3004,7 @@ for mote details.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=5f4c8956">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=92bcf405">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3055,7 +3055,7 @@ from bloqade.pyqrack import PyQrack</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=266fa96c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9b9463c6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3068,7 +3068,7 @@ and an integer <code>n</code> representing the number of qubits we want to apply
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f7f7478b">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c20cccf8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3119,7 +3119,7 @@ def qft(qreg: qasm2.QReg, n: int, k: int):
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cbbc8725">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=36bfdf3b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3131,7 +3131,7 @@ the QFT circuit is correctly implemented. We will use a quantum register of size
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f40e06a8">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=5b2e05d5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3162,7 +3162,7 @@ def main():
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=68b89204">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2c3c6870">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3179,7 +3179,7 @@ to see the final state of the qubits after applying the QFT circuit.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=6fa55df1">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=3abfe936">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3215,7 +3215,7 @@ print(qreg)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>IList([PyQrackQubit(addr=0, sim_reg=&lt;pyqrack.qrack_simulator.QrackSimulator object at 0x7f51a2f62600&gt;, state=&lt;QubitState.Active: 1&gt;), PyQrackQubit(addr=1, sim_reg=&lt;pyqrack.qrack_simulator.QrackSimulator object at 0x7f51a2f62600&gt;, state=&lt;QubitState.Active: 1&gt;), PyQrackQubit(addr=2, sim_reg=&lt;pyqrack.qrack_simulator.QrackSimulator object at 0x7f51a2f62600&gt;, state=&lt;QubitState.Active: 1&gt;)])
+<pre>IList([PyQrackQubit(addr=0, sim_reg=&lt;pyqrack.qrack_simulator.QrackSimulator object at 0x7f505c8a5e80&gt;, state=&lt;QubitState.Active: 1&gt;), PyQrackQubit(addr=1, sim_reg=&lt;pyqrack.qrack_simulator.QrackSimulator object at 0x7f505c8a5e80&gt;, state=&lt;QubitState.Active: 1&gt;), PyQrackQubit(addr=2, sim_reg=&lt;pyqrack.qrack_simulator.QrackSimulator object at 0x7f505c8a5e80&gt;, state=&lt;QubitState.Active: 1&gt;)])
 </pre>
 </div>
 </div>
@@ -3231,7 +3231,7 @@ print(qreg)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9314802b">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8f6634c3">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3243,7 +3243,7 @@ that corresponds to the QFT circuit.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=2278b34c">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=b3f420b6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
