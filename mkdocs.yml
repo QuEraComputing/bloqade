@@ -144,7 +144,7 @@ plugins:
       minify_html: false
   - blog
   - mkdocs-jupyter:
-      execute: !ENV ["EXECUTE_NOTEBOOKS", true]
+      execute: !ENV ["EXECUTE_NOTEBOOKS", false]
       allow_errors: false
       ignore: ["scripts/*"]
 

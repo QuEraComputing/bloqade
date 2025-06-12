@@ -51,5 +51,7 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - name: Build documentation
+        env:
+          EXECUTE_NOTEBOOKS: "true"
         run: |
           uv run mkdocs build
