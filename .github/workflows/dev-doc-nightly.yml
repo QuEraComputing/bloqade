@@ -1,0 +1,57 @@
+# This workflow pulls in the latest main branches of dependent packages and tries to build the documentation
+# so we can stay on top of issues with the examples when introducing changes
+name: Documentation
+on:
+  schedule:
+  - cron: 24 4 * * *
+concurrency:
+  group: ${{ github.workflow }}-${{ github.headref }}
+  cancel-in-progress: true
+
+jobs:
+  documentation:
+    name: Build documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          # Install a specific version of uv.
+          version: "0.5.1"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+      - name: Install Documentation dependencies
+        run: uv sync --group doc
+
+        # get latest dependencies from git directly
+      - name: clone the latest bloqade-circuit
+        id: clone_bloqade_circuit
+        uses: actions/checkout@v4
+        with:
+          repository: https://github.com/QuEraComputing/bloqade-circuit
+          path: '../bloqade-circuit'
+
+      - name: clone the latest bloqade-analog
+        id: clone_bloqade_analog
+        uses: actions/checkout@v4
+        with:
+          repository: https://github.com/QuEraComputing/bloqade-analog
+          path: '../bloqade-analog'
+
+      - name: add local repos as dependencies
+        run: uv add ../bloqade-circuit ../bloqade-analog
+
+      - name: Set up build cache
+        uses: actions/cache@v4
+        id: cache
+        with:
+          key: mkdocs-material-nightly-dev-${{ github.headref }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+      - name: Build documentation
+        env:
+          EXECUTE_NOTEBOOKS: "true"
+        run: |
+          uv run mkdocs build

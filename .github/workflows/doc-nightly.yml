@@ -1,0 +1,39 @@
+# This workflow builds & deploys the documentation using the latest release versions of dependent packages
+# Main use is to detect issues / accidental breaking changes with patch releases of e.g. bloqade-circuit
+name: Documentation
+on:
+  schedule:
+  - cron: 12 4 * * 0
+concurrency:
+  group: ${{ github.workflow }}-${{ github.headref }}
+  cancel-in-progress: true
+
+jobs:
+  documentation:
+    name: Build documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          # Install a specific version of uv.
+          version: "0.5.1"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+      - name: Install Documentation dependencies
+        run: uv sync --group doc
+
+      - name: Set up build cache
+        uses: actions/cache@v4
+        id: cache
+        with:
+          key: mkdocs-material-nightly-${{ github.headref }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+      - name: Build documentation
+        env:
+          EXECUTE_NOTEBOOKS: "true"
+        run: |
+          uv run mkdocs build
