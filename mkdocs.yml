@@ -55,6 +55,7 @@ nav:
       - QAOA: "digital/examples/qaoa.py"
       - Deutsch-Jozsa Algorithm: "digital/examples/deutsch_squin.py"
   - Analog Tutorials: 'https://queracomputing.github.io/bloqade-analog-examples/dev/'
+  - qBook: 'https://qbook.quera.com/'
   - Bloqade Analog: 'https://queracomputing.github.io/bloqade-analog/latest/'
   - Analog Reference: 'https://queracomputing.github.io/bloqade-analog/latest/reference/overview/'
   - API Reference:
