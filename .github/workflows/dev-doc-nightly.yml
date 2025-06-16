@@ -29,14 +29,14 @@ jobs:
         id: clone_bloqade_circuit
         uses: actions/checkout@v4
         with:
-          repository: https://github.com/QuEraComputing/bloqade-circuit
+          repository: QuEraComputing/bloqade-circuit
           path: '../bloqade-circuit'
 
       - name: clone the latest bloqade-analog
         id: clone_bloqade_analog
         uses: actions/checkout@v4
         with:
-          repository: https://github.com/QuEraComputing/bloqade-analog
+          repository: QuEraComputing/bloqade-analog
           path: '../bloqade-analog'
 
       - name: add local repos as dependencies
