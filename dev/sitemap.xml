@@ -2,186 +2,186 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://bloqade.quera.com/dev/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/background/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/contrib/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/install/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/manifesto/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/blog/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/blog/2023/12/15/introducing-bloqade-sdk-for-python/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/blog/2025/03/01/a-new-journey-for-bloqade/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/digital/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/digital/dialects_and_kernels/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/digital/examples/deutsch_squin/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/digital/examples/ghz/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/digital/examples/pauli_exponentiation/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/digital/examples/qaoa/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/digital/examples/qft/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/digital/examples/repeat_until_success/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/digital/simulator_device/simulator_device/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/digital/simulator_device/tasks/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/quick_start/analog/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/quick_start/circuits/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/quick_start/circuits/API/qasm2_core/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/quick_start/circuits/API/qasm2_inline_defunct/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/quick_start/circuits/API/qasm2_noise/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/quick_start/circuits/API/qasm2_parallel/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/quick_start/circuits/API/qasm2_uop/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/quick_start/circuits/compiler_passes/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/quick_start/circuits/compiler_passes/asap_parallelism/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/quick_start/circuits/compiler_passes/circuit_simplification/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/quick_start/circuits/compiler_passes/native_gate_rewrite/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/quick_start/circuits/interpreters_and_analysis/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/quick_start/circuits/interpreters_and_analysis/pyqrack_emulator/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/quick_start/circuits/interpreters_and_analysis/qasm2_codegen/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/reference/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/reference/analog/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/reference/analysis/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/reference/device/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/reference/pyqrack/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/reference/qasm2/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/reference/qbraid/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/reference/squin/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/reference/stim/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/reference/task/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/reference/types/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/reference/visual/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/blog/archive/2025/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/dev/blog/archive/2023/</loc>
-         <lastmod>2025-06-13</lastmod>
+         <lastmod>2025-06-17</lastmod>
     </url>
 </urlset>
