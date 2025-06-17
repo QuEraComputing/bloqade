@@ -30,17 +30,17 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: QuEraComputing/bloqade-circuit
-          path: '../bloqade-circuit'
+          path: 'submodules/bloqade-circuit'
 
       - name: clone the latest bloqade-analog
         id: clone_bloqade_analog
         uses: actions/checkout@v4
         with:
           repository: QuEraComputing/bloqade-analog
-          path: '../bloqade-analog'
+          path: 'submodules/bloqade-analog'
 
       - name: add local repos as dependencies
-        run: uv add ../bloqade-circuit ../bloqade-analog
+        run: uv add submodules/bloqade-circuit submodules/bloqade-analog
 
       - name: Set up build cache
         uses: actions/cache@v4
