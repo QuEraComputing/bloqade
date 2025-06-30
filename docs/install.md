@@ -43,6 +43,10 @@ which is the official development environment for Bloqade. You can install `uv` 
 
 Bloqade is a Python namespace package, we officially provide several sub-packages, each of which is an eDSL for neutral atom quantum computing. The following is a list of the sub-packages in Bloqade:
 
+!!! note
+
+    If you have already installed Bloqade via the instructions above, all the following subpckages are already installed with the exception of the `stim` eDSL which is currently experimental.
+
 ### `bloqade.qasm2`
 
 QASM2 and its extensions support for neutral atom quantum computing. Available via:
@@ -59,14 +63,6 @@ Analog quantum computing eDSL for neutral atom quantum computing (previously `bl
 pip install bloqade-analog
 ```
 
-### `bloqade.pyqrack`
-
-Support of the PyQrack simulator as a runtime backend for QASM2 and extensions.
-
-```bash
-pip install bloqade-pyqrack
-```
-
 ### `bloqade.qbraid`
 
 Support of the qBraid cloud service as a runtime backend for retrieving noise models and running circuits.
@@ -77,7 +73,7 @@ pip install bloqade[qbraid]
 
 ### `bloqade.stim` (Experimental)
 
-STIM and its extensions support for neutral atom quantum computing. Available via:
+Stim and its extensions support for neutral atom quantum computing. Available via:
 
 ```bash
 pip install bloqade[stim]
