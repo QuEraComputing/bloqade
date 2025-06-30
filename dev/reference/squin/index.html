@@ -2922,6 +2922,430 @@ have a cyclic dependency.</p>
 <div class="doc doc-object doc-function">
 
 
+<h2 id="bloqade.squin.cirq.dump_circuit" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">dump_circuit</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">dump_circuit</span><span class="p">(</span>
+    <span class="n">mt</span><span class="p">:</span> <span class="n">Method</span><span class="p">,</span>
+    <span class="n">qubits</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Qid</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Converts a squin.kernel method to a cirq.Circuit object and dumps it as JSON.</p>
+<p>This just runs <code>emit_circuit</code> and calls the <code>cirq.to_json</code> function to emit a JSON.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>mt</code>
+            </td>
+            <td>
+                  <code><span title="kirin.ir.Method">Method</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The kernel method from which to construct the circuit.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Other Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>qubits</code></td>
+            <td>
+                  <code><span title="typing.Sequence">Sequence</span>[<span title="cirq.Qid">Qid</span>] | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of qubits to use as the qubits in the circuit. Defaults to None.
+If this is None, then <code>cirq.LineQubit</code>s are inserted for every <code>squin.qubit.new</code>
+statement in the order they appear inside the kernel.
+<strong>Note</strong>: If a list of qubits is provided, make sure that there is a sufficient
+number of qubits for the resulting circuit.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/cirq/__init__.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dump_circuit</span><span class="p">(</span><span class="n">mt</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">,</span> <span class="n">qubits</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Qid</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a squin.kernel method to a cirq.Circuit object and dumps it as JSON.</span>
+
+<span class="sd">    This just runs `emit_circuit` and calls the `cirq.to_json` function to emit a JSON.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mt (ir.Method): The kernel method from which to construct the circuit.</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        qubits (Sequence[cirq.Qid] | None):</span>
+<span class="sd">            A list of qubits to use as the qubits in the circuit. Defaults to None.</span>
+<span class="sd">            If this is None, then `cirq.LineQubit`s are inserted for every `squin.qubit.new`</span>
+<span class="sd">            statement in the order they appear inside the kernel.</span>
+<span class="sd">            **Note**: If a list of qubits is provided, make sure that there is a sufficient</span>
+<span class="sd">            number of qubits for the resulting circuit.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">circuit</span> <span class="o">=</span> <span class="n">emit_circuit</span><span class="p">(</span><span class="n">mt</span><span class="p">,</span> <span class="n">qubits</span><span class="o">=</span><span class="n">qubits</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cirq</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bloqade.squin.cirq.emit_circuit" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">emit_circuit</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">emit_circuit</span><span class="p">(</span>
+    <span class="n">mt</span><span class="p">:</span> <span class="n">Method</span><span class="p">,</span> <span class="n">qubits</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Qid</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Converts a squin.kernel method to a cirq.Circuit object.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>mt</code>
+            </td>
+            <td>
+                  <code><span title="kirin.ir.Method">Method</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The kernel method from which to construct the circuit.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Other Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>qubits</code></td>
+            <td>
+                  <code><span title="typing.Sequence">Sequence</span>[<span title="cirq.Qid">Qid</span>] | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of qubits to use as the qubits in the circuit. Defaults to None.
+If this is None, then <code>cirq.LineQubit</code>s are inserted for every <code>squin.qubit.new</code>
+statement in the order they appear inside the kernel.
+<strong>Note</strong>: If a list of qubits is provided, make sure that there is a sufficient
+number of qubits for the resulting circuit.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+        <h4 id="bloqade.squin.cirq.emit_circuit--examples">Examples:</h4>
+<p>Here's a very basic example:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
+
+<span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">h</span><span class="p">()</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">cx</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">cx</span><span class="p">()</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">cx</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">cirq</span><span class="o">.</span><span class="n">emit_circuit</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+</code></pre></div>
+<p>You can also compose multiple kernels. Those are emitted as subcircuits within the "main" circuit.
+Subkernels can accept arguments and return a value.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kirin.dialects</span><span class="w"> </span><span class="kn">import</span> <span class="n">ilist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cirq</span>
+
+<span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">entangle</span><span class="p">(</span><span class="n">q</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Literal</span><span class="p">[</span><span class="mi">2</span><span class="p">]]):</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">h</span><span class="p">()</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">cx</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">cx</span><span class="p">()</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">cx</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cx</span>
+
+<span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">cx</span> <span class="o">=</span> <span class="n">entangle</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+    <span class="n">q2</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">cx</span><span class="p">,</span> <span class="p">[</span><span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">q2</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+
+
+<span class="c1"># custom list of qubits on grid</span>
+<span class="n">qubits</span> <span class="o">=</span> <span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">GridQubit</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">cirq</span><span class="o">.</span><span class="n">emit_circuit</span><span class="p">(</span><span class="n">main</span><span class="p">,</span> <span class="n">qubits</span><span class="o">=</span><span class="n">qubits</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+</code></pre></div>
+<p>We also passed in a custom list of qubits above. This allows you to provide a custom geometry
+and manipulate the qubits in other circuits directly written in cirq as well.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/cirq/__init__.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit_circuit</span><span class="p">(</span>
+    <span class="n">mt</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">,</span>
+    <span class="n">qubits</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Qid</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a squin.kernel method to a cirq.Circuit object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mt (ir.Method): The kernel method from which to construct the circuit.</span>
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        qubits (Sequence[cirq.Qid] | None):</span>
+<span class="sd">            A list of qubits to use as the qubits in the circuit. Defaults to None.</span>
+<span class="sd">            If this is None, then `cirq.LineQubit`s are inserted for every `squin.qubit.new`</span>
+<span class="sd">            statement in the order they appear inside the kernel.</span>
+<span class="sd">            **Note**: If a list of qubits is provided, make sure that there is a sufficient</span>
+<span class="sd">            number of qubits for the resulting circuit.</span>
+
+<span class="sd">    ## Examples:</span>
+
+<span class="sd">    Here&#39;s a very basic example:</span>
+
+<span class="sd">    ```python</span>
+<span class="sd">    from bloqade import squin</span>
+
+<span class="sd">    @squin.kernel</span>
+<span class="sd">    def main():</span>
+<span class="sd">        q = squin.qubit.new(2)</span>
+<span class="sd">        h = squin.op.h()</span>
+<span class="sd">        squin.qubit.apply(h, q[0])</span>
+<span class="sd">        cx = squin.op.cx()</span>
+<span class="sd">        squin.qubit.apply(cx, q)</span>
+
+<span class="sd">    circuit = squin.cirq.emit_circuit(main)</span>
+
+<span class="sd">    print(circuit)</span>
+<span class="sd">    ```</span>
+
+<span class="sd">    You can also compose multiple kernels. Those are emitted as subcircuits within the &quot;main&quot; circuit.</span>
+<span class="sd">    Subkernels can accept arguments and return a value.</span>
+
+<span class="sd">    ```python</span>
+<span class="sd">    from bloqade import squin</span>
+<span class="sd">    from kirin.dialects import ilist</span>
+<span class="sd">    from typing import Literal</span>
+<span class="sd">    import cirq</span>
+
+<span class="sd">    @squin.kernel</span>
+<span class="sd">    def entangle(q: ilist.IList[squin.qubit.Qubit, Literal[2]]):</span>
+<span class="sd">        h = squin.op.h()</span>
+<span class="sd">        squin.qubit.apply(h, q[0])</span>
+<span class="sd">        cx = squin.op.cx()</span>
+<span class="sd">        squin.qubit.apply(cx, q)</span>
+<span class="sd">        return cx</span>
+
+<span class="sd">    @squin.kernel</span>
+<span class="sd">    def main():</span>
+<span class="sd">        q = squin.qubit.new(2)</span>
+<span class="sd">        cx = entangle(q)</span>
+<span class="sd">        q2 = squin.qubit.new(3)</span>
+<span class="sd">        squin.qubit.apply(cx, [q[1], q2[2]])</span>
+
+
+<span class="sd">    # custom list of qubits on grid</span>
+<span class="sd">    qubits = [cirq.GridQubit(i, i+1) for i in range(5)]</span>
+
+<span class="sd">    circuit = squin.cirq.emit_circuit(main, qubits=qubits)</span>
+<span class="sd">    print(circuit)</span>
+
+<span class="sd">    ```</span>
+
+<span class="sd">    We also passed in a custom list of qubits above. This allows you to provide a custom geometry</span>
+<span class="sd">    and manipulate the qubits in other circuits directly written in cirq as well.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mt</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="n">func</span><span class="o">.</span><span class="n">Function</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">mt</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">signature</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">is_subseteq</span><span class="p">(</span>
+        <span class="n">types</span><span class="o">.</span><span class="n">NoneType</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="n">EmitError</span><span class="p">(</span>
+            <span class="s2">&quot;The method you are trying to convert to a circuit has a return value, but returning from a circuit is not supported.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">emitter</span> <span class="o">=</span> <span class="n">EmitCirq</span><span class="p">(</span><span class="n">qubits</span><span class="o">=</span><span class="n">qubits</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">emitter</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">mt</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">())</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h2 id="bloqade.squin.cirq.load_circuit" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">load_circuit</span>
 
@@ -3088,12 +3512,7 @@ have a cyclic dependency.</p>
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/cirq/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span>
 <span class="normal">20</span>
@@ -3165,7 +3584,12 @@ have a cyclic dependency.</p>
 <span class="normal">86</span>
 <span class="normal">87</span>
 <span class="normal">88</span>
-<span class="normal">89</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load_circuit</span><span class="p">(</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load_circuit</span><span class="p">(</span>
     <span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span>
     <span class="n">kernel_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;main&quot;</span><span class="p">,</span>
     <span class="n">dialects</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">DialectGroup</span> <span class="o">=</span> <span class="n">kernel</span><span class="p">,</span>

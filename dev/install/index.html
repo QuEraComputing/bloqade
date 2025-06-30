@@ -613,15 +613,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bloqadepyqrack" class="md-nav__link">
-    <span class="md-ellipsis">
-      bloqade.pyqrack
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#bloqadeqbraid" class="md-nav__link">
     <span class="md-ellipsis">
       bloqade.qbraid
@@ -2680,15 +2671,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bloqadepyqrack" class="md-nav__link">
-    <span class="md-ellipsis">
-      bloqade.pyqrack
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#bloqadeqbraid" class="md-nav__link">
     <span class="md-ellipsis">
       bloqade.qbraid
@@ -2781,6 +2763,10 @@ which is the official development environment for Bloqade. You can install <code
 </div>
 <h2 id="bloqade-and-its-friends">Bloqade and its friends</h2>
 <p>Bloqade is a Python namespace package, we officially provide several sub-packages, each of which is an eDSL for neutral atom quantum computing. The following is a list of the sub-packages in Bloqade:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you have already installed Bloqade via the instructions above, all the following subpckages are already installed with the exception of the <code>stim</code> eDSL which is currently experimental.</p>
+</div>
 <h3 id="bloqadeqasm2"><code>bloqade.qasm2</code></h3>
 <p>QASM2 and its extensions support for neutral atom quantum computing. Available via:</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>qasm2<span class="o">]</span>
@@ -2789,16 +2775,12 @@ which is the official development environment for Bloqade. You can install <code
 <p>Analog quantum computing eDSL for neutral atom quantum computing (previously <code>bloqade-python</code>). Available via:</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade-analog
 </code></pre></div>
-<h3 id="bloqadepyqrack"><code>bloqade.pyqrack</code></h3>
-<p>Support of the PyQrack simulator as a runtime backend for QASM2 and extensions.</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade-pyqrack
-</code></pre></div>
 <h3 id="bloqadeqbraid"><code>bloqade.qbraid</code></h3>
 <p>Support of the qBraid cloud service as a runtime backend for retrieving noise models and running circuits.</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>qbraid<span class="o">]</span>
 </code></pre></div>
 <h3 id="bloqadestim-experimental"><code>bloqade.stim</code> (Experimental)</h3>
-<p>STIM and its extensions support for neutral atom quantum computing. Available via:</p>
+<p>Stim and its extensions support for neutral atom quantum computing. Available via:</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>stim<span class="o">]</span>
 </code></pre></div>
 <h2 id="development">Development</h2>
