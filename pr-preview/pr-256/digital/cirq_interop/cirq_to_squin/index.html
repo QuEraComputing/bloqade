@@ -297,6 +297,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="https://qbook.quera.com/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  qBook
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="https://queracomputing.github.io/bloqade-analog/latest/" class="md-tabs__link">
         
   
@@ -1787,6 +1806,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#basic-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic examples
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#noise" class="md-nav__link">
     <span class="md-ellipsis">
       Noise
@@ -2110,6 +2138,28 @@
   
   
     <li class="md-nav__item">
+      <a href="https://qbook.quera.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    qBook
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="https://queracomputing.github.io/bloqade-analog/latest/" class="md-nav__link">
         
   
@@ -2195,7 +2245,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2212,14 +2262,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             API Reference
           </label>
@@ -2515,7 +2565,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2532,14 +2582,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             Blog
           </label>
@@ -2573,10 +2623,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_2" >
         
           
-          <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="0">
             
   
   
@@ -2589,8 +2639,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7_2">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
             <span class="md-nav__icon md-icon"></span>
             Archive
           </label>
@@ -2710,6 +2760,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#basic-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic examples
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#noise" class="md-nav__link">
     <span class="md-ellipsis">
       Noise
@@ -2787,6 +2846,40 @@
 <p>If you want to obtain a squin kernel from a circuit, you can use the <code>load_circuit</code> method in the <code>squin.cirq</code> submodule.
 What you're effectively doing is lowering a circuit to a squin IR.
 This IR can then be further lowered to eventually run on hardware.</p>
+<h2 id="basic-examples">Basic examples</h2>
+<p>Here are some basic usage examples to help you get started.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cirq</span>
+
+<span class="n">qubits</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">LineQubit</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">(</span>
+    <span class="n">cirq</span><span class="o">.</span><span class="n">H</span><span class="p">(</span><span class="n">qubits</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+    <span class="n">cirq</span><span class="o">.</span><span class="n">CX</span><span class="p">(</span><span class="n">qubits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">qubits</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+    <span class="n">cirq</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">qubits</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># let&#39;s have a look</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+
+<span class="n">main_loaded</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">cirq</span><span class="o">.</span><span class="n">load_circuit</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">kernel_name</span><span class="o">=</span><span class="s2">&quot;main_loaded&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>The above is equivalent to writing the following kernel function yourself:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">h</span><span class="p">()</span>
+    <span class="n">CX</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">cx</span><span class="p">()</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">CX</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+</code></pre></div>
+<p>You can further inspect the lowered kernel as usual, e.g. by printing the IR.
+Let's compare the manually written version and the loaded version:</p>
+<div class="highlight"><pre><span></span><code><span class="n">main</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+<span class="n">main_loaded</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+</code></pre></div>
+<p>The resulting IR is equivalent, yet the loaded is a bit longer since the automated loading can make fewer assumptions about the code.
+Still, you can use the kernel as any other, e.g. by calling it from another kernel or running it via a simulator.</p>
 <h2 id="noise">Noise</h2>
 <h2 id="composability-of-kernels">Composability of kernels</h2>
 <p>WIP</p>

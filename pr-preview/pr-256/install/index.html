@@ -297,6 +297,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="https://qbook.quera.com/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  qBook
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="https://queracomputing.github.io/bloqade-analog/latest/" class="md-tabs__link">
         
   
@@ -588,15 +607,6 @@
   <a href="#bloqadeanalog" class="md-nav__link">
     <span class="md-ellipsis">
       bloqade.analog
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bloqadepyqrack" class="md-nav__link">
-    <span class="md-ellipsis">
-      bloqade.pyqrack
     </span>
   </a>
   
@@ -2129,6 +2139,28 @@
   
   
     <li class="md-nav__item">
+      <a href="https://qbook.quera.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    qBook
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="https://queracomputing.github.io/bloqade-analog/latest/" class="md-nav__link">
         
   
@@ -2214,7 +2246,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2231,14 +2263,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             API Reference
           </label>
@@ -2534,7 +2566,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -2551,14 +2583,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             Blog
           </label>
@@ -2592,10 +2624,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_2" >
         
           
-          <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="0">
             
   
   
@@ -2608,8 +2640,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7_2">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
             <span class="md-nav__icon md-icon"></span>
             Archive
           </label>
@@ -2757,15 +2789,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bloqadepyqrack" class="md-nav__link">
-    <span class="md-ellipsis">
-      bloqade.pyqrack
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#bloqadeqbraid" class="md-nav__link">
     <span class="md-ellipsis">
       bloqade.qbraid
@@ -2858,6 +2881,10 @@ which is the official development environment for Bloqade. You can install <code
 </div>
 <h2 id="bloqade-and-its-friends">Bloqade and its friends</h2>
 <p>Bloqade is a Python namespace package, we officially provide several sub-packages, each of which is an eDSL for neutral atom quantum computing. The following is a list of the sub-packages in Bloqade:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you have already installed Bloqade via the instructions above, all the following subpckages are already installed with the exception of the <code>stim</code> eDSL which is currently experimental.</p>
+</div>
 <h3 id="bloqadeqasm2"><code>bloqade.qasm2</code></h3>
 <p>QASM2 and its extensions support for neutral atom quantum computing. Available via:</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>qasm2<span class="o">]</span>
@@ -2866,16 +2893,12 @@ which is the official development environment for Bloqade. You can install <code
 <p>Analog quantum computing eDSL for neutral atom quantum computing (previously <code>bloqade-python</code>). Available via:</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade-analog
 </code></pre></div>
-<h3 id="bloqadepyqrack"><code>bloqade.pyqrack</code></h3>
-<p>Support of the PyQrack simulator as a runtime backend for QASM2 and extensions.</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade-pyqrack
-</code></pre></div>
 <h3 id="bloqadeqbraid"><code>bloqade.qbraid</code></h3>
 <p>Support of the qBraid cloud service as a runtime backend for retrieving noise models and running circuits.</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>qbraid<span class="o">]</span>
 </code></pre></div>
 <h3 id="bloqadestim-experimental"><code>bloqade.stim</code> (Experimental)</h3>
-<p>STIM and its extensions support for neutral atom quantum computing. Available via:</p>
+<p>Stim and its extensions support for neutral atom quantum computing. Available via:</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade<span class="o">[</span>stim<span class="o">]</span>
 </code></pre></div>
 <h2 id="development">Development</h2>
