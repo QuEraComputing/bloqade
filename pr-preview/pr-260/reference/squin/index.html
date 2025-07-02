@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
     
     
       
@@ -2555,7 +2555,7 @@
 
 
   
-    <a href="https://github.com/QuEraComputing/bloqade/edit/main/docs/reference/squin.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/QuEraComputing/bloqade/edit/main/docs/reference/squin.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -3002,25 +3002,25 @@ number of qubits for the resulting circuit.</p>
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/cirq/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span>
-<span class="normal">185</span>
-<span class="normal">186</span>
-<span class="normal">187</span>
-<span class="normal">188</span>
-<span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dump_circuit</span><span class="p">(</span><span class="n">mt</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">,</span> <span class="n">qubits</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Qid</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dump_circuit</span><span class="p">(</span><span class="n">mt</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">,</span> <span class="n">qubits</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Qid</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a squin.kernel method to a cirq.Circuit object and dumps it as JSON.</span>
 
 <span class="sd">    This just runs `emit_circuit` and calls the `cirq.to_json` function to emit a JSON.</span>
@@ -3172,67 +3172,7 @@ and manipulate the qubits in other circuits directly written in cirq as well.</p
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/cirq/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">157</span>
 <span class="normal">158</span>
 <span class="normal">159</span>
 <span class="normal">160</span>
@@ -3254,7 +3194,72 @@ and manipulate the qubits in other circuits directly written in cirq as well.</p
 <span class="normal">176</span>
 <span class="normal">177</span>
 <span class="normal">178</span>
-<span class="normal">179</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit_circuit</span><span class="p">(</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit_circuit</span><span class="p">(</span>
     <span class="n">mt</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">,</span>
     <span class="n">qubits</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Qid</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">:</span>
@@ -3336,7 +3341,12 @@ and manipulate the qubits in other circuits directly written in cirq as well.</p
         <span class="p">)</span>
 
     <span class="n">emitter</span> <span class="o">=</span> <span class="n">EmitCirq</span><span class="p">(</span><span class="n">qubits</span><span class="o">=</span><span class="n">qubits</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">emitter</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">mt</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">())</span>
+
+    <span class="c1"># Rewrite noise statements</span>
+    <span class="n">mt_</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">similar</span><span class="p">(</span><span class="n">mt</span><span class="o">.</span><span class="n">dialects</span><span class="p">)</span>
+    <span class="n">RewriteNoiseStmts</span><span class="p">(</span><span class="n">mt_</span><span class="o">.</span><span class="n">dialects</span><span class="p">)(</span><span class="n">mt_</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">emitter</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">mt_</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">())</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3355,6 +3365,9 @@ and manipulate the qubits in other circuits directly written in cirq as well.</p
     <span class="n">circuit</span><span class="p">:</span> <span class="n">Circuit</span><span class="p">,</span>
     <span class="n">kernel_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;main&quot;</span><span class="p">,</span>
     <span class="n">dialects</span><span class="p">:</span> <span class="n">DialectGroup</span> <span class="o">=</span> <span class="n">kernel</span><span class="p">,</span>
+    <span class="n">register_as_argument</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">return_register</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">register_argument_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;q&quot;</span><span class="p">,</span>
     <span class="nb">globals</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">lineno_offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -3432,6 +3445,46 @@ and manipulate the qubits in other circuits directly written in cirq as well.</p
             </td>
           </tr>
           <tr class="doc-section-item">
+            <td><code>register_as_argument</code></td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Determine whether the resulting kernel function should accept
+a single <code>ilist.IList[Qubit, Any]</code> argument that is a list of qubits used within the
+function. This allows you to compose kernel functions generated from circuits.
+Defaults to <code>False</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>return_register</code></td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Determine whether the resulting kernel functionr returns a
+single value of type <code>ilist.IList[Qubit, Any]</code> that is the list of qubits used
+in the kernel function. Useful when you want to compose multiple kernel functions
+generated from circuits. Defaults to <code>False</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>register_argument_name</code></td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the argument that represents the qubit register.
+Only used when <code>register_as_argument=True</code>. Defaults to "q".</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
             <td><code>globals</code></td>
             <td>
                   <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>] | None</code>
@@ -3488,7 +3541,7 @@ and manipulate the qubits in other circuits directly written in cirq as well.</p
           </tr>
       </tbody>
     </table>
-        <p>Example:</p>
+        <h4 id="bloqade.squin.cirq.load_circuit--usage-examples">Usage Examples:</h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># from cirq&#39;s &quot;hello qubit&quot; example</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">cirq</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
@@ -3508,91 +3561,174 @@ and manipulate the qubits in other circuits directly written in cirq as well.</p
 <span class="c1"># print the resulting IR</span>
 <span class="n">main</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
 </code></pre></div>
+<p>You can also compose kernel functions generated from circuits by passing in
+and / or returning the respective quantum registers:</p>
+<div class="highlight"><pre><span></span><code><span class="n">q</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">LineQubit</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">H</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">cirq</span><span class="o">.</span><span class="n">CX</span><span class="p">(</span><span class="o">*</span><span class="n">q</span><span class="p">))</span>
+
+<span class="n">get_entangled_qubits</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">cirq</span><span class="o">.</span><span class="n">load_circuit</span><span class="p">(</span>
+    <span class="n">circuit</span><span class="p">,</span> <span class="n">return_register</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kernel_name</span><span class="o">=</span><span class="s2">&quot;get_entangled_qubits&quot;</span>
+<span class="p">)</span>
+<span class="n">get_entangled_qubits</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+
+<span class="n">entangle_qubits</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">cirq</span><span class="o">.</span><span class="n">load_circuit</span><span class="p">(</span>
+    <span class="n">circuit</span><span class="p">,</span> <span class="n">register_as_argument</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kernel_name</span><span class="o">=</span><span class="s2">&quot;entangle_qubits&quot;</span>
+<span class="p">)</span>
+
+<span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">qreg</span> <span class="o">=</span> <span class="n">get_entangled_qubits</span><span class="p">()</span>
+    <span class="n">qreg2</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">entangle_qubits</span><span class="p">([</span><span class="n">qreg</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">qreg2</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+    <span class="k">return</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">qreg2</span><span class="p">)</span>
+</code></pre></div>
 
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/cirq/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load_circuit</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 18</span>
+<span class="normal"> 19</span>
+<span class="normal"> 20</span>
+<span class="normal"> 21</span>
+<span class="normal"> 22</span>
+<span class="normal"> 23</span>
+<span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load_circuit</span><span class="p">(</span>
     <span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span>
     <span class="n">kernel_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;main&quot;</span><span class="p">,</span>
     <span class="n">dialects</span><span class="p">:</span> <span class="n">ir</span><span class="o">.</span><span class="n">DialectGroup</span> <span class="o">=</span> <span class="n">kernel</span><span class="p">,</span>
+    <span class="n">register_as_argument</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">return_register</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">register_argument_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;q&quot;</span><span class="p">,</span>
     <span class="nb">globals</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">lineno_offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -3607,13 +3743,23 @@ and manipulate the qubits in other circuits directly written in cirq as well.</p
 <span class="sd">    Keyword Args:</span>
 <span class="sd">        kernel_name (str): The name of the kernel to load. Defaults to &quot;main&quot;.</span>
 <span class="sd">        dialects (ir.DialectGroup | None): The dialects to use. Defaults to `squin.kernel`.</span>
+<span class="sd">        register_as_argument (bool): Determine whether the resulting kernel function should accept</span>
+<span class="sd">            a single `ilist.IList[Qubit, Any]` argument that is a list of qubits used within the</span>
+<span class="sd">            function. This allows you to compose kernel functions generated from circuits.</span>
+<span class="sd">            Defaults to `False`.</span>
+<span class="sd">        return_register (bool): Determine whether the resulting kernel functionr returns a</span>
+<span class="sd">            single value of type `ilist.IList[Qubit, Any]` that is the list of qubits used</span>
+<span class="sd">            in the kernel function. Useful when you want to compose multiple kernel functions</span>
+<span class="sd">            generated from circuits. Defaults to `False`.</span>
+<span class="sd">        register_argument_name (str): The name of the argument that represents the qubit register.</span>
+<span class="sd">            Only used when `register_as_argument=True`. Defaults to &quot;q&quot;.</span>
 <span class="sd">        globals (dict[str, Any] | None): The global variables to use. Defaults to None.</span>
 <span class="sd">        file (str | None): The file name for error reporting. Defaults to None.</span>
 <span class="sd">        lineno_offset (int): The line number offset for error reporting. Defaults to 0.</span>
 <span class="sd">        col_offset (int): The column number offset for error reporting. Defaults to 0.</span>
 <span class="sd">        compactify (bool): Whether to compactify the output. Defaults to True.</span>
 
-<span class="sd">    Example:</span>
+<span class="sd">    ## Usage Examples:</span>
 
 <span class="sd">    ```python</span>
 <span class="sd">    # from cirq&#39;s &quot;hello qubit&quot; example</span>
@@ -3635,6 +3781,30 @@ and manipulate the qubits in other circuits directly written in cirq as well.</p
 <span class="sd">    # print the resulting IR</span>
 <span class="sd">    main.print()</span>
 <span class="sd">    ```</span>
+
+<span class="sd">    You can also compose kernel functions generated from circuits by passing in</span>
+<span class="sd">    and / or returning the respective quantum registers:</span>
+
+<span class="sd">    ```python</span>
+<span class="sd">    q = cirq.LineQubit.range(2)</span>
+<span class="sd">    circuit = cirq.Circuit(cirq.H(q[0]), cirq.CX(*q))</span>
+
+<span class="sd">    get_entangled_qubits = squin.cirq.load_circuit(</span>
+<span class="sd">        circuit, return_register=True, kernel_name=&quot;get_entangled_qubits&quot;</span>
+<span class="sd">    )</span>
+<span class="sd">    get_entangled_qubits.print()</span>
+
+<span class="sd">    entangle_qubits = squin.cirq.load_circuit(</span>
+<span class="sd">        circuit, register_as_argument=True, kernel_name=&quot;entangle_qubits&quot;</span>
+<span class="sd">    )</span>
+
+<span class="sd">    @squin.kernel</span>
+<span class="sd">    def main():</span>
+<span class="sd">        qreg = get_entangled_qubits()</span>
+<span class="sd">        qreg2 = squin.qubit.new(1)</span>
+<span class="sd">        entangle_qubits([qreg[1], qreg2[0]])</span>
+<span class="sd">        return squin.qubit.measure(qreg2)</span>
+<span class="sd">    ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">target</span> <span class="o">=</span> <span class="n">Squin</span><span class="p">(</span><span class="n">dialects</span><span class="o">=</span><span class="n">dialects</span><span class="p">,</span> <span class="n">circuit</span><span class="o">=</span><span class="n">circuit</span><span class="p">)</span>
@@ -3646,16 +3816,38 @@ and manipulate the qubits in other circuits directly written in cirq as well.</p
         <span class="n">lineno_offset</span><span class="o">=</span><span class="n">lineno_offset</span><span class="p">,</span>
         <span class="n">col_offset</span><span class="o">=</span><span class="n">col_offset</span><span class="p">,</span>
         <span class="n">compactify</span><span class="o">=</span><span class="n">compactify</span><span class="p">,</span>
+        <span class="n">register_as_argument</span><span class="o">=</span><span class="n">register_as_argument</span><span class="p">,</span>
+        <span class="n">register_argument_name</span><span class="o">=</span><span class="n">register_argument_name</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="c1"># NOTE: no return value</span>
-    <span class="n">return_value</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">ConstantNone</span><span class="p">()</span>
-    <span class="n">body</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">return_value</span><span class="p">)</span>
-    <span class="n">body</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">value_or_stmt</span><span class="o">=</span><span class="n">return_value</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">return_register</span><span class="p">:</span>
+        <span class="n">return_value</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">qreg</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">return_value</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">ConstantNone</span><span class="p">()</span>
+        <span class="n">body</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">return_value</span><span class="p">)</span>
+
+    <span class="n">return_node</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">value_or_stmt</span><span class="o">=</span><span class="n">return_value</span><span class="p">)</span>
+    <span class="n">body</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">return_node</span><span class="p">)</span>
+
+    <span class="n">self_arg_name</span> <span class="o">=</span> <span class="n">kernel_name</span> <span class="o">+</span> <span class="s2">&quot;_self&quot;</span>
+    <span class="n">arg_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">self_arg_name</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">register_as_argument</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">qreg</span><span class="o">.</span><span class="n">type</span><span class="p">,)</span>
+        <span class="n">arg_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">register_argument_name</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">()</span>
+
+    <span class="c1"># NOTE: add _self as argument; need to know signature before so do it after lowering</span>
+    <span class="n">signature</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">Signature</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">return_node</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+    <span class="n">body</span><span class="o">.</span><span class="n">blocks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">insert_from</span><span class="p">(</span>
+        <span class="mi">0</span><span class="p">,</span>
+        <span class="n">types</span><span class="o">.</span><span class="n">Generic</span><span class="p">(</span><span class="n">ir</span><span class="o">.</span><span class="n">Method</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Tuple</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">signature</span><span class="o">.</span><span class="n">inputs</span><span class="p">),</span> <span class="n">signature</span><span class="o">.</span><span class="n">output</span><span class="p">),</span>
+        <span class="n">self_arg_name</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="n">code</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
         <span class="n">sym_name</span><span class="o">=</span><span class="n">kernel_name</span><span class="p">,</span>
-        <span class="n">signature</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">Signature</span><span class="p">((),</span> <span class="n">types</span><span class="o">.</span><span class="n">NoneType</span><span class="p">),</span>
+        <span class="n">signature</span><span class="o">=</span><span class="n">signature</span><span class="p">,</span>
         <span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">,</span>
     <span class="p">)</span>
 
@@ -3663,7 +3855,7 @@ and manipulate the qubits in other circuits directly written in cirq as well.</p
         <span class="n">mod</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">py_func</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">sym_name</span><span class="o">=</span><span class="n">kernel_name</span><span class="p">,</span>
-        <span class="n">arg_names</span><span class="o">=</span><span class="p">[],</span>
+        <span class="n">arg_names</span><span class="o">=</span><span class="n">arg_names</span><span class="p">,</span>
         <span class="n">dialects</span><span class="o">=</span><span class="n">dialects</span><span class="p">,</span>
         <span class="n">code</span><span class="o">=</span><span class="n">code</span><span class="p">,</span>
     <span class="p">)</span>
@@ -5988,7 +6180,7 @@ dialect.</p>
       <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.action.view", "content.action.edit", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
       
         <script src="../../javascripts/katex.js"></script>
       
