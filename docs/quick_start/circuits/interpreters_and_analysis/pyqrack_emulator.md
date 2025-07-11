@@ -5,7 +5,7 @@
 
 ## Running simulations
 
-The program can be executed via a simulator backend, e.g. PyQrack, you can install it via:
+The program can be executed via a simulator backend, e.g. PyQrack, you can install it for M-series Macs and other machines via:
 
 
 ```bash
@@ -14,7 +14,7 @@ pip install pyqrack
 
 !!! warning
 
-    If you are using a Mac with an Intel CPU you will need:
+    If you are using a Mac with an Intel CPU you will need to instead install the following:
 
     ```bash
     pip install pyqrack-cpu
