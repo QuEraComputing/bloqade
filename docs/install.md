@@ -1,42 +1,12 @@
 # Installation
 
-Bloqade is available in [PyPI](https://pypi.org/) and
-thus can be installed via [`pip`](https://pypi.org/project/pip/).
-Install Bloqade using the following command:
+Bloqade is compatible with Python 3.10+ and available on [PyPI](https://pypi.org/project/bloqade/).
+You can install it via [`pip`](https://pypi.org/project/pip/) into your environment:
+
 
 ```bash
 pip install bloqade
 ```
-
-Bloqade support python 3.10+.
-
-We strongly recommend developing your compiler project using [`uv`](https://docs.astral.sh/uv/),
-which is the official development environment for Bloqade. You can install `uv` using the following command:
-
-
-=== "Linux and macOS"
-
-    ```bash
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-    ```
-
-    then
-
-    ```bash
-    uv add kirin-toolchain
-    ```
-
-=== "Windows"
-
-    ```cmd
-    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-    ```
-
-    then
-
-    ```cmd
-    uv add kirin-toolchain
-    ```
 
 
 ## Bloqade and its friends
@@ -87,16 +57,37 @@ If you want to contribute to Bloqade, you can clone the repository from GitHub:
 git clone https://github.com/QuEraComputing/bloqade.git
 ```
 
-We use `uv` to manage the development environment, after you install `uv`, you can install the development dependencies using the following command:
+We use [`uv`](https://docs.astral.sh/uv/) to manage the development environment.
+
+You can install `uv` via the following:
+
+=== "Linux and macOS"
+
+    ```bash
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    ```
+
+=== 
+
+    ```cmd
+    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+    ```
+
+Then you can install the development dependencies executing one of the following commands:
 
 ```bash
-uv sync
+# For contributing to code
+uv sync --group dev
+# For contributions to documentation
+uv sync --group doc
+# For just getting everything mentioned above
+uv sync --all-groups
 ```
 
-Our code review requires that you pass the tests and the linting checks. We recommend
-you to install `pre-commit` to run the checks before you commit your changes, the command line
-tool `pre-commit` has been installed as part of the development dependencies. You can setup
-`pre-commit` using the following command:
+Our code review requires that you pass the tests and linting checks. We recommend
+you install `pre-commit` to run the checks before you commit your changes.  `pre-commit`
+is already specified as a development dependency for bloqade and once installed, 
+you can setup `pre-commit` using the following command:
 
 ```bash
 pre-commit install
