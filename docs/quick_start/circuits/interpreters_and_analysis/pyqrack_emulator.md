@@ -5,17 +5,34 @@
 
 ## Running simulations
 
-The program can be executed via a simulator backend, e.g. PyQrack, you can install it via
+The program can be executed via a simulator backend, e.g. PyQrack, you can install it via:
 
 
 ```bash
-pip install bloqade-pyqrack[backend]
+pip install pyqrack
 ```
 
-with the `backend` being one of ` pyqrack`, `pyqrack-cpu`, `pyqrack-cuda` depending on
-the hardware and OS you have. See [README](https://github.com/QuEraComputing/bloqade-pyqrack?tab=readme-ov-file#which-extra-do-i-install) for mote details.
+!!! warning
+
+    If you are using a Mac with an Intel CPU you will need:
+
+    ```bash
+    pip install pyqrack-cpu
+    ```
+
+    Alternatively, if you have access to a GPU with CUDA support you can leverage that via:
+
+    ```bash
+    pip install pyqrack-cuda
+    ```
+    
+
 
 ```python
+
+from bloqade import qasm2
+from bloqade.pyqrack import PyQrack
+
 @qasm2.extended
 def main():
     return qft(qasm2.qreg(3), 3)
