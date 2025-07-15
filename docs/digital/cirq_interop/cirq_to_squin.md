@@ -141,3 +141,11 @@ main.print()
 
 !!! note
     You can also mix both options by setting `register_as_argument = True` and `return_register = True` in order to obtain a kernel function that both accepts and returns a list of qubits.
+
+
+## Limitations
+
+There are some limitations when loading circuits.
+One, for example, is that custom gates are not supported as you can't generally know how to lower them to a squin statement.
+
+If you find a missing feature, please open a GitHub issue.
