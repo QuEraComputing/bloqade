@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
     
     
       
@@ -1856,6 +1856,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2810,6 +2819,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2826,7 +2844,7 @@
 
 
   
-    <a href="https://github.com/QuEraComputing/bloqade/edit/main/docs/digital/cirq_interop/cirq_to_squin.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/QuEraComputing/bloqade/edit/main/docs/digital/cirq_interop/cirq_to_squin.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2881,10 +2899,85 @@ Let's compare the manually written version and the loaded version:</p>
 <p>The resulting IR is equivalent, yet the loaded is a bit longer since the automated loading can make fewer assumptions about the code.
 Still, you can use the kernel as any other, e.g. by calling it from another kernel or running it via a simulator.</p>
 <h2 id="noise">Noise</h2>
+<p>Lowering a noisy circuit to squin is also supported.
+All common channels in cirq will be lowered to an equivalent noise statement in squin.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cirq</span>
+
+<span class="n">qubits</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">LineQubit</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">noisy_circuit</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">(</span>
+    <span class="n">cirq</span><span class="o">.</span><span class="n">H</span><span class="p">(</span><span class="n">qubits</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+    <span class="n">cirq</span><span class="o">.</span><span class="n">CX</span><span class="p">(</span><span class="n">qubits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">qubits</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+    <span class="n">cirq</span><span class="o">.</span><span class="n">depolarize</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span><span class="o">.</span><span class="n">on_each</span><span class="p">(</span><span class="n">qubits</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># let&#39;s have a look</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">noisy_circuit</span><span class="p">)</span>
+
+<span class="n">noisy_kernel</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">cirq</span><span class="o">.</span><span class="n">load_circuit</span><span class="p">(</span><span class="n">noisy_circuit</span><span class="p">)</span>
+<span class="n">noisy_kernel</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+</code></pre></div>
+<p>This becomes especially useful when used together with a <code>cirq.NoiseModel</code> that automatically adds noise to a circuit via <code>circuit.with_noise(model)</code>.</p>
 <h2 id="composability-of-kernels">Composability of kernels</h2>
-<p>WIP</p>
+<p>You may also run into a situation, where you define a circuit that is used as part of a larger one, maybe even multiple times.
+In order to allow you to do something similar here, you can pass in and / or return the qubit register in a loaded kernel.
+Both these options are controlled by simple keyword arguments.</p>
 <h3 id="qubits-as-argument-to-the-kernel-function">Qubits as argument to the kernel function</h3>
+<p>Setting <code>register_as_argument=True</code> when loading a kernel, will result in a squin kernel function that accepts (and requires) a single argument of type <code>IList[Qubit]</code>.
+This means you can use a loaded circuit as part of another kernel function.
+Check it out:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cirq</span>
+
+<span class="n">qubits</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">LineQubit</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">(</span>
+    <span class="n">cirq</span><span class="o">.</span><span class="n">H</span><span class="p">(</span><span class="n">qubits</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+    <span class="n">cirq</span><span class="o">.</span><span class="n">CX</span><span class="p">(</span><span class="n">qubits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">qubits</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+<span class="p">)</span>
+
+<span class="n">sub_kernel</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">cirq</span><span class="o">.</span><span class="n">load_circuit</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">register_as_argument</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kernel_name</span><span class="o">=</span><span class="s2">&quot;sub_kernel&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="c1"># entangle qubits 1 and 2</span>
+    <span class="n">sub_kernel</span><span class="p">([</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+
+    <span class="c1"># entangle qubits 3 and 4</span>
+    <span class="n">sub_kernel</span><span class="p">([</span><span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span>
+
+
+<span class="n">main</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+</code></pre></div>
+<p>Looking at the IR of the resulting kernel, you can see that there is are <code>invoke sub_kernel</code> statements present, which call the lowered circuit with the given arguments.</p>
 <h3 id="qubits-as-return-value-from-the-kernel">Qubits as return value from the kernel</h3>
+<p>Similarly to above, you may also want to return a list of qubits from a loaded kernel.
+Let's adapt the above to instantiate and return a pair of entangled qubits using the same circuit:</p>
+<div class="highlight"><pre><span></span><code><span class="n">sub_kernel</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">cirq</span><span class="o">.</span><span class="n">load_circuit</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">return_register</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kernel_name</span><span class="o">=</span><span class="s2">&quot;sub_kernel&quot;</span><span class="p">)</span>
+
+<span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># instantiate and entangle a list of two qubits</span>
+    <span class="n">q1</span> <span class="o">=</span> <span class="n">sub_kernel</span><span class="p">()</span>
+
+    <span class="c1"># do it again, to get another set</span>
+    <span class="n">q2</span> <span class="o">=</span> <span class="n">sub_kernel</span><span class="p">()</span>
+
+    <span class="c1"># now we have 4 qubits to work with</span>
+    <span class="o">...</span>
+
+<span class="n">main</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can also mix both options by setting <code>register_as_argument = True</code> and <code>return_register = True</code> in order to obtain a kernel function that both accepts and returns a list of qubits.</p>
+</div>
+<h2 id="limitations">Limitations</h2>
+<p>There are some limitations when loading circuits.
+One, for example, is that custom gates are not supported as you can't generally know how to lower them to a squin statement.</p>
+<p>If you find a missing feature, please open a GitHub issue.</p>
 
 
 
@@ -3012,7 +3105,7 @@ Still, you can use the kernel as any other, e.g. by calling it from another kern
       <script id="__config" type="application/json">{"base": "../../..", "features": ["announce.dismiss", "content.action.view", "content.action.edit", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.56ea9cef.min.js"></script>
       
         <script src="../../../javascripts/katex.js"></script>
       

@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
     
     
       
@@ -2734,7 +2734,7 @@
 
 
   
-    <a href="https://github.com/QuEraComputing/bloqade/edit/main/docs/quick_start/circuits/interpreters_and_analysis/pyqrack_emulator.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/QuEraComputing/bloqade/edit/main/docs/quick_start/circuits/interpreters_and_analysis/pyqrack_emulator.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2759,12 +2759,22 @@ on <a href="https://github.com/QuEraComputing/bloqade/issues/new">GitHub</a> if 
 contribute.</p>
 </div>
 <h2 id="running-simulations">Running simulations</h2>
-<p>The program can be executed via a simulator backend, e.g. PyQrack, you can install it via</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade-pyqrack<span class="o">[</span>backend<span class="o">]</span>
+<p>The program can be executed via a simulator backend, e.g. PyQrack, you can install it for M-series Macs and other machines via:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>pyqrack
 </code></pre></div>
-<p>with the <code>backend</code> being one of <code>pyqrack</code>, <code>pyqrack-cpu</code>, <code>pyqrack-cuda</code> depending on
-the hardware and OS you have. See <a href="https://github.com/QuEraComputing/bloqade-pyqrack?tab=readme-ov-file#which-extra-do-i-install">README</a> for mote details.</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you are using a Mac with an Intel CPU you will need to instead install the following:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>pyqrack-cpu
+</code></pre></div>
+<p>Alternatively, if you have access to a GPU with CUDA support you can leverage that via:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>pyqrack-cuda
+</code></pre></div>
+</div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">qasm2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.pyqrack</span><span class="w"> </span><span class="kn">import</span> <span class="n">PyQrack</span>
+
+<span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">qft</span><span class="p">(</span><span class="n">qasm2</span><span class="o">.</span><span class="n">qreg</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
 
@@ -2899,7 +2909,7 @@ the hardware and OS you have. See <a href="https://github.com/QuEraComputing/blo
       <script id="__config" type="application/json">{"base": "../../../..", "features": ["announce.dismiss", "content.action.view", "content.action.edit", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow"], "search": "../../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.56ea9cef.min.js"></script>
       
         <script src="../../../../javascripts/katex.js"></script>
       

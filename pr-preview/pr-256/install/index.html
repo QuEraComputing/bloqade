@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
     
     
       
@@ -2836,7 +2836,7 @@
 
 
   
-    <a href="https://github.com/QuEraComputing/bloqade/edit/main/docs/install.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/QuEraComputing/bloqade/edit/main/docs/install.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2853,32 +2853,10 @@
 
 
 <h1 id="installation">Installation</h1>
-<p>Bloqade is available in <a href="https://pypi.org/">PyPI</a> and
-thus can be installed via <a href="https://pypi.org/project/pip/"><code>pip</code></a>.
-Install Bloqade using the following command:</p>
+<p>Bloqade is compatible with Python 3.10+ and available on <a href="https://pypi.org/project/bloqade/">PyPI</a>.
+You can install it via <a href="https://pypi.org/project/pip/"><code>pip</code></a> into your environment:</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade
 </code></pre></div>
-<p>Bloqade support python 3.10+.</p>
-<p>We strongly recommend developing your compiler project using <a href="https://docs.astral.sh/uv/"><code>uv</code></a>,
-which is the official development environment for Bloqade. You can install <code>uv</code> using the following command:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Linux and macOS</label><label for="__tabbed_1_2">Windows</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-LsSf<span class="w"> </span>https://astral.sh/uv/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
-</code></pre></div>
-<p>then</p>
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>add<span class="w"> </span>kirin-toolchain
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>powershell -ExecutionPolicy ByPass -c &quot;irm https://astral.sh/uv/install.ps1 | iex&quot;
-</code></pre></div>
-<p>then</p>
-<div class="highlight"><pre><span></span><code>uv add kirin-toolchain
-</code></pre></div>
-</div>
-</div>
-</div>
 <h2 id="bloqade-and-its-friends">Bloqade and its friends</h2>
 <p>Bloqade is a Python namespace package, we officially provide several sub-packages, each of which is an eDSL for neutral atom quantum computing. The following is a list of the sub-packages in Bloqade:</p>
 <div class="admonition note">
@@ -2905,13 +2883,33 @@ which is the official development environment for Bloqade. You can install <code
 <p>If you want to contribute to Bloqade, you can clone the repository from GitHub:</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/QuEraComputing/bloqade.git
 </code></pre></div>
-<p>We use <code>uv</code> to manage the development environment, after you install <code>uv</code>, you can install the development dependencies using the following command:</p>
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>sync
+<p>We use <a href="https://docs.astral.sh/uv/"><code>uv</code></a> to manage the development environment.</p>
+<p>You can install <code>uv</code> via the following:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Linux and macOS</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-LsSf<span class="w"> </span>https://astral.sh/uv/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
 </code></pre></div>
-<p>Our code review requires that you pass the tests and the linting checks. We recommend
-you to install <code>pre-commit</code> to run the checks before you commit your changes, the command line
-tool <code>pre-commit</code> has been installed as part of the development dependencies. You can setup
-<code>pre-commit</code> using the following command:</p>
+</div>
+</div>
+</div>
+<p>=== </p>
+<pre><code>```cmd
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+</code></pre>
+<p>Then you can install the development dependencies executing one of the following commands:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># For contributing to code</span>
+uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>dev
+<span class="c1"># For contributions to documentation</span>
+uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>doc
+<span class="c1"># For just getting everything mentioned above</span>
+uv<span class="w"> </span>sync<span class="w"> </span>--all-groups
+</code></pre></div>
+<p>Our code review requires that you pass the tests and linting checks. We recommend
+you install <code>pre-commit</code> to run the checks before you commit your changes.  <code>pre-commit</code>
+is already specified as a development dependency for bloqade and once installed, 
+you can setup <code>pre-commit</code> using the following command:</p>
 <div class="highlight"><pre><span></span><code>pre-commit<span class="w"> </span>install
 </code></pre></div>
 
@@ -3041,7 +3039,7 @@ tool <code>pre-commit</code> has been installed as part of the development depen
       <script id="__config" type="application/json">{"base": "..", "features": ["announce.dismiss", "content.action.view", "content.action.edit", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../assets/javascripts/bundle.56ea9cef.min.js"></script>
       
         <script src="../javascripts/katex.js"></script>
       
