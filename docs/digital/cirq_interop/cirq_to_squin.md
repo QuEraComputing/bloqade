@@ -148,4 +148,4 @@ main.print()
 There are some limitations when loading circuits.
 One, for example, is that custom gates are not supported as you can't generally know how to lower them to a squin statement.
 
-If you find a missing feature, please open a GitHub issue.
+If you find a missing feature, please feel free to [open a GitHub issue](https://github.com/QuEraComputing/bloqade-circuit/issues).
