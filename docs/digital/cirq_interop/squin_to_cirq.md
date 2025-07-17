@@ -56,4 +56,4 @@ Note, that the qubits will be used in the resulting circuit in the order they ap
 Please note that there are some limitations, especially regarding control flow.
 Using `if` statements or loops inside a kernel function may lead to errors.
 
-If you run into an issue that you think should be supported, please report an issue on the GitHub repository.
+If you run into an issue that you think should be supported, please [report an issue on the GitHub repository](https://github.com/QuEraComputing/bloqade-circuit/issues).
