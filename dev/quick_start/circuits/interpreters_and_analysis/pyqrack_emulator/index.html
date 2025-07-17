@@ -1562,6 +1562,8 @@
       
         
       
+        
+      
     
     
     
@@ -1743,6 +1745,122 @@
     
       
         
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../digital/cirq_interop/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Interoperability with Cirq
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Interoperability with Cirq
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../digital/cirq_interop/cirq_to_squin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Converting cirq to squin
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../digital/cirq_interop/squin_to_cirq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Converting squin to Cirq
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
       
         
       
@@ -1767,10 +1885,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
         
           
-          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
             
   
   
@@ -1783,8 +1901,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
             <span class="md-nav__icon md-icon"></span>
             Circuits
           </label>
@@ -2641,12 +2759,22 @@ on <a href="https://github.com/QuEraComputing/bloqade/issues/new">GitHub</a> if 
 contribute.</p>
 </div>
 <h2 id="running-simulations">Running simulations</h2>
-<p>The program can be executed via a simulator backend, e.g. PyQrack, you can install it via</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade-pyqrack<span class="o">[</span>backend<span class="o">]</span>
+<p>The program can be executed via a simulator backend, e.g. PyQrack, you can install it for M-series Macs and other machines via:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>pyqrack
 </code></pre></div>
-<p>with the <code>backend</code> being one of <code>pyqrack</code>, <code>pyqrack-cpu</code>, <code>pyqrack-cuda</code> depending on
-the hardware and OS you have. See <a href="https://github.com/QuEraComputing/bloqade-pyqrack?tab=readme-ov-file#which-extra-do-i-install">README</a> for mote details.</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you are using a Mac with an Intel CPU you will need to instead install the following:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>pyqrack-cpu
+</code></pre></div>
+<p>Alternatively, if you have access to a GPU with CUDA support you can leverage that via:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>pyqrack-cuda
+</code></pre></div>
+</div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">qasm2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.pyqrack</span><span class="w"> </span><span class="kn">import</span> <span class="n">PyQrack</span>
+
+<span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">qft</span><span class="p">(</span><span class="n">qasm2</span><span class="o">.</span><span class="n">qreg</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
 
