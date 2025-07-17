@@ -24,7 +24,7 @@
     
     
       
-        <title>Converting squin to cirq - The Neutral Atom SDK</title>
+        <title>Converting squin to Cirq - The Neutral Atom SDK</title>
       
     
     
@@ -119,7 +119,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Converting squin to cirq
+              Converting squin to Cirq
             
           </span>
         </div>
@@ -1726,7 +1726,7 @@
   
   
   <span class="md-ellipsis">
-    Interoperability with cirq
+    Interoperability with Cirq
     
   </span>
   
@@ -1743,7 +1743,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_4">
             <span class="md-nav__icon md-icon"></span>
-            Interoperability with cirq
+            Interoperability with Cirq
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1793,7 +1793,7 @@
   
   
   <span class="md-ellipsis">
-    Converting squin to cirq
+    Converting squin to Cirq
     
   </span>
   
@@ -1806,7 +1806,7 @@
   
   
   <span class="md-ellipsis">
-    Converting squin to cirq
+    Converting squin to Cirq
     
   </span>
   
@@ -2794,7 +2794,7 @@
   
 
 
-<h1 id="converting-squin-to-cirq">Converting squin to cirq</h1>
+<h1 id="converting-squin-to-cirq">Converting squin to Cirq</h1>
 <p>You can convert a squin kernel function to a <code>cirq.Circuit</code> object.
 The output circuit will feature gates that most closely resemble the kernel you put in.</p>
 <h2 id="basic-usage">Basic usage</h2>
@@ -2814,7 +2814,7 @@ The output circuit will feature gates that most closely resemble the kernel you 
 <span class="nb">print</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 </code></pre></div>
 <p>There is one crucial difference between a squin kernel and a cirq circuit:
-the qubits are defined inside a kernel, whereas they are defined outside of a circuit.</p>
+the qubits are defined inside a kernel, whereas for a circuit they are defined outside.</p>
 <p>The default behavior here is to emit a set of <code>cirq.LineQubit</code>, which is of the correct length.
 They will be sorted by their <code>Qid</code> (position) according to the order they appear in the kernel.</p>
 <h2 id="customizing-qubits">Customizing qubits</h2>
@@ -2836,7 +2836,7 @@ Otherwise, you may get indexing errors.</p>
 <h2 id="limitations">Limitations</h2>
 <p>Please note that there are some limitations, especially regarding control flow.
 Using <code>if</code> statements or loops inside a kernel function may lead to errors.</p>
-<p>If you run into an issue that you think should be supported, please report an issue on the GitHub repository.</p>
+<p>If you run into an issue that you think should be supported, please <a href="https://github.com/QuEraComputing/bloqade-circuit/issues">report an issue on the GitHub repository</a>.</p>
 
 
 
