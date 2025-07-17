@@ -1,7 +1,7 @@
 # Interoperability with cirq
 
-The [cirq](https://quantumai.google/cirq) framework is a powerful tool for writing quantum circuits targeting near-term devices.
-Instead of reinventing the wheel, bloqade offers convenient interoperability with cirq that allows you to jointly use both libraries in order to develop your quantum program.
+The [Cirq](https://quantumai.google/cirq) framework is a powerful tool for writing quantum circuits targeting near-term devices.
+Instead of reinventing the wheel, Bloqade offers convenient interoperability with Cirq that allows you to jointly use both libraries in order to develop your quantum program.
 
 Specifically, you can turn a [`cirq.Circuit`](https://quantumai.google/reference/python/cirq/Circuit) object into a [squin](../dialects_and_kernels.md#squin) kernel function and vice versa.
 

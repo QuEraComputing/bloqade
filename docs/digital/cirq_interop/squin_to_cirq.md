@@ -1,4 +1,4 @@
-# Converting squin to cirq
+# Converting squin to Cirq
 
 You can convert a squin kernel function to a `cirq.Circuit` object.
 The output circuit will feature gates that most closely resemble the kernel you put in.
@@ -24,7 +24,7 @@ print(circuit)
 ```
 
 There is one crucial difference between a squin kernel and a cirq circuit:
-the qubits are defined inside a kernel, whereas they are defined outside of a circuit.
+the qubits are defined inside a kernel, whereas for a circuit they are defined outside.
 
 The default behavior here is to emit a set of `cirq.LineQubit`, which is of the correct length.
 They will be sorted by their `Qid` (position) according to the order they appear in the kernel.
