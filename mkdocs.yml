@@ -47,7 +47,7 @@ nav:
     - Simulator Device:
       - digital/simulator_device/simulator_device.md
       - digital/simulator_device/tasks.md
-    - Interoperability with cirq:
+    - Interoperability with Cirq:
       - "digital/cirq_interop/index.md"
       - "digital/cirq_interop/cirq_to_squin.md"
       - "digital/cirq_interop/squin_to_cirq.md"
