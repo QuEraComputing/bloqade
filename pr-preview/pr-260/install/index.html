@@ -1611,6 +1611,8 @@
       
         
       
+        
+      
     
     
     
@@ -1792,6 +1794,122 @@
     
       
         
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../digital/cirq_interop/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Interoperability with Cirq
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Interoperability with Cirq
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/cirq_interop/cirq_to_squin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Converting cirq to squin
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/cirq_interop/squin_to_cirq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Converting squin to Cirq
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
       
         
       
@@ -1816,10 +1934,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
         
           
-          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
             
   
   
@@ -1832,8 +1950,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
             <span class="md-nav__icon md-icon"></span>
             Circuits
           </label>
@@ -2735,32 +2853,10 @@
 
 
 <h1 id="installation">Installation</h1>
-<p>Bloqade is available in <a href="https://pypi.org/">PyPI</a> and
-thus can be installed via <a href="https://pypi.org/project/pip/"><code>pip</code></a>.
-Install Bloqade using the following command:</p>
+<p>Bloqade is compatible with Python 3.10+ and available on <a href="https://pypi.org/project/bloqade/">PyPI</a>.
+You can install it via <a href="https://pypi.org/project/pip/"><code>pip</code></a> into your environment:</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>bloqade
 </code></pre></div>
-<p>Bloqade support python 3.10+.</p>
-<p>We strongly recommend developing your compiler project using <a href="https://docs.astral.sh/uv/"><code>uv</code></a>,
-which is the official development environment for Bloqade. You can install <code>uv</code> using the following command:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Linux and macOS</label><label for="__tabbed_1_2">Windows</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-LsSf<span class="w"> </span>https://astral.sh/uv/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
-</code></pre></div>
-<p>then</p>
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>add<span class="w"> </span>kirin-toolchain
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>powershell -ExecutionPolicy ByPass -c &quot;irm https://astral.sh/uv/install.ps1 | iex&quot;
-</code></pre></div>
-<p>then</p>
-<div class="highlight"><pre><span></span><code>uv add kirin-toolchain
-</code></pre></div>
-</div>
-</div>
-</div>
 <h2 id="bloqade-and-its-friends">Bloqade and its friends</h2>
 <p>Bloqade is a Python namespace package, we officially provide several sub-packages, each of which is an eDSL for neutral atom quantum computing. The following is a list of the sub-packages in Bloqade:</p>
 <div class="admonition note">
@@ -2787,13 +2883,33 @@ which is the official development environment for Bloqade. You can install <code
 <p>If you want to contribute to Bloqade, you can clone the repository from GitHub:</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/QuEraComputing/bloqade.git
 </code></pre></div>
-<p>We use <code>uv</code> to manage the development environment, after you install <code>uv</code>, you can install the development dependencies using the following command:</p>
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>sync
+<p>We use <a href="https://docs.astral.sh/uv/"><code>uv</code></a> to manage the development environment.</p>
+<p>You can install <code>uv</code> via the following:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Linux and macOS</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-LsSf<span class="w"> </span>https://astral.sh/uv/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
 </code></pre></div>
-<p>Our code review requires that you pass the tests and the linting checks. We recommend
-you to install <code>pre-commit</code> to run the checks before you commit your changes, the command line
-tool <code>pre-commit</code> has been installed as part of the development dependencies. You can setup
-<code>pre-commit</code> using the following command:</p>
+</div>
+</div>
+</div>
+<p>=== </p>
+<pre><code>```cmd
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+</code></pre>
+<p>Then you can install the development dependencies executing one of the following commands:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># For contributing to code</span>
+uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>dev
+<span class="c1"># For contributions to documentation</span>
+uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>doc
+<span class="c1"># For just getting everything mentioned above</span>
+uv<span class="w"> </span>sync<span class="w"> </span>--all-groups
+</code></pre></div>
+<p>Our code review requires that you pass the tests and linting checks. We recommend
+you install <code>pre-commit</code> to run the checks before you commit your changes.  <code>pre-commit</code>
+is already specified as a development dependency for bloqade and once installed, 
+you can setup <code>pre-commit</code> using the following command:</p>
 <div class="highlight"><pre><span></span><code>pre-commit<span class="w"> </span>install
 </code></pre></div>
 
