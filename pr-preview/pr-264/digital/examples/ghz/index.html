@@ -3349,7 +3349,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b38a1e95">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4d518a76">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3365,7 +3365,7 @@ connectivity, we can also decrease the circuit <em>execution</em> depth from $N$
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3d75454f">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b92e9f7d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3385,20 +3385,22 @@ connectivity, we can also decrease the circuit <em>execution</em> depth from $N$
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">qasm2</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kirin.dialects</span><span class="w"> </span><span class="kn">import</span> <span class="n">ilist</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">qasm2</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-1">import math
 
-from bloqade import qasm2
-from kirin.dialects import ilist</div>
+from kirin.dialects import ilist
+
+from bloqade import qasm2</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=88de6d43">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9c6a2666">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3408,14 +3410,14 @@ from kirin.dialects import ilist</div>
 This gives the circuit an execution depth of $N$.</p>
 <div align="center">
 <picture>
-<img alt="No description has been provided for this image" src="/digital/examples/ghz_linear_circuit.svg"/>
+<img alt="No description has been provided for this image" src="../ghz_linear_circuit.svg"/>
 </picture>
 </div>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=de34181d">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=93235b88">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3472,7 +3474,7 @@ This gives the circuit an execution depth of $N$.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ffe03fdc">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b57586fe">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3484,7 +3486,7 @@ We can achieve log(N) circuit depth by <a href="https://arxiv.org/abs/2101.08946
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=82620f6d">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4973613c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3500,14 +3502,14 @@ So even thought the circuit depth is $log(N) = n$, the circuit execution depth i
 </div>
 <div align="center">
 <picture>
-<img alt="No description has been provided for this image" src="/digital/examples/ghz_log_circuit.svg"/>
+<img alt="No description has been provided for this image" src="../ghz_log_circuit.svg"/>
 </picture>
 </div>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=ca15a38c">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=852cef72">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3570,7 +3572,7 @@ So even thought the circuit depth is $log(N) = n$, the circuit execution depth i
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1b7e01ef">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8adb6b9a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3591,7 +3593,7 @@ With the following modification, we can further reduce the circuit execution dep
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=0d8d76df">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=14aeb9f4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3684,7 +3686,7 @@ With the following modification, we can further reduce the circuit execution dep
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=264bd8c2">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2daab886">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3704,7 +3706,7 @@ As a result, the returned QASM2 program will not have any arguments.
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3960638f">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=ce437832">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
