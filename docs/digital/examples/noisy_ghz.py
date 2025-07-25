@@ -1,13 +1,13 @@
 # %% [markdown]
 # # GHZ State preparation and noise
 #
-# In this example, we will illustrate how to work with bloqade's noise models of the Gemini architecture in order to study its effects on a circuit that prepares a GHZ state.
+# In this example, we will illustrate how to work with `bloqade`'s heuristic noise models of Gemini class digital quantum processors by applying them to a circuit that prepares a GHZ state.
 
 # %% [markdown]
 # ## Primer on Gemini noise models
 #
-# There are essentially two classes of heuristic noise models: one-zone models such as `GeminiOneZoneNoiseModel` and a two-zone model `GeminiTwoZoneNoiseModel`.
-# These correspond to two distinct approaches getting a sense of the influence of noise on Gemini class hardware.
+# In `bloqade`, there are two classes of heuristic noise models: one-zone models such as `GeminiOneZoneNoiseModel` and a two-zone model `GeminiTwoZoneNoiseModel`.
+# These are inspired by two distinct approaches to implement a quantum circuit on hardware and are designed to get a sense of the influence of noise on Gemini class hardware.
 #
 # On the one hand, the one-zone model assumes a single-zone layout where qubits remain in the gate zone throughout the computation.
 # On the other hand, the two-zone model incorporates a storage zone and assumes that qubits are transported between gate and storage regions.
@@ -15,11 +15,11 @@
 # Both models are informed by benchmark data on the device but are intentionally conservative.
 # Specifically, they tend to overestimate noise due to the lack of knowledge about optimized move schedules, which leads to overestimating move-induced errors.
 #
-# At this stage, we recommend interpreting the two models as providing a range for expected noise levels on Gemini-class devices, rather than precise predictions. They are useful for gaining intuition about noise sensitivity and for benchmarking algorithmic robustness under realistic but  assumptions.
+# At this stage, we recommend interpreting the two models as providing a range for expected noise levels on Gemini-class devices, rather than precise predictions. They are useful for gaining intuition about noise sensitivity and for benchmarking algorithmic robustness to errors, using hardware-informed but simplistic assumptions.
 #
 # Note, that there are actually two additional one-zone noise models, `GeminiOneZoneNoiseModelCorrelated` and `GeminiOneZoneNoiseModelConflictGraphMoves`.
 # As the names suggest, the former also takes into account correlated noise, whereas the latter takes into account more realistic move schedules.
-# In the following example, we will not be considering these two, but they are interchangeable with the used noise models (up to the fact, that the conflict graph moves require you to specify a grid using `cirq.GridQubit`s).
+# In the following example, we will not be considering these two, but they are interchangeable with the used noise models (up to the fact, that the conflict graph moves require you to specify qubits as `cirq.GridQubit`s).
 
 # %% [markdown]
 # ## Noise model implementations
@@ -35,8 +35,8 @@
 #
 # Now, let's get started with the actual example.
 #
-# As a first step, we will define a function that builds a GHZ circuit in cirq for a given number of qubits.
-# The resulting circuit will grow linearly with the number of qubits.
+# As a first step, we will define a function that builds a GHZ circuit in cirq that has a depth linear in the number of qubits.
+# 
 
 # %%
 import cirq
@@ -64,7 +64,7 @@ def ghz_circuit(n: int) -> cirq.Circuit:
 # ### Closer look at a basic circuit
 
 # %% [markdown]
-# Here's what this circuit looks like for a number of qubits:
+# Here's what this circuit looks like for `n=3` qubits:
 
 # %%
 ghz_circuit_3 = ghz_circuit(3)
@@ -83,12 +83,12 @@ print(noisy_ghz_circuit_3)
 
 # %% [markdown]
 # As you can see, we have successfully added noise.
-# However, the circuit also looks very different in terms of it's gates.
+# However, the circuit also looks very different in terms of its gates.
 #
 # This is because `noise.transform_circuit` does actually two things:
 #
 # 1. Since we want to consider a circuit that is compatible with the Gemini architecture, we need to transform it to the native gate set first. This set consists of (phased) X gates and CZ gates only.
-# 2. Once we have a native circuit, noise is injected according to the used noise model.
+# 2. Once we have a native circuit, noise is injected according to the chosen noise model.
 #
 # To clarify, here is how you would convert the circuit without using the `noise.transform_circuit` utility function:
 
@@ -108,18 +108,18 @@ print(noisy_ghz_circuit_3)
 # %% [markdown]
 # ### Studying the fidelity
 #
-# Now that we got the basics down, we can compute the fidelity of the circuit with noise present for different qubit numbers.
-# By fidelity, we simply mean the difference from a noise-less version of the circuit.
+# Now that we have got the basics down, we can compute the fidelity of noisy circuits with different qubit numbers.
+# By fidelity, we simply mean the overlap of the final state with the perfect GHZ state expected from the noise-less version of the circuit.
 #
-# The corresponding density matrices are obtained using cirq's simulator.
+# The corresponding density matrices are obtained using `cirq`'s simulator.
 #
-# We will do so using two different noise models, the one-zone model from before and also the two-zone model.
+# We will do the simulation using two different noise models, the one-zone model used above and also the two-zone model.
 
 # %% [markdown]
 # <div class="admonition note">
 # <p class="admonition-title">Fidelity calculation</p>
 # <p>
-#     In the following, we will simply use the expectation value of the noisy density matrix computed against the noiseless one as fidelity.
+#     In the following, we will simply use the expectation value of the noisy density matrix computed against the noiseless one as a proxy for fidelity.
 #     This is a suboptimal choice, but we wanted to keep the example simple.
 #     Feel free to substitute the fidelity calculation by the fidelity of your choice (e.g. the Uhlmann fidelity)
 # </p>
@@ -179,10 +179,10 @@ plt.legend()
 # %% [markdown]
 # ## Interoperability with squin
 #
-# Finally, we want to point out that you can also use the generated circuit's to obtain a squin kernel function.
+# Finally, we want to point out that you can also use the generated noisy circuits to obtain a squin kernel function.
 #
 # This is useful if you want to use other features of the bloqade pipeline.
-# For example, it would allow you to run the pyqrack simulator instead of cirq's own, which can be more efficient.
+# For example, it would allow you to run the `pyqrack` simulator instead of `cirq`'s own, which can be more efficient.
 
 # %%
 circuit = ghz_circuit(5)
