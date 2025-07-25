@@ -11,8 +11,9 @@
 # %%
 import math
 
-from bloqade import qasm2
 from kirin.dialects import ilist
+
+from bloqade import qasm2
 
 # %% [markdown]
 # ## Simple Linear Depth Implementation of a GHZ State Preparation Circuit
@@ -22,7 +23,7 @@ from kirin.dialects import ilist
 
 # <div align="center">
 # <picture>
-#    <img src="/digital/examples/ghz_linear_circuit.svg" >
+#    <img src="../ghz_linear_circuit.svg" >
 # </picture>
 # </div>
 
@@ -65,7 +66,7 @@ def ghz_linear(n: int):
 
 # <div align="center">
 # <picture>
-#    <img src="/digital/examples/ghz_log_circuit.svg" >
+#    <img src="../ghz_log_circuit.svg" >
 # </picture>
 # </div>
 

@@ -19,6 +19,7 @@ nav:
           - Examples:
             - Quantum Fourier Transform: "digital/examples/qft.py"
             - GHZ state preparation: "digital/examples/ghz.py"
+            - Noisy GHZ states: "digital/examples/noisy_ghz.py"
             - Pauli Exponential: "digital/examples/pauli_exponentiation.py"
             - Repeat Until Success: "digital/examples/repeat_until_success.py"
             - QAOA: "digital/examples/qaoa.py"
@@ -54,6 +55,7 @@ nav:
     - Circuits:
       - Quantum Fourier Transform: "digital/examples/qft.py"
       - GHZ state preparation: "digital/examples/ghz.py"
+      - Noisy GHZ states: "digital/examples/noisy_ghz.py"
       - Pauli Exponential: "digital/examples/pauli_exponentiation.py"
       - Repeat Until Success: "digital/examples/repeat_until_success.py"
       - QAOA: "digital/examples/qaoa.py"

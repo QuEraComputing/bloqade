@@ -16,8 +16,9 @@
 # %%
 import math
 
-from bloqade import qasm2
 from bloqade.pyqrack import PyQrack
+
+from bloqade import qasm2
 
 # %% [markdown]
 # In the following, we will define the Quantum Fourier Transform (QFT) circuit using recursion
@@ -55,7 +56,7 @@ def main():
 # to see the final state of the qubits after applying the QFT circuit.
 # <div align="center">
 # <picture>
-#    <img src="/digital/examples/qft.svg" >
+#    <img src="../qft.svg" >
 # </picture>
 # </div>
 
