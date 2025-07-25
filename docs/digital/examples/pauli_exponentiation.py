@@ -80,7 +80,7 @@ def pauli_exponential(targets: tuple[qasm2.Qubit, ...], pauli: str, gamma: float
 
 # <div align="center">
 # <picture>
-#    <img src="/digital/examples/pauli_exponentiation.svg" >
+#    <img src="../pauli_exponentiation.svg" >
 # </picture>
 # </div>
 
