@@ -3448,38 +3448,38 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7df102a9">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a96131b4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="ghz-state-preparation-and-noise">GHZ State preparation and noise<a class="anchor-link" href="#ghz-state-preparation-and-noise">¶</a></h1><p>In this example, we will illustrate how to work with bloqade's noise models of the Gemini architecture in order to study its effects on a circuit that prepares a GHZ state.</p>
+<h1 id="ghz-state-preparation-and-noise">GHZ State preparation and noise<a class="anchor-link" href="#ghz-state-preparation-and-noise">¶</a></h1><p>In this example, we will illustrate how to work with <code>bloqade</code>'s heuristic noise models of Gemini class digital quantum processors by applying them to a circuit that prepares a GHZ state.</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=50e3d0b0">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=198e60b2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="primer-on-gemini-noise-models">Primer on Gemini noise models<a class="anchor-link" href="#primer-on-gemini-noise-models">¶</a></h2><p>There are essentially two classes of heuristic noise models: one-zone models such as <code>GeminiOneZoneNoiseModel</code> and a two-zone model <code>GeminiTwoZoneNoiseModel</code>.
-These correspond to two distinct approaches getting a sense of the influence of noise on Gemini class hardware.</p>
+<h2 id="primer-on-gemini-noise-models">Primer on Gemini noise models<a class="anchor-link" href="#primer-on-gemini-noise-models">¶</a></h2><p>In <code>bloqade</code>, there are two classes of heuristic noise models: one-zone models such as <code>GeminiOneZoneNoiseModel</code> and a two-zone model <code>GeminiTwoZoneNoiseModel</code>.
+These are inspired by two distinct approaches to implement a quantum circuit on hardware and are designed to get a sense of the influence of noise on Gemini class hardware.</p>
 <p>On the one hand, the one-zone model assumes a single-zone layout where qubits remain in the gate zone throughout the computation.
 On the other hand, the two-zone model incorporates a storage zone and assumes that qubits are transported between gate and storage regions.</p>
 <p>Both models are informed by benchmark data on the device but are intentionally conservative.
 Specifically, they tend to overestimate noise due to the lack of knowledge about optimized move schedules, which leads to overestimating move-induced errors.</p>
-<p>At this stage, we recommend interpreting the two models as providing a range for expected noise levels on Gemini-class devices, rather than precise predictions. They are useful for gaining intuition about noise sensitivity and for benchmarking algorithmic robustness under realistic but  assumptions.</p>
+<p>At this stage, we recommend interpreting the two models as providing a range for expected noise levels on Gemini-class devices, rather than precise predictions. They are useful for gaining intuition about noise sensitivity and for benchmarking algorithmic robustness to errors, using hardware-informed but simplistic assumptions.</p>
 <p>Note, that there are actually two additional one-zone noise models, <code>GeminiOneZoneNoiseModelCorrelated</code> and <code>GeminiOneZoneNoiseModelConflictGraphMoves</code>.
 As the names suggest, the former also takes into account correlated noise, whereas the latter takes into account more realistic move schedules.
-In the following example, we will not be considering these two, but they are interchangeable with the used noise models (up to the fact, that the conflict graph moves require you to specify a grid using <code>cirq.GridQubit</code>s).</p>
+In the following example, we will not be considering these two, but they are interchangeable with the used noise models (up to the fact, that the conflict graph moves require you to specify qubits as <code>cirq.GridQubit</code>s).</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f8391364">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a380418a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3493,20 +3493,19 @@ However, you can already rely on <a href="../cirq_interop">interoperability with
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1eaaf71c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2df0b1a7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="ghz-preparation-and-noise">GHZ preparation and noise<a class="anchor-link" href="#ghz-preparation-and-noise">¶</a></h2><p>Now, let's get started with the actual example.</p>
-<p>As a first step, we will define a function that builds a GHZ circuit in cirq for a given number of qubits.
-The resulting circuit will grow linearly with the number of qubits.</p>
+<p>As a first step, we will define a function that builds a GHZ circuit in cirq that has a depth linear in the number of qubits.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b00950fe">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=942cca7d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3569,7 +3568,7 @@ def ghz_circuit(n: int) -&gt; cirq.Circuit:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d14522a6">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c8f55d18">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3580,18 +3579,18 @@ def ghz_circuit(n: int) -&gt; cirq.Circuit:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2f307bf8">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e65015ae">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Here's what this circuit looks like for a number of qubits:</p>
+<p>Here's what this circuit looks like for <code>n=3</code> qubits:</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=5bd61036">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=04f5521a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3620,7 +3619,7 @@ print(ghz_circuit_3)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=fb8aadf0">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f7bca8f9">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3633,7 +3632,7 @@ Now, we will convert the circuit above to a noisy one using bloqade's <code>cirq
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=7dd48137">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=54e1edcf">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3664,25 +3663,25 @@ print(noisy_ghz_circuit_3)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a532af92">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e06f07b2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>As you can see, we have successfully added noise.
-However, the circuit also looks very different in terms of it's gates.</p>
+However, the circuit also looks very different in terms of its gates.</p>
 <p>This is because <code>noise.transform_circuit</code> does actually two things:</p>
 <ol>
 <li>Since we want to consider a circuit that is compatible with the Gemini architecture, we need to transform it to the native gate set first. This set consists of (phased) X gates and CZ gates only.</li>
-<li>Once we have a native circuit, noise is injected according to the used noise model.</li>
+<li>Once we have a native circuit, noise is injected according to the chosen noise model.</li>
 </ol>
 <p>To clarify, here is how you would convert the circuit without using the <code>noise.transform_circuit</code> utility function:</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=222de901">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=038e3955">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3711,7 +3710,7 @@ print(native_ghz_3)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4d0522ce">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7bb9d6cd">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3723,7 +3722,7 @@ print(native_ghz_3)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4f3e084a">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4e11e8d1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3752,21 +3751,21 @@ print(noisy_ghz_circuit_3)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4faffd22">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=742a860b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="studying-the-fidelity">Studying the fidelity<a class="anchor-link" href="#studying-the-fidelity">¶</a></h3><p>Now that we got the basics down, we can compute the fidelity of the circuit with noise present for different qubit numbers.
-By fidelity, we simply mean the difference from a noise-less version of the circuit.</p>
-<p>The corresponding density matrices are obtained using cirq's simulator.</p>
-<p>We will do so using two different noise models, the one-zone model from before and also the two-zone model.</p>
+<h3 id="studying-the-fidelity">Studying the fidelity<a class="anchor-link" href="#studying-the-fidelity">¶</a></h3><p>Now that we have got the basics down, we can compute the fidelity of noisy circuits with different qubit numbers.
+By fidelity, we simply mean the overlap of the final state with the perfect GHZ state expected from the noise-less version of the circuit.</p>
+<p>The corresponding density matrices are obtained using <code>cirq</code>'s simulator.</p>
+<p>We will do the simulation using two different noise models, the one-zone model used above and also the two-zone model.</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=16487e06">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=18e1a1dd">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3775,7 +3774,7 @@ By fidelity, we simply mean the difference from a noise-less version of the circ
 <div class="admonition note">
 <p class="admonition-title">Fidelity calculation</p>
 <p>
-    In the following, we will simply use the expectation value of the noisy density matrix computed against the noiseless one as fidelity.
+    In the following, we will simply use the expectation value of the noisy density matrix computed against the noiseless one as a proxy for fidelity.
     This is a suboptimal choice, but we wanted to keep the example simple.
     Feel free to substitute the fidelity calculation by the fidelity of your choice (e.g. the Uhlmann fidelity)
 </p>
@@ -3784,7 +3783,7 @@ By fidelity, we simply mean the difference from a noise-less version of the circ
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=feb07fa0">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=07711e5b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3853,7 +3852,7 @@ for n in qubits:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b89d028d">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7d2943e5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3864,7 +3863,7 @@ for n in qubits:
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f87e2f2e">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4263b886">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3899,7 +3898,7 @@ plt.legend()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7d5ad0bd">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=24572c40">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3914,7 +3913,7 @@ plt.legend()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d69fdfe0">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6694cbf9">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3930,20 +3929,20 @@ For example, you can <a href="../ghz">reduce the circuit depth</a></p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b892ef91">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4d460b67">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="interoperability-with-squin">Interoperability with squin<a class="anchor-link" href="#interoperability-with-squin">¶</a></h2><p>Finally, we want to point out that you can also use the generated circuit's to obtain a squin kernel function.</p>
+<h2 id="interoperability-with-squin">Interoperability with squin<a class="anchor-link" href="#interoperability-with-squin">¶</a></h2><p>Finally, we want to point out that you can also use the generated noisy circuits to obtain a squin kernel function.</p>
 <p>This is useful if you want to use other features of the bloqade pipeline.
-For example, it would allow you to run the pyqrack simulator instead of cirq's own, which can be more efficient.</p>
+For example, it would allow you to run the <code>pyqrack</code> simulator instead of <code>cirq</code>'s own, which can be more efficient.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=1df07f50">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=79d8e7bf">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3972,7 +3971,7 @@ noisy_circuit = noise.transform_circuit(circuit, model=noise.GeminiOneZoneNoiseM
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=99bffa98">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a44636f2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
