@@ -68,6 +68,7 @@ nav:
     - reference/index.md
     - reference/analog.md
     - reference/analysis.md
+    - reference/cirq_utils.md
     - reference/device.md
     - reference/pyqrack.md
     - reference/qasm2.md
