@@ -1,3 +1,19 @@
+# ---
+# jupyter:
+#   jupytext:
+#     cell_metadata_filter: -all
+#     custom_cell_magics: kql
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.17.2
+#   kernelspec:
+#     display_name: kirin-workspace (3.12.10)
+#     language: python
+#     name: python3
+# ---
+
 # %% [markdown]
 # # GHZ State preparation and noise
 #
@@ -25,7 +41,7 @@
 # ## Noise model implementations
 #
 # For now, these noise models are implemented as [`cirq.NoiseModel`](https://quantumai.google/reference/python/cirq/NoiseModel) classes, so that you can use with any circuit you build using `cirq`.
-# They are part of the `bloqade.cirq_utils` submodule.
+# They are part of the [`bloqade.cirq_utils`](../../../reference/cirq_utils) submodule.
 #
 # Support for using these models with e.g. [squin](../dialects_and_kernels.md) will follow in the future.
 # However, you can already rely on [interoperability with cirq](../cirq_interop) in order to convert (noisy) circuits to squin kernels and use other parts of the compiler pipeline.
@@ -36,7 +52,7 @@
 # Now, let's get started with the actual example.
 #
 # As a first step, we will define a function that builds a GHZ circuit in cirq that has a depth linear in the number of qubits.
-# 
+#
 
 # %%
 import cirq
@@ -175,6 +191,65 @@ plt.legend()
 #
 # You could now think about how to optimize the circuits in order to reduce their sensitivity for noise.
 # For example, you can [reduce the circuit depth](../ghz)
+
+# %% [markdown]
+# ### Modifying the noise
+#
+# There are a number of parameters that govern the effect a noise model introduces into a circuit.
+# These can all be set independently to adapt the noise model to your specific application.
+#
+# In general, there are noise parameters for the following noise processes:
+#
+# * Depolarization due to gate application.
+# * Depolarization due to movement, both applied to moving atoms and idle atoms (a.k.a. sitter errors).
+# * Atom loss errors.
+#
+# <div class="admonition note">
+# <p class="admonition-title">Atom loss</p>
+# <p>
+#     Please note, that atom loss is currently not supported, i.e. it's not considered in the noise models.
+#     We plan to add that in the future.
+# </p>
+# </div>
+#
+# The noise processes are further split into local and global noise channels and separated by their cause.
+#
+# For a full list of noise parameters and a description of each one, please refer to the move noise model in [`bloqade.qasm2.dialects.noise.model.MoveNoiseModelABC`](../../../reference/qasm2/#bloqade.qasm2.dialects.noise.model.MoveNoiseModelABC)
+#
+# We can use those parameters in order to modify the strength of the noise.
+#
+# For example, say you want to introduce an extra penalty for moving qubits around in order to study how you can reduce movements. To do so, let's re-use the fidelity calculation using the two-zone model from above, but modify movement errors.
+
+# %%
+modified_two_zone_model = noise.GeminiTwoZoneNoiseModel(
+    mover_px=2e-3,
+    mover_py=2e-3,
+    mover_pz=1e-3,
+)
+fidelities_modified_two_zone = []
+for n in qubits:
+    circuit = ghz_circuit(n)
+    noisy_circuit = noise.transform_circuit(circuit, model=modified_two_zone_model)
+    rho = simulator.simulate(circuit).final_density_matrix
+    rho_noisy = simulator.simulate(noisy_circuit).final_density_matrix
+    fidelities_modified_two_zone.append(np.trace(rho @ rho_noisy))
+
+# %%
+plt.plot(qubits, fidelities_one_zone, "o", label="one-zone model")
+plt.plot(qubits, fidelities_modified_two_zone, "x", label="modified two-zone model")
+plt.xlabel("Number of qubits")
+plt.ylabel("Fidelity")
+plt.legend()
+
+# %% [markdown]
+# <div align="center">
+# <picture>
+#    <img src="../noisy_ghz_modified.svg" >
+# </picture>
+# </div>
+
+# %% [markdown]
+# As you can see, the fidelities no longer cross over since the increased movement noise now eliminates the advantage of the two-zone model for the considered numbers of qubits.
 
 # %% [markdown]
 # ## Interoperability with squin
