@@ -1,0 +1,4196 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Bloqade - the neutral atom SDK">
+      
+      
+      
+        <link rel="canonical" href="https://bloqade.quera.com/reference/cirq_utils/">
+      
+      
+        <link rel="prev" href="../analysis/">
+      
+      
+        <link rel="next" href="../device/">
+      
+      
+      <link rel="icon" href="../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+    
+    
+      
+        <title>cirq_utils - The Neutral Atom SDK</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Lato";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bloqade.cirq_utils" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="The Neutral Atom SDK" class="md-header__button md-logo" aria-label="The Neutral Atom SDK" data-md-component="logo">
+      
+  <img src="../../assets/logo-dark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            The Neutral Atom SDK
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              cirq_utils
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/QuEraComputing/bloqade" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bloqade
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../.." class="md-tabs__link">
+          
+  
+  
+    
+  
+  Home
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../digital/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Digital Tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://queracomputing.github.io/bloqade-analog-examples/dev/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Analog Tutorials
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://qbook.quera.com/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  qBook
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://queracomputing.github.io/bloqade-analog/latest/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Bloqade Analog
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://queracomputing.github.io/bloqade-analog/latest/reference/overview/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Analog Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../blog/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://quera.com" class="md-tabs__link">
+        
+  
+  
+    
+  
+  QuEra Computing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="The Neutral Atom SDK" class="md-nav__button md-logo" aria-label="The Neutral Atom SDK" data-md-component="logo">
+      
+  <img src="../../assets/logo-dark.svg" alt="logo">
+
+    </a>
+    The Neutral Atom SDK
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/QuEraComputing/bloqade" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bloqade
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../.." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Home
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../background/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Background
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../manifesto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Manifesto
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_5" id="__nav_1_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Quick Start
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_5">
+            <span class="md-nav__icon md-icon"></span>
+            Quick Start
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../quick_start/circuits/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Circuits
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1_5_1" id="__nav_1_5_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            Circuits
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_5_1_2" id="__nav_1_5_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_1_5_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_5_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/examples/qft/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quantum Fourier Transform
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/examples/ghz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GHZ State Preparation with Parallelism
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/examples/noisy_ghz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GHZ State preparation and noise
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/examples/pauli_exponentiation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Pauli Exponentiation for Quantum Simulation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/examples/repeat_until_success/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Repeat Until Success with STAR Gadget
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/examples/qaoa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    QAOA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5_1_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../quick_start/circuits/compiler_passes/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Compiler passes
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1_5_1_3" id="__nav_1_5_1_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_1_5_1_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_5_1_3">
+            <span class="md-nav__icon md-icon"></span>
+            Compiler passes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quick_start/circuits/compiler_passes/native_gate_rewrite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Native gate rewrite
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quick_start/circuits/compiler_passes/asap_parallelism/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ASAP Parallelism
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quick_start/circuits/compiler_passes/circuit_simplification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Circuit simplification
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5_1_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../quick_start/circuits/interpreters_and_analysis/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Interpreters and analysis
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1_5_1_4" id="__nav_1_5_1_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_1_5_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_5_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            Interpreters and analysis
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quick_start/circuits/interpreters_and_analysis/qasm2_codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    QASM2 Codegen
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quick_start/circuits/interpreters_and_analysis/pyqrack_emulator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PyQrack emulator
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5_1_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_5_1_5" id="__nav_1_5_1_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Circuit dialect API
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_1_5_1_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_5_1_5">
+            <span class="md-nav__icon md-icon"></span>
+            Circuit dialect API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quick_start/circuits/API/qasm2_core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    QASM2 Core
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quick_start/circuits/API/qasm2_noise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    QASM2 Noise
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quick_start/circuits/API/qasm2_parallel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    QASM2 Parallel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quick_start/circuits/API/qasm2_uop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    QASM2 Uop
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../quick_start/analog/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Analog
+    
+  </span>
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Analog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_5_3" id="__nav_1_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Qourier
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Qourier
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quick_start/qourier/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    None
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contrib/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../digital/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Digital Tutorials
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Digital Tutorials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/dialects_and_kernels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dialects and kernels
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Simulator Device
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Simulator Device
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/simulator_device/simulator_device/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Simulation devices
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/simulator_device/tasks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tasks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../digital/cirq_interop/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Interoperability with Cirq
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Interoperability with Cirq
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/cirq_interop/cirq_to_squin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Converting cirq to squin
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/cirq_interop/squin_to_cirq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Converting squin to Cirq
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Circuits
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            Circuits
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/examples/qft/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quantum Fourier Transform
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/examples/ghz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GHZ State Preparation with Parallelism
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/examples/noisy_ghz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GHZ State preparation and noise
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/examples/pauli_exponentiation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Pauli Exponentiation for Quantum Simulation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/examples/repeat_until_success/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Repeat Until Success with STAR Gadget
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/examples/qaoa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    QAOA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../digital/examples/deutsch_squin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Deutsch-Jozsa Algorithm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://queracomputing.github.io/bloqade-analog-examples/dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Analog Tutorials
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://qbook.quera.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    qBook
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://queracomputing.github.io/bloqade-analog/latest/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Bloqade Analog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://queracomputing.github.io/bloqade-analog/latest/reference/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Analog Reference
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    API Reference
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            API Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    analog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    cirq_utils
+    
+  </span>
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../device/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    device
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pyqrack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    pyqrack
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../qasm2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    qasm2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../qbraid/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    qbraid
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../squin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    squin
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stim/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    stim
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../task/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    task
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    types
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../visual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    visual
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../blog/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Archive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/archive/2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    2025
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/archive/2023/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    2023
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://quera.com" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    QuEra Computing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/QuEraComputing/bloqade/edit/main/docs/reference/cirq_utils.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/QuEraComputing/bloqade/raw/main/docs/reference/cirq_utils.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="bloqade.cirq_utils"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h1 id="bloqade.cirq_utils.lineprog" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">lineprog</span>
+
+
+</h1>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bloqade.cirq_utils.lineprog.LPProblem" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">LPProblem</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">LPProblem</span><span class="p">(</span>
+    <span class="n">constraints_eqz</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(),</span>
+    <span class="n">constraints_gez</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(),</span>
+    <span class="n">linear_objective</span><span class="p">:</span> <span class="n">Expression</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="k">lambda</span><span class="p">:</span> <span class="n">Expression</span><span class="p">({})</span>
+    <span class="p">)(),</span>
+    <span class="n">quadratic_objective</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(),</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.cirq_utils.lineprog.LPProblem.add_abs" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">add_abs</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">add_abs</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="n">Expression</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Use a slack variable to add an absolute value constraint.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/lineprog.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_abs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">:</span> <span class="n">Expression</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Use a slack variable to add an absolute value constraint.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">slack</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_gez</span><span class="p">(</span><span class="n">slack</span> <span class="o">-</span> <span class="n">expr</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_gez</span><span class="p">(</span><span class="n">slack</span> <span class="o">+</span> <span class="n">expr</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_gez</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">slack</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_linear</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">slack</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h1 id="bloqade.cirq_utils.parallelize" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">parallelize</span>
+
+
+</h1>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bloqade.cirq_utils.parallelize.auto_similarity" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">auto_similarity</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">auto_similarity</span><span class="p">(</span>
+    <span class="n">circuit</span><span class="p">:</span> <span class="n">Circuit</span><span class="p">,</span> <span class="n">weight_1q</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">weight_2q</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Hashable</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Automatically tag the circuit with topological basis group labels,
+where each group is a pair of gates that can be executed in parallel.</p>
+<p>Inputs:
+circuit - a cirq.Circuit to be analyzed. This should be CZ + PhaseXZGate, otherwise no annotation will occur.
+weight_1q: float - the weight to assign to single-qubit gates.
+weight_2q: float - the weight to assign to two-qubit gates.</p>
+<p>Returns:
+[0] - the cirq.Circuit with each gate annotated with topological similarity tags.
+[1] - a dictionary mapping each tag to its weight, where the key is the tag and the value is the weight.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">auto_similarity</span><span class="p">(</span>
+    <span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="n">weight_1q</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">weight_2q</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Hashable</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Automatically tag the circuit with topological basis group labels,</span>
+<span class="sd">    where each group is a pair of gates that can be executed in parallel.</span>
+
+<span class="sd">    Inputs:</span>
+<span class="sd">    circuit - a cirq.Circuit to be analyzed. This should be CZ + PhaseXZGate, otherwise no annotation will occur.</span>
+<span class="sd">    weight_1q: float - the weight to assign to single-qubit gates.</span>
+<span class="sd">    weight_2q: float - the weight to assign to two-qubit gates.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    [0] - the cirq.Circuit with each gate annotated with topological similarity tags.</span>
+<span class="sd">    [1] - a dictionary mapping each tag to its weight, where the key is the tag and the value is the weight.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">flattened_circuit</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">GateOperation</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">flatten_op_tree</span><span class="p">(</span><span class="n">circuit</span><span class="p">))</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">flattened_circuit</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">flattened_circuit</span><span class="p">)):</span>
+            <span class="n">op1</span> <span class="o">=</span> <span class="n">flattened_circuit</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">op2</span> <span class="o">=</span> <span class="n">flattened_circuit</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">can_be_parallel</span><span class="p">(</span><span class="n">op1</span><span class="p">,</span> <span class="n">op2</span><span class="p">):</span>
+                <span class="c1"># Add tags to both operations</span>
+                <span class="n">tag</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;AUTO:</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">flattened_circuit</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">op1</span><span class="o">.</span><span class="n">with_tags</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+                <span class="n">flattened_circuit</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">op2</span><span class="o">.</span><span class="n">with_tags</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">op1</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">weights</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight_1q</span>
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">op1</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">weights</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight_2q</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unsupported gate type&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">(</span><span class="n">flattened_circuit</span><span class="p">),</span> <span class="n">weights</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bloqade.cirq_utils.parallelize.block_similarity" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">block_similarity</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">block_similarity</span><span class="p">(</span>
+    <span class="n">circuit</span><span class="p">:</span> <span class="n">Circuit</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">block_id</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Hashable</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Associate every gate in a circuit with a similarity group.</p>
+<p>Inputs:
+circuit - a cirq.Circuit to be analyzed.
+weight: float - the weight to assign to each block of gates.</p>
+<p>Returns:
+[0] - the cirq.Circuit with each gate annotated with topological similarity tags.
+[1] - a dictionary mapping each tag to its weight, where the key is the tag and the value is the weight.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span>
+<span class="normal">97</span>
+<span class="normal">98</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">block_similarity</span><span class="p">(</span>
+    <span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">block_id</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Hashable</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Associate every gate in a circuit with a similarity group.</span>
+
+<span class="sd">    Inputs:</span>
+<span class="sd">    circuit - a cirq.Circuit to be analyzed.</span>
+<span class="sd">    weight: float - the weight to assign to each block of gates.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    [0] - the cirq.Circuit with each gate annotated with topological similarity tags.</span>
+<span class="sd">    [1] - a dictionary mapping each tag to its weight, where the key is the tag and the value is the weight.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">new_moments</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">tag</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;BLOCK:</span><span class="si">{</span><span class="n">block_id</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">for</span> <span class="n">moment</span> <span class="ow">in</span> <span class="n">circuit</span><span class="o">.</span><span class="n">moments</span><span class="p">:</span>
+        <span class="n">new_moments</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">gate</span><span class="o">.</span><span class="n">with_tags</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span> <span class="k">for</span> <span class="n">gate</span> <span class="ow">in</span> <span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">])</span>
+    <span class="n">weights</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight</span>
+    <span class="k">return</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">(</span><span class="n">new_moments</span><span class="p">),</span> <span class="n">weights</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bloqade.cirq_utils.parallelize.can_be_parallel" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">can_be_parallel</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">can_be_parallel</span><span class="p">(</span>
+    <span class="n">op1</span><span class="p">:</span> <span class="n">GateOperation</span><span class="p">,</span>
+    <span class="n">op2</span><span class="p">:</span> <span class="n">GateOperation</span><span class="p">,</span>
+    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-14</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Heuristic similarity function to determine if two operations are similar enough
+to be grouped together in parallel execution.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">can_be_parallel</span><span class="p">(</span>
+    <span class="n">op1</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">GateOperation</span><span class="p">,</span> <span class="n">op2</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">GateOperation</span><span class="p">,</span> <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-14</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Heuristic similarity function to determine if two operations are similar enough</span>
+<span class="sd">    to be grouped together in parallel execution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">are_disjoint</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">op1</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">op2</span><span class="o">.</span><span class="n">qubits</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">are_disjoint</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="c1"># Check if both operations are CZ gates</span>
+    <span class="n">both_cz</span> <span class="o">=</span> <span class="n">op1</span><span class="o">.</span><span class="n">gate</span> <span class="o">==</span> <span class="n">cirq</span><span class="o">.</span><span class="n">CZ</span> <span class="ow">and</span> <span class="n">op2</span><span class="o">.</span><span class="n">gate</span> <span class="o">==</span> <span class="n">cirq</span><span class="o">.</span><span class="n">CZ</span>
+
+    <span class="n">both_phased_xz</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">op1</span><span class="o">.</span><span class="n">gate</span><span class="p">,</span> <span class="n">cirq</span><span class="o">.</span><span class="n">PhasedXZGate</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
+        <span class="n">op2</span><span class="o">.</span><span class="n">gate</span><span class="p">,</span> <span class="n">cirq</span><span class="o">.</span><span class="n">PhasedXZGate</span>
+    <span class="p">)</span>
+    <span class="n">equal_unitaries</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">equal_up_to_global_phase</span><span class="p">(</span>
+        <span class="n">cirq</span><span class="o">.</span><span class="n">unitary</span><span class="p">(</span><span class="n">op1</span><span class="o">.</span><span class="n">gate</span><span class="p">),</span> <span class="n">cirq</span><span class="o">.</span><span class="n">unitary</span><span class="p">(</span><span class="n">op2</span><span class="o">.</span><span class="n">gate</span><span class="p">),</span> <span class="n">atol</span><span class="o">=</span><span class="n">tol</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">both_phased_xz</span> <span class="ow">and</span> <span class="n">equal_unitaries</span><span class="p">)</span> <span class="ow">or</span> <span class="n">both_cz</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bloqade.cirq_utils.parallelize.colorize" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">colorize</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">colorize</span><span class="p">(</span><span class="n">epochs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Unique</span><span class="p">[</span><span class="n">GateOperation</span><span class="p">]]])</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>For each epoch, separate any 1q and 2q gates, and colorize the 2q gates
+so that they can be executed in parallel without conflicts.
+Args:
+    epochs: list[list[Unique[cirq.GateOperation]]] - a list of epochs, where each
+        epoch is a list of gates that can be executed in parallel.</p>
+
+
+    <p><span class="doc-section-title">Yields:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>list[cirq.GateOperation] - a list of lists of gates, where each
+inner list contains gates that can be executed in parallel.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">colorize</span><span class="p">(</span>
+    <span class="n">epochs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Unique</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">GateOperation</span><span class="p">]]],</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For each epoch, separate any 1q and 2q gates, and colorize the 2q gates</span>
+<span class="sd">    so that they can be executed in parallel without conflicts.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        epochs: list[list[Unique[cirq.GateOperation]]] - a list of epochs, where each</span>
+<span class="sd">            epoch is a list of gates that can be executed in parallel.</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        list[cirq.GateOperation] - a list of lists of gates, where each</span>
+<span class="sd">            inner list contains gates that can be executed in parallel.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="n">epochs</span><span class="p">:</span>
+        <span class="n">oneq_gates</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">twoq_gates</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">gate</span> <span class="ow">in</span> <span class="n">epoch</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">gate</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">oneq_gates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gate</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">gate</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">twoq_gates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gate</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unsupported gate type&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">oneq_gates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">oneq_gates</span>
+
+        <span class="c1"># twoq_gates2 = colorizer(twoq_gates)# Inlined.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implements an edge coloring algorithm on a set of simultaneous 2q gates,</span>
+<span class="sd">        so that they can be done in an ordered manner so that no to gates use</span>
+<span class="sd">        the same qubit in the same layer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">gate</span> <span class="ow">in</span> <span class="n">twoq_gates</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">gate</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">gate</span><span class="o">.</span><span class="n">gate</span> <span class="o">!=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">CZ</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unsupported gate type&quot;</span><span class="p">)</span>
+            <span class="n">graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">gate</span><span class="o">.</span><span class="n">qubits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">gate</span><span class="o">.</span><span class="n">qubits</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">linegraph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">line_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+
+        <span class="n">best_colors</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Qid</span><span class="p">,</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Qid</span><span class="p">],</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">nx</span><span class="o">.</span><span class="n">algorithms</span><span class="o">.</span><span class="n">coloring</span><span class="o">.</span><span class="n">greedy_color</span><span class="p">(</span><span class="n">linegraph</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;largest_first&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">best_num_colors</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">best_colors</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+
+        <span class="k">for</span> <span class="n">strategy</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="c1">#&#39;random_sequential&#39;,</span>
+            <span class="s2">&quot;smallest_last&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;independent_set&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;connected_sequential_bfs&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;connected_sequential_dfs&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;saturation_largest_first&quot;</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="n">colors</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Qid</span><span class="p">,</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Qid</span><span class="p">],</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">nx</span><span class="o">.</span><span class="n">algorithms</span><span class="o">.</span><span class="n">coloring</span><span class="o">.</span><span class="n">greedy_color</span><span class="p">(</span><span class="n">linegraph</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="n">strategy</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">num_colors</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">colors</span><span class="o">.</span><span class="n">values</span><span class="p">())))</span> <span class="o">&lt;</span> <span class="n">best_num_colors</span><span class="p">:</span>
+                <span class="n">best_num_colors</span> <span class="o">=</span> <span class="n">num_colors</span>
+                <span class="n">best_colors</span> <span class="o">=</span> <span class="n">colors</span>
+
+        <span class="n">twoq_gates2</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">list</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">CZ</span><span class="p">(</span><span class="o">*</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">best_colors</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="n">x</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">best_colors</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="p">)</span>
+        <span class="c1"># -- end colorizer --</span>
+        <span class="k">yield from</span> <span class="n">twoq_gates2</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bloqade.cirq_utils.parallelize.generate_epochs" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">generate_epochs</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">generate_epochs</span><span class="p">(</span><span class="n">solution</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">NodeType</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Internal function to generate epochs from the solution of the linear program.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">generate_epochs</span><span class="p">(</span>
+    <span class="n">solution</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">NodeType</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="n">tol</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Internal function to generate epochs from the solution of the linear program.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sorted_gates</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">solution</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sorted_gates</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">([])</span>
+
+    <span class="n">gate</span><span class="p">,</span> <span class="n">latest_time</span> <span class="o">=</span> <span class="n">sorted_gates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">current_epoch</span> <span class="o">=</span> <span class="p">[</span><span class="n">gate</span><span class="p">]</span>  <span class="c1"># Start with the first gate</span>
+    <span class="k">for</span> <span class="n">gate</span><span class="p">,</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">sorted_gates</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="k">if</span> <span class="n">time</span> <span class="o">-</span> <span class="n">latest_time</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
+            <span class="n">current_epoch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gate</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">current_epoch</span>
+            <span class="n">current_epoch</span> <span class="o">=</span> <span class="p">[</span><span class="n">gate</span><span class="p">]</span>
+
+        <span class="n">latest_time</span> <span class="o">=</span> <span class="n">time</span>
+
+    <span class="k">yield</span> <span class="n">current_epoch</span>  <span class="c1"># Yield the last epoch</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bloqade.cirq_utils.parallelize.moment_similarity" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">moment_similarity</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">moment_similarity</span><span class="p">(</span>
+    <span class="n">circuit</span><span class="p">:</span> <span class="n">Circuit</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Hashable</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Associate every gate in each moment with a similarity group.</p>
+<p>Inputs:
+circuit - a cirq.Circuit to be analyzed.
+weight: float - the weight to assign to each block of gates.</p>
+<p>Returns:
+[0] - the cirq.Circuit with each gate annotated with topological similarity tags.
+[1] - a dictionary mapping each tag to its weight, where the key is the tag and the value is the weight.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">moment_similarity</span><span class="p">(</span>
+    <span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Hashable</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Associate every gate in each moment with a similarity group.</span>
+
+<span class="sd">    Inputs:</span>
+<span class="sd">    circuit - a cirq.Circuit to be analyzed.</span>
+<span class="sd">    weight: float - the weight to assign to each block of gates.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    [0] - the cirq.Circuit with each gate annotated with topological similarity tags.</span>
+<span class="sd">    [1] - a dictionary mapping each tag to its weight, where the key is the tag and the value is the weight.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">new_moments</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">moment_index</span><span class="p">,</span> <span class="n">moment</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">moments</span><span class="p">):</span>
+        <span class="n">tag</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;MOMENT:</span><span class="si">{</span><span class="n">moment_index</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">new_moments</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">gate</span><span class="o">.</span><span class="n">with_tags</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span> <span class="k">for</span> <span class="n">gate</span> <span class="ow">in</span> <span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">])</span>
+        <span class="n">weights</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight</span>
+    <span class="k">return</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">(</span><span class="n">new_moments</span><span class="p">),</span> <span class="n">weights</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bloqade.cirq_utils.parallelize.no_similarity" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">no_similarity</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">no_similarity</span><span class="p">(</span><span class="n">circuit</span><span class="p">:</span> <span class="n">Circuit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Removes all tags from the circuit</p>
+<p>Inputs:
+circuit: cirq.Circuit - the circuit to remove tags from.</p>
+<p>Returns:
+[0] - cirq.Circuit - the circuit with all tags removed.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">no_similarity</span><span class="p">(</span><span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Removes all tags from the circuit</span>
+
+<span class="sd">    Inputs:</span>
+<span class="sd">    circuit: cirq.Circuit - the circuit to remove tags from.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    [0] - cirq.Circuit - the circuit with all tags removed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">new_moments</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">moment</span> <span class="ow">in</span> <span class="n">circuit</span><span class="o">.</span><span class="n">moments</span><span class="p">:</span>
+        <span class="n">new_moments</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">gate</span><span class="o">.</span><span class="n">untagged</span> <span class="k">for</span> <span class="n">gate</span> <span class="ow">in</span> <span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">(</span><span class="n">new_moments</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bloqade.cirq_utils.parallelize.parallelize" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">parallelize</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">parallelize</span><span class="p">(</span>
+    <span class="n">circuit</span><span class="p">:</span> <span class="n">Circuit</span><span class="p">,</span>
+    <span class="n">hyperparameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">auto_tag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Use linear programming to reorder a circuit so that it may be optimally be
+run in parallel. This is done using a DAG representation, as well as a heuristic
+similarity function to group parallelizable gates together.</p>
+<p>Extra topological information (similarity) can be used by tagging each gate with
+the topological basis groups that it belongs to, for example</p>
+<blockquote>
+<p>circuit.append(cirq.H(qubits[0]).with_tags(1,2,3,4))
+represents that this gate is part of the topological basis groups 1,2,3, and 4.</p>
+</blockquote>
+
+
+<details class="inputs" open>
+  <summary>Inputs</summary>
+  <p>circuit: cirq.Circuit - the static circuit to be optimized
+hyperparameters: dict[str, float] - hyperparameters for the optimization
+    - "linear": float (0.01) - the linear cost of each gate
+    - "1q": float (1.0)  - the quadratic cost of 1q gates
+    - "2q": float (2.0)  - the quadratic cost of 2q gates
+    - "tags": float (0.5) - the default weight of the topological basis.</p>
+</details>        <p>Returns:
+    cirq.Circuit - the optimized circuit, where each moment is as parallel as possible.
+      it is also broken into native CZ gate set of {CZ, PhXZ}</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parallelize</span><span class="p">(</span>
+    <span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span>
+    <span class="n">hyperparameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">auto_tag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Use linear programming to reorder a circuit so that it may be optimally be</span>
+<span class="sd">    run in parallel. This is done using a DAG representation, as well as a heuristic</span>
+<span class="sd">    similarity function to group parallelizable gates together.</span>
+
+<span class="sd">    Extra topological information (similarity) can be used by tagging each gate with</span>
+<span class="sd">    the topological basis groups that it belongs to, for example</span>
+<span class="sd">    &gt; circuit.append(cirq.H(qubits[0]).with_tags(1,2,3,4))</span>
+<span class="sd">    represents that this gate is part of the topological basis groups 1,2,3, and 4.</span>
+
+<span class="sd">    Inputs:</span>
+<span class="sd">        circuit: cirq.Circuit - the static circuit to be optimized</span>
+<span class="sd">        hyperparameters: dict[str, float] - hyperparameters for the optimization</span>
+<span class="sd">            - &quot;linear&quot;: float (0.01) - the linear cost of each gate</span>
+<span class="sd">            - &quot;1q&quot;: float (1.0)  - the quadratic cost of 1q gates</span>
+<span class="sd">            - &quot;2q&quot;: float (2.0)  - the quadratic cost of 2q gates</span>
+<span class="sd">            - &quot;tags&quot;: float (0.5) - the default weight of the topological basis.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        cirq.Circuit - the optimized circuit, where each moment is as parallel as possible.</span>
+<span class="sd">          it is also broken into native CZ gate set of {CZ, PhXZ}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hyperparameters</span> <span class="o">=</span> <span class="n">_get_hyperparameters</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">auto_tag</span><span class="p">:</span>
+        <span class="c1"># Transpile the circuit to a native CZ gate set.</span>
+        <span class="n">transpiled_circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+        <span class="c1"># Annotate the circuit with topological information</span>
+        <span class="c1"># to improve parallelization</span>
+        <span class="n">transpiled_circuit</span><span class="p">,</span> <span class="n">group_weights</span> <span class="o">=</span> <span class="n">auto_similarity</span><span class="p">(</span>
+            <span class="n">transpiled_circuit</span><span class="p">,</span>
+            <span class="n">weight_1q</span><span class="o">=</span><span class="n">hyperparameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;1q&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+            <span class="n">weight_2q</span><span class="o">=</span><span class="n">hyperparameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;2q&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">group_weights</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">epochs</span> <span class="o">=</span> <span class="n">colorize</span><span class="p">(</span>
+        <span class="n">generate_epochs</span><span class="p">(</span>
+            <span class="n">solve_epochs</span><span class="p">(</span>
+                <span class="n">directed</span><span class="o">=</span><span class="n">to_dag_circuit</span><span class="p">(</span><span class="n">transpiled_circuit</span><span class="p">),</span>
+                <span class="n">group_weights</span><span class="o">=</span><span class="n">group_weights</span><span class="p">,</span>
+                <span class="n">hyperparameters</span><span class="o">=</span><span class="n">hyperparameters</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="c1"># Convert the epochs to a cirq circuit.</span>
+    <span class="n">moments</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">Moment</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">(</span><span class="n">moments</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bloqade.cirq_utils.parallelize.solve_epochs" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">solve_epochs</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">solve_epochs</span><span class="p">(</span>
+    <span class="n">directed</span><span class="p">:</span> <span class="n">DiGraph</span><span class="p">,</span>
+    <span class="n">group_weights</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Hashable</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="n">hyperparameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Unique</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">GateOperation</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Internal function to solve the epochs using linear programming.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">solve_epochs</span><span class="p">(</span>
+    <span class="n">directed</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">,</span>
+    <span class="n">group_weights</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Hashable</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="n">hyperparameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Unique</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">GateOperation</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Internal function to solve the epochs using linear programming.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">hyperparameters</span> <span class="o">=</span> <span class="n">_get_hyperparameters</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">)</span>
+
+    <span class="n">basis</span> <span class="o">=</span> <span class="p">{</span><span class="n">node</span><span class="p">:</span> <span class="n">Variable</span><span class="p">()</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">directed</span><span class="o">.</span><span class="n">nodes</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">basis</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="c1"># ---</span>
+    <span class="c1"># Turn into a linear program to solve</span>
+    <span class="c1"># ---</span>
+    <span class="n">lp</span> <span class="o">=</span> <span class="n">LPProblem</span><span class="p">()</span>
+
+    <span class="c1"># All timesteps must be positive</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">directed</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+        <span class="n">lp</span><span class="o">.</span><span class="n">add_gez</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">basis</span><span class="p">[</span><span class="n">node</span><span class="p">])</span>
+
+    <span class="c1"># Add ordering constraints</span>
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">directed</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+        <span class="n">lp</span><span class="o">.</span><span class="n">add_gez</span><span class="p">(</span><span class="n">basis</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">-</span> <span class="n">basis</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="n">all_variables</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">basis</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="c1"># Add linear objective: minimize the total time</span>
+    <span class="n">objective</span> <span class="o">=</span> <span class="n">hyperparameters</span><span class="p">[</span><span class="s2">&quot;linear&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">sum</span><span class="p">(</span><span class="n">all_variables</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">all_variables</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">default_weight</span> <span class="o">=</span> <span class="n">hyperparameters</span><span class="p">[</span><span class="s2">&quot;tags&quot;</span><span class="p">]</span>
+    <span class="n">lp</span><span class="o">.</span><span class="n">add_linear</span><span class="p">(</span><span class="n">objective</span><span class="p">)</span>
+    <span class="c1"># Add ABS objective: similarity wants to go together.</span>
+    <span class="k">for</span> <span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">directed</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="c1"># Topological (user) similarity:</span>
+        <span class="n">inter</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">node1</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">tags</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">node2</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">tags</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inter</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">weight</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">group_weights</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default_weight</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">inter</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">weight</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">lp</span><span class="o">.</span><span class="n">add_abs</span><span class="p">((</span><span class="n">basis</span><span class="p">[</span><span class="n">node1</span><span class="p">]</span> <span class="o">-</span> <span class="n">basis</span><span class="p">[</span><span class="n">node2</span><span class="p">])</span> <span class="o">*</span> <span class="n">weight</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">weight</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Weights must be positive&quot;</span><span class="p">)</span>
+
+    <span class="n">solution</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">node</span><span class="p">:</span> <span class="n">solution</span><span class="p">[</span><span class="n">basis</span><span class="p">[</span><span class="n">node</span><span class="p">]]</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">directed</span><span class="o">.</span><span class="n">nodes</span><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bloqade.cirq_utils.parallelize.to_dag_circuit" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">to_dag_circuit</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">to_dag_circuit</span><span class="p">(</span>
+    <span class="n">circuit</span><span class="p">:</span> <span class="n">Circuit</span><span class="p">,</span> <span class="n">can_reorder</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Convert a cirq.Circuit to a directed acyclic graph (DAG) representation.
+This is useful for analyzing the circuit structure and dependencies.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>circuit</code>
+            </td>
+            <td>
+                  <code><span title="cirq.Circuit">Circuit</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>cirq.Circuit - the circuit to convert.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>can_reorder</code>
+            </td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>function - a function that checks if two operations can be reordered.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+        <p>Returns:
+[0] - nx.DiGraph - the directed acyclic graph representation of the circuit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_dag_circuit</span><span class="p">(</span><span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="n">can_reorder</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a cirq.Circuit to a directed acyclic graph (DAG) representation.</span>
+<span class="sd">    This is useful for analyzing the circuit structure and dependencies.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        circuit: cirq.Circuit - the circuit to convert.</span>
+<span class="sd">        can_reorder: function - a function that checks if two operations can be reordered.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    [0] - nx.DiGraph - the directed acyclic graph representation of the circuit.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">reorder_check</span><span class="p">(</span>
+        <span class="n">op1</span><span class="p">,</span> <span class="n">op2</span>
+    <span class="p">):</span>  <span class="c1"># can reorder iff both are CZ, or intersection is empty</span>
+        <span class="k">if</span> <span class="n">op1</span><span class="o">.</span><span class="n">gate</span> <span class="o">==</span> <span class="n">cirq</span><span class="o">.</span><span class="n">CZ</span> <span class="ow">and</span> <span class="n">op2</span><span class="o">.</span><span class="n">gate</span> <span class="o">==</span> <span class="n">cirq</span><span class="o">.</span><span class="n">CZ</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">op1</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">op2</span><span class="o">.</span><span class="n">qubits</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span>
+
+    <span class="c1"># Turn into DAG</span>
+    <span class="n">directed</span> <span class="o">=</span> <span class="n">CircuitDag</span><span class="o">.</span><span class="n">from_circuit</span><span class="p">(</span>
+        <span class="n">circuit</span><span class="p">,</span> <span class="n">can_reorder</span><span class="o">=</span><span class="n">reorder_check</span> <span class="k">if</span> <span class="n">can_reorder</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">can_reorder</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">transitive_reduction</span><span class="p">(</span><span class="n">directed</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bloqade.cirq_utils.parallelize.transpile" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">transpile</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">:</span> <span class="n">Circuit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Transpile a circuit to a native CZ gate set of {CZ, PhXZ}.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transpile a circuit to a native CZ gate set of {CZ, PhXZ}.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Convert to CZ target gate set.</span>
+    <span class="n">circuit2</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">optimize_for_target_gateset</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">gateset</span><span class="o">=</span><span class="n">cirq</span><span class="o">.</span><span class="n">CZTargetGateset</span><span class="p">())</span>
+    <span class="n">missing_qubits</span> <span class="o">=</span> <span class="n">circuit</span><span class="o">.</span><span class="n">all_qubits</span><span class="p">()</span> <span class="o">-</span> <span class="n">circuit2</span><span class="o">.</span><span class="n">all_qubits</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">qubit</span> <span class="ow">in</span> <span class="n">missing_qubits</span><span class="p">:</span>
+        <span class="n">circuit2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">cirq</span><span class="o">.</span><span class="n">PhasedXZGate</span><span class="p">(</span><span class="n">x_exponent</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z_exponent</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">axis_phase_exponent</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">on</span><span class="p">(</span>
+                <span class="n">qubit</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">circuit2</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../analysis/" class="md-footer__link md-footer__link--prev" aria-label="Previous: analysis">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                analysis
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../device/" class="md-footer__link md-footer__link--next" aria-label="Next: device">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                device
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2025 Bloqade contributors
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://x.com/QueraComputing" target="_blank" rel="noopener" title="x.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/company/quera-computing-inc/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.action.view", "content.action.edit", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.50899def.min.js"></script>
+      
+        <script src="../../javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+    
+  </body>
+</html>
