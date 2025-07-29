@@ -219,12 +219,21 @@ plt.legend()
 # We can use those parameters in order to modify the strength of the noise.
 #
 # For example, say you want to introduce an extra penalty for moving qubits around in order to study how you can reduce movements. To do so, let's re-use the fidelity calculation using the two-zone model from above, but modify movement errors.
+We can query the default move errors from the `cirq` noise model:
 
+default_model = noise.GeminiTwoZoneNoiseModel()
+
+# %%
+print(f'The noise Pauli channel associated with moving atoms is (px, py, pz) = ({px,py,pz}).)
+
+%% [markdown]
+
+Then we can instantiate a noise model with modified parameters:
 # %%
 modified_two_zone_model = noise.GeminiTwoZoneNoiseModel(
     mover_px=2e-3,
     mover_py=2e-3,
-    mover_pz=1e-3,
+    mover_pz=3e-3,
 )
 fidelities_modified_two_zone = []
 for n in qubits:
