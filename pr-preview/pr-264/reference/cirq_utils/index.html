@@ -2926,6 +2926,2482 @@
 
 
 
+<h1 id="bloqade.cirq_utils.noise" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">noise</span>
+
+
+</h1>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="bloqade.cirq_utils.noise.conflict_graph" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">conflict_graph</span>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="bloqade.cirq_utils.noise.conflict_graph.OneZoneConflictGraph" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">OneZoneConflictGraph</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">OneZoneConflictGraph</span><span class="p">(</span><span class="n">moment</span><span class="p">:</span> <span class="n">Moment</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+
+        <p>Representation of the AOD conflict graph for qubits to more to their entangling partners in a single zone setup.</p>
+<p>Assumes the qubits are specified as cirq.GridQubits with a chosen geometry.</p>
+
+        <p>:param moment: A cirq.Moment object containing operations (gates) to be analyzed.</p>
+
+
+
+
+
+
+
+                  <details class="quote">
+                    <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/noise/conflict_graph.py</code></summary>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">moment</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Moment</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initializes the conflict graph for a given moment of a cirq circuit.</span>
+
+<span class="sd">    :param moment: A cirq.Moment object containing operations (gates) to be analyzed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">moment</span> <span class="o">=</span> <span class="n">moment</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">gates_in_moment</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">moment</span><span class="o">.</span><span class="n">operations</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+                  </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bloqade.cirq_utils.noise.conflict_graph.OneZoneConflictGraph.get_move_schedule" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">get_move_schedule</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_move_schedule</span><span class="p">(</span><span class="n">mover_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Generates a move schedule by coloring the conflict graph greedily, first coloring nodes of highest degree.</p>
+<p>Qubits that are the arguments of a single CZ gate are 'partners'. Only one partner need be moved to arrange the
+atoms for the 2Q gate. Thus, in coloring the conflict graph, as soon as one partner is colored, the other can be
+disregarded for the purpose of coloring the rest of the graph.</p>
+<p>This sets the self.move_schedule attribute, which is a dictionary where the keys are the indices of the move moments.</p>
+<p>:param mover_limit: The maximum number of qubits that can be moved in a single moment. Added as a constraint
+    when coloring the conflict graph.
+:returns a dictionary of idx:[cirq.Qid] where idx indexes the move moment where the list of qubits move.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/noise/conflict_graph.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_move_schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mover_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generates a move schedule by coloring the conflict graph greedily, first coloring nodes of highest degree.</span>
+
+<span class="sd">    Qubits that are the arguments of a single CZ gate are &#39;partners&#39;. Only one partner need be moved to arrange the</span>
+<span class="sd">    atoms for the 2Q gate. Thus, in coloring the conflict graph, as soon as one partner is colored, the other can be</span>
+<span class="sd">    disregarded for the purpose of coloring the rest of the graph.</span>
+
+<span class="sd">    This sets the self.move_schedule attribute, which is a dictionary where the keys are the indices of the move moments.</span>
+
+<span class="sd">    :param mover_limit: The maximum number of qubits that can be moved in a single moment. Added as a constraint</span>
+<span class="sd">        when coloring the conflict graph.</span>
+<span class="sd">    :returns a dictionary of idx:[cirq.Qid] where idx indexes the move moment where the list of qubits move.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_get_nodes</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_get_edges</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_get_node_degrees</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">ordered_nodes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">degrees</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">degrees</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">move_schedule</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">colored_nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">partner_node</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_nodes</span><span class="p">:</span>
+        <span class="n">colored</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">gate</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gates_in_moment</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">gate</span><span class="o">.</span><span class="n">qubits</span><span class="p">:</span>
+                <span class="n">partners</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">gate</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span>
+                <span class="n">partners</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                <span class="n">partner_node</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">partners</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">colored_nodes</span><span class="p">:</span>
+            <span class="c1"># NOTE: if a node is colored, both it and its partner are added to colored_nodes</span>
+            <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">connected_nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">edge</span><span class="p">:</span>
+                    <span class="n">connected_nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">connected_nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">connected_nodes</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">move_schedule</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">has_colored_neighbor</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">for</span> <span class="n">connected_node</span> <span class="ow">in</span> <span class="n">connected_nodes</span><span class="p">:</span>
+                    <span class="c1"># NOTE: loop through to make sure none of the connected nodes are already assigned to color.</span>
+                    <span class="k">if</span> <span class="n">connected_node</span> <span class="ow">in</span> <span class="n">move_schedule</span><span class="p">[</span><span class="n">color</span><span class="p">]:</span>
+                        <span class="n">has_colored_neighbor</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="k">break</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                <span class="n">mover_limit_reached</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">move_schedule</span><span class="p">[</span><span class="n">color</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="n">mover_limit</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">has_colored_neighbor</span> <span class="ow">or</span> <span class="n">mover_limit_reached</span><span class="p">):</span>
+                    <span class="c1"># NOTE: node needs color</span>
+                    <span class="n">move_schedule</span><span class="p">[</span><span class="n">color</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                    <span class="n">colored</span> <span class="o">=</span> <span class="kc">True</span>
+
+                    <span class="c1"># NOTE: add this node and it&#39;s partner to the solved nodes.</span>
+                    <span class="n">colored_nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">partner_node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">colored_nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">partner_node</span><span class="p">)</span>
+                    <span class="k">break</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">colored</span><span class="p">:</span>
+                <span class="n">move_schedule</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">move_schedule</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{</span><span class="n">node</span><span class="p">}</span>
+                <span class="n">colored</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">colored_nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">partner_node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">colored_nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">partner_node</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">colored_nodes</span><span class="p">)</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ordered_nodes</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">move_schedule</span> <span class="o">=</span> <span class="n">move_schedule</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">move_schedule</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="bloqade.cirq_utils.noise.model" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">model</span>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="bloqade.cirq_utils.noise.model.GeminiNoiseModelABC" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">GeminiNoiseModelABC</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">GeminiNoiseModelABC</span><span class="p">(</span>
+    <span class="n">check_input_circuit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">local_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004102</span><span class="p">,</span>
+    <span class="n">local_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004102</span><span class="p">,</span>
+    <span class="n">local_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004112</span><span class="p">,</span>
+    <span class="n">local_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">local_unaddressed_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2e-07</span><span class="p">,</span>
+    <span class="n">local_unaddressed_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2e-07</span><span class="p">,</span>
+    <span class="n">local_unaddressed_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2e-06</span><span class="p">,</span>
+    <span class="n">local_unaddressed_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">global_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.5e-05</span><span class="p">,</span>
+    <span class="n">global_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.5e-05</span><span class="p">,</span>
+    <span class="n">global_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.5e-05</span><span class="p">,</span>
+    <span class="n">global_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">cz_paired_gate_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0006549</span><span class="p">,</span>
+    <span class="n">cz_paired_gate_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0006549</span><span class="p">,</span>
+    <span class="n">cz_paired_gate_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.003184</span><span class="p">,</span>
+    <span class="n">cz_gate_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">cz_unpaired_gate_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005149</span><span class="p">,</span>
+    <span class="n">cz_unpaired_gate_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005149</span><span class="p">,</span>
+    <span class="n">cz_unpaired_gate_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.002185</span><span class="p">,</span>
+    <span class="n">cz_unpaired_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">mover_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.000806</span><span class="p">,</span>
+    <span class="n">mover_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.000806</span><span class="p">,</span>
+    <span class="n">mover_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.002458</span><span class="p">,</span>
+    <span class="n">move_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">sitter_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0003066</span><span class="p">,</span>
+    <span class="n">sitter_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0003066</span><span class="p">,</span>
+    <span class="n">sitter_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004639</span><span class="p">,</span>
+    <span class="n">sit_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="cirq.NoiseModel">NoiseModel</span></code>, <code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;MoveNoiseModelABC&lt;/span&gt;
+
+
+  &lt;span class=&quot;doc doc-labels&quot;&gt;
+      &lt;small class=&quot;doc doc-label doc-label-dataclass&quot;&gt;&lt;code&gt;dataclass&lt;/code&gt;&lt;/small&gt;
+  &lt;/span&gt; (&lt;code&gt;bloqade.qasm2.dialects.noise.MoveNoiseModelABC&lt;/code&gt;)" href="../qasm2/#bloqade.qasm2.dialects.noise.model.MoveNoiseModelABC">MoveNoiseModelABC</a></code></p>
+
+
+        <p>Abstract base class for all Gemini noise models.</p>
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="bloqade.cirq_utils.noise.model.GeminiNoiseModelABC.check_input_circuit" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">check_input_circuit</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">check_input_circuit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Determine whether or not to verify that the circuit only contains native gates.</p>
+<p><strong>Caution</strong>: Disabling this for circuits containing non-native gates may lead to incorrect results!</p>
+
+    </div>
+
+</div>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bloqade.cirq_utils.noise.model.GeminiNoiseModelABC.parallel_cz_errors" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">parallel_cz_errors</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">parallel_cz_errors</span><span class="p">(</span>
+    <span class="n">ctrls</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">qargs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">rest</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Takes a set of ctrls and qargs and returns a noise model for all qubits.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/noise/model.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parallel_cz_errors</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">ctrls</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">qargs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">rest</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+        <span class="s2">&quot;This noise model doesn&#39;t support rewrites on bloqade kernels, but should be used with cirq.&quot;</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="bloqade.cirq_utils.noise.model.GeminiOneZoneNoiseModel" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">GeminiOneZoneNoiseModel</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">GeminiOneZoneNoiseModel</span><span class="p">(</span>
+    <span class="n">check_input_circuit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">parallelize_circuit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">local_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004102</span><span class="p">,</span>
+    <span class="n">local_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004102</span><span class="p">,</span>
+    <span class="n">local_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004112</span><span class="p">,</span>
+    <span class="n">local_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">local_unaddressed_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2e-07</span><span class="p">,</span>
+    <span class="n">local_unaddressed_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2e-07</span><span class="p">,</span>
+    <span class="n">local_unaddressed_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2e-06</span><span class="p">,</span>
+    <span class="n">local_unaddressed_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">global_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.5e-05</span><span class="p">,</span>
+    <span class="n">global_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.5e-05</span><span class="p">,</span>
+    <span class="n">global_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.5e-05</span><span class="p">,</span>
+    <span class="n">global_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">cz_paired_gate_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0006549</span><span class="p">,</span>
+    <span class="n">cz_paired_gate_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0006549</span><span class="p">,</span>
+    <span class="n">cz_paired_gate_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.003184</span><span class="p">,</span>
+    <span class="n">cz_gate_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">cz_unpaired_gate_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005149</span><span class="p">,</span>
+    <span class="n">cz_unpaired_gate_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005149</span><span class="p">,</span>
+    <span class="n">cz_unpaired_gate_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.002185</span><span class="p">,</span>
+    <span class="n">cz_unpaired_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">mover_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.000806</span><span class="p">,</span>
+    <span class="n">mover_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.000806</span><span class="p">,</span>
+    <span class="n">mover_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.002458</span><span class="p">,</span>
+    <span class="n">move_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">sitter_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0003066</span><span class="p">,</span>
+    <span class="n">sitter_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0003066</span><span class="p">,</span>
+    <span class="n">sitter_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004639</span><span class="p">,</span>
+    <span class="n">sit_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;GeminiOneZoneNoiseModelABC&lt;/span&gt;
+
+
+  &lt;span class=&quot;doc doc-labels&quot;&gt;
+      &lt;small class=&quot;doc doc-label doc-label-dataclass&quot;&gt;&lt;code&gt;dataclass&lt;/code&gt;&lt;/small&gt;
+  &lt;/span&gt; (&lt;code&gt;bloqade.cirq_utils.noise.model.GeminiOneZoneNoiseModelABC&lt;/code&gt;)" href="#bloqade.cirq_utils.noise.model.GeminiOneZoneNoiseModelABC">GeminiOneZoneNoiseModelABC</a></code></p>
+
+
+        <p>A Cirq-compatible noise model for a one-zone implementation of the Gemini architecture.</p>
+<p>This model introduces custom asymmetric depolarizing noise for both single- and two-qubit gates
+depending on whether operations are global, local, or part of a CZ interaction. Since the model assumes all
+atoms are in the entangling zone, error are applied that stem from application of Rydberg error, even for
+qubits not actively involved in a gate operation.</p>
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bloqade.cirq_utils.noise.model.GeminiOneZoneNoiseModel.noisy_moment" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">noisy_moment</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">noisy_moment</span><span class="p">(</span><span class="n">moment</span><span class="p">:</span> <span class="n">Moment</span><span class="p">,</span> <span class="n">system_qubits</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Qid</span><span class="p">])</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Applies a structured noise model to a given moment depending on the type of operations it contains.</p>
+
+
+<details class="for-single-qubit-moments" open>
+  <summary>For single-qubit moments</summary>
+  <ul>
+<li>If all gates are identical and act on all qubits, global noise is applied.</li>
+<li>Otherwise, local depolarizing noise is applied per qubit.</li>
+</ul>
+</details>
+
+<details class="for-two-qubit-moments" open>
+  <summary>For two-qubit moments</summary>
+  <ul>
+<li>Applies move error to move control qubits to target qubits before the gate and again to move back after
+    the gate.</li>
+<li>Applies gate error to control and target qubits.</li>
+<li>Adds 1q asymmetric noise to qubits that do not participate in a gate.</li>
+</ul>
+</details>
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>moment</code>
+            </td>
+            <td>
+                  <code><span title="cirq.Moment">Moment</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A cirq.Moment containing the original quantum operations.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>system_qubits</code>
+            </td>
+            <td>
+                  <code><span title="typing.Sequence">Sequence</span>[<span title="cirq.Qid">Qid</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>All qubits in the system (used to determine idleness and global operations).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of cirq.Moment objects:
+[pre-gate move noise, original moment, post-gate move noise, gate noise moment]</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the moment contains multi-qubit gates involving &gt;2 qubits, which are unsupported.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/noise/model.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">noisy_moment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">moment</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Moment</span><span class="p">,</span> <span class="n">system_qubits</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Qid</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applies a structured noise model to a given moment depending on the type of operations it contains.</span>
+
+<span class="sd">    For single-qubit moments:</span>
+<span class="sd">        - If all gates are identical and act on all qubits, global noise is applied.</span>
+<span class="sd">        - Otherwise, local depolarizing noise is applied per qubit.</span>
+
+<span class="sd">    For two-qubit moments:</span>
+<span class="sd">        - Applies move error to move control qubits to target qubits before the gate and again to move back after</span>
+<span class="sd">            the gate.</span>
+<span class="sd">        - Applies gate error to control and target qubits.</span>
+<span class="sd">        - Adds 1q asymmetric noise to qubits that do not participate in a gate.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        moment: A cirq.Moment containing the original quantum operations.</span>
+<span class="sd">        system_qubits: All qubits in the system (used to determine idleness and global operations).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of cirq.Moment objects:</span>
+<span class="sd">            [pre-gate move noise, original moment, post-gate move noise, gate noise moment]</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the moment contains multi-qubit gates involving &gt;2 qubits, which are unsupported.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Moment with original ops</span>
+    <span class="n">original_moment</span> <span class="o">=</span> <span class="n">moment</span>
+
+    <span class="c1"># Check if the moment is empty</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">move_noise_ops</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">gate_noise_ops</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Check if the moment contains 1-qubit gates or 2-qubit gates</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">gate_noise_ops</span><span class="p">,</span> <span class="n">move_noise_ops</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_single_qubit_moment_noise_ops</span><span class="p">(</span>
+            <span class="n">moment</span><span class="p">,</span> <span class="n">system_qubits</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># Check if the moment only contains two qubit gates</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">])</span>
+
+        <span class="n">control_qubits</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">qubits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">]</span>
+        <span class="n">target_qubits</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">qubits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">]</span>
+        <span class="n">gated_qubits</span> <span class="o">=</span> <span class="n">control_qubits</span> <span class="o">+</span> <span class="n">target_qubits</span>
+        <span class="n">idle_atoms</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">system_qubits</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">gated_qubits</span><span class="p">))</span>
+
+        <span class="n">move_noise_ops</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">cirq</span><span class="o">.</span><span class="n">asymmetric_depolarize</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">mover_pauli_rates</span><span class="p">)</span><span class="o">.</span><span class="n">on_each</span><span class="p">(</span>
+                <span class="n">control_qubits</span>
+            <span class="p">),</span>
+            <span class="n">cirq</span><span class="o">.</span><span class="n">asymmetric_depolarize</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">sitter_pauli_rates</span><span class="p">)</span><span class="o">.</span><span class="n">on_each</span><span class="p">(</span>
+                <span class="n">target_qubits</span> <span class="o">+</span> <span class="n">idle_atoms</span>
+            <span class="p">),</span>
+        <span class="p">]</span>  <span class="c1"># In this setting, we assume a 1 zone scheme where the controls move to the targets.</span>
+
+        <span class="n">gate_noise_ops</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">cirq</span><span class="o">.</span><span class="n">asymmetric_depolarize</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cz_paired_pauli_rates</span><span class="p">)</span><span class="o">.</span><span class="n">on_each</span><span class="p">(</span>
+                <span class="n">gated_qubits</span>
+            <span class="p">),</span>
+            <span class="n">cirq</span><span class="o">.</span><span class="n">asymmetric_depolarize</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cz_unpaired_pauli_rates</span><span class="p">)</span><span class="o">.</span><span class="n">on_each</span><span class="p">(</span>
+                <span class="n">idle_atoms</span>
+            <span class="p">),</span>
+        <span class="p">]</span>  <span class="c1"># In this 1 zone scheme, all unpaired atoms are in the entangling zone.</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Moment contains operations with more than 2 qubits, which is not supported. &quot;</span>
+            <span class="s2">&quot;Correlated measurements should be added after the noise model is applied.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">move_noise_ops</span> <span class="o">==</span> <span class="p">[]:</span>
+        <span class="n">move_noise_moments</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">move_noise_moments</span> <span class="o">=</span> <span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Moment</span><span class="p">(</span><span class="n">move_noise_ops</span><span class="p">)]</span>
+    <span class="n">gate_noise_moment</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Moment</span><span class="p">(</span><span class="n">gate_noise_ops</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="o">*</span><span class="n">move_noise_moments</span><span class="p">,</span>
+        <span class="n">original_moment</span><span class="p">,</span>
+        <span class="n">gate_noise_moment</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">move_noise_moments</span><span class="p">,</span>
+    <span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="bloqade.cirq_utils.noise.model.GeminiOneZoneNoiseModelABC" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">GeminiOneZoneNoiseModelABC</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">GeminiOneZoneNoiseModelABC</span><span class="p">(</span>
+    <span class="n">check_input_circuit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">parallelize_circuit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">local_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004102</span><span class="p">,</span>
+    <span class="n">local_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004102</span><span class="p">,</span>
+    <span class="n">local_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004112</span><span class="p">,</span>
+    <span class="n">local_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">local_unaddressed_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2e-07</span><span class="p">,</span>
+    <span class="n">local_unaddressed_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2e-07</span><span class="p">,</span>
+    <span class="n">local_unaddressed_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2e-06</span><span class="p">,</span>
+    <span class="n">local_unaddressed_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">global_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.5e-05</span><span class="p">,</span>
+    <span class="n">global_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.5e-05</span><span class="p">,</span>
+    <span class="n">global_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.5e-05</span><span class="p">,</span>
+    <span class="n">global_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">cz_paired_gate_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0006549</span><span class="p">,</span>
+    <span class="n">cz_paired_gate_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0006549</span><span class="p">,</span>
+    <span class="n">cz_paired_gate_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.003184</span><span class="p">,</span>
+    <span class="n">cz_gate_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">cz_unpaired_gate_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005149</span><span class="p">,</span>
+    <span class="n">cz_unpaired_gate_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005149</span><span class="p">,</span>
+    <span class="n">cz_unpaired_gate_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.002185</span><span class="p">,</span>
+    <span class="n">cz_unpaired_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">mover_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.000806</span><span class="p">,</span>
+    <span class="n">mover_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.000806</span><span class="p">,</span>
+    <span class="n">mover_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.002458</span><span class="p">,</span>
+    <span class="n">move_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">sitter_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0003066</span><span class="p">,</span>
+    <span class="n">sitter_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0003066</span><span class="p">,</span>
+    <span class="n">sitter_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004639</span><span class="p">,</span>
+    <span class="n">sit_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;GeminiNoiseModelABC&lt;/span&gt;
+
+
+  &lt;span class=&quot;doc doc-labels&quot;&gt;
+      &lt;small class=&quot;doc doc-label doc-label-dataclass&quot;&gt;&lt;code&gt;dataclass&lt;/code&gt;&lt;/small&gt;
+  &lt;/span&gt; (&lt;code&gt;bloqade.cirq_utils.noise.model.GeminiNoiseModelABC&lt;/code&gt;)" href="#bloqade.cirq_utils.noise.model.GeminiNoiseModelABC">GeminiNoiseModelABC</a></code></p>
+
+
+        <p>Abstract base class for all one-zone Gemini noise models.</p>
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bloqade.cirq_utils.noise.model.GeminiOneZoneNoiseModelABC.noisy_moments" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">noisy_moments</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">noisy_moments</span><span class="p">(</span>
+    <span class="n">moments</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Moment</span><span class="p">],</span> <span class="n">system_qubits</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Qid</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">OP_TREE</span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Adds possibly stateful noise to a series of moments.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>moments</code>
+            </td>
+            <td>
+                  <code><span title="typing.Iterable">Iterable</span>[<span title="cirq.Moment">Moment</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The moments to add noise to.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>system_qubits</code>
+            </td>
+            <td>
+                  <code><span title="typing.Sequence">Sequence</span>[<span title="cirq.Qid">Qid</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of all qubits in the system.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.Sequence">Sequence</span>[<span title="cirq.OP_TREE">OP_TREE</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A sequence of OP_TREEEs, with the k'th tree corresponding to the</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.Sequence">Sequence</span>[<span title="cirq.OP_TREE">OP_TREE</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>noisy operations for the k'th moment.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/noise/model.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">noisy_moments</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">moments</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Moment</span><span class="p">],</span> <span class="n">system_qubits</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Qid</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">OP_TREE</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds possibly stateful noise to a series of moments.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        moments: The moments to add noise to.</span>
+<span class="sd">        system_qubits: A list of all qubits in the system.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A sequence of OP_TREEEs, with the k&#39;th tree corresponding to the</span>
+<span class="sd">        noisy operations for the k&#39;th moment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_input_circuit</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_moments</span><span class="p">(</span><span class="n">moments</span><span class="p">)</span>
+
+    <span class="c1"># Split into moments with only 1Q and 2Q gates</span>
+    <span class="n">moments_1q</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">cirq</span><span class="o">.</span><span class="n">Moment</span><span class="p">([</span><span class="n">op</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">moment</span><span class="o">.</span><span class="n">operations</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">moment</span> <span class="ow">in</span> <span class="n">moments</span>
+    <span class="p">]</span>
+    <span class="n">moments_2q</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">cirq</span><span class="o">.</span><span class="n">Moment</span><span class="p">([</span><span class="n">op</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">moment</span><span class="o">.</span><span class="n">operations</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">moment</span> <span class="ow">in</span> <span class="n">moments</span>
+    <span class="p">]</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">moments_1q</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">moments_2q</span><span class="p">)</span>
+
+    <span class="n">interleaved_moments</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">moment</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">moments_1q</span><span class="p">):</span>
+        <span class="n">interleaved_moments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">moment</span><span class="p">)</span>
+        <span class="n">interleaved_moments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">moments_2q</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+    <span class="n">interleaved_circuit</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="o">.</span><span class="n">from_moments</span><span class="p">(</span><span class="o">*</span><span class="n">interleaved_moments</span><span class="p">)</span>
+
+    <span class="c1"># Combine subsequent 1Q gates</span>
+    <span class="n">compressed_circuit</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">merge_single_qubit_moments_to_phxz</span><span class="p">(</span>
+        <span class="n">interleaved_circuit</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelize_circuit</span><span class="p">:</span>
+        <span class="n">compressed_circuit</span> <span class="o">=</span> <span class="n">parallelize</span><span class="p">(</span><span class="n">compressed_circuit</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noisy_moments_impl_moment</span><span class="p">(</span>
+        <span class="n">compressed_circuit</span><span class="o">.</span><span class="n">moments</span><span class="p">,</span> <span class="n">system_qubits</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="bloqade.cirq_utils.noise.model.GeminiOneZoneNoiseModelConflictGraphMoves" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">GeminiOneZoneNoiseModelConflictGraphMoves</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">GeminiOneZoneNoiseModelConflictGraphMoves</span><span class="p">(</span>
+    <span class="n">check_input_circuit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">parallelize_circuit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">max_parallel_movers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">local_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004102</span><span class="p">,</span>
+    <span class="n">local_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004102</span><span class="p">,</span>
+    <span class="n">local_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004112</span><span class="p">,</span>
+    <span class="n">local_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">local_unaddressed_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2e-07</span><span class="p">,</span>
+    <span class="n">local_unaddressed_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2e-07</span><span class="p">,</span>
+    <span class="n">local_unaddressed_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2e-06</span><span class="p">,</span>
+    <span class="n">local_unaddressed_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">global_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.5e-05</span><span class="p">,</span>
+    <span class="n">global_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.5e-05</span><span class="p">,</span>
+    <span class="n">global_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.5e-05</span><span class="p">,</span>
+    <span class="n">global_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">cz_paired_gate_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0006549</span><span class="p">,</span>
+    <span class="n">cz_paired_gate_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0006549</span><span class="p">,</span>
+    <span class="n">cz_paired_gate_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.003184</span><span class="p">,</span>
+    <span class="n">cz_gate_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">cz_unpaired_gate_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005149</span><span class="p">,</span>
+    <span class="n">cz_unpaired_gate_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005149</span><span class="p">,</span>
+    <span class="n">cz_unpaired_gate_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.002185</span><span class="p">,</span>
+    <span class="n">cz_unpaired_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">mover_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.000806</span><span class="p">,</span>
+    <span class="n">mover_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.000806</span><span class="p">,</span>
+    <span class="n">mover_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.002458</span><span class="p">,</span>
+    <span class="n">move_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">sitter_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0003066</span><span class="p">,</span>
+    <span class="n">sitter_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0003066</span><span class="p">,</span>
+    <span class="n">sitter_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004639</span><span class="p">,</span>
+    <span class="n">sit_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;GeminiOneZoneNoiseModel&lt;/span&gt;
+
+
+  &lt;span class=&quot;doc doc-labels&quot;&gt;
+      &lt;small class=&quot;doc doc-label doc-label-dataclass&quot;&gt;&lt;code&gt;dataclass&lt;/code&gt;&lt;/small&gt;
+  &lt;/span&gt; (&lt;code&gt;bloqade.cirq_utils.noise.model.GeminiOneZoneNoiseModel&lt;/code&gt;)" href="#bloqade.cirq_utils.noise.model.GeminiOneZoneNoiseModel">GeminiOneZoneNoiseModel</a></code></p>
+
+
+        <p>A Cirq noise model that uses a conflict graph to schedule moves in a one-zone Gemini architecture.</p>
+<p>Assumes that the qubits are cirq.GridQubits, such that the assignment of row, column coordinates define the initial
+geometry. An SLM site at the two qubit interaction distance is also assumed next to each cirq.GridQubit to allow
+for multiple moves before a single Rydberg pulse is applied for a parallel CZ.</p>
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bloqade.cirq_utils.noise.model.GeminiOneZoneNoiseModelConflictGraphMoves.noisy_moment" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">noisy_moment</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">noisy_moment</span><span class="p">(</span><span class="n">moment</span><span class="p">,</span> <span class="n">system_qubits</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Applies a structured noise model to a given moment depending on the type of operations it contains.</p>
+
+
+<details class="for-single-qubit-moments" open>
+  <summary>For single-qubit moments</summary>
+  <ul>
+<li>If all gates are identical and act on all qubits, global noise is applied.</li>
+<li>Otherwise, local depolarizing noise is applied per qubit.</li>
+</ul>
+</details>
+
+<details class="for-two-qubit-moments" open>
+  <summary>For two-qubit moments</summary>
+  <ul>
+<li>Applies move error to move control qubits to target qubits before the gate and again to move back after
+    the gate.</li>
+<li>Applies gate error to control and target qubits.</li>
+<li>Adds 1q asymmetric noise to qubits that do not participate in a gate.</li>
+</ul>
+</details>
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>moment</code>
+            </td>
+            <td>
+                  <code><span title="cirq.Moment">Moment</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A cirq.Moment containing the original quantum operations.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>system_qubits</code>
+            </td>
+            <td>
+                  <code><span title="typing.Sequence">Sequence</span>[<span title="cirq.Qid">Qid</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>All qubits in the system (used to determine idleness and global operations).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of cirq.Moment objects:
+[pre-gate move noise, original moment, post-gate move noise, gate noise moment]</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the moment contains multi-qubit gates involving &gt;2 qubits, which are unsupported.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/noise/model.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">noisy_moment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">moment</span><span class="p">,</span> <span class="n">system_qubits</span><span class="p">):</span>
+    <span class="c1"># Moment with original ops</span>
+    <span class="n">original_moment</span> <span class="o">=</span> <span class="n">moment</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span>
+        <span class="p">[</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">cirq</span><span class="o">.</span><span class="n">GridQubit</span><span class="p">)</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">system_qubits</span><span class="p">]</span>
+    <span class="p">),</span> <span class="s2">&quot;Found a qubit that is not a GridQubit.&quot;</span>
+    <span class="c1"># Check if the moment is empty</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">move_moments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">gate_noise_ops</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Check if the moment contains 1-qubit gates or 2-qubit gates</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">gate_noise_ops</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_single_qubit_moment_noise_ops</span><span class="p">(</span>
+            <span class="n">moment</span><span class="p">,</span> <span class="n">system_qubits</span>
+        <span class="p">)</span>
+        <span class="n">move_moments</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">cg</span> <span class="o">=</span> <span class="n">OneZoneConflictGraph</span><span class="p">(</span><span class="n">moment</span><span class="p">)</span>
+        <span class="n">schedule</span> <span class="o">=</span> <span class="n">cg</span><span class="o">.</span><span class="n">get_move_schedule</span><span class="p">(</span><span class="n">mover_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_parallel_movers</span><span class="p">)</span>
+        <span class="n">move_moments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">move_moment_idx</span><span class="p">,</span> <span class="n">movers</span> <span class="ow">in</span> <span class="n">schedule</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">control_qubits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">movers</span><span class="p">)</span>
+            <span class="n">target_qubits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                <span class="nb">set</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">qubits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">]</span>
+                    <span class="o">+</span> <span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">qubits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="o">-</span> <span class="n">movers</span>
+            <span class="p">)</span>
+            <span class="n">gated_qubits</span> <span class="o">=</span> <span class="n">control_qubits</span> <span class="o">+</span> <span class="n">target_qubits</span>
+            <span class="n">idle_atoms</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">system_qubits</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">gated_qubits</span><span class="p">))</span>
+
+            <span class="n">move_noise_ops</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">cirq</span><span class="o">.</span><span class="n">asymmetric_depolarize</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">mover_pauli_rates</span><span class="p">)</span><span class="o">.</span><span class="n">on_each</span><span class="p">(</span>
+                    <span class="n">control_qubits</span>
+                <span class="p">),</span>
+                <span class="n">cirq</span><span class="o">.</span><span class="n">asymmetric_depolarize</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">sitter_pauli_rates</span><span class="p">)</span><span class="o">.</span><span class="n">on_each</span><span class="p">(</span>
+                    <span class="n">target_qubits</span> <span class="o">+</span> <span class="n">idle_atoms</span>
+                <span class="p">),</span>
+            <span class="p">]</span>
+
+            <span class="n">move_moments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">Moment</span><span class="p">(</span><span class="n">move_noise_ops</span><span class="p">))</span>
+
+        <span class="n">control_qubits</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">qubits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">]</span>
+        <span class="n">target_qubits</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">qubits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">]</span>
+        <span class="n">gated_qubits</span> <span class="o">=</span> <span class="n">control_qubits</span> <span class="o">+</span> <span class="n">target_qubits</span>
+        <span class="n">idle_atoms</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">system_qubits</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">gated_qubits</span><span class="p">))</span>
+
+        <span class="n">gate_noise_ops</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">cirq</span><span class="o">.</span><span class="n">asymmetric_depolarize</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cz_paired_pauli_rates</span><span class="p">)</span><span class="o">.</span><span class="n">on_each</span><span class="p">(</span>
+                <span class="n">gated_qubits</span>
+            <span class="p">),</span>
+            <span class="n">cirq</span><span class="o">.</span><span class="n">asymmetric_depolarize</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cz_unpaired_pauli_rates</span><span class="p">)</span><span class="o">.</span><span class="n">on_each</span><span class="p">(</span>
+                <span class="n">idle_atoms</span>
+            <span class="p">),</span>
+        <span class="p">]</span>  <span class="c1"># In this 1 zone scheme, all unpaired atoms are in the entangling zone.</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Moment contains operations with more than 2 qubits, which is not supported.&quot;</span>
+            <span class="s2">&quot;Correlated measurements should be added after the noise model is applied.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">gate_noise_moment</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Moment</span><span class="p">(</span><span class="n">gate_noise_ops</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="o">*</span><span class="n">move_moments</span><span class="p">,</span>
+        <span class="n">original_moment</span><span class="p">,</span>
+        <span class="n">gate_noise_moment</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">(</span><span class="n">move_moments</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+    <span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="bloqade.cirq_utils.noise.model.GeminiOneZoneNoiseModelCorrelated" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">GeminiOneZoneNoiseModelCorrelated</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">GeminiOneZoneNoiseModelCorrelated</span><span class="p">(</span>
+    <span class="n">check_input_circuit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">parallelize_circuit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">cz_paired_correlated_rates</span><span class="p">:</span> <span class="n">ndarray</span> <span class="o">=</span> <span class="n">_default_cz_paired_correlated_rates</span><span class="p">(),</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">local_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004102</span><span class="p">,</span>
+    <span class="n">local_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004102</span><span class="p">,</span>
+    <span class="n">local_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004112</span><span class="p">,</span>
+    <span class="n">local_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">local_unaddressed_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2e-07</span><span class="p">,</span>
+    <span class="n">local_unaddressed_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2e-07</span><span class="p">,</span>
+    <span class="n">local_unaddressed_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2e-06</span><span class="p">,</span>
+    <span class="n">local_unaddressed_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">global_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.5e-05</span><span class="p">,</span>
+    <span class="n">global_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.5e-05</span><span class="p">,</span>
+    <span class="n">global_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.5e-05</span><span class="p">,</span>
+    <span class="n">global_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">cz_paired_gate_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0006549</span><span class="p">,</span>
+    <span class="n">cz_paired_gate_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0006549</span><span class="p">,</span>
+    <span class="n">cz_paired_gate_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.003184</span><span class="p">,</span>
+    <span class="n">cz_gate_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">cz_unpaired_gate_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005149</span><span class="p">,</span>
+    <span class="n">cz_unpaired_gate_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005149</span><span class="p">,</span>
+    <span class="n">cz_unpaired_gate_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.002185</span><span class="p">,</span>
+    <span class="n">cz_unpaired_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">mover_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.000806</span><span class="p">,</span>
+    <span class="n">mover_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.000806</span><span class="p">,</span>
+    <span class="n">mover_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.002458</span><span class="p">,</span>
+    <span class="n">move_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">sitter_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0003066</span><span class="p">,</span>
+    <span class="n">sitter_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0003066</span><span class="p">,</span>
+    <span class="n">sitter_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004639</span><span class="p">,</span>
+    <span class="n">sit_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;GeminiOneZoneNoiseModel&lt;/span&gt;
+
+
+  &lt;span class=&quot;doc doc-labels&quot;&gt;
+      &lt;small class=&quot;doc doc-label doc-label-dataclass&quot;&gt;&lt;code&gt;dataclass&lt;/code&gt;&lt;/small&gt;
+  &lt;/span&gt; (&lt;code&gt;bloqade.cirq_utils.noise.model.GeminiOneZoneNoiseModel&lt;/code&gt;)" href="#bloqade.cirq_utils.noise.model.GeminiOneZoneNoiseModel">GeminiOneZoneNoiseModel</a></code></p>
+
+
+        <p>A Cirq noise model for implementing correlated two-qubit Pauli errors in a one-zone Gemini architecture.</p>
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bloqade.cirq_utils.noise.model.GeminiOneZoneNoiseModelCorrelated.noisy_moment" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">noisy_moment</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">noisy_moment</span><span class="p">(</span><span class="n">moment</span><span class="p">,</span> <span class="n">system_qubits</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Applies a structured noise model to a given moment depending on the type of operations it contains.</p>
+
+
+<details class="for-single-qubit-moments" open>
+  <summary>For single-qubit moments</summary>
+  <ul>
+<li>If all gates are identical and act on all qubits, global noise is applied.</li>
+<li>Otherwise, local depolarizing noise is applied per qubit.</li>
+</ul>
+</details>
+
+<details class="for-two-qubit-moments" open>
+  <summary>For two-qubit moments</summary>
+  <ul>
+<li>Applies move error to move control qubits to target qubits before the gate and again to move back after
+    the gate.</li>
+<li>Applies gate error to control and target qubits.</li>
+<li>Adds 1q asymmetric noise to qubits that do not participate in a gate.</li>
+</ul>
+</details>
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>moment</code>
+            </td>
+            <td>
+                  <code><span title="cirq.Moment">Moment</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A cirq.Moment containing the original quantum operations.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>system_qubits</code>
+            </td>
+            <td>
+                  <code><span title="typing.Sequence">Sequence</span>[<span title="cirq.Qid">Qid</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>All qubits in the system (used to determine idleness and global operations).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of cirq.Moment objects:
+[pre-gate move noise, original moment, post-gate move noise, gate noise moment]</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If the moment contains multi-qubit gates involving &gt;2 qubits, which are unsupported.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/noise/model.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">noisy_moment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">moment</span><span class="p">,</span> <span class="n">system_qubits</span><span class="p">):</span>
+    <span class="c1"># Moment with original ops</span>
+    <span class="n">original_moment</span> <span class="o">=</span> <span class="n">moment</span>
+
+    <span class="c1"># Check if the moment is empty</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">move_noise_ops</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">gate_noise_ops</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Check if the moment contains 1-qubit gates or 2-qubit gates</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">gate_noise_ops</span><span class="p">,</span> <span class="n">move_noise_ops</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_single_qubit_moment_noise_ops</span><span class="p">(</span>
+            <span class="n">moment</span><span class="p">,</span> <span class="n">system_qubits</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">qubits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">control_qubits</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">qubits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">]</span>
+        <span class="n">target_qubits</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">qubits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">]</span>
+        <span class="n">gated_qubits</span> <span class="o">=</span> <span class="n">control_qubits</span> <span class="o">+</span> <span class="n">target_qubits</span>
+        <span class="n">idle_atoms</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">system_qubits</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">gated_qubits</span><span class="p">))</span>
+
+        <span class="n">move_noise_ops</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">cirq</span><span class="o">.</span><span class="n">asymmetric_depolarize</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">mover_pauli_rates</span><span class="p">)</span><span class="o">.</span><span class="n">on_each</span><span class="p">(</span>
+                <span class="n">control_qubits</span>
+            <span class="p">),</span>
+            <span class="n">cirq</span><span class="o">.</span><span class="n">asymmetric_depolarize</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">sitter_pauli_rates</span><span class="p">)</span><span class="o">.</span><span class="n">on_each</span><span class="p">(</span>
+                <span class="n">target_qubits</span> <span class="o">+</span> <span class="n">idle_atoms</span>
+            <span class="p">),</span>
+        <span class="p">]</span>  <span class="c1"># In this setting, we assume a 1 zone scheme where the controls move to the targets.</span>
+
+        <span class="c1"># Add correlated noise channels for entangling pairs</span>
+        <span class="n">two_qubit_pauli</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">two_qubit_pauli</span>
+        <span class="n">gate_noise_ops</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">two_qubit_pauli</span><span class="o">.</span><span class="n">on_each</span><span class="p">([</span><span class="n">c</span><span class="p">,</span> <span class="n">t</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">control_qubits</span><span class="p">,</span> <span class="n">target_qubits</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="c1"># In this 1 zone scheme, all unpaired atoms are in the entangling zone.</span>
+        <span class="n">idle_depolarize</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">asymmetric_depolarize</span><span class="p">(</span>
+            <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cz_unpaired_pauli_rates</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">on_each</span><span class="p">(</span><span class="n">idle_atoms</span><span class="p">)</span>
+
+        <span class="n">gate_noise_ops</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idle_depolarize</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Moment contains operations with more than 2 qubits, which is not supported.&quot;</span>
+            <span class="s2">&quot;Correlated measurements should be added after the noise model is applied.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">move_noise_ops</span> <span class="o">==</span> <span class="p">[]:</span>
+        <span class="n">move_noise_moments</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">move_noise_moments</span> <span class="o">=</span> <span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Moment</span><span class="p">(</span><span class="n">move_noise_ops</span><span class="p">)]</span>
+    <span class="n">gate_noise_moment</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Moment</span><span class="p">(</span><span class="n">gate_noise_ops</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="o">*</span><span class="n">move_noise_moments</span><span class="p">,</span>
+        <span class="n">original_moment</span><span class="p">,</span>
+        <span class="n">gate_noise_moment</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">move_noise_moments</span><span class="p">,</span>
+    <span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="bloqade.cirq_utils.noise.model.GeminiTwoZoneNoiseModel" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">GeminiTwoZoneNoiseModel</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">GeminiTwoZoneNoiseModel</span><span class="p">(</span>
+    <span class="n">check_input_circuit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">local_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004102</span><span class="p">,</span>
+    <span class="n">local_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004102</span><span class="p">,</span>
+    <span class="n">local_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004112</span><span class="p">,</span>
+    <span class="n">local_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">local_unaddressed_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2e-07</span><span class="p">,</span>
+    <span class="n">local_unaddressed_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2e-07</span><span class="p">,</span>
+    <span class="n">local_unaddressed_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2e-06</span><span class="p">,</span>
+    <span class="n">local_unaddressed_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">global_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.5e-05</span><span class="p">,</span>
+    <span class="n">global_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.5e-05</span><span class="p">,</span>
+    <span class="n">global_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.5e-05</span><span class="p">,</span>
+    <span class="n">global_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">cz_paired_gate_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0006549</span><span class="p">,</span>
+    <span class="n">cz_paired_gate_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0006549</span><span class="p">,</span>
+    <span class="n">cz_paired_gate_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.003184</span><span class="p">,</span>
+    <span class="n">cz_gate_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">cz_unpaired_gate_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005149</span><span class="p">,</span>
+    <span class="n">cz_unpaired_gate_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005149</span><span class="p">,</span>
+    <span class="n">cz_unpaired_gate_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.002185</span><span class="p">,</span>
+    <span class="n">cz_unpaired_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">mover_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.000806</span><span class="p">,</span>
+    <span class="n">mover_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.000806</span><span class="p">,</span>
+    <span class="n">mover_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.002458</span><span class="p">,</span>
+    <span class="n">move_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">sitter_px</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0003066</span><span class="p">,</span>
+    <span class="n">sitter_py</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0003066</span><span class="p">,</span>
+    <span class="n">sitter_pz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0004639</span><span class="p">,</span>
+    <span class="n">sit_loss_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;GeminiNoiseModelABC&lt;/span&gt;
+
+
+  &lt;span class=&quot;doc doc-labels&quot;&gt;
+      &lt;small class=&quot;doc doc-label doc-label-dataclass&quot;&gt;&lt;code&gt;dataclass&lt;/code&gt;&lt;/small&gt;
+  &lt;/span&gt; (&lt;code&gt;bloqade.cirq_utils.noise.model.GeminiNoiseModelABC&lt;/code&gt;)" href="#bloqade.cirq_utils.noise.model.GeminiNoiseModelABC">GeminiNoiseModelABC</a></code></p>
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="bloqade.cirq_utils.noise.model.GeminiTwoZoneNoiseModel.noisy_moments" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">noisy_moments</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">noisy_moments</span><span class="p">(</span>
+    <span class="n">moments</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Moment</span><span class="p">],</span> <span class="n">system_qubits</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Qid</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">OP_TREE</span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Adds possibly stateful noise to a series of moments.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>moments</code>
+            </td>
+            <td>
+                  <code><span title="typing.Iterable">Iterable</span>[<span title="cirq.Moment">Moment</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The moments to add noise to.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>system_qubits</code>
+            </td>
+            <td>
+                  <code><span title="typing.Sequence">Sequence</span>[<span title="cirq.Qid">Qid</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of all qubits in the system.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.Sequence">Sequence</span>[<span title="cirq.OP_TREE">OP_TREE</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A sequence of OP_TREEEs, with the k'th tree corresponding to the</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.Sequence">Sequence</span>[<span title="cirq.OP_TREE">OP_TREE</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>noisy operations for the k'th moment.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/noise/model.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">noisy_moments</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">moments</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Moment</span><span class="p">],</span> <span class="n">system_qubits</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Qid</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">OP_TREE</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds possibly stateful noise to a series of moments.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        moments: The moments to add noise to.</span>
+<span class="sd">        system_qubits: A list of all qubits in the system.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A sequence of OP_TREEEs, with the k&#39;th tree corresponding to the</span>
+<span class="sd">        noisy operations for the k&#39;th moment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_input_circuit</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_moments</span><span class="p">(</span><span class="n">moments</span><span class="p">)</span>
+
+    <span class="n">moments</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">moments</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">moments</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="n">nqubs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">system_qubits</span><span class="p">)</span>
+    <span class="n">noisy_moment_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">prev_moment</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Moment</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># TODO: clean up error getters so they return a list moments rather than circuits</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">moments</span><span class="p">)):</span>
+        <span class="n">noisy_moment_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">moment</span>
+                <span class="k">for</span> <span class="n">moment</span> <span class="ow">in</span> <span class="n">_two_zone_utils</span><span class="o">.</span><span class="n">get_move_error_channel_two_zoned</span><span class="p">(</span>
+                    <span class="n">moments</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                    <span class="n">prev_moment</span><span class="p">,</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mover_pauli_rates</span><span class="p">),</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sitter_pauli_rates</span><span class="p">),</span>
+                    <span class="n">nqubs</span><span class="p">,</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">moments</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">moment</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">noisy_moment_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">moments</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="n">noisy_moment_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">moment</span>
+                <span class="k">for</span> <span class="n">moment</span> <span class="ow">in</span> <span class="n">_two_zone_utils</span><span class="o">.</span><span class="n">get_gate_error_channel</span><span class="p">(</span>
+                    <span class="n">moments</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">local_pauli_rates</span><span class="p">),</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">global_pauli_rates</span><span class="p">),</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">cz_paired_pauli_rates</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cz_paired_pauli_rates</span>
+                    <span class="p">),</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cz_unpaired_pauli_rates</span><span class="p">),</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">moments</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">moment</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">prev_moment</span> <span class="o">=</span> <span class="n">moments</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">noisy_moment_list</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="bloqade.cirq_utils.noise.transform" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">transform</span>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.cirq_utils.noise.transform.transform_circuit" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">transform_circuit</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">transform_circuit</span><span class="p">(</span>
+    <span class="n">circuit</span><span class="p">:</span> <span class="n">Circuit</span><span class="p">,</span>
+    <span class="n">to_native_gateset</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">NoiseModel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">parallelize_circuit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Transform an input circuit into one with the native gateset with noise operations added.</p>
+<p>Noise operations will be added to all qubits in circuit.all_qubits(), regardless of whether the output of the
+circuit optimizers contain all the qubits.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>circuit</code>
+            </td>
+            <td>
+                  <code><span title="cirq.Circuit">Circuit</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The input circuit.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Other Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>to_native_gateset</code></td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether or not to convert the input circuit to one using the native set of gates (<code>cirq.CZTargetGateset</code>)
+only. Defaults to <code>True</code>. Note, that if you use an input circuit that has gates different from this gateset and don't convert it,
+may lead to incorrect results and errors.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>model</code></td>
+            <td>
+                  <code><span title="cirq.NoiseModel">NoiseModel</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The cirq noise model to apply to the circuit. Usually, you want to use one of the ones supplied in this submodule,
+such as <code>GeminiOneZoneNoiseModel</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>parallelize_circuit</code></td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether or not to parallelize the circuit as much as possible after it's been converted to the native gateset.
+Defaults to <code>False</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="cirq.Circuit">Circuit</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>cirq.Circuit:
+The resulting noisy circuit.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/noise/transform.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">transform_circuit</span><span class="p">(</span>
+    <span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span>
+    <span class="n">to_native_gateset</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">NoiseModel</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">parallelize_circuit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Transform an input circuit into one with the native gateset with noise operations added.</span>
+
+<span class="sd">    Noise operations will be added to all qubits in circuit.all_qubits(), regardless of whether the output of the</span>
+<span class="sd">    circuit optimizers contain all the qubits.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        circuit (cirq.Circuit): The input circuit.</span>
+
+<span class="sd">    Keyword Arguments:</span>
+<span class="sd">        to_native_gateset (bool): Whether or not to convert the input circuit to one using the native set of gates (`cirq.CZTargetGateset`)</span>
+<span class="sd">            only. Defaults to `True`. Note, that if you use an input circuit that has gates different from this gateset and don&#39;t convert it,</span>
+<span class="sd">            may lead to incorrect results and errors.</span>
+<span class="sd">        model (cirq.NoiseModel): The cirq noise model to apply to the circuit. Usually, you want to use one of the ones supplied in this submodule,</span>
+<span class="sd">            such as `GeminiOneZoneNoiseModel`.</span>
+<span class="sd">        parallelize_circuit (bool): Whether or not to parallelize the circuit as much as possible after it&#39;s been converted to the native gateset.</span>
+<span class="sd">            Defaults to `False`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        cirq.Circuit:</span>
+<span class="sd">            The resulting noisy circuit.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">GeminiOneZoneNoiseModel</span><span class="p">(</span><span class="n">parallelize_circuit</span><span class="o">=</span><span class="n">parallelize_circuit</span><span class="p">)</span>
+
+    <span class="c1"># only parallelize here if we aren&#39;t parallelizing inside a one-zone model</span>
+    <span class="n">parallelize_circuit_here</span> <span class="o">=</span> <span class="n">parallelize_circuit</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
+        <span class="n">model</span><span class="p">,</span> <span class="n">GeminiOneZoneNoiseModelABC</span>
+    <span class="p">)</span>
+
+    <span class="n">system_qubits</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">all_qubits</span><span class="p">())</span>
+    <span class="c1"># Transform to CZ + PhasedXZ gateset.</span>
+    <span class="k">if</span> <span class="n">to_native_gateset</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">parallelize_circuit_here</span><span class="p">:</span>
+        <span class="n">native_circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">parallelize_circuit_here</span><span class="p">:</span>
+        <span class="n">native_circuit</span> <span class="o">=</span> <span class="n">parallelize</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">native_circuit</span> <span class="o">=</span> <span class="n">circuit</span>
+
+    <span class="c1"># Add noise</span>
+    <span class="n">noisy_circuit</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">op_tree</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">noisy_moments</span><span class="p">(</span><span class="n">native_circuit</span><span class="p">,</span> <span class="n">system_qubits</span><span class="p">):</span>
+        <span class="c1"># Keep moments aligned</span>
+        <span class="n">noisy_circuit</span> <span class="o">+=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">(</span><span class="n">op_tree</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">noisy_circuit</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
 <h1 id="bloqade.cirq_utils.parallelize" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">parallelize</span>
 
@@ -2980,9 +5456,7 @@ weight_2q: float - the weight to assign to two-qubit gates.</p>
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">103</span>
 <span class="normal">104</span>
 <span class="normal">105</span>
 <span class="normal">106</span>
@@ -3013,7 +5487,9 @@ weight_2q: float - the weight to assign to two-qubit gates.</p>
 <span class="normal">131</span>
 <span class="normal">132</span>
 <span class="normal">133</span>
-<span class="normal">134</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">auto_similarity</span><span class="p">(</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">auto_similarity</span><span class="p">(</span>
     <span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="n">weight_1q</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">weight_2q</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Hashable</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -3079,27 +5555,27 @@ weight: float - the weight to assign to each block of gates.</p>
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">block_similarity</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">block_similarity</span><span class="p">(</span>
     <span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">block_id</span><span class="p">:</span> <span class="nb">int</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Hashable</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -3243,9 +5719,7 @@ inner list contains gates that can be executed in parallel.</p>
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">279</span>
-<span class="normal">280</span>
-<span class="normal">281</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">281</span>
 <span class="normal">282</span>
 <span class="normal">283</span>
 <span class="normal">284</span>
@@ -3310,7 +5784,9 @@ inner list contains gates that can be executed in parallel.</p>
 <span class="normal">343</span>
 <span class="normal">344</span>
 <span class="normal">345</span>
-<span class="normal">346</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">colorize</span><span class="p">(</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">colorize</span><span class="p">(</span>
     <span class="n">epochs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Unique</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">GateOperation</span><span class="p">]]],</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -3402,9 +5878,7 @@ inner list contains gates that can be executed in parallel.</p>
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">254</span>
-<span class="normal">255</span>
-<span class="normal">256</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">256</span>
 <span class="normal">257</span>
 <span class="normal">258</span>
 <span class="normal">259</span>
@@ -3424,7 +5898,9 @@ inner list contains gates that can be executed in parallel.</p>
 <span class="normal">273</span>
 <span class="normal">274</span>
 <span class="normal">275</span>
-<span class="normal">276</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">generate_epochs</span><span class="p">(</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">generate_epochs</span><span class="p">(</span>
     <span class="n">solution</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">NodeType</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
     <span class="n">tol</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">,</span>
 <span class="p">):</span>
@@ -3479,9 +5955,7 @@ weight: float - the weight to assign to each block of gates.</p>
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
 <span class="normal">57</span>
 <span class="normal">58</span>
 <span class="normal">59</span>
@@ -3500,7 +5974,9 @@ weight: float - the weight to assign to each block of gates.</p>
 <span class="normal">72</span>
 <span class="normal">73</span>
 <span class="normal">74</span>
-<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">moment_similarity</span><span class="p">(</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">moment_similarity</span><span class="p">(</span>
     <span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Hashable</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -3550,9 +6026,7 @@ circuit: cirq.Circuit - the circuit to remove tags from.</p>
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">139</span>
 <span class="normal">140</span>
 <span class="normal">141</span>
 <span class="normal">142</span>
@@ -3563,7 +6037,9 @@ circuit: cirq.Circuit - the circuit to remove tags from.</p>
 <span class="normal">147</span>
 <span class="normal">148</span>
 <span class="normal">149</span>
-<span class="normal">150</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">no_similarity</span><span class="p">(</span><span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">:</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">no_similarity</span><span class="p">(</span><span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Removes all tags from the circuit</span>
 
@@ -3626,9 +6102,7 @@ hyperparameters: dict[str, float] - hyperparameters for the optimization
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">349</span>
-<span class="normal">350</span>
-<span class="normal">351</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">351</span>
 <span class="normal">352</span>
 <span class="normal">353</span>
 <span class="normal">354</span>
@@ -3677,7 +6151,9 @@ hyperparameters: dict[str, float] - hyperparameters for the optimization
 <span class="normal">397</span>
 <span class="normal">398</span>
 <span class="normal">399</span>
-<span class="normal">400</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parallelize</span><span class="p">(</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parallelize</span><span class="p">(</span>
     <span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span>
     <span class="n">hyperparameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">auto_tag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -3705,9 +6181,9 @@ hyperparameters: dict[str, float] - hyperparameters for the optimization
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">hyperparameters</span> <span class="o">=</span> <span class="n">_get_hyperparameters</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">)</span>
 
+    <span class="c1"># Transpile the circuit to a native CZ gate set.</span>
+    <span class="n">transpiled_circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">auto_tag</span><span class="p">:</span>
-        <span class="c1"># Transpile the circuit to a native CZ gate set.</span>
-        <span class="n">transpiled_circuit</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
         <span class="c1"># Annotate the circuit with topological information</span>
         <span class="c1"># to improve parallelization</span>
         <span class="n">transpiled_circuit</span><span class="p">,</span> <span class="n">group_weights</span> <span class="o">=</span> <span class="n">auto_similarity</span><span class="p">(</span>
@@ -3757,9 +6233,7 @@ hyperparameters: dict[str, float] - hyperparameters for the optimization
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">204</span>
-<span class="normal">205</span>
-<span class="normal">206</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">206</span>
 <span class="normal">207</span>
 <span class="normal">208</span>
 <span class="normal">209</span>
@@ -3804,7 +6278,9 @@ hyperparameters: dict[str, float] - hyperparameters for the optimization
 <span class="normal">248</span>
 <span class="normal">249</span>
 <span class="normal">250</span>
-<span class="normal">251</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">solve_epochs</span><span class="p">(</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">solve_epochs</span><span class="p">(</span>
     <span class="n">directed</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">,</span>
     <span class="n">group_weights</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Hashable</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
     <span class="n">hyperparameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -3927,9 +6403,7 @@ This is useful for analyzing the circuit structure and dependencies.</p>
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">155</span>
 <span class="normal">156</span>
 <span class="normal">157</span>
 <span class="normal">158</span>
@@ -3952,7 +6426,9 @@ This is useful for analyzing the circuit structure and dependencies.</p>
 <span class="normal">175</span>
 <span class="normal">176</span>
 <span class="normal">177</span>
-<span class="normal">178</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_dag_circuit</span><span class="p">(</span><span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="n">can_reorder</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">:</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_dag_circuit</span><span class="p">(</span><span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="n">can_reorder</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a cirq.Circuit to a directed acyclic graph (DAG) representation.</span>
 <span class="sd">    This is useful for analyzing the circuit structure and dependencies.</span>
@@ -4017,12 +6493,16 @@ This is useful for analyzing the circuit structure and dependencies.</p>
 <span class="normal">48</span>
 <span class="normal">49</span>
 <span class="normal">50</span>
-<span class="normal">51</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">:</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">transpile</span><span class="p">(</span><span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transpile a circuit to a native CZ gate set of {CZ, PhXZ}.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Convert to CZ target gate set.</span>
     <span class="n">circuit2</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">optimize_for_target_gateset</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">gateset</span><span class="o">=</span><span class="n">cirq</span><span class="o">.</span><span class="n">CZTargetGateset</span><span class="p">())</span>
+    <span class="n">circuit2</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">drop_empty_moments</span><span class="p">(</span><span class="n">circuit2</span><span class="p">)</span>
+
     <span class="n">missing_qubits</span> <span class="o">=</span> <span class="n">circuit</span><span class="o">.</span><span class="n">all_qubits</span><span class="p">()</span> <span class="o">-</span> <span class="n">circuit2</span><span class="o">.</span><span class="n">all_qubits</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">qubit</span> <span class="ow">in</span> <span class="n">missing_qubits</span><span class="p">:</span>
