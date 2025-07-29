@@ -1,0 +1,3027 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Bloqade - the neutral atom SDK">
+      
+      
+      
+        <link rel="canonical" href="https://bloqade.quera.com/v0.27.1/blog/">
+      
+      
+        <link rel="prev" href="../reference/visual/">
+      
+      
+        <link rel="next" href="archive/2025/">
+      
+      
+      <link rel="icon" href="../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+    
+    
+      
+        <title>Index - The Neutral Atom SDK</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Lato";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="The Neutral Atom SDK" class="md-header__button md-logo" aria-label="The Neutral Atom SDK" data-md-component="logo">
+      
+  <img src="../assets/logo-dark.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            The Neutral Atom SDK
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Index
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/QuEraComputing/bloqade" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bloqade
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href=".." class="md-tabs__link">
+          
+  
+  
+    
+  
+  Home
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../digital/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Digital Tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://queracomputing.github.io/bloqade-analog-examples/dev/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Analog Tutorials
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://qbook.quera.com/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  qBook
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://queracomputing.github.io/bloqade-analog/latest/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Bloqade Analog
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://queracomputing.github.io/bloqade-analog/latest/reference/overview/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Analog Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://quera.com" class="md-tabs__link">
+        
+  
+  
+    
+  
+  QuEra Computing
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="The Neutral Atom SDK" class="md-nav__button md-logo" aria-label="The Neutral Atom SDK" data-md-component="logo">
+      
+  <img src="../assets/logo-dark.svg" alt="logo">
+
+    </a>
+    The Neutral Atom SDK
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/QuEraComputing/bloqade" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bloqade
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href=".." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Home
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../background/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Background
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manifesto/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Manifesto
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_5" id="__nav_1_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Quick Start
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_5">
+            <span class="md-nav__icon md-icon"></span>
+            Quick Start
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../quick_start/circuits/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Circuits
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1_5_1" id="__nav_1_5_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            Circuits
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_5_1_2" id="__nav_1_5_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_1_5_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_5_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/examples/qft/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quantum Fourier Transform
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/examples/ghz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GHZ State Preparation with Parallelism
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/examples/noisy_ghz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GHZ State preparation and noise
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/examples/pauli_exponentiation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Pauli Exponentiation for Quantum Simulation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/examples/repeat_until_success/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Repeat Until Success with STAR Gadget
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/examples/qaoa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    QAOA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5_1_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../quick_start/circuits/compiler_passes/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Compiler passes
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1_5_1_3" id="__nav_1_5_1_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_1_5_1_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_5_1_3">
+            <span class="md-nav__icon md-icon"></span>
+            Compiler passes
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick_start/circuits/compiler_passes/native_gate_rewrite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Native gate rewrite
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick_start/circuits/compiler_passes/asap_parallelism/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ASAP Parallelism
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick_start/circuits/compiler_passes/circuit_simplification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Circuit simplification
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5_1_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../quick_start/circuits/interpreters_and_analysis/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Interpreters and analysis
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1_5_1_4" id="__nav_1_5_1_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_1_5_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_5_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            Interpreters and analysis
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick_start/circuits/interpreters_and_analysis/qasm2_codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    QASM2 Codegen
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick_start/circuits/interpreters_and_analysis/pyqrack_emulator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PyQrack emulator
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5_1_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_5_1_5" id="__nav_1_5_1_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Circuit dialect API
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_1_5_1_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_5_1_5">
+            <span class="md-nav__icon md-icon"></span>
+            Circuit dialect API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick_start/circuits/API/qasm2_core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    QASM2 Core
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick_start/circuits/API/qasm2_noise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    QASM2 Noise
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick_start/circuits/API/qasm2_parallel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    QASM2 Parallel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick_start/circuits/API/qasm2_uop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    QASM2 Uop
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../quick_start/analog/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Analog
+    
+  </span>
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Analog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_5_3" id="__nav_1_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Qourier
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Qourier
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick_start/qourier/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    None
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contrib/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../digital/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Digital Tutorials
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Digital Tutorials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/dialects_and_kernels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dialects and kernels
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Simulator Device
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Simulator Device
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/simulator_device/simulator_device/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Simulation devices
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/simulator_device/tasks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tasks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../digital/cirq_interop/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Interoperability with Cirq
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Interoperability with Cirq
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/cirq_interop/cirq_to_squin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Converting cirq to squin
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/cirq_interop/squin_to_cirq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Converting squin to Cirq
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Circuits
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            Circuits
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/examples/qft/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quantum Fourier Transform
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/examples/ghz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GHZ State Preparation with Parallelism
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/examples/noisy_ghz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GHZ State preparation and noise
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/examples/pauli_exponentiation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Pauli Exponentiation for Quantum Simulation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/examples/repeat_until_success/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Repeat Until Success with STAR Gadget
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/examples/qaoa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    QAOA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../digital/examples/deutsch_squin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Deutsch-Jozsa Algorithm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://queracomputing.github.io/bloqade-analog-examples/dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Analog Tutorials
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://qbook.quera.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    qBook
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://queracomputing.github.io/bloqade-analog/latest/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Bloqade Analog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://queracomputing.github.io/bloqade-analog/latest/reference/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Analog Reference
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    API Reference
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            API Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/analog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    analog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/cirq_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    cirq_utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/device/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    device
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/pyqrack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    pyqrack
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/qasm2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    qasm2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/qbraid/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    qbraid
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/squin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    squin
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/stim/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    stim
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/task/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    task
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    types
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/visual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    visual
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="./" class="md-nav__link md-nav__link--active">
+              
+  
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link md-nav__link--active" for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Archive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="archive/2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    2025
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="archive/2023/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    2023
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://quera.com" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    QuEra Computing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+  <div class="md-content" data-md-component="content">
+    <div class="md-content__inner">
+      <header class="md-typeset">
+        
+      </header>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+      <nav class="md-post__authors md-typeset">
+        
+          <span class="md-author">
+            <img src="https://github.com/jon-wurtz.png" alt="Jonathan Wurtz">
+          </span>
+        
+      </nav>
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2025-03-01 00:00:00+00:00">March 1, 2025</time></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              4 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="a-new-journey-for-bloqade"><a class="toclink" href="2025/03/01/a-new-journey-for-bloqade/">A new journey for Bloqade</a></h2>
+<p>In 2023 we were excited to introduce Bloqade, a python SDK for programming and interfacing with analog mode neutral atom hardware based off feedback from our community as well as a need to make conducting experiments on our hardware easier. Today, we introduce the next generation of Bloqade: as well as programming analog-mode computation, our new bloqade module enables programming gate-based computation, with an eye on near-term NISQ demonstrations and intermediate-term fault tolerant solutions. Don’t worry; all of your favorite features of the previous generation of Bloqade are still there under the <code>bloqade.analog</code> namespace, but now you can explore digital-mode computation specialized to reconfigurable neutral atom architectures.
+Why have we built this new module? There are plenty of incredible quantum programming packages, such as <a href="https://www.ibm.com/quantum/qiskit">Qiskit</a> and <a href="https://quantumai.google/cirq">Cirq</a>, as well as an entire ecosystem of middleware providers with specialized pipelines to turn abstract problems into circuits. However, these packages may not be everything that is needed for efficient hardware execution on neutral atom hardware: <strong>a circuits-only representation of quantum executions may be an insufficient abstraction for effective hardware-level programs</strong>. This is a challenge: we want to enable everyone to maximally leverage the power of neutral atom quantum computers beyond abstract circuit representations. For this reason, we are building Bloqade to be a hardware-oriented SDK to represent hybrid executions on reconfigurable neutral atom hardware. In this way, Bloqade can be integrated into the larger ecosystem—for example, <a href="https://en.wikipedia.org/wiki/Code_generation_(compiler)">code generation</a> of QASM from a Bloqade program, but be an SDK specialized to our hardware: <strong>THE SDK for neutral atoms</strong>.</p>
+<p>The vision of Bloqade is to empower quantum scientists, working on things ranging from applications development to algorithmic co-design, to build hybrid quantum-classical programs that leverage the strength of neutral atom quantum computers and have a real chance of demonstrating quantum utility. Bloqade is built on top of <a href="https://github.com/QuEraComputing/kirin">Kirin</a>, an open source compiler infrastructure designed for kernel functions and embedded Domain-Specific Language (eDSL) creation.</p>
+<h3 id="composable-quantum-programming"><a class="toclink" href="2025/03/01/a-new-journey-for-bloqade/#composable-quantum-programming">Composable quantum programming</a></h3>
+<p>As of today, Bloqade has two objectives: digital and analog quantum computing. <code>bloqade-analog</code> is the SDK for analog-mode neutral atom computers and includes several handy utilities ranging from building and analyzing analog programs, to emulation and execution on QuEra's cloud-accessible hardware "Aquila". <code>bloqade</code> is the initial iteration to represent digital circuit execution using gate-based quantum computing on reconfigurable neutral atom architecture. It extends the QASM2 language to include extra annotation of circuits that is important for efficient execution, such as parallelism and global gates. As well as being able to construct quantum programs with the full convenience of features found in classical programming languages - such as loops, control flows and closures - <code>bloqade</code> also includes basic compiler transformation passes, emulation, and code generation.</p>
+<p>But <code>bloqade</code> is not done with just these two components. We envision adding new components (called "dialects") which help you write programs which are tuned for optimal performance in an error corrected era of neutral atom hardware. Stay tuned and help us build the future of quantum computing as we build out new components targeting QEC and atom moving!</p>
+<h3 id="hardware-oriented-programming-and-co-design"><a class="toclink" href="2025/03/01/a-new-journey-for-bloqade/#hardware-oriented-programming-and-co-design">Hardware-oriented programming and co-design</a></h3>
+<p>At its core, Bloqade strives to be the neutral atom SDK for getting the most out of today's and tomorrows' quantum hardware. It is clear that the circuit-level abstraction is not enough to program real quantum hardware; indeed, tomorrows' quantum demonstrations and applications must program at the hardware level and develop special tooling to compile higher-level abstractions to efficient implementations. We call this process <strong>"co-design"</strong>: designing algorithms specialized to near-term hardware, with an eye on nontrivial demonstrations and scalable solutions. Ultimately, this co-design approach requires hardware-specific DSLs which explicitly represent the native executions on neutral atom hardware: in other words, Bloqade.</p>
+<h3 id="hybrid-computing-beyond-circuits"><a class="toclink" href="2025/03/01/a-new-journey-for-bloqade/#hybrid-computing-beyond-circuits">Hybrid computing beyond circuits</a></h3>
+<p>Many quantum algorithms are hybrid, requiring both classical and quantum resources to work together in tandem. This could be anything from syndrome extraction and measurement-based computing to variational parameter updates in VQE methods and orbital fragmentation methods in molecular simulation. Through the use of the Kirin compiler infrastructure, Bloqade embraces this philosophy of heterogeneous compute. Kirin programs are written as (compositions of) <a href="https://en.wikipedia.org/wiki/Compute_kernel">kernels</a> -- subroutines that are intended to run on particular hardware (such as QPUs), or orchestrated to run on heterogeneous compute (such as a real-time classical runtime plus a QPU). These subroutines -- plus the built-in hybrid representations-- enable many key primitives, such as error correction.</p>
+<p>Additionally, the ability to compose functions together and to use typical classical programming structures like <code>if</code> and recursions enables many simplifications in writing complex circuits. In fact, recursions and the ability to dynamically allocate new memory (which is not known until runtime) enables many powerful subroutines and is natively enabled with Bloqade's kernel-based representation; for example, see <a href="../digital/examples/repeat_until_success/">this implementation</a> of a repeat-until-success program.</p>
+<h3 id="analog-digital-logical-towards-real-quantum-utility"><a class="toclink" href="2025/03/01/a-new-journey-for-bloqade/#analog-digital-logical-towards-real-quantum-utility">Analog, digital, logical: towards real quantum utility</a></h3>
+<p>The first step in Bloqade's journey was building out the analog mode SDK, designed to interface with QuEra’s cloud-accessible analog-mode neutral-atom quantum computer Aquila, as well as enable analysis and scientific discovery in analog quantum computing. But the journey should not stop there: real quantum utility is error corrected and requires robust algorithmic exploration and design of quantum primitives, in-depth analysis of near-term hardware performance and benchmarking, and building pipelines and hybrid architectures that are intended not just for today’s demonstrations but also for tomorrow’s utility-scale hardware. By introducing the next generation of Bloqade, we hope to enable this exploration by adding in support for near-term digital and intermediate-term logical representations of hybrid quantum computations.</p>
+<h3 id="learn-more"><a class="toclink" href="2025/03/01/a-new-journey-for-bloqade/#learn-more">Learn more</a></h3>
+<p>Bloqade is an open-source project and can be freely downloaded and modified; you can learn how to do so <a href="../install/">here</a>. If you want to see how to write programs with of the new <code>bloqade</code> package, check out our examples <a href="../digital/">here</a>. If you would like to learn more about QuEra Computing Inc., check out our <a href="https://quera.com">webpage</a> as well as discover our many <a href="https://www.quera.com/news#publications">academic publications and demonstrations</a>.</p>
+    
+  </div>
+</article>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+      <nav class="md-post__authors md-typeset">
+        
+          <span class="md-author">
+            <img src="https://github.com/johnzl-777.png" alt="John Long">
+          </span>
+        
+      </nav>
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2023-12-15 00:00:00+00:00">December 15, 2023</time></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              5 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="introducing-bloqade-sdk-for-python"><a class="toclink" href="2023/12/15/introducing-bloqade-sdk-for-python/">Introducing Bloqade SDK for Python</a></h2>
+<p><img alt="Bloqade Logo" src="../assets/logo.svg#only-light" />
+<img alt="Bloqade Logo" src="../assets/logo-dark.svg#only-dark" /></p>
+<p>Greetings Neutral Atom QC experts, enthusiasts, and newcomers!</p>
+<p>We are <del>excited to the Rydberg state</del> thrilled to announce the Python version of our cutting-edge SDK, Bloqade. Originally developed in Julia, Bloqade has been a game-changer in the realm of Neutral Atom quantum computing. With the introduction of the Python version, we aim to make this revolutionary technology more accessible and user-friendly than ever before.</p>
+<h3 id="why-python"><a class="toclink" href="2023/12/15/introducing-bloqade-sdk-for-python/#why-python">Why Python?</a></h3>
+<p>Python is one of the most widely used programming languages, especially in the quantum computing community and broader scientific communities. By extending Bloqade to Python, we are opening doors to a broader audience, enabling more developers, researchers, and organizations to harness the power of Neutral Atom quantum computing.</p>
+<h3 id="neutral-atom-quantum-computing"><a class="toclink" href="2023/12/15/introducing-bloqade-sdk-for-python/#neutral-atom-quantum-computing">Neutral Atom Quantum Computing</a></h3>
+<p>Recently, the Neutral Atom platform has come on the QC scene in the form of Analog Hamiltonian Simulators that have a broad set of use cases beyond quantum circuits. Ranging from simulating unique quantum phases of matter, solving combinatorial optimization problems, and machine learning applications, the analog mode provides strong values in solving practical, interesting problems in the near term.</p>
+<p>These advances are crucial milestones on the way towards scalable digital gate-based architecture using atom shuttling. This new technology and its novel applications demand a paradigm shift in the way we not only think about quantum computing, but translate those ideas to real hardware. Enter Bloqade, a next-generation SDK designed to put the power of neutral atoms at your fingertips.</p>
+<h3 id="why-bloqade"><a class="toclink" href="2023/12/15/introducing-bloqade-sdk-for-python/#why-bloqade">Why Bloqade?</a></h3>
+<p>Bloqade is designed with the primary goal of making it easier to compose programs for QuEra’s hardware and analyze results.</p>
+<p>We've gained valuable insights into how users have used our neutral-atom hardware and with it, their struggles with existing tools. We took advantage of this knowledge to produce a tool that could take the "hard" out of "hardware". Bloqade is precision-balanced in both <em>flexibility</em> to empower novices to experiment with ease and <em>power</em> to let experts perform cutting-edge work without breaking a sweat.</p>
+<h4 id="highlights"><a class="toclink" href="2023/12/15/introducing-bloqade-sdk-for-python/#highlights">Highlights</a></h4>
+<h5 id="smart-documentation"><a class="toclink" href="2023/12/15/introducing-bloqade-sdk-for-python/#smart-documentation">Smart Documentation</a></h5>
+<p>With our commitment to enabling more seamless program development, we've put the relevant documentation you need right <em>where</em> and <em>when</em> you need it.</p>
+<p>No more obnoxious switching between your favorite coding environment and documentation in a separate window. Let Bloqade guide you where you'd like to go:</p>
+<p><img alt="" src="../assets/readme-gifs/smart-docs.gif" /></p>
+<h5 id="fully-parameterized-analog-programs"><a class="toclink" href="2023/12/15/introducing-bloqade-sdk-for-python/#fully-parameterized-analog-programs">Fully Parameterized Analog Programs</a></h5>
+<p><em>Parameter sweeps</em> are a common theme of programs for analog quantum computers, where a user would like to observe differences in output results by varying a value or values in their program.</p>
+<p>You used to have to manually crank out variations of your program with different values and then keep track of all the individual submissions to the emulator and hardware, a mess to keep track of and process the results of afterwards.</p>
+<p>Bloqade eliminates this with its own support for variables that can later be assigned single values or a whole sequence of values for trivial parameter sweeping. This isn't some feature that's constrained to a certain backend, you can take your program with all its variables and submit it to your choice of emulator or our hardware directly.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">var</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.atom_arrangement</span><span class="w"> </span><span class="kn">import</span> <span class="n">Square</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">adiabatic_durations</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">]</span>
+
+<span class="c1"># create variables explicitly...</span>
+<span class="n">max_detuning</span> <span class="o">=</span> <span class="n">var</span><span class="p">(</span><span class="s2">&quot;max_detuning&quot;</span><span class="p">)</span>
+<span class="c1"># ...or implicitly inside the program definition.</span>
+<span class="n">adiabatic_program</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">Square</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;lattice_spacing&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">rydberg</span><span class="o">.</span><span class="n">rabi</span><span class="o">.</span><span class="n">amplitude</span><span class="o">.</span><span class="n">uniform</span><span class="o">.</span><span class="n">piecewise_linear</span><span class="p">(</span>
+        <span class="n">durations</span><span class="o">=</span><span class="n">adiabatic_durations</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;max_rabi&quot;</span><span class="p">,</span> <span class="s2">&quot;max_rabi&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">detuning</span><span class="o">.</span><span class="n">uniform</span><span class="o">.</span><span class="n">piecewise_linear</span><span class="p">(</span>
+        <span class="n">durations</span><span class="o">=</span><span class="n">adiabatic_durations</span><span class="p">,</span>
+        <span class="n">values</span><span class="o">=</span><span class="p">[</span>
+            <span class="o">-</span><span class="n">max_detuning</span><span class="p">,</span> <span class="c1"># scalar variables support direct arithmetic operations</span>
+            <span class="o">-</span><span class="n">max_detuning</span><span class="p">,</span>
+            <span class="n">max_detuning</span><span class="p">,</span>
+            <span class="n">max_detuning</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">max_rabi</span><span class="o">=</span><span class="mf">15.8</span><span class="p">,</span> <span class="n">max_detuning</span><span class="o">=</span><span class="mf">16.33</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">batch_assign</span><span class="p">(</span><span class="n">lattice_spacing</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arrange</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="c1"># Launch your program on your choice of Braket or in-house emulator...</span>
+<span class="n">emu_results</span> <span class="o">=</span> <span class="n">adiabatic_program</span><span class="o">.</span><span class="n">braket</span><span class="o">.</span><span class="n">local_emulator</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+<span class="n">faster_emu_results</span> <span class="o">=</span> <span class="n">adiabatic_program</span><span class="o">.</span><span class="n">bloqade</span><span class="o">.</span><span class="n">python</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+<span class="c1"># ...as well as hardware without stress</span>
+<span class="n">hw_results</span> <span class="o">=</span> <span class="n">adiabatic_program</span><span class="o">.</span><span class="n">parallelize</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">braket</span><span class="o">.</span><span class="n">aquila</span><span class="p">()</span><span class="o">.</span><span class="n">run_async</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</code></pre></div>
+<h5 id="integrated-visualization-tools"><a class="toclink" href="2023/12/15/introducing-bloqade-sdk-for-python/#integrated-visualization-tools">Integrated Visualization Tools</a></h5>
+<p>Instantly understand what your programs are doing faster than you can say "neutral atoms rock!" with Bloqade's built-in visualization tools:</p>
+<p><img alt="" src="../assets/readme-gifs/locations-hover.gif" /></p>
+<p><img alt="" src="../assets/readme-gifs/graph-select.gif" /></p>
+<p>For your results, no more obnoxious manual compilation of results across different parameters or wrangling them into more useful forms. Get insights of experiment outcomes in the blink of an eye:</p>
+<p><img alt="" src="../assets/readme-gifs/visualize-bitstrings.gif" /></p>
+<p><img alt="" src="../assets/readme-gifs/hover-bitstrings.gif" /></p>
+<p>Now that's what we call having your cake AND eating it.</p>
+<h3 id="bloqade-roadmap"><a class="toclink" href="2023/12/15/introducing-bloqade-sdk-for-python/#bloqade-roadmap">Bloqade Roadmap</a></h3>
+<h4 id="bloqade-alpha-phase"><a class="toclink" href="2023/12/15/introducing-bloqade-sdk-for-python/#bloqade-alpha-phase">Bloqade Alpha Phase</a></h4>
+<p>During the next year, we plan on continuing development of Bloqade's python interface. If you are as excited about Neutral Atom quantum computing as us, or heck, even just quantum physics in general, give Bloqade a try! This is your opportunity to influence the direction of Bloqade and get in on the ground floor of the next Quantum Computing revolution.</p>
+<h4 id="but-what-about-julia"><a class="toclink" href="2023/12/15/introducing-bloqade-sdk-for-python/#but-what-about-julia">But what about Julia?</a></h4>
+<p><strong><em>Don't you guys already HAVE an SDK in Julia? Why do you need two SDKs?</em></strong></p>
+<p>That's right! However, there's a key motivating factor for the reason we created Bloqade Python that's distinct for Bloqade.jl's existence.</p>
+<p>Bloqade.jl is primarily geared as a <em>high-performance emulator</em>. It allows you to design complex neutral-atom algorithms that may not necessarily run on our hardware BUT are excellent if you're exploring novel physical phenonema/algorithms or as a tool for pedagogical purposes.</p>
+<p>Bloqade.jl does have the ability to submit to <a href="https://www.quera.com/aquila"><em>Aquila</em></a>, our flagship quantum computer, but for more complex tasks such as sweeping parameters (e.g. running the same program on hardware with slightly different parameters each time) or advanced post-processing, it becomes cumbersome quite quickly.</p>
+<p>There are no plans to drop support any time soon though. On the contrary, we plan on fully integrating Bloqade.jl into the Python package, which will enable you to program Neutral Atom quantum hardware without having to choose.</p>
+<p>We very much look forward to you trying out Bloqade!</p>
+    
+  </div>
+</article>
+      
+      
+        
+          
+
+
+
+<nav class="md-pagination">
+  
+</nav>
+        
+      
+    </div>
+  </div>
+
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../reference/visual/" class="md-footer__link md-footer__link--prev" aria-label="Previous: visual">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                visual
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="archive/2025/" class="md-footer__link md-footer__link--next" aria-label="Next: 2025">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                2025
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2025 Bloqade contributors
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://x.com/QueraComputing" target="_blank" rel="noopener" title="x.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/company/quera-computing-inc/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["announce.dismiss", "content.action.view", "content.action.edit", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.50899def.min.js"></script>
+      
+        <script src="../javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+    
+  </body>
+</html>
