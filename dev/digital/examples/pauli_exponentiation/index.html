@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://bloqade.quera.com/dev/digital/examples/pauli_exponentiation/">
       
       
-        <link rel="prev" href="../ghz/">
+        <link rel="prev" href="../noisy_ghz/">
       
       
         <link rel="next" href="../repeat_until_success/">
@@ -728,6 +728,8 @@
       
         
       
+        
+      
     
     
     
@@ -800,6 +802,29 @@
   
   <span class="md-ellipsis">
     GHZ State Preparation with Parallelism
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../noisy_ghz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GHZ State preparation and noise
     
   </span>
   
@@ -1834,6 +1859,8 @@
       
         
       
+        
+      
     
     
     
@@ -1909,6 +1936,29 @@
   
   <span class="md-ellipsis">
     GHZ State Preparation with Parallelism
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../noisy_ghz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GHZ State preparation and noise
     
   </span>
   
@@ -2159,6 +2209,8 @@
       
         
       
+        
+      
     
     
     
@@ -2240,6 +2292,29 @@
   
   <span class="md-ellipsis">
     analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/cirq_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    cirq_utils
     
   </span>
   
@@ -3146,7 +3221,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c76c6606">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=702a1f92">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3157,7 +3232,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f2dbac0a">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=27d618f4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3188,7 +3263,7 @@ from bloqade import qasm2</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=21444922">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=77acfed9">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3200,7 +3275,7 @@ with a parameterized angle <code>gamma</code>.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=47a279b2">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=bb1f27bb">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3243,7 +3318,7 @@ def zzzz_gadget(targets: tuple[qasm2.Qubit, ...], gamma: float):
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c0ef06f5">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=117f75f6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3255,7 +3330,7 @@ with a parameterized start and end Pauli basis.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=d032b48f">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=00661273">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3340,7 +3415,7 @@ def pauli_basis_change(targets: tuple[qasm2.Qubit, ...], start: str, end: str):
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c9594e23">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b83f838f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3352,7 +3427,7 @@ with a parameterized Pauli basis and angle <code>gamma</code>.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3649b424">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=040963de">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3391,7 +3466,7 @@ def pauli_exponential(targets: tuple[qasm2.Qubit, ...], pauli: str, gamma: float
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=dd4daed1">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c5007bb6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3400,14 +3475,14 @@ def pauli_exponential(targets: tuple[qasm2.Qubit, ...], pauli: str, gamma: float
 <p>Finally, we define the <code>main</code> function as the entry point of the program.</p>
 <div align="center">
 <picture>
-<img alt="No description has been provided for this image" src="/digital/examples/pauli_exponentiation.svg"/>
+<img alt="No description has been provided for this image" src="../pauli_exponentiation.svg"/>
 </picture>
 </div>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=38cbc6bc">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f8b6cce9">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3440,7 +3515,7 @@ def main():
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b83a7ff0">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=bfbaeb2f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3451,7 +3526,7 @@ def main():
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=37ace219">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c42feba5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3520,7 +3595,7 @@ qasm2.parse.pprint(ast)</div>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../ghz/" class="md-footer__link md-footer__link--prev" aria-label="Previous: GHZ State Preparation with Parallelism">
+          <a href="../noisy_ghz/" class="md-footer__link md-footer__link--prev" aria-label="Previous: GHZ State preparation and noise">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -3530,7 +3605,7 @@ qasm2.parse.pprint(ast)</div>
                 Previous
               </span>
               <div class="md-ellipsis">
-                GHZ State Preparation with Parallelism
+                GHZ State preparation and noise
               </div>
             </div>
           </a>
