@@ -1,11 +1,9 @@
 ---
-date: 2025-03-01
+date: 2025-07-30
 authors:
-    - jwurtz
-    - rogerluo
-    - kaihsin
-    - weinbe58
-    - johnzl-777
+    - dplankensteiner
+    - lmartinez
+    - tcochran
 ---
 # Simulating noisy circuits for near-term quantum hardware
 
