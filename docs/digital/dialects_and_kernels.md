@@ -10,6 +10,19 @@ Bloqade provides a set of pre-defined dialects, with which you can write your pr
 
 Once you have your kernel, you can inspect their intermediate representation (IR), apply different optimizations using [compiler passes](../quick_start/circuits/compiler_passes/index.md), or run them on a [(simulator) device](./simulator_device/simulator_device.md).
 
+All dialects can be used by decorating a function.
+Small primer on decorators: a decorator in Python is simply a function (or any callable really) that returns another function (callable).
+They are used with the `@` syntax.
+
+!!! note
+    It is important to understand that when you are writing a kernel function in a dialect you are generally **not writing Python** code, even though it looks a lot like it.
+    Therefore, kernel functions can usually not be called directly.
+    Think of this as trying to execute another programming language with the Python interpreter: of course, that will error.
+    In order to execute a kernel (either on hardware or via simulation), they need an interpreter with an according method table, so the interpreter knows how to execute the statements inside the kernel function.
+    `bloqade-circuit` provides those for you.
+    If you want to learn more about this, please head on over to the [Kirin documentation](https://queracomputing.github.io/kirin/latest/).
+    Similarly, different dialects are (usually) not compatible with one another as they practically define their own language (although you may be able to transpile between them).
+
 
 # Available dialects
 
