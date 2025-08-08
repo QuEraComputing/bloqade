@@ -128,14 +128,35 @@ main.print()
 
 ## squin
 
-This dialect is, in a sense, more expressive than the qasm2 dialects: it allows you to specify operators rather than just gate applications.
-That can be useful if you're trying to e.g. simulate a Hamiltonian time evolution.
-
 !!! warning
     The squin dialect is in an early stage of development.
     Expect substantial changes to it in the near future.
 
+
+This dialect is, in a sense, more expressive than the qasm2 dialects: it allows you to specify operators rather than just gate applications.
+That can be useful if you're trying to e.g. simulate a Hamiltonian time evolution.
+
+For simple circuits, however, gate applications also have short-hand standard library definitions defined in the `squin.gate` submodule.
 Here's a short example:
+
+```python
+from bloqade import squin
+
+@squin.kernel
+def main():
+    q = squin.qubit.new(2)
+    squin.gate.h(q[0])
+    squin.gate.cx(q[0], q[1])
+    return squin.qubit.measure(q)
+
+# have a look at the IR
+main.print()
+```
+
+
+As mentioned above, you can also build up more complex "operators" that are then applied to any number of qubits.
+To show how you can do that, here's an example on how to write the above kernel defining the gates as separate operators.
+This isn't exactly a practical use-case, but serves as an example.
 
 ```python
 from bloqade import squin
@@ -148,10 +169,10 @@ def main():
     # apply a hadamard to only the first qubit
     h1 = squin.op.kron(h, squin.op.identity(sites=1))
 
-    squin.qubit.apply(h1, q)
+    squin.qubit.apply(h1, q[0], q[1])
 
     cx = squin.op.cx()
-    squin.qubit.apply(cx, q)
+    squin.qubit.apply(cx, q[0], q[1])
 
     return squin.qubit.measure(q)
 
