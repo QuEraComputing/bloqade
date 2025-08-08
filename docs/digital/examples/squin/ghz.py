@@ -167,7 +167,7 @@ noisy_linear_ghz.print()
 # The only difference is that we now need to provide additional arguments for the noise probabilities.
 
 # %%
-result = sim.run(noisy_linear_ghz, args=(2, 1e-3, 2e-3))
+result = sim.run(noisy_linear_ghz, args=(2, 1e-2, 2e-2))
 print(result)
 
 # %% [markdown]
@@ -196,9 +196,9 @@ print(result_bitstring)
 # In this case, "correct" means the measurement outcome is fully correlated.
 
 # %%
-n_shots = 100
+n_shots = 1000
 n_qubits = 4
-p_single = 1e-3
+p_single = 1e-2
 p_paired = 2 * p_single
 fidelity = 1.0
 sim = StackMemorySimulator(min_qubits=n_qubits)
