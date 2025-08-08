@@ -3179,6 +3179,32 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      TL;DR
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3216,10 +3242,41 @@ on <a href="https://github.com/QuEraComputing/bloqade/issues/new">GitHub</a> if 
 contribute.</p>
 </div>
 <h1 id="digital-bloqade">Digital Bloqade</h1>
-<p>This page provides some information on digital circuits, their simulation and a collection of quick examples to help you get started with Digital Bloqade.
-Each example is a self-contained page that demonstrates a specific feature or use case.
-You can copy and paste the code snippets into your own project and modify them as needed.</p>
-<p>You can also find the corresponding scripts in <a href="https://jupytext.readthedocs.io/en/latest/">jupytext format</a> at the <a href="https://github.com/QuEraComputing/bloqade">bloqade repository</a> under <code>docs/digital/examples/</code>.</p>
+<p>The digital submodule of Bloqade, called <code>bloqade-circuit</code> defines a set of embedded domain-specific languages (eDSLs) that can be used to define digital quantum programs.
+These programs are intended for both simulation and to be run on hardware. This package is open source and can be found <a href="https://github.com/QuEraComputing/bloqade-circuit">on GitHub</a>.</p>
+<p>Please refer to the <a href="dialects_and_kernels/">Dialects and Kernels</a> section of this documentation for an overview over the most important eDSLs.
+The infrastructure behind these compilers is built on top of <a href="https://queracomputing.github.io/kirin/latest/">Kirin</a>.</p>
+<p>It is easiest to learn how to use this package by checking out the <a href="tutorials_index/">examples &amp; tutorials section</a>, where we show how you can build and study different quantum programs written in different DSLs.
+You can also find the corresponding scripts in <a href="https://jupytext.readthedocs.io/en/latest/">jupytext format</a> at the <a href="https://github.com/QuEraComputing/bloqade">bloqade repository</a> under <code>docs/digital/examples/</code>.</p>
+<p>Finally, if you want the full details on the API, please refer to the <a href="../reference/">API reference documentation</a>.</p>
+<h2 id="installation">Installation</h2>
+<p>The package comes as a submodule of Bloqade, so you can just run</p>
+<div class="highlight"><pre><span></span><code>pip install bloqade
+</code></pre></div>
+<p>in order to obtain it.</p>
+<p>Sometimes, you may want to reduce the number of dependencies, in which case you can also only install the submodule</p>
+<div class="highlight"><pre><span></span><code>pip install bloqade-circuit
+</code></pre></div>
+<p>Note, that bloqade-circuit also has some optional dependencies, which you may want to install.
+For example</p>
+<div class="highlight"><pre><span></span><code>pip install bloqade-circuit[cirq,qasm2,stim]
+</code></pre></div>
+<h2 id="tldr">TL;DR</h2>
+<p>Here's a GHZ preparation circuit written in the <a href="../reference/squin/"><code>squin</code></a> dialect:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
+
+<span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ghz</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="n">squin</span><span class="o">.</span><span class="n">gate</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="n">squin</span><span class="o">.</span><span class="n">gate</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+</code></pre></div>
+<p>Here are <a href="tutorials_index/">some more examples</a>.</p>
 
 
 
