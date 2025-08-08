@@ -16,6 +16,14 @@ Squin is bloqade-circuits central dialect used to build circuits and run them on
 
     See how you can implement the fundamental Deutsch-Jozsa algorithm with a Squin kernel function.
 
+
+-   [GHZ state preparation and noise](../examples/squin/ghz/)
+
+    ---
+
+    Inject noise manually in a simple squin kernel.
+
+
 </div>
 
 

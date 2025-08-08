@@ -25,6 +25,7 @@ nav:
               - QAOA: "digital/examples/qasm2/qaoa.py"
             - Squin dialect examples:
               - Deutsch-Jozsa Algorithm: digital/examples/squin/deutsch_squin.py
+              - GHZ state preparation with noise: digital/examples/squin/ghz.py
             - Integration with other SDKs:
               - Noisy GHZ states with cirq: "digital/examples/interop/noisy_ghz.py"
           - Compiler passes:
@@ -66,6 +67,7 @@ nav:
       - QAOA: "digital/examples/qasm2/qaoa.py"
     - Squin dialect examples:
       - Deutsch-Jozsa Algorithm: digital/examples/squin/deutsch_squin.py
+      - GHZ state preparation with noise: digital/examples/squin/ghz.py
     - Integration with other SDKs:
       - Noisy GHZ states with cirq: "digital/examples/interop/noisy_ghz.py"
   - Analog Tutorials: 'https://queracomputing.github.io/bloqade-analog-examples/dev/'
