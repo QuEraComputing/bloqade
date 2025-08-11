@@ -19,8 +19,10 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 dependencies = [
-    "bloqade-circuit[cirq,qasm2,qbraid,vis]~=0.4.0",
+    "bloqade-circuit[cirq,qasm2,qbraid,vis]>=0.6.5",
     "bloqade-analog~=0.16.3",
+    "ipynb>=0.5.1",
+    "ipykernel>=6.29.5",
 ]
 
 [build-system]
