@@ -13,7 +13,7 @@ jobs:
     name: Build documentation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Install uv
         uses: astral-sh/setup-uv@v6
         with:
@@ -27,14 +27,14 @@ jobs:
         # get latest dependencies from git directly
       - name: clone the latest bloqade-circuit
         id: clone_bloqade_circuit
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: QuEraComputing/bloqade-circuit
           path: 'submodules/bloqade-circuit'
 
       - name: clone the latest bloqade-analog
         id: clone_bloqade_analog
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: QuEraComputing/bloqade-analog
           path: 'submodules/bloqade-analog'
