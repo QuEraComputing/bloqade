@@ -41,7 +41,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Name tellus sem, mattis
 
 ## Example: Noise in the GHZ state
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Name tellus sem, mattis eu quam in, semper semper turpis. Suspendisse dignissim sagittis dui imperdiet sagittis. Duis imperdiet rutrum turpis eu pulvinar. Phasellus bibendum porta fermentum. Phasellus eu lobortis lectus. Duis massa risus, porttitor id metus quis, sollicitudin dapibus orci. Ut tincidunt ultrices diam, sit amet molestie purus accumsan quis. Ut erat felis, molestie eu orci sed, ultrices sagittis augue.
+It is often most convenient to study an example in order to learn how to use a set of tools.
+To this end, we included a tutorial that shows you how to annotate a GHZ preparation circuit using the different heuristic noise models.
+We'll discuss some underlying concepts and highlight interesting parts of the tutorial in this section.
+If you want all the details, please find [the full example here](../../../digital/examples/noisy_ghz.py).
+
 
 ### Flow chart (Tyler)
 
@@ -53,4 +57,16 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Name tellus sem, mattis
 
 ### GHZ data (David)
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Name tellus sem, mattis eu quam in, semper semper turpis. Suspendisse dignissim sagittis dui imperdiet sagittis. Duis imperdiet rutrum turpis eu pulvinar. Phasellus bibendum porta fermentum. Phasellus eu lobortis lectus. Duis massa risus, porttitor id metus quis, sollicitudin dapibus orci. Ut tincidunt ultrices diam, sit amet molestie purus accumsan quis. Ut erat felis, molestie eu orci sed, ultrices sagittis augue.
+Now, let's look at some results of [the example](../../../digital/examples/noisy_ghz.py) that compares the different noise processes.
+
+The different noise models lead to overall different infidileties of the circuit:
+
+![GHZ circuit fidelity with different noise models](../../../digital/examples/noisy_ghz_fidelity.svg)
+
+As you'd expect, the general trend of the fidelity is that it decreases with a growing number of qubits.
+Depending on how many qubits you need, you may want to run the above simulation in order to decide whether you'd want to operate Gemini in a one-zone or a two-zone setup.
+
+On a more abstract level, you may also want to optimize the circuit that you use to obtain the result you want.
+The example uses a linear depth GHZ algorithm, which is arguably not the best choice to prepare a GHZ state.
+
+Using our noise framework you can explore and analyze different strategies to find the one best suited for your particular application.
