@@ -14,7 +14,7 @@ Register = IList[bloqade.types.Qubit, Any]
 # 
 # In this tutorial we will demonstrate how to write circuits and quantum executions with Bloqade. Specifically, we will use the `squin` dialect set from the compiler toolchain `kirin`. `SQUIN` stands for `S`tructural `Qu`antum `IN`struction set and is the circuit-level representation of quantum executions. It is built on top of the `kirin` framework, an [open-source compiler toolchain](https://queracomputing.github.io/kirin/latest/) for embedded domain-specific languages (eDSLs) that target scientific computing kernels. A key feature of squin is the _kernel_, which can roughly be seen as the object which will be executed on the target hardware. Naturally, this hardware could be a quantum computer but it also extends to classical execution as well, such as mid-circuit feedforward or even non-quantum execution such as robotics.
 # 
-# These kernels can be built using decorators of python functions. We will use the `@squin.kernel` decorator in this notebook but keep in mind that other eDSLs have different decorators inherited from base Kirin decorators. The decorator lowers the python AST into a kirin SSA (single static assignment) form, which is a useful intermediate representation for compiler analysis. You don't have to worry too much about SSA or compilers very much here, but if you want to learn more check out the [kirin documentation](https://queracomputing.github.io/kirin/latest/).
+# These kernels can be built using decorators of python functions. We will use the `@squin.kernel` decorator in this notebook but keep in mind that other eDSLs have different decorators inherited from base Kirin decorators. The decorator lowers Python's abstract syntax tree (AST) into a kirin SSA (single static assignment) form, which is a useful intermediate representation for compiler analysis. You don't have to worry too much about SSA or compilers here, but if you want to learn more check out the [kirin documentation](https://queracomputing.github.io/kirin/latest/).
 
 # %%
 try:
@@ -91,7 +91,7 @@ def _gates():
     
 
 # %% [markdown]
-# You are also able to define your own custom gates using the `op` dialects. Operators are gates and other quantum operations decoupled from application from particular target qubits. Each `squin.gate` method is actually its own kernel which creates an operation and then applies it to a particular qubit. Separating the definition of operators from their application to qubits enables several convenient analysis techniques, such as identifying equivalent gates with common subexpressions elimination. Note that operators do not necessarily have to be unitary, and can more widely represent objects such as observables and Hamiltonians.
+# You are also able to define your own custom gates using the `op` dialects. Operators are gates and other quantum operations decoupled from application on particular target qubits. Each `squin.gate` method is actually its own kernel which creates an operation and then applies it to a particular qubit. Separating the definition of operators from their application to qubits enables several convenient analysis techniques, such as identifying equivalent gates with common subexpressions elimination. Note that operators do not necessarily have to be unitary, and can more widely represent objects such as observables and Hamiltonians.
 
 # %%
 # All expressed operators:
@@ -142,7 +142,7 @@ def _operators():
 
 
 # %% [markdown]
-# For example, lets make some operators and gates that go beyond the basic operators. Note that more complicated functionalities, such as T state teleportation, need function signatures that do not match that of the builtin `squin.gate` functions, and might need to be written using `op`. For example, consider a kernel that applies a controlled T gate to a register of qubits
+# For example, let's make some operators and gates that go beyond the basic operators. Note that more complicated functionalities, such as T state teleportation, need function signatures that do not match that of the builtin `squin.gate` functions, and might need to be written using `op`. For example, consider a kernel that applies a controlled T gate to a register of qubits
 
 # %%
 try:
@@ -269,7 +269,7 @@ circuit2:cirq.Circuit = squin.cirq.emit_circuit(kernel, ignore_returns=True)
 print(circuit2)
 
 # %% [markdown]
-# The circuit loading also works with classical feed forward, though it is in general more difficult to generally extract out a cirq circuit from a generic feedforward cirq kernel. For example, the T teleportation gadget can be written and loaded as
+# The circuit loading also works with classical feed forward, though it is generally more difficult to extract a cirq circuit from a generic feedforward cirq kernel. For example, the T teleportation gadget can be written and loaded as
 
 # %%
 reg = cirq.LineQubit.range(2)
@@ -336,7 +336,7 @@ print(circuit)
 # A kernel is simply a representation of an execution, and is not much use without being able to analyze and execute that kernel. We can simulate the action of kernels using concrete interpreters. The emulator must a) keep track of the classical state of the variables, b) keep track of the quantum state of the qubits, and thus c) faithfully represent the execution of that program as if it was run on a hybrid quantum/classical computer. Bloqade's emulator is built on top of the excellent [PyQrack quantum simulator](https://pyqrack.readthedocs.io/en/latest/) and satisfies the three goals above.
 # 
 # There are three main objects when considering simulation:
-# 1. **The emulator object** - Representing the thing that some kernel is going to be executed on. Today it is tye PyQrack simulator, but eventually it could also include other simulators or physical hardware. The `*.task` method builds...
+# 1. **The emulator object** - Representing the thing that some kernel is going to be executed on. Today it is the PyQrack simulator, but eventually it could also include other simulators or physical hardware. The `*.task` method builds...
 # 2. **The task object** - Binding together the emulator, kernel execution, and input parameters for that kernel. This task is not executed until the `*.run` method is called. Upon calling `run`, the kernel is interpreted, the quantum circuit is executed, any classical co-processing is done, and the kernel completes. Repeated calling of `run` will "reset" the executor into its initial state and rerun the kernel. After running, returns...
 # 3. **The results object** - Whatever the `return` of the kernel is is returned here, with the same type signature. These could be qubits or qubit registers (list of qubits), values, or really whatever object you like.
 # 
