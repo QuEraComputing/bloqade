@@ -32,6 +32,8 @@ def hello_world(theta:float) -> IList[bool, Any]:
     squin.gate.rx(theta, qubits[0])
     bits = squin.qubit.measure(qubits)
     return bits
+# [kernel].print() prints the raw SSA, which is the intermediate representation of the kernel
+# as used internally by Kirin.
 hello_world.print()
 
 # %% [markdown]
@@ -139,6 +141,10 @@ def _operators():
     squin.op.mult # Is this necessary?
     squin.op.identity # The identity operator, which does nothing
     squin.op.pauli_string(string="XXYZ") # A simpler alias for squin.op.kron(squin.op.X(), ...)
+    
+    # Finally, operators can be applied to qubits.
+    qbs:IList[bloqade.types.Qubit,Any] = squin.qubit.new(2) # Create a list of 2 new qubits
+    squin.qubit.apply(operator=cx, qubits=qbs) # Apply the operator to a list of qubits
 
 
 # %% [markdown]
@@ -149,12 +155,8 @@ try:
     del controlled_t
 except:
     pass
-try:
-    del heisenberg_rotation
-except:
-    pass
 @squin.kernel
-def controlled_t(qubits:Register):
+def controlled_t(qubit1: bloqade.types.Qubit, qubit2: bloqade.types.Qubit):
     """
     A controlled T gate, aka a sqrt{CZ} gate.
     ---o---
@@ -163,12 +165,12 @@ def controlled_t(qubits:Register):
     """
     t = squin.op.t()
     ctrl = squin.op.control(t, n_controls=1)
-    squin.qubit.apply(operator=ctrl, qubits=qubits)
+    squin.qubit.apply(ctrl, qubit1, qubit2)
 
 controlled_t.print()
 
 # %% [markdown]
-# Finally, you can also define noise on qubits using the `squin.noise` namespace. Like `op`, `noise` operators are defined separately from their application to qubits
+# Finally, you can also define noise on qubits using the `squin.noise` namespace. Like `op`, `noise` operators are defined separately from their application to qubits. Note that these will likely soon also have shorthands like gates https://github.com/QuEraComputing/bloqade-circuit/issues/451
 
 # %%
 try:
@@ -188,13 +190,13 @@ def _noise():
     
     # Noise is applied to qubits in the same way as operators.
     qubit = squin.qubit.new(1)[0]
-    squin.qubit.apply(operator=loss, qubits=[qubit])
+    squin.qubit.apply(loss, qubit)
 
 # %% [markdown]
 # ## Using Bloqade kernels
 # A key feature of kernels is the ability to do complex control flow similar to how one might program python. For example, one can use a for loop to apply the same gate to multiple qubits to prepare a GHZ state.
 # 
-# A common pattern is to use factory functions that return bloqade kernels. This way, you can fix parameters (such as the number of qubits) pythonically without needing to introduce the variable directly into the kernel itself.
+# A useful pattern is to use factory functions that return bloqade kernels. This way, you can fix parameters (such as the number of qubits) pythonically without needing to introduce the variable directly into the kernel itself.
 
 # %%
 # Bell state prep.
@@ -379,7 +381,10 @@ assert foo(1,2)==True
 # 
 # These nonphysical values are based in being able to directly observe and evaluate the quantum state. The state can be extracted via the `PyQrackSimulator.quantum_state` method, with an input signature of a list of (pyqrack) qubits. These qubits can be generated as a return value from a kernel (as is the case for the `GHZ_state_factory` function) or from the `task.qubits()` method.
 # 
-# The resulting state is a reduced density matrix represented by its eigensystem of eigenvalues and eigenvectors. The state vector basis is the Z basis, ordered by the labels of the input qubit list with an edannes consistent with cirq. The RDM form is chosen because the qubit list may be an entangled subset of the entire register, and thus may be a mixed state. The eigensystem form is chosen because if the state is pure -- or only slightly entangled -- the resulting state will be efficiently represented by only carrying the nonzero eigenvectors of the density matrix. Consistent with `np.linalg.eigh`, the first index indexes the eigenvector (e.g. `eigenvector[:,3]` is the 4th eigenvector with eigenvalue `eigenvalue[3]`)
+# The resulting state is a reduced density matrix represented by its eigensystem of eigenvalues and eigenvectors.
+# The state vector basis is the Z basis
+# The edannes of the basis is consistent with cirq, with the basis index representing the binary value: the 0th index representing |00000>, 1st representing |00001>, 5th representing |00101> and so forth, with |00001> representing a flip of the last qubit in the list.
+# The RDM form is chosen because the qubit list may be an entangled subset of the entire register, and thus may be a mixed state. The eigensystem form is chosen because if the state is pure -- or only slightly entangled -- the resulting state will be efficiently represented by only carrying the nonzero eigenvectors of the density matrix. Consistent with `np.linalg.eigh`, the first index indexes the eigenvector (e.g. `eigenvector[:,3]` is the 4th eigenvector with eigenvalue `eigenvalue[3]`)
 
 # %%
 from bloqade.pyqrack import PyQrackQubit
@@ -501,11 +506,11 @@ print("State:  ", rho)
 # %% [markdown]
 # # Composition of kernels
 # 
-# The powerful thing about bloqade kernels is that they allow all of the typical syntax of for loops, if-else statements, function calls, and other powerful abstractions. Lets use this to write efficient representations of complex circuits.
+# Bloqade kernels is allow all of the typical syntax of for loops, if-else statements, function calls, and other powerful abstractions. Let us use this to write efficient representations of complex circuits.
 # 
-# For this example, we will use a Trotterization of the 1d Transverse Ising model.
+# For this example, we will use a [Trotterization of the 1d Transverse Ising model](https://qiskit-community.github.io/qiskit-algorithms/tutorials/13_trotterQRTE.html).
 # 
-# One option is to write the entire thing in Cirq. Observe that the return objects of these builder functions are static objects.
+# The first option we will explore is to write the entire circuit in Cirq, and then convert it into a bloqade kernel using the `squin.cirq.load_circuit` lowering. Observe that the return objects of these builder functions are static objects.
 
 # %%
 def trotter_layer(qubits:list[cirq.Qid], dt:float = 0.01, J:float = 1, h:float = 1)-> cirq.Circuit:
@@ -551,17 +556,20 @@ bloqade_trotter_circuit = squin.cirq.load_circuit(
 
 
 # %% [markdown]
-# alteratively, one can mix between writing kernels converted from Cirq circuits and direct bloqade kernels. For example, each layer has fixed parameters as defined by a cirq circuit, but a variable number of layers as parameterized by a kernel input and for loop.
+# As an intermediate, one can mix between writing kernels converted from Cirq circuits and direct bloqade kernels. For example, each layer has fixed parameters as defined by a cirq circuit, but a variable number of layers as parameterized by a kernel input and for loop. This option has the benefit of being able to use Cirq infrastructure to optimize and represent individual layers, while still being able to use bloqade kernels to represent parameterized circuits. In this case, the output kernel has the timestep and Ising parameters fixed (as they are fixed in the cirq circuit), but the number of steps is variable.
 
 # %%
 
-def factory_trotter(N:int):
+def factory_trotter(N:int,
+                    dt:float = 0.01,
+                    J:float = 1,
+                    h:float = 1) -> Method:
     bloqade_trotter_layer = squin.cirq.load_circuit(
                 trotter_layer(
                 qubits=cirq.LineQubit.range(N),
-                dt=0.01,
-                J=1,
-                h=1),
+                dt=dt,
+                J=J,
+                h=h),
             kernel_name="trotter",
             register_as_argument=True,
             return_register=True)
@@ -651,7 +659,6 @@ print("Overlap:", np.abs(np.dot(np.conj(cirq_statevector), cirq_bloqade_state.ei
 # Similarly, the execution and output state of the cirq state and kernel written fully in bloqade have the same state. Note that for the `bloqade_trotter` kernel, the arguments are not declared until the simulator is run.
 
 # %%
-# Option C: Bloqade only
 cirq_trotter_qubits = StackMemorySimulator(min_qubits=12).run(bloqade_trotter, args=(12,10,0.01,1,1))
 cirq_bloqade_state = StackMemorySimulator.quantum_state(cirq_trotter_qubits)
 print("Overlap:", np.abs(np.dot(np.conj(cirq_statevector), cirq_bloqade_state.eigenvectors[:,0]))**2)
@@ -659,9 +666,9 @@ print("Overlap:", np.abs(np.dot(np.conj(cirq_statevector), cirq_bloqade_state.ei
 # %% [markdown]
 # # Mid-circuit feed forward
 # 
-# The powerful thing about bloqade kernels is the ability to natively represent mid-circuit feed-forward using control flow. While the possibilities are endless, including measurement based quantum computing and error correction, we show two examples here.
+# Bloqade kernels are able to natively represent mid-circuit feed-forward using control flow represented by standard pythonic if-else and while structures. While the possibilities are endless, including measurement based quantum computing and error correction, we show two examples here.
 # 
-# The first is T state teleportation, which teleports a T gate that was applied to an ancilla (a "T state") onto the target state using only Clifford gates and feedforward. Due to the property of being Clifford, the gadget itself is fault tolerant and thus plays an important role in many error corrected algorithms.
+# The first is T state teleportation, which teleports a T gate that was applied to an ancilla (a "T state") onto the target state using only Clifford gates and feedforward. Due to the property of being Clifford, the circuit itself is fault tolerant and thus plays an important role in many error corrected algorithms.
 
 # %%
 try:
@@ -756,8 +763,4 @@ print(state)
 
 # %% [markdown]
 # As a final note, consider how difficult it would be to represent this circuit in Cirq. In particular, there is a for loop, where inside the for loop there is an algebraic operation (XOR) that feeds forward onto a variable (parity). This circuit is inexpressible in Cirq without some serious hacking of ancilla qubit registers.
-
-# %% [markdown]
-# 
-
 

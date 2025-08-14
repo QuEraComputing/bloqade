@@ -19,10 +19,8 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 dependencies = [
-    "bloqade-circuit[cirq,qasm2,qbraid,vis]>=0.6.5",
+    "bloqade-circuit[cirq,qasm2,qbraid,vis,stim]>=0.6.5",
     "bloqade-analog~=0.16.3",
-    "ipynb>=0.5.1",
-    "ipykernel>=6.29.5",
 ]
 
 [build-system]
@@ -49,6 +47,8 @@ dev = [
     "ruff>=0.7.3",
     "rust-just>=1.36.0",
     "tomlkit>=0.13.2",
+    "ipynb>=0.5.1",
+    "ipykernel>=6.29.5",
 ]
 doc = [
     "griffe-inherited-docstrings>=1.1.1",
