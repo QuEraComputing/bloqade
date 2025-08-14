@@ -44,10 +44,8 @@ nav:
             - QASM2 Uop: quick_start/circuits/API/qasm2_uop.md
         - Analog:
           - quick_start/analog/index.md
-        - Qourier:
-          - quick_start/qourier/index.md
       - Contributing: contrib.md
-  - Digital Bloqade:
+  - Bloqade Digital:
     - digital/index.md
     - digital/dialects_and_kernels.md
     - Simulator Device:
@@ -70,9 +68,9 @@ nav:
       - GHZ state preparation with noise: digital/examples/squin/ghz.py
     - Integration with other SDKs:
       - Noisy GHZ states with cirq: "digital/examples/interop/noisy_ghz.py"
+  - Bloqade Analog: 'https://queracomputing.github.io/bloqade-analog/latest/'
   - Analog Tutorials: 'https://queracomputing.github.io/bloqade-analog-examples/dev/'
   - qBook: 'https://qbook.quera.com/'
-  - Bloqade Analog: 'https://queracomputing.github.io/bloqade-analog/latest/'
   - Analog Reference: 'https://queracomputing.github.io/bloqade-analog/latest/reference/overview/'
   - API Reference:
     - reference/index.md
