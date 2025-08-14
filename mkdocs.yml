@@ -45,7 +45,7 @@ nav:
   - Digital Tutorials:
     - digital/index.md
     - digital/dialects_and_kernels.md
-    - Circuits wit bloqade: digital/tutorials/circuits_with_bloqade.py
+    - Circuits with Bloqade: digital/tutorials/circuits_with_bloqade.py
     - Simulator Device:
       - digital/simulator_device/simulator_device.md
       - digital/simulator_device/tasks.md
