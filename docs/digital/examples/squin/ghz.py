@@ -42,32 +42,14 @@ def ghz_linear(n: int):
     q = squin.qubit.new(n)
     squin.gate.h(q[0])
     for i in range(1, n):
-        squin.gate.cx(q[0], q[i])
+        squin.gate.cx(q[i - 1], q[i])
 
 
 ghz_linear.print()
 
 # %% [markdown]
 # As you can see, writing basic circuits in squin is rather straightforward.
-#
-# Note, that we actually didn't implement the circuit shown in the image.
-# We have a freedom of choice as to which qubit we use as the control in the CX gate.
-#
-# So, instead of
-#
-# ```python
-# for i in range(1, n):
-#     squin.gate.cx(q[i - 1], q[i])
-# ```
-#
-# we wrote
-#
-# ```python
-# for i in range(1, n):
-#     squin.gate.cx(q[0], q[i])
-# ```
-#
-# This will become relevant later when considering noise.
+
 
 # %% [markdown]
 # ## Simulating the kernel
@@ -142,8 +124,8 @@ def noisy_linear_ghz(n: int, p_single: float, p_paired: float):
     two_qubit_noise = squin.noise.depolarize2(p_paired)
 
     for i in range(1, n):
-        squin.gate.cx(q[0], q[i])
-        squin.qubit.apply(two_qubit_noise, q[0], q[i])
+        squin.gate.cx(q[i - 1], q[i])
+        squin.qubit.apply(two_qubit_noise, q[i - 1], q[i])
 
     return squin.qubit.measure(q)
 
