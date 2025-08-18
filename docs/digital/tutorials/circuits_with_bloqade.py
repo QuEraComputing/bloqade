@@ -9,6 +9,7 @@ from typing import Any
 from kirin.types import Method
 Register = IList[bloqade.types.Qubit, Any]
 
+
 # %% [markdown]
 # # Circuits with Bloqade
 # 
@@ -17,10 +18,6 @@ Register = IList[bloqade.types.Qubit, Any]
 # These kernels can be built using decorators of python functions. We will use the `@squin.kernel` decorator in this notebook but keep in mind that other eDSLs have different decorators inherited from base Kirin decorators. The decorator lowers Python's abstract syntax tree (AST) into a kirin SSA (single static assignment) form, which is a useful intermediate representation for compiler analysis. You don't have to worry too much about SSA or compilers here, but if you want to learn more check out the [kirin documentation](https://queracomputing.github.io/kirin/latest/).
 
 # %%
-try:
-    del hello_world
-except:
-    pass
 @squin.kernel
 def hello_world(theta:float) -> IList[bool, Any]:
     """
@@ -50,10 +47,6 @@ hello_world.print()
 # The first set of expressions are the familiar representations of quantum gates, measurements, and qubits. These are under the `squin.qubit` and `squin.gate` namespaces
 
 # %%
-try: # As needed for kirin < 0.18
-    del _gates
-except:
-    pass
 @squin.kernel
 def _gates():
     
@@ -98,10 +91,6 @@ def _gates():
 # %%
 # All expressed operators:
 
-try: # As needed for kirin < 0.18
-    del _operators
-except:
-    pass
 @squin.kernel
 def _operators():
     # Gates and operations are defined independently of qubits.
@@ -144,17 +133,13 @@ def _operators():
     
     # Finally, operators can be applied to qubits.
     qbs:IList[bloqade.types.Qubit,Any] = squin.qubit.new(2) # Create a list of 2 new qubits
-    squin.qubit.apply(operator=cx, qubits=qbs) # Apply the operator to a list of qubits
+    squin.qubit.apply(cx, qbs[0], qbs[1]) # Apply the operator to a list of qubits
 
 
 # %% [markdown]
 # For example, let's make some operators and gates that go beyond the basic operators. Note that more complicated functionalities, such as T state teleportation, need function signatures that do not match that of the builtin `squin.gate` functions, and might need to be written using `op`. For example, consider a kernel that applies a controlled T gate to a register of qubits
 
 # %%
-try:
-    del controlled_t
-except:
-    pass
 @squin.kernel
 def controlled_t(qubit1: bloqade.types.Qubit, qubit2: bloqade.types.Qubit):
     """
@@ -167,16 +152,11 @@ def controlled_t(qubit1: bloqade.types.Qubit, qubit2: bloqade.types.Qubit):
     ctrl = squin.op.control(t, n_controls=1)
     squin.qubit.apply(ctrl, qubit1, qubit2)
 
-controlled_t.print()
 
 # %% [markdown]
-# Finally, you can also define noise on qubits using the `squin.noise` namespace. Like `op`, `noise` operators are defined separately from their application to qubits. Note that these will likely soon also have shorthands like gates https://github.com/QuEraComputing/bloqade-circuit/issues/451
+# Finally, you can also define noise on qubits using the `squin.noise` namespace. Like `op`, `noise` operators are defined separately from their application to qubits.
 
 # %%
-try:
-    del _noise
-except:
-    pass
 @squin.kernel
 def _noise():
 
@@ -185,8 +165,8 @@ def _noise():
     loss = squin.noise.qubit_loss(p=0.1) # A qubit loss with probability 0.1
     squin.noise.depolarize(p=0.1) # Depolarizing channel https://quantumai.google/reference/python/cirq/DepolarizingChannel
     
-    squin.noise.single_qubit_pauli_channel # ???
-    squin.noise.two_qubit_pauli_channel # ???
+    squin.noise.single_qubit_pauli_channel # An arbitrary single-qubit pauli channel, charcterized by a list of 3 floats representing the probabilities of X, Y, and Z flips.
+    squin.noise.two_qubit_pauli_channel # An arbitrary two-qubit pauli channel, characterized by a list of 15 floats representing the probabilities of each Pauli operation on the two qubits.
     
     # Noise is applied to qubits in the same way as operators.
     qubit = squin.qubit.new(1)[0]
@@ -218,10 +198,6 @@ kernel.print()
 # Alternatively, kernels could be parameterized; for example, we could write the same GHZ state preparation, except it prepares a variable number of qubits that is not declared until the kernel is run. In order to run in some `main` function, the qubits need to be declared elsewhere.
 
 # %%
-try:
-    del GHZ_state_factory
-except:
-    pass
 @squin.kernel
 def GHZ_state_factory(nqubits:int) -> Register:
     qubits = squin.qubit.new(nqubits)
@@ -292,10 +268,6 @@ kernel.print()
 # Due to the difficulty of representing mid-circuit control flow in cirq, attempting to lower these kernels back to cirq will result in an error
 
 # %%
-try:
-    del t_teleport_noargs
-except:
-    pass
 @squin.kernel
 def t_teleport_noargs():
     """
@@ -315,21 +287,14 @@ except Exception as e:
     print("ERROR:",e)
 
 # Though measurement without feedforward is possible
-try:
-    del coinflip
-except:
-    pass
 @squin.kernel
 def coinflip():
     qubit = squin.qubit.new(1)[0]
     squin.gate.h(qubit)
-    bits = squin.qubit.measure(qubit)
-    return bits
+    return squin.qubit.measure(qubit)
 circuit = squin.cirq.emit_circuit(coinflip, ignore_returns=True)
 print(circuit)
 
-
-# %%
 
 
 # %% [markdown]
@@ -363,10 +328,6 @@ print(results)
 # For simpler kernels that only use kirin builtin statements -- such as control flow, for loops, arithmetic, and the like -- it is possible to directly call the kernel and use the default Kirin interpreter.
 
 # %%
-try:
-    del foo
-except:
-    pass
 def foo(x:int,y:int) -> bool:
     return x<y
 assert foo(1,2)==True
@@ -408,8 +369,6 @@ statevector = state.eigenvectors[:,0]
 print("The statevector of the GHZ state looks like [1, 0, 0, ..., 0, 1]")
 print(statevector)
 
-# %%
-# Further state analysis pending #https://github.com/QuEraComputing/bloqade-circuit/issues/447
 
 # %% [markdown]
 # If the output is randomized, one can average over many runs. The following cells are some helper functions which will likely be integrated directly into bloqade after iteration.
@@ -446,7 +405,7 @@ def multirun(task:PyQrackSimulatorTask,nshots:int, return_state:bool=False)-> di
         if return_state:
             rho_all.append(PyQrackSimulatorBase.quantum_state(task.qubits()))
     
-    # Convert ilist to tuple so that it is hashable by Counter https://github.com/QuEraComputing/bloqade-circuit/issues/428
+    # Convert ilist to tuple so that it is hashable by Counter
     def convert(data):
         if isinstance(data, (list,IList)):
             return tuple(convert(item) for item in data)
@@ -485,16 +444,6 @@ def multistate(task:PyQrackSimulatorTask,nshots:int)-> np.linalg._linalg.EighRes
 
 
 # %%
-# Define a kernel that randomly measures 1 or 0 with 50% probability each.
-try:
-    del coinflip
-except:
-    pass
-@squin.kernel
-def coinflip()-> list[bool]:
-    qubit = squin.qubit.new(2)
-    squin.gate.h(qubit[0])
-    return squin.qubit.measure(qubit)
 
 # Define the emulator and task
 emulator = StackMemorySimulator()
@@ -591,15 +540,6 @@ def factory_trotter(N:int,
 # Alternatively, you could just write everything directly as a Bloqade kernel. Note that the ZZ operator that is native to Cirq must be expanded into its own "helper" kernel via a decomposition into cx / z / cx. The resulting kernel is fully parameterized, with the values not actually evaluated until runtime (or further compilation and folding).
 
 # %%
-# Option C: write it all in bloqade directly
-try:
-    del bloqade_trotter
-except:
-    pass
-try:
-    del op_zz
-except:
-    pass
 # Define an operator that looks like the ZZ power gate
 @squin.kernel
 def op_zz(theta: float, qb1:bloqade.types.Qubit, qb2:bloqade.types.Qubit):
@@ -671,10 +611,6 @@ print("Overlap:", np.abs(np.dot(np.conj(cirq_statevector), cirq_bloqade_state.ei
 # The first is T state teleportation, which teleports a T gate that was applied to an ancilla (a "T state") onto the target state using only Clifford gates and feedforward. Due to the property of being Clifford, the circuit itself is fault tolerant and thus plays an important role in many error corrected algorithms.
 
 # %%
-try:
-    del t_teleport
-except:
-    pass
 @squin.kernel
 def t_teleport(target:squin.qubit.Qubit) -> squin.qubit.Qubit:
     ancilla = squin.qubit.new(1)[0]
@@ -689,11 +625,6 @@ def t_teleport(target:squin.qubit.Qubit) -> squin.qubit.Qubit:
 
 # And now lets wrap it into a larger context to run. In this case,
 # apply to a |+> state and see that we get a T|+> state out.
-# https://github.com/QuEraComputing/bloqade-circuit/issues/431
-try:
-    del t_teleport_wrapper
-except:
-    pass
 @squin.kernel
 def t_teleport_wrapper()-> Register:
     
@@ -717,9 +648,7 @@ print(state)
 # 
 # [2] [Constant-Depth Preparation of Matrix Product States with Adaptive Quantum Circuits](https://doi.org/10.1103/PRXQuantum.5.030344)
 # 
-# The explicit circuit for the GHZ circuit is shown below, as reproduced from Fig. 5 of [1]. Yellow $\oplus$ represent the XOR of the two input bits.
-# 
-# ![image.png](attachment:image.png)
+# The explicit circuit for the GHZ circuit is shown in Fig. 5 of [1]. There is classical feedforward in the form of a parity check, which requires a classical XOR operation that is irrepresentable by CIRQ.
 
 # %%
 
@@ -764,3 +693,5 @@ print(state)
 # %% [markdown]
 # As a final note, consider how difficult it would be to represent this circuit in Cirq. In particular, there is a for loop, where inside the for loop there is an algebraic operation (XOR) that feeds forward onto a variable (parity). This circuit is inexpressible in Cirq without some serious hacking of ancilla qubit registers.
 
+
+# %%
