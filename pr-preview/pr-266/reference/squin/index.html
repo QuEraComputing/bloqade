@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
     
     
       
@@ -4660,937 +4660,6 @@ and / or returning the respective quantum registers:</p>
 
 
 
-<h1 id="bloqade.squin.gate" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">gate</span>
-
-
-</h1>
-
-    <div class="doc doc-contents ">
-
-
-
-
-
-
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.ch" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">ch</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">ch</span><span class="p">(</span><span class="n">control</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Controlled Hadamard gate applied to control and target</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">ch</span><span class="p">(</span><span class="n">control</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Controlled Hadamard gate applied to control and target&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">ch</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">control</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.cx" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">cx</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">cx</span><span class="p">(</span><span class="n">control</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Controlled x gate applied to control and target</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">cx</span><span class="p">(</span><span class="n">control</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Controlled x gate applied to control and target&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">cx</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">control</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.cy" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">cy</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">cy</span><span class="p">(</span><span class="n">control</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Controlled y gate applied to control and target</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">cy</span><span class="p">(</span><span class="n">control</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Controlled y gate applied to control and target&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">cy</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">control</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.cz" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">cz</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">cz</span><span class="p">(</span><span class="n">control</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Controlled z gate applied to control and target</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">cz</span><span class="p">(</span><span class="n">control</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Controlled z gate applied to control and target&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">cz</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">control</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.h" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">h</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">h</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Hadamard gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">h</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hadamard gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">h</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.p0" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">p0</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">p0</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Projector on 0 applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">p0</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Projector on 0 applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">p0</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.p1" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">p1</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">p1</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Projector on 1 applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">p1</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Projector on 1 applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">p1</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.reset" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">reset</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">reset</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Reset qubit to 0.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset qubit to 0.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.rx" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">rx</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">rx</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Rotation X gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">rx</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotation X gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">rot</span><span class="p">(</span><span class="n">_op</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">theta</span><span class="p">)</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.ry" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">ry</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">ry</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Rotation Y gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span>
-<span class="normal">185</span>
-<span class="normal">186</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">ry</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotation Y gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">rot</span><span class="p">(</span><span class="n">_op</span><span class="o">.</span><span class="n">y</span><span class="p">(),</span> <span class="n">theta</span><span class="p">)</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.rz" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">rz</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">rz</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Rotation Z gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">rz</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotation Z gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">rot</span><span class="p">(</span><span class="n">_op</span><span class="o">.</span><span class="n">z</span><span class="p">(),</span> <span class="n">theta</span><span class="p">)</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.s" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">s</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">s</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>s gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">s</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;s gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">s</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.s_adj" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">s_adj</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">s_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Adjoint s gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">s_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adjoint s gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">s</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">_op</span><span class="o">.</span><span class="n">adjoint</span><span class="p">(</span><span class="n">op</span><span class="p">),</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.spin_n" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">spin_n</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">spin_n</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Spin lowering gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">spin_n</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spin lowering gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">spin_n</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.spin_p" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">spin_p</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">spin_p</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Spin raising gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">spin_p</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spin raising gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">spin_p</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.sqrt_x" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">sqrt_x</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">sqrt_x</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Square root x gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">sqrt_x</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Square root x gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">sqrt_x</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.sqrt_x_adj" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">sqrt_x_adj</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">sqrt_x_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Adjoint sqrt_x gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">sqrt_x_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adjoint sqrt_x gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">sqrt_x</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">_op</span><span class="o">.</span><span class="n">adjoint</span><span class="p">(</span><span class="n">op</span><span class="p">),</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.sqrt_y" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">sqrt_y</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">sqrt_y</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Square root y gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">sqrt_y</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Square root y gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">sqrt_y</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.sqrt_y_adj" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">sqrt_y_adj</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">sqrt_y_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Adjoint sqrt_y gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">sqrt_y_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adjoint sqrt_y gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">sqrt_y</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">_op</span><span class="o">.</span><span class="n">adjoint</span><span class="p">(</span><span class="n">op</span><span class="p">),</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.sqrt_z" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">sqrt_z</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">sqrt_z</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Square root z gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">sqrt_z</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Square root z gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">s</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.sqrt_z_adj" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">sqrt_z_adj</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">sqrt_z_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Adjoint square root z gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">sqrt_z_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adjoint square root z gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">s</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">_op</span><span class="o">.</span><span class="n">adjoint</span><span class="p">(</span><span class="n">op</span><span class="p">),</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.t" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">t</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">t</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>t gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">t</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;t gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.t_adj" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">t_adj</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">t_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Adjoint t gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">t_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adjoint t gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">_op</span><span class="o">.</span><span class="n">adjoint</span><span class="p">(</span><span class="n">op</span><span class="p">),</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.u" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">u</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">u</span><span class="p">(</span>
-    <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lam</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>3D rotation gate applied to control and target</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">u</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lam</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;3D rotation gate applied to control and target&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">u</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">lam</span><span class="p">)</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.x" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">x</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">x</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>x gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">x</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;x gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">x</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.y" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">y</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">y</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>y gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">y</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;y gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">y</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="bloqade.squin.gate.z" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">z</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">z</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>z gate applied to qubit.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/gate.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">z</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;z gate applied to qubit.&quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">z</span><span class="p">()</span>
-    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-module">
-
-
-
 <h1 id="bloqade.squin.lowering" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">lowering</span>
 
@@ -5638,6 +4707,57 @@ and / or returning the respective quantum registers:</p>
 
 
         <p>Custom lowering for ApplyAny that collects vararg qubits into a single tuple argument</p>
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="bloqade.squin.lowering.BroadcastCallLowering" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">BroadcastCallLowering</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">BroadcastCallLowering</span><span class="p">()</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="kirin.lowering.FromPythonCall">FromPythonCall</span>[&#39;qubit.Broadcast&#39;]</code></p>
+
+
+        <p>Custom lowering for broadcast vararg call.</p>
+<p>NOTE: we can re-use this to lower Apply too once we remove the deprecated syntax</p>
 
 
 
@@ -5834,7 +4954,9 @@ and / or returning the respective quantum registers:</p>
               Bases: <code><span title="bloqade.squin.noise.stmts.NoiseChannel">NoiseChannel</span></code></p>
 
 
-        <p>Apply correlated depolarize error to two qubit</p>
+        <p>Apply correlated depolarize error to two qubits</p>
+<p>This will apply one of the randomly chosen Pauli products:</p>
+<p>{IX, IY, IZ, XI, XX, XY, XZ, YI, YX, YY, YZ, ZI, ZX, ZY, ZZ}</p>
 
 
 
@@ -5867,8 +4989,8 @@ and / or returning the respective quantum registers:</p>
 
 
 
-<h3 id="bloqade.squin.noise.stmts.PPError" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">PPError</span>
+<h3 id="bloqade.squin.noise.stmts.TwoQubitPauliChannel" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TwoQubitPauliChannel</span>
 
 
 </h3>
@@ -5879,7 +5001,10 @@ and / or returning the respective quantum registers:</p>
               Bases: <code><span title="bloqade.squin.noise.stmts.NoiseChannel">NoiseChannel</span></code></p>
 
 
-        <p>Pauli Product Error</p>
+        <p>This will apply one of the randomly chosen Pauli products:</p>
+<p>{IX, IY, IZ, XI, XX, XY, XZ, YI, YX, YY, YZ, ZI, ZX, ZY, ZZ}</p>
+<p>but the choice is weighed with the given probability.</p>
+<p>NOTE: the given parameters are ordered as given in the list above!</p>
 
 
 
@@ -7822,27 +6947,163 @@ U_3(\theta, \phi, \lambda) = R_z(\phi) R_y(\theta) R_z(\lambda)
 <div class="doc doc-object doc-function">
 
 
+<h2 id="bloqade.squin.qubit.apply" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">apply</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">apply</span><span class="p">(</span><span class="n">operator</span><span class="p">:</span> <span class="n">Op</span><span class="p">,</span> <span class="o">*</span><span class="n">qubits</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Apply an operator to qubits. The number of qubit arguments must match the
+size of the operator.</p>
+<p>Note, that when considering atom loss, lost qubits will be skipped.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>operator</code>
+            </td>
+            <td>
+                  <code><span title="bloqade.squin.op.types.Op">Op</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The operator to apply.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>*qubits</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;Qubit&lt;/span&gt; (&lt;code&gt;bloqade.types.Qubit&lt;/code&gt;)" href="../types/#bloqade.types.Qubit">Qubit</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The qubits to apply the operator to. The number of qubits must
+match the size of the operator.</p>
+              </div>
+            </td>
+            <td>
+                  <code>()</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>None</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/qubit.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@wraps</span><span class="p">(</span><span class="n">ApplyAny</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="n">operator</span><span class="p">:</span> <span class="n">Op</span><span class="p">,</span> <span class="o">*</span><span class="n">qubits</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply an operator to qubits. The number of qubit arguments must match the</span>
+<span class="sd">    size of the operator.</span>
+
+<span class="sd">    Note, that when considering atom loss, lost qubits will be skipped.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        operator: The operator to apply.</span>
+<span class="sd">        *qubits: The qubits to apply the operator to. The number of qubits must</span>
+<span class="sd">            match the size of the operator.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h2 id="bloqade.squin.qubit.broadcast" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">broadcast</span>
 
 
 </h2>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">broadcast</span><span class="p">(</span>
-    <span class="n">operator</span><span class="p">:</span> <span class="n">Op</span><span class="p">,</span> <span class="n">qubits</span><span class="p">:</span> <span class="n">IList</span><span class="p">[</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Qubit</span><span class="p">]</span>
+    <span class="n">operator</span><span class="p">:</span> <span class="n">Op</span><span class="p">,</span>
+    <span class="o">*</span><span class="n">qubits</span><span class="p">:</span> <span class="n">IList</span><span class="p">[</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">OpSize</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Qubit</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Broadcast and apply an operator to a list of qubits. For example, an operator
-that expects 2 qubits can be applied to a list of 2n qubits, where n is an integer &gt; 0.</p>
-<p>For controlled operators, the list of qubits is interpreted as sets of (controls, targets).
-For example</p>
-<div class="highlight"><pre><span></span><code>apply(CX, [q0, q1, q2, q3])
-</code></pre></div>
-<p>is equivalent to</p>
-<div class="highlight"><pre><span></span><code>apply(CX, [q0, q1])
-apply(CX, [q2, q3])
+        <p>Broadcast and apply an operator to lists of qubits. The number of qubit lists must
+match the size of the operator and the lists must be of same length. The operator is
+then applied to the list elements similar to what python's map function does.</p>
+<h4 id="bloqade.squin.qubit.broadcast--usage-examples">Usage examples</h4>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
+
+<span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ghz</span><span class="p">():</span>
+    <span class="n">controls</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">targets</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="n">h</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">h</span><span class="p">()</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">controls</span><span class="p">)</span>
+
+    <span class="n">cx</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">cx</span><span class="p">()</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">cx</span><span class="p">,</span> <span class="n">controls</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -7878,7 +7139,7 @@ apply(CX, [q2, q3])
                 <code>qubits</code>
             </td>
             <td>
-                  <code><span title="kirin.dialects.ilist.IList">IList</span>[<a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;Qubit&lt;/span&gt; (&lt;code&gt;bloqade.types.Qubit&lt;/code&gt;)" href="../types/#bloqade.types.Qubit">Qubit</a>, <span title="typing.Any">Any</span>] | <span title="list">list</span>[<a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;Qubit&lt;/span&gt; (&lt;code&gt;bloqade.types.Qubit&lt;/code&gt;)" href="../types/#bloqade.types.Qubit">Qubit</a>]</code>
+                  <code><span title="kirin.dialects.ilist.IList">IList</span>[<a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;Qubit&lt;/span&gt; (&lt;code&gt;bloqade.types.Qubit&lt;/code&gt;)" href="../types/#bloqade.types.Qubit">Qubit</a>, <span title="bloqade.squin.qubit.OpSize">OpSize</span>] | <span title="list">list</span>[<a class="autorefs autorefs-internal" title="&lt;code class=&quot;doc-symbol doc-symbol-heading doc-symbol-class&quot;&gt;&lt;/code&gt;            &lt;span class=&quot;doc doc-object-name doc-class-name&quot;&gt;Qubit&lt;/span&gt; (&lt;code&gt;bloqade.types.Qubit&lt;/code&gt;)" href="../types/#bloqade.types.Qubit">Qubit</a>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7887,7 +7148,7 @@ must be inferable and match the number of qubits expected by the operator.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>()</code>
             </td>
           </tr>
       </tbody>
@@ -7919,7 +7180,24 @@ must be inferable and match the number of qubits expected by the operator.</p>
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/qubit.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">157</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
 <span class="normal">158</span>
 <span class="normal">159</span>
 <span class="normal">160</span>
@@ -7933,36 +7211,27 @@ must be inferable and match the number of qubits expected by the operator.</p>
 <span class="normal">168</span>
 <span class="normal">169</span>
 <span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span>
-<span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@wraps</span><span class="p">(</span><span class="n">Broadcast</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">broadcast</span><span class="p">(</span><span class="n">operator</span><span class="p">:</span> <span class="n">Op</span><span class="p">,</span> <span class="n">qubits</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Qubit</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Broadcast and apply an operator to a list of qubits. For example, an operator</span>
-<span class="sd">    that expects 2 qubits can be applied to a list of 2n qubits, where n is an integer &gt; 0.</span>
+<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@wraps</span><span class="p">(</span><span class="n">Broadcast</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">broadcast</span><span class="p">(</span><span class="n">operator</span><span class="p">:</span> <span class="n">Op</span><span class="p">,</span> <span class="o">*</span><span class="n">qubits</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">OpSize</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Qubit</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Broadcast and apply an operator to lists of qubits. The number of qubit lists must</span>
+<span class="sd">    match the size of the operator and the lists must be of same length. The operator is</span>
+<span class="sd">    then applied to the list elements similar to what python&#39;s map function does.</span>
 
-<span class="sd">    For controlled operators, the list of qubits is interpreted as sets of (controls, targets).</span>
-<span class="sd">    For example</span>
+<span class="sd">    ## Usage examples</span>
 
-<span class="sd">    ```</span>
-<span class="sd">    apply(CX, [q0, q1, q2, q3])</span>
-<span class="sd">    ```</span>
+<span class="sd">    ```python</span>
+<span class="sd">    from bloqade import squin</span>
 
-<span class="sd">    is equivalent to</span>
+<span class="sd">    @squin.kernel</span>
+<span class="sd">    def ghz():</span>
+<span class="sd">        controls = squin.qubit.new(4)</span>
+<span class="sd">        targets = squin.qubit.new(4)</span>
 
-<span class="sd">    ```</span>
-<span class="sd">    apply(CX, [q0, q1])</span>
-<span class="sd">    apply(CX, [q2, q3])</span>
+<span class="sd">        h = squin.op.h()</span>
+<span class="sd">        squin.qubit.broadcast(h, controls)</span>
+
+<span class="sd">        cx = squin.op.cx()</span>
+<span class="sd">        squin.qubit.broadcast(cx, controls, targets)</span>
 <span class="sd">    ```</span>
 
 <span class="sd">    Args:</span>
@@ -8060,19 +7329,19 @@ is returned.</p>
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/qubit.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@wraps</span><span class="p">(</span><span class="n">MeasureAny</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@wraps</span><span class="p">(</span><span class="n">MeasureAny</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">measure</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Measure a qubit or qubits in the list.</span>
 
@@ -8634,6 +7903,7 @@ is returned.</p>
 
 
         <p>Desugar apply operators in the kernel.</p>
+<p>NOTE: this pass can be removed once we decide to disallow the syntax apply(op: Op, qubits: list)</p>
 
 
 
@@ -8707,6 +7977,1348 @@ is returned.</p>
 
 </div>
 
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h1 id="bloqade.squin.stdlib" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">stdlib</span>
+
+
+</h1>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="bloqade.squin.stdlib.channel" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">channel</span>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.channel.depolarize" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">depolarize</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">depolarize</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Apply depolarization error with probability p to qubit.</p>
+<p>This means, that with a probability p/3 one of the three Pauli operators is applied.
+Which Pauli operator is applied is chosen at random with equal probability.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/channel.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">depolarize</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply depolarization error with probability p to qubit.</span>
+
+<span class="sd">    This means, that with a probability p/3 one of the three Pauli operators is applied.</span>
+<span class="sd">    Which Pauli operator is applied is chosen at random with equal probability.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">noise</span><span class="o">.</span><span class="n">depolarize</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.channel.depolarize2" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">depolarize2</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">depolarize2</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit1</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">qubit2</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Apply the correlated two-qubit depolarization error with probability p to qubits.</p>
+<p>This means, that with a probability of p/15 one of the Pauli products {XX, XY, XZ, XI, YX, YY, ...}
+is applied to the qubit pair. Which Pauli product is applied is chosen at random with equal probability.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/channel.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">depolarize2</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit1</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">qubit2</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply the correlated two-qubit depolarization error with probability p to qubits.</span>
+
+<span class="sd">    This means, that with a probability of p/15 one of the Pauli products {XX, XY, XZ, XI, YX, YY, ...}</span>
+<span class="sd">    is applied to the qubit pair. Which Pauli product is applied is chosen at random with equal probability.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">op</span> <span class="o">=</span> <span class="n">noise</span><span class="o">.</span><span class="n">depolarize2</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit1</span><span class="p">,</span> <span class="n">qubit2</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.channel.pauli_error" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">pauli_error</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">pauli_error</span><span class="p">(</span><span class="n">basis</span><span class="p">:</span> <span class="n">PauliOp</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Apply the pauli operator given as basis with a probability p to qubit.</p>
+<p>NOTE: the <code>PauliError</code> actually supports multiple qubits and multi-site bases,
+it's only the short-hand definition here that is limited to a single qubit.
+If you want to define a pauli error for multiple qubits, you can do so using
+the statement, for example</p>
+<div class="highlight"><pre><span></span><code><span class="n">q</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">multi_qubit_pauli</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">pauli_string</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="s2">&quot;XYZ&quot;</span><span class="p">)</span>
+<span class="n">pauli_error</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">noise</span><span class="o">.</span><span class="n">pauli_error</span><span class="p">(</span><span class="n">basis</span><span class="o">=</span><span class="n">multi_qubit_pauli</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pauli_error</span><span class="p">,</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</code></pre></div>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/channel.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pauli_error</span><span class="p">(</span><span class="n">basis</span><span class="p">:</span> <span class="n">PauliOp</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply the pauli operator given as basis with a probability p to qubit.</span>
+
+<span class="sd">    NOTE: the `PauliError` actually supports multiple qubits and multi-site bases,</span>
+<span class="sd">    it&#39;s only the short-hand definition here that is limited to a single qubit.</span>
+<span class="sd">    If you want to define a pauli error for multiple qubits, you can do so using</span>
+<span class="sd">    the statement, for example</span>
+
+<span class="sd">    ```python</span>
+<span class="sd">    q = squin.qubit.new(3)</span>
+<span class="sd">    multi_qubit_pauli = squin.op.pauli_string(string=&quot;XYZ&quot;)</span>
+<span class="sd">    pauli_error = squin.noise.pauli_error(basis=multi_qubit_pauli, p=0.1)</span>
+<span class="sd">    squin.qubit.apply(pauli_error, q[0], q[1], q[2])</span>
+<span class="sd">    ```</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">noise</span><span class="o">.</span><span class="n">pauli_error</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.channel.qubit_loss" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">qubit_loss</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">qubit_loss</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Apply a qubit loss channel with probability p.</p>
+<p>When a loss channel is applied, the qubit is marked as lost by setting its state accordingly.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/channel.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">qubit_loss</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply a qubit loss channel with probability p.</span>
+
+<span class="sd">    When a loss channel is applied, the qubit is marked as lost by setting its state accordingly.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">noise</span><span class="o">.</span><span class="n">qubit_loss</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.channel.single_qubit_pauli_channel" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">single_qubit_pauli_channel</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">single_qubit_pauli_channel</span><span class="p">(</span>
+    <span class="n">params</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Apply the single qubit Pauli error with probabilities px, py, pz, respectively, to the qubit.</p>
+<p>Similar to <code>depolarize</code>, but with distinct probabilities. An error occurs with the probability <code>px + py + pz</code>.
+Which operator is applied is chosen at random, but weighed with the respective probabilities.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/channel.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">single_qubit_pauli_channel</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply the single qubit Pauli error with probabilities px, py, pz, respectively, to the qubit.</span>
+
+<span class="sd">    Similar to `depolarize`, but with distinct probabilities. An error occurs with the probability `px + py + pz`.</span>
+<span class="sd">    Which operator is applied is chosen at random, but weighed with the respective probabilities.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">noise</span><span class="o">.</span><span class="n">single_qubit_pauli_channel</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.channel.two_qubit_pauli_channel" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">two_qubit_pauli_channel</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">two_qubit_pauli_channel</span><span class="p">(</span>
+    <span class="n">params</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">qubit1</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">qubit2</span><span class="p">:</span> <span class="n">Qubit</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Apply the two-qubit correlated Pauli error with probabilities given in the list above.</p>
+<p>This means one of the operator products</p>
+<p>{IX, IY, IZ, XI, XX, XY, XZ, YI, YX, YY, YZ, ZI, ZX, ZY, ZZ}</p>
+<p>is applied. The choice of which is weighed by the given probabilities.</p>
+<p>NOTE: the given parameters are ordered as given in the list above!</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/channel.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">two_qubit_pauli_channel</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">qubit1</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">qubit2</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply the two-qubit correlated Pauli error with probabilities given in the list above.</span>
+
+<span class="sd">    This means one of the operator products</span>
+
+<span class="sd">    {IX, IY, IZ, XI, XX, XY, XZ, YI, YX, YY, YZ, ZI, ZX, ZY, ZZ}</span>
+
+<span class="sd">    is applied. The choice of which is weighed by the given probabilities.</span>
+
+<span class="sd">    NOTE: the given parameters are ordered as given in the list above!</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">noise</span><span class="o">.</span><span class="n">two_qubit_pauli_channel</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit1</span><span class="p">,</span> <span class="n">qubit2</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="bloqade.squin.stdlib.gate" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">gate</span>
+
+
+</h2>
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.ch" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">ch</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">ch</span><span class="p">(</span><span class="n">control</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Controlled Hadamard gate applied to control and target</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ch</span><span class="p">(</span><span class="n">control</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Controlled Hadamard gate applied to control and target&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">ch</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">control</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.cx" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">cx</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">cx</span><span class="p">(</span><span class="n">control</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Controlled x gate applied to control and target</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cx</span><span class="p">(</span><span class="n">control</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Controlled x gate applied to control and target&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">cx</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">control</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.cy" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">cy</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">cy</span><span class="p">(</span><span class="n">control</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Controlled y gate applied to control and target</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cy</span><span class="p">(</span><span class="n">control</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Controlled y gate applied to control and target&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">cy</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">control</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.cz" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">cz</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">cz</span><span class="p">(</span><span class="n">control</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Controlled z gate applied to control and target</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cz</span><span class="p">(</span><span class="n">control</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Controlled z gate applied to control and target&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">cz</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">control</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.h" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">h</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">h</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Hadamard gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">h</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hadamard gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">h</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.p0" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">p0</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">p0</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Projector on 0 applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">p0</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Projector on 0 applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">p0</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.p1" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">p1</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">p1</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Projector on 1 applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">p1</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Projector on 1 applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">p1</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.reset" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">reset</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">reset</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Reset qubit to 0.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset qubit to 0.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.reset_to_one" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">reset_to_one</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">reset_to_one</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Reset qubit to 1.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">reset_to_one</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset qubit to 1.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">reset_to_one</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.rx" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">rx</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">rx</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Rotation X gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rx</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotation X gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">rot</span><span class="p">(</span><span class="n">_op</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">theta</span><span class="p">)</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.ry" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">ry</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">ry</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Rotation Y gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ry</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotation Y gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">rot</span><span class="p">(</span><span class="n">_op</span><span class="o">.</span><span class="n">y</span><span class="p">(),</span> <span class="n">theta</span><span class="p">)</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.rz" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">rz</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">rz</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Rotation Z gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rz</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rotation Z gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">rot</span><span class="p">(</span><span class="n">_op</span><span class="o">.</span><span class="n">z</span><span class="p">(),</span> <span class="n">theta</span><span class="p">)</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.s" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">s</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">s</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>s gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">s</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;s gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">s</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.s_adj" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">s_adj</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">s_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Adjoint s gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">s_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adjoint s gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">s</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">_op</span><span class="o">.</span><span class="n">adjoint</span><span class="p">(</span><span class="n">op</span><span class="p">),</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.spin_n" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">spin_n</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">spin_n</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Spin lowering gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">spin_n</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spin lowering gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">spin_n</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.spin_p" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">spin_p</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">spin_p</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Spin raising gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">spin_p</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spin raising gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">spin_p</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.sqrt_x" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">sqrt_x</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">sqrt_x</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Square root x gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sqrt_x</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Square root x gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">sqrt_x</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.sqrt_x_adj" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">sqrt_x_adj</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">sqrt_x_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Adjoint sqrt_x gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sqrt_x_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adjoint sqrt_x gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">sqrt_x</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">_op</span><span class="o">.</span><span class="n">adjoint</span><span class="p">(</span><span class="n">op</span><span class="p">),</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.sqrt_y" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">sqrt_y</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">sqrt_y</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Square root y gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sqrt_y</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Square root y gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">sqrt_y</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.sqrt_y_adj" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">sqrt_y_adj</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">sqrt_y_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Adjoint sqrt_y gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sqrt_y_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adjoint sqrt_y gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">sqrt_y</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">_op</span><span class="o">.</span><span class="n">adjoint</span><span class="p">(</span><span class="n">op</span><span class="p">),</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.sqrt_z" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">sqrt_z</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">sqrt_z</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Square root z gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sqrt_z</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Square root z gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">s</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.sqrt_z_adj" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">sqrt_z_adj</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">sqrt_z_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Adjoint square root z gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sqrt_z_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adjoint square root z gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">s</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">_op</span><span class="o">.</span><span class="n">adjoint</span><span class="p">(</span><span class="n">op</span><span class="p">),</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.t" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">t</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">t</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>t gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">t</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;t gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.t_adj" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">t_adj</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">t_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Adjoint t gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">t_adj</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adjoint t gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">_op</span><span class="o">.</span><span class="n">adjoint</span><span class="p">(</span><span class="n">op</span><span class="p">),</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.u" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">u</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">u</span><span class="p">(</span>
+    <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lam</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>3D rotation gate applied to control and target</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">u</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lam</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;3D rotation gate applied to control and target&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">u</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">lam</span><span class="p">)</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.x" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">x</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">x</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>x gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">x</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;x gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">x</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.y" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">y</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">y</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>y gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">y</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;y gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">y</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.squin.stdlib.gate.z" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">z</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">z</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>z gate applied to qubit.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/squin/stdlib/gate.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">z</span><span class="p">(</span><span class="n">qubit</span><span class="p">:</span> <span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;z gate applied to qubit.&quot;&quot;&quot;</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">_op</span><span class="o">.</span><span class="n">z</span><span class="p">()</span>
+    <span class="n">_qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">qubit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 
@@ -8900,10 +9512,10 @@ dialect.</p>
     
     
       
-      <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.action.view", "content.action.edit", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.action.view", "content.action.edit", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.50899def.min.js"></script>
+      <script src="../../assets/javascripts/bundle.92b07e13.min.js"></script>
       
         <script src="../../javascripts/katex.js"></script>
       
