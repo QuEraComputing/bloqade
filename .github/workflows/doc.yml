@@ -34,7 +34,7 @@ jobs:
 
       - name: clone the latest bloqade-circuit release
         id: clone_bloqade_circuit
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: QuEraComputing/bloqade-circuit
           path: 'submodules/bloqade-circuit'
@@ -48,7 +48,7 @@ jobs:
 
       - name: clone the latest bloqade-analog release
         id: clone_bloqade_analog
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: QuEraComputing/bloqade-analog
           path: 'submodules/bloqade-analog'
