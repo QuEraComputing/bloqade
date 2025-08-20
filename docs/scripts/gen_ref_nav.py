@@ -6,8 +6,8 @@ from pathlib import Path
 import mkdocs_gen_files
 
 if os.getenv("GITHUB_ACTIONS") == "true":
-    BLOQADE_CIRCUIT_SRC_PATH = ".venv/lib/python3.12/site-packages/bloqade-circuit/"
-    BLOQADE_ANALOG_SRC_PATH = ".venv/lib/python3.12/site-packages/bloqade-analog/"
+    BLOQADE_CIRCUIT_SRC_PATH = "submodules/bloqade-circuit/"
+    BLOQADE_ANALOG_SRC_PATH = "submodules/bloqade-analog/"
 else:
     """
     NOTE: we assume the following project structure when building locally:
