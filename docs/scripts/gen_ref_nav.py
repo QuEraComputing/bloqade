@@ -3,26 +3,22 @@
 import os
 from pathlib import Path
 
-import bloqade.analog
 import mkdocs_gen_files
 
-import bloqade
-
-# NOTE: get module paths from actual imported packages
-bloqade_circuit_path = bloqade.__file__
-if bloqade_circuit_path is not None:
-    BLOQADE_CIRCUIT_SRC_PATH = os.path.dirname(bloqade_circuit_path)
+if os.getenv("GITHUB_ACTIONS") == "true":
+    BLOQADE_CIRCUIT_SRC_PATH = ".venv/lib/python3.12/site-packages/bloqade-circuit/"
+    BLOQADE_ANALOG_SRC_PATH = ".venv/lib/python3.12/site-packages/bloqade-analog/"
 else:
-    bloqade_paths = bloqade.__path__
-    BLOQADE_CIRCUIT_SRC_PATH = next(
-        path for path in bloqade_paths if "bloqade-circuit/src/bloqade" in path
-    )
+    """
+    NOTE: we assume the following project structure when building locally:
 
-bloqade_analog_path = bloqade.analog.__file__
-if bloqade_analog_path is not None:
-    BLOQADE_ANALOG_SRC_PATH = os.path.dirname(bloqade_analog_path)
-else:
-    BLOQADE_ANALOG_SRC_PATH = bloqade.analog.__path__[0]
+    ../
+    ├── bloqade
+    ├── bloqade-analog
+    └── bloqade-circuit
+    """
+    BLOQADE_CIRCUIT_SRC_PATH = "../bloqade-circuit/"
+    BLOQADE_ANALOG_SRC_PATH = "../bloqade-analog/"
 
 
 skip_keywords = [
@@ -41,27 +37,22 @@ skip_keywords = [
     "test/",
     "tests/",
     "test_utils",
-    "bloqade-analog/docs",
+    "docs/",
     "squin/cirq/emit/",  # NOTE: this fails when included because there is an __init__.py missing, but the files have no docs anyway and it will be moved so safe to ignore
 ]
 
 
-def make_nav(
-    bloqade_package_name: str, BLOQADE_PACKAGE_PATH: str, prefix="src/bloqade"
-):
+def make_nav(bloqade_package_name: str, BLOQADE_PACKAGE_PATH: str):
     """
     build the mkdocstrings nav object for the given package
 
     Arguments:
-        bloqade_package_name (str): name of the bloqade package. This must match with the mkdocs path as the generated pages are put under reference/<bloqade_package_name>/<prefix>/
+        bloqade_package_name (str): name of the bloqade package. This must match with the mkdocs path as the generated pages are put under reference/<bloqade_package_name>
         BLOQADE_PACKAGE_PATH (str): the path to the module.
-        prefix (str): the prefix at which the source files are located in the root directory of the sub-package. Usually, that's src/bloqade for bloqade-* packages, but in the case of e.g. analog it's bloqade-analog/src/bloqade/analog.
     """
     nav = mkdocs_gen_files.Nav()
     for path in sorted(Path(BLOQADE_PACKAGE_PATH).rglob("*.py")):
-        module_path = Path(
-            prefix, path.relative_to(BLOQADE_PACKAGE_PATH).with_suffix("")
-        )
+        module_path = Path(path.relative_to(BLOQADE_PACKAGE_PATH).with_suffix(""))
         doc_path = Path(
             bloqade_package_name, module_path.relative_to(".").with_suffix(".md")
         )
@@ -105,8 +96,6 @@ bloqade_circuit_nav = make_nav("bloqade-circuit", BLOQADE_CIRCUIT_SRC_PATH)
 with mkdocs_gen_files.open("reference/SUMMARY_BLOQADE_CIRCUIT.md", "w") as nav_file:
     nav_file.writelines(bloqade_circuit_nav.build_literate_nav())
 
-bloqade_analog_nav = make_nav(
-    "bloqade-analog", BLOQADE_ANALOG_SRC_PATH, prefix="src/bloqade/analog"
-)
+bloqade_analog_nav = make_nav("bloqade-analog", BLOQADE_ANALOG_SRC_PATH)
 with mkdocs_gen_files.open("reference/SUMMARY_BLOQADE_ANALOG.md", "w") as nav_file:
     nav_file.writelines(bloqade_analog_nav.build_literate_nav())
