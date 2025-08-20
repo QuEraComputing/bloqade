@@ -1,5 +1,6 @@
 """Generate the code reference pages and navigation."""
 
+import os
 from pathlib import Path
 
 import bloqade.analog
@@ -8,11 +9,21 @@ import mkdocs_gen_files
 import bloqade
 
 # NOTE: get module paths from actual imported packages
-bloqade_paths = bloqade.__path__
-BLOQADE_CIRCUIT_SRC_PATH = next(
-    path for path in bloqade_paths if "bloqade-circuit/src/bloqade" in path
-)
-BLOQADE_ANALOG_SRC_PATH = bloqade.analog.__path__[0]
+bloqade_circuit_path = bloqade.__file__
+if bloqade_circuit_path is not None:
+    BLOQADE_CIRCUIT_SRC_PATH = os.path.dirname(bloqade_circuit_path)
+else:
+    bloqade_paths = bloqade.__path__
+    BLOQADE_CIRCUIT_SRC_PATH = next(
+        path for path in bloqade_paths if "bloqade-circuit/src/bloqade" in path
+    )
+
+bloqade_analog_path = bloqade.analog.__file__
+if bloqade_analog_path is not None:
+    BLOQADE_ANALOG_SRC_PATH = os.path.dirname(bloqade_analog_path)
+else:
+    BLOQADE_ANALOG_SRC_PATH = bloqade.analog.__path__[0]
+
 
 skip_keywords = [
     "julia",  ## [KHW] skip for now since we didn't have julia codegen rdy
