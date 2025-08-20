@@ -38,6 +38,14 @@ skip_keywords = [
 def make_nav(
     bloqade_package_name: str, BLOQADE_PACKAGE_PATH: str, prefix="src/bloqade"
 ):
+    """
+    build the mkdocstrings nav object for the given package
+
+    Arguments:
+        bloqade_package_name (str): name of the bloqade package. This must match with the mkdocs path as the generated pages are put under reference/<bloqade_package_name>/<prefix>/
+        BLOQADE_PACKAGE_PATH (str): the path to the module.
+        prefix (str): the prefix at which the source files are located in the root directory of the sub-package. Usually, that's src/bloqade for bloqade-* packages, but in the case of e.g. analog it's bloqade-analog/src/bloqade/analog.
+    """
     nav = mkdocs_gen_files.Nav()
     for path in sorted(Path(BLOQADE_PACKAGE_PATH).rglob("*.py")):
         module_path = Path(
