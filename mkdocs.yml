@@ -63,21 +63,9 @@ nav:
   - Analog Tutorials: 'https://queracomputing.github.io/bloqade-analog-examples/dev/'
   - qBook: 'https://qbook.quera.com/'
   - Bloqade Analog: 'https://queracomputing.github.io/bloqade-analog/latest/'
-  - Analog Reference: 'https://queracomputing.github.io/bloqade-analog/latest/reference/overview/'
   - API Reference:
-    - reference/index.md
-    - reference/analog.md
-    - reference/analysis.md
-    - reference/cirq_utils.md
-    - reference/device.md
-    - reference/pyqrack.md
-    - reference/qasm2.md
-    - reference/qbraid.md
-    - reference/squin.md
-    - reference/stim.md
-    - reference/task.md
-    - reference/types.md
-    - reference/visual.md
+    - Bloqade Digital: 'reference/bloqade-circuit/src/bloqade/'
+    - Bloqade Analog: 'reference/bloqade-analog/src/bloqade/analog/'
   - Blog:
     - blog/index.md
   - QuEra Computing: 'https://quera.com'
@@ -126,6 +114,7 @@ theme:
     - toc.follow
 
 plugins:
+  - autorefs
   - mkdocstrings:
       handlers:
         python:
@@ -147,7 +136,7 @@ plugins:
       scripts:
         - docs/scripts/gen_ref_nav.py
   - literate-nav:
-      nav_file: SUMMARY.txt
+      nav_file: SUMMARY_BLOQADE_CIRCUIT.md
   - minify:
       minify_html: false
   - blog
@@ -155,6 +144,7 @@ plugins:
       execute: !ENV ["EXECUTE_NOTEBOOKS", false]
       allow_errors: false
       ignore: ["scripts/*"]
+  - mike
 
 extra_javascript:
   - javascripts/katex.js

@@ -2,9 +2,17 @@
 
 from pathlib import Path
 
+import bloqade.analog
 import mkdocs_gen_files
 
-SRC_PATH = "src"
+import bloqade
+
+# NOTE: get module paths from actual imported packages
+bloqade_paths = bloqade.__path__
+BLOQADE_CIRCUIT_SRC_PATH = next(
+    path for path in bloqade_paths if "bloqade-circuit/src/bloqade" in path
+)
+BLOQADE_ANALOG_SRC_PATH = bloqade.analog.__path__[0]
 
 skip_keywords = [
     "julia",  ## [KHW] skip for now since we didn't have julia codegen rdy
@@ -19,41 +27,67 @@ skip_keywords = [
     "visualization",  ## hiding from user
     "submission/capabilities",  ## hiding from user
     "submission/quera_api_client",
+    "test/",
+    "tests/",
+    "test_utils",
+    "bloqade-analog/docs",
+    "squin/cirq/emit/",  # NOTE: this fails when included because there is an __init__.py missing, but the files have no docs anyway and it will be moved so safe to ignore
 ]
 
-nav = mkdocs_gen_files.Nav()
-for path in sorted(Path(SRC_PATH).rglob("*.py")):
-    module_path = path.relative_to(SRC_PATH).with_suffix("")
-    doc_path = path.relative_to(SRC_PATH).with_suffix(".md")
-    full_doc_path = Path("reference", doc_path)
 
-    iskip = False
+def make_nav(
+    bloqade_package_name: str, BLOQADE_PACKAGE_PATH: str, prefix="src/bloqade"
+):
+    nav = mkdocs_gen_files.Nav()
+    for path in sorted(Path(BLOQADE_PACKAGE_PATH).rglob("*.py")):
+        module_path = Path(
+            prefix, path.relative_to(BLOQADE_PACKAGE_PATH).with_suffix("")
+        )
+        doc_path = Path(
+            bloqade_package_name, module_path.relative_to(".").with_suffix(".md")
+        )
+        full_doc_path = Path("reference/", doc_path)
 
-    for kwrd in skip_keywords:
-        if kwrd in str(doc_path):
-            iskip = True
-            break
-    if iskip:
-        print("[Ignore]", str(doc_path))
-        continue
+        iskip = False
 
-    print("[>]", str(doc_path))
+        for kwrd in skip_keywords:
+            if kwrd in str(doc_path):
+                iskip = True
+                break
+        if iskip:
+            print("[Ignore]", str(doc_path))
+            continue
 
-    parts = tuple(module_path.parts)
+        print("[>]", str(doc_path))
 
-    if parts[-1] == "__init__":
-        parts = parts[:-1]
-        doc_path = doc_path.with_name("index.md")
-        full_doc_path = full_doc_path.with_name("index.md")
-    elif parts[-1].startswith("_"):
-        continue
+        parts = tuple(module_path.parts)
 
-    nav[parts] = doc_path.as_posix()
-    with mkdocs_gen_files.open(full_doc_path, "w") as fd:
-        ident = ".".join(parts)
-        fd.write(f"::: {ident}")
+        if parts[-1] == "__init__":
+            parts = parts[:-1]
+            doc_path = doc_path.with_name("index.md")
+            full_doc_path = full_doc_path.with_name("index.md")
+        elif parts[-1].startswith("_"):
+            continue
 
-    mkdocs_gen_files.set_edit_path(full_doc_path, ".." / path)
+        if len(parts) == 0:
+            continue
 
-with mkdocs_gen_files.open("reference/SUMMARY.txt", "w") as nav_file:
-    nav_file.writelines(nav.build_literate_nav())
+        nav[parts] = doc_path.as_posix()
+        with mkdocs_gen_files.open(full_doc_path, "w") as fd:
+            ident = ".".join(parts[1:])
+            fd.write(f"::: {ident}")
+
+        mkdocs_gen_files.set_edit_path(full_doc_path, ".." / path)
+
+    return nav
+
+
+bloqade_circuit_nav = make_nav("bloqade-circuit", BLOQADE_CIRCUIT_SRC_PATH)
+with mkdocs_gen_files.open("reference/SUMMARY_BLOQADE_CIRCUIT.md", "w") as nav_file:
+    nav_file.writelines(bloqade_circuit_nav.build_literate_nav())
+
+bloqade_analog_nav = make_nav(
+    "bloqade-analog", BLOQADE_ANALOG_SRC_PATH, prefix="src/bloqade/analog"
+)
+with mkdocs_gen_files.open("reference/SUMMARY_BLOQADE_ANALOG.md", "w") as nav_file:
+    nav_file.writelines(bloqade_analog_nav.build_literate_nav())
