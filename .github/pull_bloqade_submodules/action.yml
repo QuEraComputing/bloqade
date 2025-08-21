@@ -5,6 +5,7 @@ runs:
     steps:
       - name: extract bloqade-circuit version
         id: bloqade_circuit_extract_version
+        shell: bash
         run: |
           VERSION=$(uv pip show bloqade-circuit | awk '/^Version: / {print "v"$2}')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
@@ -19,6 +20,7 @@ runs:
 
       - name: Extract bloqade-analog version
         id: bloqade_analog_extract_version
+        shell: bash
         run: |
           VERSION=$(uv pip show bloqade-analog | awk '/^Version: / {print "v"$2}')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
