@@ -3140,26 +3140,35 @@
 
 
 <h1 id="dialects-and-kernels">Dialects and kernels</h1>
+<p>Bloqade provides a set of pre-defined dialects, with which you can write your programs and circuits.</p>
+<p>Once you have your kernel, you can inspect their intermediate representation (IR), apply different optimizations using <a href="../../quick_start/circuits/compiler_passes/">compiler passes</a>, or run them on a <a href="../simulator_device/simulator_device/">(simulator) device</a>.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>A <strong>kernel</strong> function is a piece of code that runs on specialized hardware such as a quantum computer.</p>
 <p>A <strong>dialect</strong> is a domain-specific language (DSL) with which you can write such a kernel.
 Each dialect comes with a specific set of statements and instructions you can use in order to write your program.</p>
 </div>
-<p>Bloqade provides a set of pre-defined dialects, with which you can write your programs and circuits.</p>
-<p>Once you have your kernel, you can inspect their intermediate representation (IR), apply different optimizations using <a href="../../quick_start/circuits/compiler_passes/">compiler passes</a>, or run them on a <a href="../simulator_device/simulator_device/">(simulator) device</a>.</p>
-<p>All dialects can be used by decorating a function.
-Small primer on decorators: a decorator in Python is simply a function (or any callable really) that returns another function (callable).
-They are used with the <code>@</code> syntax.</p>
+<p>When running code that targets a specialized execution environment, there are typically several layers involved.
+At the surface, the programmer writes functions in a syntax that may resemble a host language (e.g., Python), but is actually expressed in a dialect— a domain-specific variant with its own semantics.
+A decorator marks these functions so they can be intercepted before normal host-language execution.
+All dialects can be used by decorating a function.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Here's a short primer on decorators: a decorator in Python is simply a function (or any callable really) that takes in another function as argument and returns yet another function (callable).
+Usually, the returned function will be a modified version of the input.
+Decorators are used with the <code>@</code> syntax.</p>
+</div>
+<p>Instead of running directly, the kernel function body is parsed and translated (lowered) into an intermediate representation (IR).
+This IR can be manipulated (e.g. to perform optimizations) and can later be executed by an interpreter that understands the dialect's semantics.
+The interpreter uses an internal instruction set to execute the code on the intended backend, which may be a simulator, virtual machine, or physical device.
+This separation lets developers write high-level, expressive code while the interpreter ensures it runs correctly in the target environment.
+<a href="https://queracomputing.github.io/kirin/latest/">QuEra's Kirin</a> infrastructure uses this concept by defining custom dialects that are tailored towards the needs to program neutral atom quantum computers.
+While the dialects are not python syntax, Kirin still uses the python interpreter to execute the code.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is important to understand that when you are writing a kernel function in a dialect you are generally <strong>not writing Python</strong> code, even though it looks a lot like it.
 Therefore, kernel functions can usually not be called directly.
-Think of this as trying to execute another programming language with the Python interpreter: of course, that will error.
-In order to execute a kernel (either on hardware or via simulation), they need an interpreter with an according method table, so the interpreter knows how to execute the statements inside the kernel function.
-<code>bloqade-circuit</code> provides those for you.
-If you want to learn more about this, please head on over to the <a href="https://queracomputing.github.io/kirin/latest/">Kirin documentation</a>.
-Similarly, different dialects are (usually) not compatible with one another as they practically define their own language (although you may be able to transpile between them).</p>
+Think of this as trying to execute another programming language with the Python interpreter: of course, that will error.</p>
 </div>
 <h1 id="available-dialects">Available dialects</h1>
 <p>Here's a quick overview of the most important available dialects.</p>
