@@ -1,27 +1,39 @@
 # Dialects and kernels
 
+Bloqade provides a set of pre-defined dialects, with which you can write your programs and circuits.
+
+Once you have your kernel, you can inspect their intermediate representation (IR), apply different optimizations using [compiler passes](../quick_start/circuits/compiler_passes/index.md), or run them on a [(simulator) device](./simulator_device/simulator_device.md).
+
 !!! info
     A **kernel** function is a piece of code that runs on specialized hardware such as a quantum computer.
 
     A **dialect** is a domain-specific language (DSL) with which you can write such a kernel.
     Each dialect comes with a specific set of statements and instructions you can use in order to write your program.
 
-Bloqade provides a set of pre-defined dialects, with which you can write your programs and circuits.
 
-Once you have your kernel, you can inspect their intermediate representation (IR), apply different optimizations using [compiler passes](../quick_start/circuits/compiler_passes/index.md), or run them on a [(simulator) device](./simulator_device/simulator_device.md).
-
+When running code that targets a specialized execution environment, there are typically several layers involved.
+At the surface, the programmer writes functions in a syntax that may resemble a host language (e.g., Python), but is actually expressed in a dialect— a domain-specific variant with its own semantics.
+A decorator marks these functions so they can be intercepted before normal host-language execution.
 All dialects can be used by decorating a function.
-Small primer on decorators: a decorator in Python is simply a function (or any callable really) that returns another function (callable).
-They are used with the `@` syntax.
+
+!!! info
+    Here's a short primer on decorators: a decorator in Python is simply a function (or any callable really) that takes in another function as argument and returns yet another function (callable).
+    Usually, the returned function will be a modified version of the input.
+    Decorators are used with the `@` syntax.
+
+
+Instead of running directly, the kernel function body is parsed and translated (lowered) into an intermediate representation (IR).
+This IR can be manipulated (e.g. to perform optimizations) and can later be executed by an interpreter that understands the dialect's semantics.
+The interpreter uses an internal instruction set to execute the code on the intended backend, which may be a simulator, virtual machine, or physical device.
+This separation lets developers write high-level, expressive code while the interpreter ensures it runs correctly in the target environment.
+[QuEra's Kirin](https://queracomputing.github.io/kirin/latest/) infrastructure uses this concept by defining custom dialects that are tailored towards the needs to program neutral atom quantum computers.
+While the dialects are not python syntax, Kirin still uses the python interpreter to execute the code.
+
 
 !!! note
     It is important to understand that when you are writing a kernel function in a dialect you are generally **not writing Python** code, even though it looks a lot like it.
     Therefore, kernel functions can usually not be called directly.
     Think of this as trying to execute another programming language with the Python interpreter: of course, that will error.
-    In order to execute a kernel (either on hardware or via simulation), they need an interpreter with an according method table, so the interpreter knows how to execute the statements inside the kernel function.
-    `bloqade-circuit` provides those for you.
-    If you want to learn more about this, please head on over to the [Kirin documentation](https://queracomputing.github.io/kirin/latest/).
-    Similarly, different dialects are (usually) not compatible with one another as they practically define their own language (although you may be able to transpile between them).
 
 
 # Available dialects
