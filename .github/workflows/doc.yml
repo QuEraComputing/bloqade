@@ -29,7 +29,7 @@ jobs:
       - name: extract bloqade-circuit version
         id: bloqade_circuit_extract_version
         run: |
-          VERSION=$(awk -F'~=' '/bloqade-circuit/ { gsub(/["\[\],]/, "", $2); print "v" $2 }' pyproject.toml)
+          VERSION=$(uv pip show bloqade-circuit | awk '/^Version: / {print "v"$2}')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: clone the latest bloqade-circuit release
@@ -43,7 +43,7 @@ jobs:
       - name: Extract bloqade-analog version
         id: bloqade_analog_extract_version
         run: |
-          VERSION=$(awk -F'~=' '/bloqade-analog/ { gsub(/["\[\],]/, "", $2); print "v" $2 }' pyproject.toml)
+          VERSION=$(uv pip show bloqade-analog | awk '/^Version: / {print "v"$2}')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: clone the latest bloqade-analog release
