@@ -5,18 +5,11 @@
 # our high-level programming features.
 #
 # To begin, we will import the `qasm2` module from the `bloqade` package and the `PyQrack`
-# backend from the `bloqade.pyqrack` module, which can be installed via
-#
-# ```bash
-# pip install bloqade-pyqrack[backend]
-# ```
-# with the `backend` being one of ` pyqrack`, `pyqrack-cpu`, `pyqrack-cuda` depending on
-# the hardware and OS you have. see [README](https://github.com/QuEraComputing/bloqade-pyqrack?tab=readme-ov-file#which-extra-do-i-install)
-# for mote details.
+# backend from the `bloqade.pyqrack` module.
 # %%
 import math
 
-from bloqade.pyqrack import PyQrack
+from bloqade.pyqrack import StackMemorySimulator
 
 from bloqade import qasm2
 
@@ -56,13 +49,13 @@ def main():
 # to see the final state of the qubits after applying the QFT circuit.
 # <div align="center">
 # <picture>
-#    <img src="../qft.svg" >
+#    <img src="../../qft.svg" >
 # </picture>
 # </div>
 
 
 # %%
-device = PyQrack()
+device = StackMemorySimulator(min_qubits=3)
 qreg = device.run(main)
 print(qreg)
 

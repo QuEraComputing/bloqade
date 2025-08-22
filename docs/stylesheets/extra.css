@@ -20,3 +20,12 @@
     --md-footer-logo-dark-mode:           none;
     --md-footer-logo-light-mode:         block;
 }
+
+/*
+.md-typeset .grid {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.md-typeset .grid.cards {
+  font-size: small;
+} */

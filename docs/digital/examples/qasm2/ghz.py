@@ -23,7 +23,7 @@ from bloqade import qasm2
 
 # <div align="center">
 # <picture>
-#    <img src="../ghz_linear_circuit.svg" >
+#    <img src="../../ghz_linear_circuit.svg" >
 # </picture>
 # </div>
 
@@ -60,13 +60,13 @@ def ghz_linear(n: int):
 # <p>
 # Before going any further, it's worth distinguishing between the concept of circuit depth and circuit execution depth.
 # For example, in the following implementation, each CX gate instruction inside the for-loop is executed in sequence.
-# So even thought the circuit depth is $log(N) = n$, the circuit execution depth is still $N$.
+# So even though the circuit depth is $log(N) = n$, the circuit execution depth is still $N$.
 # </p>
 # </div>
 
 # <div align="center">
 # <picture>
-#    <img src="../ghz_log_circuit.svg" >
+#    <img src="../../ghz_log_circuit.svg" >
 # </picture>
 # </div>
 
