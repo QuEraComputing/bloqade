@@ -1,14 +1,39 @@
 # Dialects and kernels
 
+Bloqade provides a set of pre-defined dialects, with which you can write your programs and circuits.
+
+Once you have your kernel, you can inspect their intermediate representation (IR), apply different optimizations using [compiler passes](../quick_start/circuits/compiler_passes/index.md), or run them on a [(simulator) device](./simulator_device/simulator_device.md).
+
 !!! info
     A **kernel** function is a piece of code that runs on specialized hardware such as a quantum computer.
 
     A **dialect** is a domain-specific language (DSL) with which you can write such a kernel.
     Each dialect comes with a specific set of statements and instructions you can use in order to write your program.
 
-Bloqade provides a set of pre-defined dialects, with which you can write your programs and circuits.
 
-Once you have your kernel, you can inspect their intermediate representation (IR), apply different optimizations using [compiler passes](../quick_start/circuits/compiler_passes/index.md), or run them on a [(simulator) device](./simulator_device/simulator_device.md).
+When running code that targets a specialized execution environment, there are typically several layers involved.
+At the surface, the programmer writes functions in a syntax that may resemble a host language (e.g., Python), but is actually expressed in a dialect— a domain-specific variant with its own semantics.
+A decorator marks these functions so they can be intercepted before normal host-language execution.
+All dialects can be used by decorating a function.
+
+!!! info
+    Here's a short primer on decorators: a decorator in Python is simply a function (or any callable really) that takes in another function as argument and returns yet another function (callable).
+    Usually, the returned function will be a modified version of the input.
+    Decorators are used with the `@` syntax.
+
+
+Instead of running directly, the kernel function body is parsed and translated (lowered) into an intermediate representation (IR).
+This IR can be manipulated (e.g. to perform optimizations) and can later be executed by an interpreter that understands the dialect's semantics.
+The interpreter uses an internal instruction set to execute the code on the intended backend, which may be a simulator, virtual machine, or physical device.
+This separation lets developers write high-level, expressive code while the interpreter ensures it runs correctly in the target environment.
+[QuEra's Kirin](https://queracomputing.github.io/kirin/latest/) infrastructure uses this concept by defining custom dialects that are tailored towards the needs to program neutral atom quantum computers.
+While the dialects are not python syntax, Kirin still uses the python interpreter to execute the code.
+
+
+!!! note
+    It is important to understand that when you are writing a kernel function in a dialect you are generally **not writing Python** code, even though it looks a lot like it.
+    Therefore, kernel functions can usually not be called directly.
+    Think of this as trying to execute another programming language with the Python interpreter: of course, that will error.
 
 
 # Available dialects
@@ -128,14 +153,35 @@ main.print()
 
 ## squin
 
-This dialect is, in a sense, more expressive than the qasm2 dialects: it allows you to specify operators rather than just gate applications.
-That can be useful if you're trying to e.g. simulate a Hamiltonian time evolution.
-
 !!! warning
     The squin dialect is in an early stage of development.
     Expect substantial changes to it in the near future.
 
+
+This dialect is, in a sense, more expressive than the qasm2 dialects: it allows you to specify operators rather than just gate applications.
+That can be useful if you're trying to e.g. simulate a Hamiltonian time evolution.
+
+For simple circuits, however, gate applications also have short-hand standard library definitions defined in the `squin.gate` submodule.
 Here's a short example:
+
+```python
+from bloqade import squin
+
+@squin.kernel
+def main():
+    q = squin.qubit.new(2)
+    squin.gate.h(q[0])
+    squin.gate.cx(q[0], q[1])
+    return squin.qubit.measure(q)
+
+# have a look at the IR
+main.print()
+```
+
+
+As mentioned above, you can also build up more complex "operators" that are then applied to any number of qubits.
+To show how you can do that, here's an example on how to write the above kernel defining the gates as separate operators.
+This isn't exactly a practical use-case, but serves as an example.
 
 ```python
 from bloqade import squin
@@ -148,10 +194,10 @@ def main():
     # apply a hadamard to only the first qubit
     h1 = squin.op.kron(h, squin.op.identity(sites=1))
 
-    squin.qubit.apply(h1, q)
+    squin.qubit.apply(h1, q[0], q[1])
 
     cx = squin.op.cx()
-    squin.qubit.apply(cx, q)
+    squin.qubit.apply(cx, q[0], q[1])
 
     return squin.qubit.measure(q)
 
