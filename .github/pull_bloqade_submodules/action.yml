@@ -1,0 +1,34 @@
+name: 'Pull bloqade submodules'
+description: 'Composite action to pull in the git repositories of bloqade-* submodules at the latest version tags compatible with bloqade. They are put in a directory called submodules'
+runs:
+    using: "composite"
+    steps:
+      - name: extract bloqade-circuit version
+        id: bloqade_circuit_extract_version
+        shell: bash
+        run: |
+          VERSION=$(uv pip show bloqade-circuit | awk '/^Version: / {print "v"$2}')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: clone the latest bloqade-circuit release
+        id: clone_bloqade_circuit
+        uses: actions/checkout@v5
+        with:
+          repository: QuEraComputing/bloqade-circuit
+          path: 'submodules/bloqade-circuit'
+          ref: ${{ steps.bloqade_circuit_extract_version.outputs.version }}
+
+      - name: Extract bloqade-analog version
+        id: bloqade_analog_extract_version
+        shell: bash
+        run: |
+          VERSION=$(uv pip show bloqade-analog | awk '/^Version: / {print "v"$2}')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: clone the latest bloqade-analog release
+        id: clone_bloqade_analog
+        uses: actions/checkout@v5
+        with:
+          repository: QuEraComputing/bloqade-analog
+          path: 'submodules/bloqade-analog'
+          ref: ${{ steps.bloqade_analog_extract_version.outputs.version }}

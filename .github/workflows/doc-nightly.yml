@@ -24,6 +24,9 @@ jobs:
       - name: Install Documentation dependencies
         run: uv sync --group doc
 
+      - name: Pull bloqade submodules
+        uses: ./.github/pull_bloqade_submodules
+
       - name: Set up build cache
         uses: actions/cache@v4
         id: cache
