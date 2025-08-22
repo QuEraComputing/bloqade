@@ -41,6 +41,10 @@
          <lastmod>2025-08-22</lastmod>
     </url>
     <url>
+         <loc>https://bloqade.quera.com/dev/digital/tutorials_index/</loc>
+         <lastmod>2025-08-22</lastmod>
+    </url>
+    <url>
          <loc>https://bloqade.quera.com/dev/digital/cirq_interop/</loc>
          <lastmod>2025-08-22</lastmod>
     </url>
@@ -53,31 +57,35 @@
          <lastmod>2025-08-22</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/dev/digital/examples/deutsch_squin/</loc>
+         <loc>https://bloqade.quera.com/dev/digital/examples/interop/noisy_ghz/</loc>
          <lastmod>2025-08-22</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/dev/digital/examples/ghz/</loc>
+         <loc>https://bloqade.quera.com/dev/digital/examples/qasm2/ghz/</loc>
          <lastmod>2025-08-22</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/dev/digital/examples/noisy_ghz/</loc>
+         <loc>https://bloqade.quera.com/dev/digital/examples/qasm2/pauli_exponentiation/</loc>
          <lastmod>2025-08-22</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/dev/digital/examples/pauli_exponentiation/</loc>
+         <loc>https://bloqade.quera.com/dev/digital/examples/qasm2/qaoa/</loc>
          <lastmod>2025-08-22</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/dev/digital/examples/qaoa/</loc>
+         <loc>https://bloqade.quera.com/dev/digital/examples/qasm2/qft/</loc>
          <lastmod>2025-08-22</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/dev/digital/examples/qft/</loc>
+         <loc>https://bloqade.quera.com/dev/digital/examples/qasm2/repeat_until_success/</loc>
          <lastmod>2025-08-22</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/dev/digital/examples/repeat_until_success/</loc>
+         <loc>https://bloqade.quera.com/dev/digital/examples/squin/deutsch_squin/</loc>
+         <lastmod>2025-08-22</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/dev/digital/examples/squin/ghz/</loc>
          <lastmod>2025-08-22</lastmod>
     </url>
     <url>
