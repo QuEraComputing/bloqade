@@ -13,7 +13,7 @@ jobs:
     name: Deploy dev documentation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Install uv
@@ -25,6 +25,10 @@ jobs:
           cache-dependency-glob: "uv.lock"
       - name: Install Documentation dependencies
         run: uv sync --group doc
+
+      - name: Pull bloqade submodules
+        uses: ./.github/pull_bloqade_submodules
+
       - name: Set up build cache
         uses: actions/cache@v4
         id: cache
