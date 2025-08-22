@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+
       - name: Install uv
         uses: astral-sh/setup-uv@v6
         with:
@@ -23,8 +24,13 @@ jobs:
           version: "0.5.1"
           enable-cache: true
           cache-dependency-glob: "uv.lock"
+
       - name: Install Documentation dependencies
         run: uv sync --group doc
+
+      - name: Pull bloqade submodules
+        uses: ./.github/pull_bloqade_submodules
+
       - name: Set up build cache
         uses: actions/cache@v4
         id: cache
