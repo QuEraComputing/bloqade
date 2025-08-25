@@ -68,7 +68,17 @@ nav:
       - GHZ state preparation with noise: digital/examples/squin/ghz.py
     - Integration with other SDKs:
       - Noisy GHZ states with cirq: "digital/examples/interop/noisy_ghz.py"
-  - Bloqade Analog: 'https://queracomputing.github.io/bloqade-analog/latest/'
+  - Bloqade Analog:
+      - analog/index.md
+      - Migration Guide to Bloqade Analog: analog/home/migration.md
+      - Quickstart: analog/home/quick_start.md
+      - Background: analog/home/background.md
+      - Gotchas: analog/home/gotchas.md
+      - Contributing: analog/contributing/
+      - Builder:
+        - analog/reference/overview.md
+        - analog/reference/standard.md
+      - Hardware Reference: analog/reference/hardware-capabilities.md
   - Analog Tutorials: 'https://queracomputing.github.io/bloqade-analog-examples/dev/'
   - qBook: 'https://qbook.quera.com/'
   - API Reference:
@@ -77,7 +87,6 @@ nav:
   - Blog:
     - blog/index.md
   - QuEra Computing: 'https://quera.com'
-  #     - QASM2: reference/bloqade/qasm2/
 
 theme:
   name: material
@@ -170,7 +179,11 @@ markdown_extensions:
   - def_list
   - footnotes
   - md_in_html
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.caret
   - pymdownx.mark
   - pymdownx.tilde
