@@ -12,15 +12,13 @@
 
 !!! note
 
-  Bloqade has been restructured to make room for new features and improvements.
-  Please refer to the [migration guide](./home/migration/) for more information.
+    Bloqade has been restructured to make room for new features and improvements.
+    Please refer to the [migration guide](./home/migration/) for more information.
 
 
-# **Welcome to Bloqade**: QuEra's Neutral Atom SDK
+## What is Bloqade Analog?
 
-## What is Bloqade?
-
-Bloqade is a Python SDK for [QuEra's](https://www.quera.com/) neutral atom quantum computer *Aquila* (check out our [paper](https://arxiv.org/abs/2306.11727)!). It's designed to make writing and analyzing the results of [analog quantum programs](home/background.md#analog-vs-digital-quantum-computing) on *Aquila* as easy as possible. It features [custom atom geometries](index.md#customizable-atom-geometries) and [flexible waveform definitions](index.md#flexible-pulse-sequence-construction) in both [emulation and real hardware](index.md#hardware-and-emulation-backends). Bloqade interfaces with the [AWS Braket](https://aws.amazon.com/braket/) cloud service where *Aquila*  is hosted, enabling you to submit programs as well as retrieve and analyze real hardware results all-in-one.
+Bloqade Analog is a Python SDK for [QuEra's](https://www.quera.com/) neutral atom quantum computer *Aquila* (check out our [paper](https://arxiv.org/abs/2306.11727)!). It's designed to make writing and analyzing the results of [analog quantum programs](home/background.md#analog-vs-digital-quantum-computing) on *Aquila* as easy as possible. It features [custom atom geometries](index.md#customizable-atom-geometries) and [flexible waveform definitions](index.md#flexible-pulse-sequence-construction) in both [emulation and real hardware](index.md#hardware-and-emulation-backends). Bloqade interfaces with the [AWS Braket](https://aws.amazon.com/braket/) cloud service where *Aquila*  is hosted, enabling you to submit programs as well as retrieve and analyze real hardware results all-in-one.
 
 ## Installation
 
@@ -30,7 +28,7 @@ You can install the package with [`pip`](https://pip.pypa.io/en/stable/) in your
 pip install bloqade
 ```
 
-## A Glimpse of Bloqade
+## A Glimpse of Bloqade Analog
 
 Let's try a simple example where we drive a [Rabi oscillation][rabi-oscillation-wiki] on a single [neutral atom][neutral-atom-qubits]. Don't worry if you're unfamiliar with [neutral atom][neutral-atom-qubits] physics, (you can check out our Background for more information!) the goal here is to just give you a taste of what Bloqade can do.
 
