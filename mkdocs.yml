@@ -68,7 +68,7 @@ nav:
       - GHZ state preparation with noise: digital/examples/squin/ghz.py
     - Integration with other SDKs:
       - Noisy GHZ states with cirq: "digital/examples/interop/noisy_ghz.py"
-  - Bloqade Analog: 'https://queracomputing.github.io/bloqade-analog/latest/'
+  - Bloqade Analog: "analog/"
   - Analog Tutorials: 'https://queracomputing.github.io/bloqade-analog-examples/dev/'
   - qBook: 'https://qbook.quera.com/'
   - API Reference:
@@ -77,7 +77,6 @@ nav:
   - Blog:
     - blog/index.md
   - QuEra Computing: 'https://quera.com'
-  #     - QASM2: reference/bloqade/qasm2/
 
 theme:
   name: material
