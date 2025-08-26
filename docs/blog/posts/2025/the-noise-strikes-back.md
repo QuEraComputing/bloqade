@@ -71,12 +71,12 @@ main noise channels:
 1. Global single qubit gate error
     - Depolarizing error applied to all qubits after a single qubit gate that is applied to all qubits in parallel.
 
-<img src="./global_single_qubit_gate_error.png" width="40%" alt="Global single qubit gate error">
+![Global single qubit gate error](./global_single_qubit_gate_error.png)
 
 1. Local single qubit gate error
     - Depolarizing error applied to gated single qubits after a single qubit gate that is applied to a subset of qubits.
 
-<img src="./local_single_qubit_gate_error.png" width="40%" alt="Local single qubit gate error">
+![Local single qubit gate error](./local_single_qubit_gate_error.png)
 
 1. CZ gate error
     - Pauli error channel that is biases towards phase errors applied to both qubits that are within the blockage radius
@@ -87,7 +87,7 @@ main noise channels:
       not have a partner qubit within the blockade radius.
     - Incorporates errors from the Rydberg pulse and dynamical decoupling.
 
-<img src="./rydberg_error.png" width="52%" alt="Errors due to Rydberg pulses">
+![Errors due to Rydberg pulses](./rydberg_error.png)
 
 1. Mover error
     - Pauli error channel that is also biased towards phase errors applied to qubits that must move during a circuit.
@@ -97,7 +97,7 @@ main noise channels:
     - Pauli error channel that is applied to atoms that are stationary while other atoms are moving.
     - Incorporates errors from dynamical decoupling and idling errors.
 
-<img src="./move_error.png" width="40%" alt="Errors due to atom moves">
+![Errors due to atom moves](./move_error.png)
 
 ## Example: Noise in the GHZ state
 
@@ -109,7 +109,7 @@ If you want all the details, please find [the full example here](../../../digita
 
 ### Flow chart (Tyler)
 
-The intended workflow for using the circuit-level noise models is described in the flow chart below. The first step for
+The intended workflow for using the circuit-level noise models is de in the flow chart below. The first step for
 a user interested in testing a specific quantum algorithm is to write an explicit circuit
 in [cirq](https://quantumai.google/cirq). Once defined in `cirq`, the circuit operations can be visualized with
 `print(circuit)`, which can be used to inspect the circuit after being passed through the transformers within `bloqade`.
@@ -124,7 +124,7 @@ Finally, we maintain interoperability between `squin` (`bloqade`'s circuit-level
 `cirq`. `squin` allows for simulation with different backends, including `pyqrack`, while also allowing for lowering to
 hardware-level programs for executions on Gemini.
 
-<img src="./flowchart.png" width="80%" alt="Global single qubit gate error">
+![cirq_utils_flowchart](./flowchart.png)
 
 ### Annotated circuit (Luis)
 
@@ -154,7 +154,7 @@ unpaired cz error (green pentagons).
 Now, let's look at some results of [the example](../../../digital/examples/noisy_ghz.py) that compares the different
 noise processes.
 
-The different noise models lead to overall different infidileties of the circuit:
+The different noise models lead to overall different infidelities of the circuit:
 
 ![GHZ circuit fidelity with different noise models](../../../digital/examples/noisy_ghz_fidelity.svg)
 
