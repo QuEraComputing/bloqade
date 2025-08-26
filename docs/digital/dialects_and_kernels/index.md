@@ -46,6 +46,9 @@ All dialects have some advantages for particular applications.
 If you are unsure which dialect best suits your needs, have a look at the high-level overview of the (non-exhaustive) list of use cases below.
 Also, we recommend having a look at [squin](./squin.md) as it is the most general purpose dialect available and is centrally used in the compilation pipeline.
 
+While the documentation in this section provides some information on the background and a high-level overview, it is also often convenient to learn from examples.
+Have a look at the (growing) [examples collection](../examples/), where you can find different implementations of quantum programs using different dialects.
+
 
 ## [squin](./squin.md)
 
