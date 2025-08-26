@@ -15,7 +15,7 @@ The infrastructure behind these compilers is built on top of [Kirin](https://que
 It is easiest to learn how to use this package by checking out the [examples & tutorials section](./examples/index.md), where we show how you can build and study different quantum programs written in different DSLs.
 You can also find the corresponding scripts in [jupytext format](https://jupytext.readthedocs.io/en/latest/) at the [bloqade repository](https://github.com/QuEraComputing/bloqade) under `docs/digital/examples/`.
 
-Finally, if you want the full details on the API, please refer to the [API reference documentation](../reference/).
+Finally, if you want the full details on the API, please refer to the [API reference documentation](../../reference/bloqade-circuit/src/bloqade/device/).
 
 ## Installation
 
@@ -42,7 +42,7 @@ pip install bloqade-circuit[cirq,qasm2,stim]
 
 ## TL;DR
 
-Here's a GHZ preparation circuit with a measurement at the end written in the [`squin`](../reference/squin.md) dialect:
+Here's a GHZ preparation circuit with a measurement at the end written in the [`squin`](../../reference/bloqade-circuit/src/bloqade/squin/) dialect:
 
 ```python
 from bloqade import squin

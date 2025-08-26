@@ -10,7 +10,7 @@ For details on each of these, please see the documentation pages below:
 * [Obtaining a squin kernel function from a `cirq.Circuit`](./cirq_to_squin.md)
 * [Emitting a `cirq.Circuit` from a squin kernel](./squin_to_cirq.md)
 
-For the API reference, please see the `cirq` submodule in the [squin API docs](../../reference/squin.md).
+For the API reference, please see the `cirq` submodule in the [squin API docs](../../reference/bloqade-circuit/src/bloqade/squin.md).
 
 ## TL;DR
 

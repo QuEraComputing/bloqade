@@ -41,10 +41,10 @@
 # ## Noise model implementations
 #
 # For now, these noise models are implemented as [`cirq.NoiseModel`](https://quantumai.google/reference/python/cirq/NoiseModel) classes, so that you can use with any circuit you build using `cirq`.
-# They are part of the [`bloqade.cirq_utils`](../../../reference/cirq_utils) submodule.
+# They are part of the [`bloqade.cirq_utils`](../../../../reference/bloqade-circuit/src/bloqade/cirq_utils) submodule.
 #
-# Support for using these models with e.g. [squin](../dialects_and_kernels) will follow in the future.
-# However, you can already rely on [interoperability with cirq](../cirq_interop) in order to convert (noisy) circuits to squin kernels and use other parts of the compiler pipeline.
+# Support for using these models with e.g. [squin](../../../dialects_and_kernels) will follow in the future.
+# However, you can already rely on [interoperability with cirq](../../../cirq_interop) in order to convert (noisy) circuits to squin kernels and use other parts of the compiler pipeline.
 
 # %% [markdown]
 # ## GHZ preparation and noise
@@ -190,7 +190,7 @@ plt.legend()
 # Whereas, in the two-zone model, qubits are moved between the gate and storage zones.
 #
 # You could now think about how to optimize the circuits in order to reduce their sensitivity for noise.
-# For example, you can [reduce the circuit depth](../ghz)
+# For example, you can [reduce the circuit depth](../../qasm2/ghz)
 
 # %% [markdown]
 # ### Modifying the noise
@@ -214,7 +214,7 @@ plt.legend()
 #
 # The noise processes are further split into local and global noise channels and separated by their cause.
 #
-# For a full list of noise parameters and a description of each one, please refer to the move noise model in [`bloqade.qasm2.dialects.noise.model.MoveNoiseModelABC`](../../../reference/qasm2/#bloqade.qasm2.dialects.noise.model.MoveNoiseModelABC)
+# For a full list of noise parameters and a description of each one, please refer to the move noise model in [`bloqade.qasm2.dialects.noise.model.MoveNoiseModelABC`](../../../../reference/bloqade-circuit/src/bloqade/qasm2/dialects/noise/model#MoveNoiseModelABC)
 #
 # We can use those parameters in order to modify the strength of the noise.
 #
