@@ -14466,7 +14466,7 @@ These programs are intended for both simulation and to be run on hardware. This 
 The infrastructure behind these compilers is built on top of <a href="https://queracomputing.github.io/kirin/latest/">Kirin</a>.</p>
 <p>It is easiest to learn how to use this package by checking out the <a href="tutorials_index/">examples &amp; tutorials section</a>, where we show how you can build and study different quantum programs written in different DSLs.
 You can also find the corresponding scripts in <a href="https://jupytext.readthedocs.io/en/latest/">jupytext format</a> at the <a href="https://github.com/QuEraComputing/bloqade">bloqade repository</a> under <code>docs/digital/examples/</code>.</p>
-<p>Finally, if you want the full details on the API, please refer to the <a href="../reference/">API reference documentation</a>.</p>
+<p>Finally, if you want the full details on the API, please refer to the <a href="../../reference/bloqade-circuit/src/bloqade/device/">API reference documentation</a>.</p>
 <h2 id="installation">Installation</h2>
 <p>The package comes as a submodule of Bloqade, so you can just run</p>
 <div class="highlight"><pre><span></span><code>pip install bloqade
@@ -14480,7 +14480,7 @@ For example</p>
 <div class="highlight"><pre><span></span><code>pip install bloqade-circuit[cirq,qasm2,stim]
 </code></pre></div>
 <h2 id="tldr">TL;DR</h2>
-<p>Here's a GHZ preparation circuit written in the <a href="../reference/squin.md"><code>squin</code></a> dialect:</p>
+<p>Here's a GHZ preparation circuit written in the <a href="../../reference/bloqade-circuit/src/bloqade/squin/"><code>squin</code></a> dialect:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
 
 <span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
