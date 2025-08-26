@@ -22,6 +22,7 @@ nav:
   - Bloqade Digital:
     - digital/index.md
     - Domain specific languages: digital/dialects_and_kernels/
+    - Compilation process: digital/compilation.md
     - Simulation: digital/simulator_device/
     - Interoperability with Cirq: digital/cirq_interop/
   - Digital Tutorials:

@@ -12,11 +12,18 @@ The compilation process is divided into several stages:
 
 ### Progressive compilation
 
-As well as writing circuit executions, you can also progressively transform and compile that circuit. For example, you may want to lower arbitrary single qubit unitaries into hardware-specific unitaries, as is done in [this example](../circuits/compiler_passes/native_gate_rewrite.md). For more details on the kinds of circuit-level compiler passes and how to write your own, see [here](../circuits/compiler_passes/index.md)
+As well as writing circuit executions, you can also progressively transform and compile that circuit.
+While it is possible to write your own compiler passes and optimizations - for that, please refer to the [kirin](https://queracomputing.github.io/kirin/latest/) documentation - bloqade-circuit also offers a number of different, pre-defined optimizations.
+
+!!! warning
+    Compiler and optimization passes are currently under development.
+    While quite a lot of them are used internally, they are not in a user-friendly state.
+    Please skip this step for the time being.
+
 
 ## Dialect groups
 
-Bloqade provides a set of [dialects (missing link)]() for QASM2 and our custom extensions to model parallel gates in neutral atom architectures. The basic QASM2 functionality can be enabled via
+Bloqade provides a set of [dialects](../dialects_and_kernels/) for QASM2 and our custom extensions to model parallel gates in neutral atom architectures. The basic QASM2 functionality can be enabled via
 
 ```bash
 pip install bloqade[qasm2]
@@ -65,7 +72,7 @@ def main():
     return qasm2.qreg(2)
 ```
 
-which corresponding to the following QASM2 code:
+which corresponds to the following QASM2 code:
 
 ```qasm
 OPENQASM 2.0;
@@ -80,4 +87,4 @@ measure q[0] -> c[0];
 measure q[1] -> c[1];
 ```
 
-Note that the `return` values are all ignored due to lack of equivalent in QASM2.
+Note that the `return` values are not supported in QASM2 and are therefore omitted in the code above.
