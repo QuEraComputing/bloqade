@@ -2,7 +2,7 @@
 
 Bloqade provides a set of pre-defined dialects, with which you can write your programs and circuits.
 
-Once you have your kernel, you can inspect their intermediate representation (IR), apply different optimizations using [compiler passes](../quick_start/circuits/compiler_passes/index.md), or run them on a [(simulator) device](./simulator_device/simulator_device.md).
+Once you have defined your kernel, you can inspect their intermediate representation (IR), apply different optimizations using [compiler passes](../quick_start/circuits/compiler_passes/index.md), or run them on a [(simulator) device](./simulator_device/simulator_device.md).
 
 !!! info
     A **kernel** function is a piece of code that runs on specialized hardware such as a quantum computer.
@@ -43,7 +43,7 @@ Here's a quick overview of the most important available dialects.
 ## qasm2
 
 There are a number of dialects with which you can write kernels that represent QASM2 programs.
-See also the [qasm2 API reference](../reference/qasm2.md)
+See also the [qasm2 API reference](../../reference/bloqade-circuit/src/bloqade/qasm2/)
 
 ### qasm2.main
 
@@ -205,11 +205,11 @@ def main():
 main.print()
 ```
 
-See also the [squin API reference](../reference/squin.md)
+See also the [squin API reference](../../reference/bloqade-circuit/src/bloqade/squin/)
 
 ## stim
 
 !!! warning
     Sorry folks, still under construction.
 
-See also the [stim API reference](../reference/stim.md)
+See also the [stim API reference](../../reference/bloqade-circuit/src/bloqade/stim/)
