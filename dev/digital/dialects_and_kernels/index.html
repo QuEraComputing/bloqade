@@ -13895,7 +13895,7 @@
 
 <h1 id="dialects-and-kernels">Dialects and kernels</h1>
 <p>Bloqade provides a set of pre-defined dialects, with which you can write your programs and circuits.</p>
-<p>Once you have your kernel, you can inspect their intermediate representation (IR), apply different optimizations using <a href="../../quick_start/circuits/compiler_passes/">compiler passes</a>, or run them on a <a href="../simulator_device/simulator_device/">(simulator) device</a>.</p>
+<p>Once you have defined your kernel, you can inspect their intermediate representation (IR), apply different optimizations using <a href="../../quick_start/circuits/compiler_passes/">compiler passes</a>, or run them on a <a href="../simulator_device/simulator_device/">(simulator) device</a>.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>A <strong>kernel</strong> function is a piece of code that runs on specialized hardware such as a quantum computer.</p>
@@ -13928,7 +13928,7 @@ Think of this as trying to execute another programming language with the Python 
 <p>Here's a quick overview of the most important available dialects.</p>
 <h2 id="qasm2">qasm2</h2>
 <p>There are a number of dialects with which you can write kernels that represent QASM2 programs.
-See also the <a href="../reference/qasm2.md">qasm2 API reference</a></p>
+See also the <a href="../../reference/bloqade-circuit/src/bloqade/qasm2/">qasm2 API reference</a></p>
 <h3 id="qasm2main">qasm2.main</h3>
 <p>This dialect allows you to write native QASM2 programs.
 As such, it includes definitions gates, measurements and quantum and classical registers, which are part of the QASM2 specification.
@@ -14066,13 +14066,13 @@ This isn't exactly a practical use-case, but serves as an example.</p>
 <span class="c1"># have a look at the IR</span>
 <span class="n">main</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
 </code></pre></div>
-<p>See also the <a href="../reference/squin.md">squin API reference</a></p>
+<p>See also the <a href="../../reference/bloqade-circuit/src/bloqade/squin/">squin API reference</a></p>
 <h2 id="stim">stim</h2>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Sorry folks, still under construction.</p>
 </div>
-<p>See also the <a href="../reference/stim.md">stim API reference</a></p>
+<p>See also the <a href="../../reference/bloqade-circuit/src/bloqade/stim/">stim API reference</a></p>
 
 
 
