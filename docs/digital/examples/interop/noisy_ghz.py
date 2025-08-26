@@ -43,7 +43,7 @@
 # For now, these noise models are implemented as [`cirq.NoiseModel`](https://quantumai.google/reference/python/cirq/NoiseModel) classes, so that you can use with any circuit you build using `cirq`.
 # They are part of the [`bloqade.cirq_utils`](../../../reference/cirq_utils) submodule.
 #
-# Support for using these models with e.g. [squin](../dialects_and_kernels.md) will follow in the future.
+# Support for using these models with e.g. [squin](../dialects_and_kernels) will follow in the future.
 # However, you can already rely on [interoperability with cirq](../cirq_interop) in order to convert (noisy) circuits to squin kernels and use other parts of the compiler pipeline.
 
 # %% [markdown]

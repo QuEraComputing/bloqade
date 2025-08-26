@@ -2,7 +2,7 @@
 
 Bloqade provides a set of pre-defined dialects, with which you can write your programs and circuits.
 
-Once you have your kernel, you can inspect their intermediate representation (IR), apply different optimizations using [compiler passes](../quick_start/circuits/compiler_passes/index.md), or run them on a [(simulator) device](./simulator_device/simulator_device.md).
+Once you have defined your kernel, you can inspect their intermediate representation (IR), apply different optimizations using [compiler passes](../quick_start/circuits/compiler_passes/index.md), or run them on a [(simulator) device](./simulator_device/simulator_device.md).
 
 !!! info
     A **kernel** function is a piece of code that runs on specialized hardware such as a quantum computer.

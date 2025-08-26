@@ -3,7 +3,7 @@
     on [GitHub](https://github.com/QuEraComputing/bloqade/issues/new) if you need help or want to
     contribute.
 
-# Quick Start
+# Bloqade Analog Quick Start
 
 All the sections below are self-contained, you can click on the links in the Table of Contents to read the relevant parts.
 
