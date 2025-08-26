@@ -1,9 +1,49 @@
+---
+title: QASM2
+---
 
-# QASM2
+# Open Quantum Assembly Language and beyond
 
-## Open Quantum Assembly Language (QASM2) and beyond
+We have chosen to closely mirror the semantics of the Open Quantum Assembly Language (QASM2) in bloqade-circuits.
+For details on the language, see the [specification](https://arxiv.org/abs/1707.03429).
 
-We have chosen to closely mirror the semantics of the Open Quantum Assembly Language (QASM2) in bloqade-circuits. The QASM2 dialect is a simple quantum assembly language that allows you to write quantum circuits in a human-readable format. However, one should note that QASM2 is a very restricted language and does not support all the features of a high-level language.
+## qasm2.main
+
+This dialect allows you to write native QASM2 programs, with all its features and restricitions.
+As such, it includes definitions gates, measurements and quantum and classical registers, which are part of the QASM2 specification.
+
+Here's an example kernel
+
+```python
+from bloqade import qasm2
+
+@qasm2.main
+def main():
+    q = qasm2.qreg(2)
+    qasm2.h(q[0])
+    qasm2.cx(q[0], q[1])
+
+    c = qasm2.creg(2)
+    qasm2.measure(q, c)
+    return c
+```
+
+You can also look at the QASM2 program this kernel represents by emitting QASM2 code from it:
+
+```python
+from bloqade.qasm2.emit import QASM2
+from bloqade.qasm2.parse import pprint
+
+
+target = QASM2()
+qasm2_program = target.emit(main)
+pprint(qasm2_program)
+```
+
+
+## qasm2.extended
+
+The QASM2 dialect is a simple quantum assembly language that allows you to write quantum circuits in a human-readable format. However, one should note that QASM2 is a very restricted language and does not support all the features of a high-level language.
 
 For example, there is a separation of **gate routines** declared with `gate` and main program written as a sequence of gate applications. While the gate routine is similar to a function in many ways, it does not support high-level features such as recursion (due to lack of `if` statement support inside) or control flows.
 
@@ -32,7 +72,13 @@ def simd_cz(controls: ilist.IList[qasm2.Qubit, Any], targets: ilist.IList[qasm2.
 
 Both will ultimately emit the exact same QASM code, but the latter snippet represents the kind of parallelism that can be leveraged by reconfigurable neutral atom hardware to more efficiently execute a program.
 
-## Quick Example
+!!! note
+    Since `qasm2.extended` has more advanced features that QASM2 in general, it is not always possible to emit a valid QASM2 program from a `qasm2.extended` kernel.
+    You have to make sure that the control flow is simple enough it can be unrolled. See below for an example of such a case.
+    Alternatively, a sure-fire, but restrictive, way is to stick to writing your kernel using `qasm2.main`.
+
+
+### Quick Example
 
 You can program kernels and quantum programs using the `qasm2.extended` decorator, such as the following Quantum Fourier Transform (QFT) circuit:
 
@@ -87,3 +133,47 @@ pprint(ast)
 ```
 
 ![QFT QASM2](qft-qasm2.png)
+
+
+## Noise
+
+You can represent different noise processes in your QASM2 kernel.
+As of now, there are essentially two different noise channels:
+
+* A pauli noise channel, which can represent different types of decoherence.
+* An atomic loss channel, which can be used to model effects of losing a qubit during the execution of a program.
+
+Usually, you don't want to write noise statements directly.
+Instead, use a [NoisePass][bloqade.qasm2.passes.NoisePass] in order to inject noise statements automatically according to a specific noise model.
+
+!!! note
+    Only the `qasm2.extended` dialect supports noise.
+
+For example, you may want to do something like this:
+
+```python
+from bloqade import qasm2
+from bloqade.qasm2.passes import NoisePass
+
+@qasm2.extended
+def main():
+    n = 2
+    q = qasm2.qreg(n)
+
+    for i in range(n):
+        qasm2.h(q[i])
+
+    qasm2.cx(q[0], q[1])
+    c = qasm2.creg(n)
+    qasm2.measure(q, c)
+    return c
+
+# Define the noise pass you want to use
+noise_pass = NoisePass(main.dialects)  # just use the default noise model for now
+
+# Inject the noise - note that the main method will be updated in-place
+noise_pass(main)
+
+# Look at the IR and all the glorious noise in there
+main.print()
+```

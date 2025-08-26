@@ -1,4 +1,4 @@
-!!! warning
+!!! warning "Note"
     This page is under construction. The content may be incomplete or incorrect. Submit an issue
     on [GitHub](https://github.com/QuEraComputing/bloqade/issues/new) if you need help or want to
     contribute.
