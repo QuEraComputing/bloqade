@@ -51,7 +51,7 @@ Choosing the hardware you want to run on is therefore mostly interchangeable wit
 
 ### Simulation with PyQrack
 
-In order to simulate your quantum program, bloqade-circuit integrates with the [Qrack](https://queracomputing.github.io/kirin/latest/) simulator via its Python bindings.
+In order to simulate your quantum program, bloqade-circuit integrates with the [Qrack](https://pyqrack.readthedocs.io/en/latest/) simulator via its Python bindings.
 Let's run a simulation of the above GHZ program:
 
 ```python
