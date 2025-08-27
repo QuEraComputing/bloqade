@@ -17,12 +17,17 @@ nav:
         - Circuits:
           - quick_start/circuits/index.md
           - Examples:
-            - Quantum Fourier Transform: "digital/examples/qft.py"
-            - GHZ state preparation: "digital/examples/ghz.py"
-            - Noisy GHZ states: "digital/examples/noisy_ghz.py"
-            - Pauli Exponential: "digital/examples/pauli_exponentiation.py"
-            - Repeat Until Success: "digital/examples/repeat_until_success.py"
-            - QAOA: "digital/examples/qaoa.py"
+            - QASM2 examples:
+              - Quantum Fourier Transform: "digital/examples/qasm2/qft.py"
+              - GHZ state preparation: "digital/examples/qasm2/ghz.py"
+              - Pauli Exponential: "digital/examples/qasm2/pauli_exponentiation.py"
+              - Repeat Until Success: "digital/examples/qasm2/repeat_until_success.py"
+              - QAOA: "digital/examples/qasm2/qaoa.py"
+            - Squin dialect examples:
+              - Deutsch-Jozsa Algorithm: digital/examples/squin/deutsch_squin.py
+              - GHZ state preparation with noise: digital/examples/squin/ghz.py
+            - Integration with other SDKs:
+              - Noisy GHZ states with cirq: "digital/examples/interop/noisy_ghz.py"
           - Compiler passes:
             - quick_start/circuits/compiler_passes/index.md
             - Native gate rewrite: quick_start/circuits/compiler_passes/native_gate_rewrite.md
@@ -39,10 +44,8 @@ nav:
             - QASM2 Uop: quick_start/circuits/API/qasm2_uop.md
         - Analog:
           - quick_start/analog/index.md
-        - Qourier:
-          - quick_start/qourier/index.md
       - Contributing: contrib.md
-  - Digital Tutorials:
+  - Bloqade Digital:
     - digital/index.md
     - digital/dialects_and_kernels.md
     - Simulator Device:
@@ -52,36 +55,38 @@ nav:
       - "digital/cirq_interop/index.md"
       - "digital/cirq_interop/cirq_to_squin.md"
       - "digital/cirq_interop/squin_to_cirq.md"
-    - Circuits:
-      - Quantum Fourier Transform: "digital/examples/qft.py"
-      - GHZ state preparation: "digital/examples/ghz.py"
-      - Noisy GHZ states: "digital/examples/noisy_ghz.py"
-      - Pauli Exponential: "digital/examples/pauli_exponentiation.py"
-      - Repeat Until Success: "digital/examples/repeat_until_success.py"
-      - QAOA: "digital/examples/qaoa.py"
-      - Deutsch-Jozsa Algorithm: "digital/examples/deutsch_squin.py"
+  - Digital Tutorials:
+    - digital/tutorials_index.md
+    - QASM2 examples:
+      - Quantum Fourier Transform: "digital/examples/qasm2/qft.py"
+      - GHZ state preparation: "digital/examples/qasm2/ghz.py"
+      - Pauli Exponential: "digital/examples/qasm2/pauli_exponentiation.py"
+      - Repeat Until Success: "digital/examples/qasm2/repeat_until_success.py"
+      - QAOA: "digital/examples/qasm2/qaoa.py"
+    - Squin dialect examples:
+      - Deutsch-Jozsa Algorithm: digital/examples/squin/deutsch_squin.py
+      - GHZ state preparation with noise: digital/examples/squin/ghz.py
+    - Integration with other SDKs:
+      - Noisy GHZ states with cirq: "digital/examples/interop/noisy_ghz.py"
+  - Bloqade Analog:
+      - analog/index.md
+      - Migration Guide to Bloqade Analog: analog/home/migration.md
+      - Quickstart: analog/home/quick_start.md
+      - Background: analog/home/background.md
+      - Gotchas: analog/home/gotchas.md
+      - Contributing: analog/contributing/
+      - Builder:
+        - analog/reference/overview.md
+        - analog/reference/standard.md
+      - Hardware Reference: analog/reference/hardware-capabilities.md
   - Analog Tutorials: 'https://queracomputing.github.io/bloqade-analog-examples/dev/'
   - qBook: 'https://qbook.quera.com/'
-  - Bloqade Analog: 'https://queracomputing.github.io/bloqade-analog/latest/'
-  - Analog Reference: 'https://queracomputing.github.io/bloqade-analog/latest/reference/overview/'
   - API Reference:
-    - reference/index.md
-    - reference/analog.md
-    - reference/analysis.md
-    - reference/cirq_utils.md
-    - reference/device.md
-    - reference/pyqrack.md
-    - reference/qasm2.md
-    - reference/qbraid.md
-    - reference/squin.md
-    - reference/stim.md
-    - reference/task.md
-    - reference/types.md
-    - reference/visual.md
+    - Bloqade Digital: 'reference/bloqade-circuit/src/bloqade/'
+    - Bloqade Analog: 'reference/bloqade-analog/src/bloqade/analog/'
   - Blog:
     - blog/index.md
   - QuEra Computing: 'https://quera.com'
-  #     - QASM2: reference/bloqade/qasm2/
 
 theme:
   name: material
@@ -126,6 +131,7 @@ theme:
     - toc.follow
 
 plugins:
+  - autorefs
   - mkdocstrings:
       handlers:
         python:
@@ -147,7 +153,7 @@ plugins:
       scripts:
         - docs/scripts/gen_ref_nav.py
   - literate-nav:
-      nav_file: SUMMARY.txt
+      nav_file: SUMMARY_BLOQADE_CIRCUIT.md
   - minify:
       minify_html: false
   - blog
@@ -155,6 +161,7 @@ plugins:
       execute: !ENV ["EXECUTE_NOTEBOOKS", false]
       allow_errors: false
       ignore: ["scripts/*"]
+  - mike
 
 extra_javascript:
   - javascripts/katex.js
@@ -172,7 +179,11 @@ markdown_extensions:
   - def_list
   - footnotes
   - md_in_html
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.caret
   - pymdownx.mark
   - pymdownx.tilde
@@ -180,6 +191,9 @@ markdown_extensions:
       alternate_style: true
   - pymdownx.arithmatex:
       generic: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 copyright: Copyright &copy; 2025 Bloqade contributors
 
