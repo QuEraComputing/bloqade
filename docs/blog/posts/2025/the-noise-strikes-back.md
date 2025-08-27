@@ -14,30 +14,29 @@ We should change the name of this file eventually, but I'm excited about the fin
 
 Operating in an analog mode of quantum computation has opened to us exciting opportunities to leverage the flexibility of a neutral atom platform in exploring the application forefront (such as optimization problems, and machine learning), as well as in addressing more scientifically oriented questions (preparation of exotic phases of matter).
 
-In our journey towards building uselful quantum computers, however, we find that operating in an analog mode we are rather limited on the range of problems that we can address, as we only have control on a handful of parameters of the underlying Hamiltonian of the quantum device. Here is where the need for a fully programable digital quantum computer comes into the picture. The promise of this mode of operation is the ability to encode non-native problems to the neutral atom platform. For instance, one of the envisioned and most exciting applications of quantum computers is the accurate simulation (in terms of estimating ground state energy) of electrons in molecules and materials. The fermionic statistics of the target particles to simulate contrast with the bosonic nature of the Rubidium atoms that constitute the building block of our platform. 
+In our journey towards building uselful quantum computers, however, we find that operating in an analog mode limits the range of problems that we can address, as we only have control of a handful of parameters of the underlying device Hamiltonian. Here is where a fully programable digital quantum computer comes into the picture. The promise of this mode of operation is the ability to encode non-native problems to the neutral atom platform. For instance, one of the envisioned and most exciting applications of quantum computers is the accurate simulation (in terms of estimating ground state energy) of electrons in molecules and materials. The fermionic statistics of the target particles to simulate contrast with the bosonic nature of the Rubidium atoms that constitute the building block of our platform. 
 
 Furthermore, we need full control in the quantum device to encode interactions and tunneling parameters between the fermionic modes that discretize our target molecules and materials.
 In our quest to reach this level of maturity in quantum hardware, we introduce Gemini-class devices, that incorporate digital programmability features in our neutral atom quantum computing platform.
 
 ## Circuit-level compared to hardware-level programming (David)
 
-Gemini class devices are digital quantum computers.
-This allows you to work on the circuit-level of abstraction rather than the hardware-level.
-While this is certainly useful, in the current era of noisy intermediate scale quantum devices, you inevitably have to
+Gemini-class devices are digital quantum computers.
+This allows the user to work on the circuit-level of abstraction rather than the hardware-level.
+While this opens many new classes of problems for study with our quantum hardware, in the current era of noisy intermediate scale quantum devices, it is imperative to
 consider potential noise processes when developing quantum programs.
 
-When writing a circuit, noise processes can be taken into account as channels that cause decoherence thereby reducing
+When writing a circuit, noise processes can be taken into account as channels that cause decoherence, thereby reducing
 the overall circuit fidelity.
-If the fidelity is too low, the computation may contain errors.
-Before executing a circuit, you need to know whether this circuit will actually lead to the desired results.
-This is where emulation comes in, which, in order to faithfully represent the results you can expect, needs to account
+If the fidelity is too low, the results of the computation may include unwanted bias or the signal may by suppressed towards zero.
+Therefore, before executing a circuit it is critical to know whether this circuit will actually yield the desired results.
+This is where emulation comes in, which, in order to faithfully represent the results of Gemini, needs to account
 for noise.
 
-At the hardware level, you always need to work with (or around) the noise that is adherent to the hardware you are
-programming on.
+At the hardware level, quantum circuit design always needs to incorporate (or work around) the noise that is inherent to the QPU system.
 This comes at the loss of abstraction and subsequently high-level tooling.
-At the same time, however, in enables you to devise your own strategies in order to suppress noise in your specific
-application, which will oftentimes outperform today's compilers.
+At the same time, however, it enables researchers to devise individual strategies in order to suppress noise in specific
+applications, which will oftentimes outperform today's general-use compilers.
 Here, we will focus on circuit level programming, but please refer
 to [bloqade-shuttle](https://queracomputing.github.io/bloqade-shuttle/dev/) to learn more about our hardware-level
 programming capabilities.
@@ -55,18 +54,18 @@ an easy-to-use framework that allows you to include Gemini's particular noise pr
 
 The abstraction of noise to the circuit-level allows all the noise sources on the device to be conglomerated into
 "effective" Pauli noise channels. The effective channels are heuristic in nature, designed to capture the average
-behavior of atoms when the system performs certain circuit-level operations. The quantitative results are based on
+behavior of atoms when the system performs certain circuit-level operations. The quantitative error probabilities are based on
 benchmarking experiments on Gemini hardware. They also take into account the dynamical decoupling that is needed to
 eliminate the effects of differential stark shifts during atom moves. All in all, the models can be expressed by six
 main noise channels:
 
 1. Global single qubit gate error
-    - Depolarizing error applied to all qubits after a single qubit gate that is applied to all qubits in parallel.
+    - Depolarizing error applied to all qubits after a single qubit gate is applied to all qubits in parallel.
 
 ![Global single qubit gate error](./global_single_qubit_gate_error.png)
 
 1. Local single qubit gate error
-    - Depolarizing error applied to gated single qubits after a single qubit gate that is applied to a subset of qubits.
+    - Depolarizing error applied to gated single qubits after a single qubit gate is applied to a subset of qubits.
 
 ![Local single qubit gate error](./local_single_qubit_gate_error.png)
 
@@ -101,11 +100,11 @@ If you want all the details, please find [the full example here](../../../digita
 
 ### Flow chart (Tyler)
 
-The intended workflow for using the circuit-level noise models is de in the flow chart below. The first step for
+The intended workflow for using the circuit-level noise models is described in the flow chart below. The first step for
 a user interested in testing a specific quantum algorithm is to write an explicit circuit
 in [cirq](https://quantumai.google/cirq). Once defined in `cirq`, the circuit operations can be visualized with
-`print(circuit)`, which can be used to inspect the circuit after being passed through the transformers within `bloqade`.
-Also, at any point, one may choose the simulate the result of the circuit with the tools provided by cirq.
+`print(circuit)`, which can be used to inspect the circuit after being passed through the various transformers within `bloqade`.
+Also, at any point, one may choose to simulate the result of the circuit with the tools provided by cirq.
 
 By passing the circuit through the transformers in `parallelize.py`, within the `bloqade-circuit.cirq_utils` repository,
 the circuit structure can be brought closer to optimal for the neutral atom platform. Then, by using the transformers
@@ -114,21 +113,21 @@ a wrapper for the different noise models, which correspond to different modes of
 
 Finally, we maintain interoperability between `squin` (`bloqade`'s circuit-level intermediate representation) and
 `cirq`. `squin` allows for simulation with different backends, including `pyqrack`, while also allowing for lowering to
-hardware-level programs for executions on Gemini.
+hardware-level programs for execution on Gemini.
 
 ![cirq_utils_flowchart](./flowchart.png)
 
 ### Annotated circuit (Luis)
 
 In practice, our heuristic noise models are used to annotate circuits with incoherent channels, with a "coarse-grained"
-awareness of hardware. As a simple example, lets consider the following that assumes noise annotation according to a
-two-zone layout:
+awareness of hardware. As a simple example, let's consider the following that assumes noise annotation according to a
+two-zone layout using  the 'GeminiTwoZoneNoiseModel` in `bloqade-circuit.cirq_utils.noise.models`:
 
 ![Noise annotation example. Two zone model](../../../digital/examples/example_annotation_fixed.svg)
 
-In our annotation scheme, assume that we are iterating sequentially over the layers of a quantum circuit, and we encounter the layer depicted in a) on which we will add the noise channels. One important assumption in our two zone model to keep in mind is that the qubits corresponding to the gates appearing in a given layer, will be treated as qubits sitting in the gate zone, and thus, the rest of the qubits are assumed to be in the storage zone. 
+In our annotation scheme, assume that we are iterating sequentially over the layers of a quantum circuit, and we encounter the layer depicted in a) on which we will add the noise channels. One important assumption in our two zone model to keep in mind is that the qubits corresponding to the gates appearing in a given layer will be treated as being in the gate zone, and thus the rest of the qubits are assumed to be in the storage zone. 
 
-To capture the cost of moves that we need to pay to reach a given configuration, we need to take a closer look to the layer that precedes our current target layer. In b), we explicitly show the layer that was annotated with noise in the previous iteration, with its corresponding qubit spatial layout below it. The move cost to reach the target qubit configuration before qubit execution is shown in c), and noise annotation is carried according to three sequential stages: 1) qubits that need to be removed from the gate zone undergo move error (orange crosses), and the rest get sitter error, 2)similarly, qubits that need to be added to the gate zone get move error and the rest get sitter noise, and 3) additional move error to "pair up" qubits is added before gate execution (notice than more than one layer might be needed to account for this cost).
+To capture the cost of moves to reach a given configuration, we need to take a closer look at the layer that precedes our current target layer. In b), we explicitly show the layer that was annotated with noise in the previous iteration, with its corresponding qubit spatial layout below it. The move cost to reach the target qubit configuration before qubit execution is shown in c), and noise annotation is carried according to three sequential stages: 1) qubits that need to be removed from the gate zone undergo move error (orange crosses), and the rest get sitter error, 2)similarly, qubits that need to be added to the gate zone get move error and the rest get sitter noise, and 3) additional move error to "pair up" qubits is added before gate execution (notice than more than one layer might be needed to account for this cost).
 
 Finally, noise is annotated after gates, where it is assumed that entangling gates are executed in hardware before single qubit gates. In doing so, qubits that are not participant in the entangling gates receive unpaired cz error (green pentagons).
 
