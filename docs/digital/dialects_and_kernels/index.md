@@ -4,7 +4,7 @@ Bloqade provides a set of pre-defined domain specific languages (DSLs), with whi
 We call these DSLs dialects.
 For a list of available dialects [see blow](#available-dialects).
 
-Once you have defined your kernel, you can inspect their intermediate representation (IR), apply different optimizations using compiler passes, or run them on a [(simulator) device](./simulator_device/simulator_device.md).
+Once you have defined your kernel, you can inspect their intermediate representation (IR), apply different optimizations using compiler passes, or run them on a [(simulator) device](../simulator_device/simulator_device.md).
 
 !!! info "Kernels & dialects in a nutshell"
     A **kernel** function is a piece of code that runs on specialized hardware such as a quantum computer.
