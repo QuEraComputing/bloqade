@@ -7,7 +7,69 @@ title: SQUIN
 This dialect is, in a sense, more expressive than the qasm2 dialects: it allows you to specify operators rather than just gate applications.
 That can be useful if you're trying to e.g. simulate a Hamiltonian time evolution.
 
-That said, gate applications also have short-hand standard library definitions defined in the `squin.gate` submodule.
+## Squin overview
+
+The SQUIN DSL consists of three sub-groups of dialects:
+
+* `squin.qubit`, which can be used for manipulating qubits via gate applications and measurements.
+* `squin.op`, which is used to define gates as operators separately from qubits and perform algebraic operations on them.
+* `squin.noise`, which defines noise channels as operators.
+
+Furthermore, there are two standard library modules, which are mainly used for convenience:
+
+* `squin.gate`, which combines `squin.op` and `squin.qubit`, so you can write gates as you would when defining a quantum circuit.
+* `squin.channel`, which combines `squin.noise` operators and `squin.qubit` in a similar way.
+
+Read on for more detailed explanations.
+
+## Operators: Separating Quantum Gates from Qubits
+
+When you define a quantum circuit, you usually think about gates applying to a fixed number of qubits.
+What this actually means in terms of the underlying Physics is that a unitary operator, that describes the time evolution with a Hamiltonian corresponding to the gate you want to apply, is applied to the qubits of interest.
+
+In the SQUIN dialect, the notion of operators is introduced to reflect that lower level: you can define gates as operators, without applying them to a qubit right away.
+Furthermore, you can perform algebraic operations on these operators, which will result in yet another operator that you can apply to qubits.
+
+Since function calls are also supported in this DSL, you can define functions that build and return operators which you can later apply.
+
+Here is a (somewhat artificial) example, that illustrates the flexibility of SQUIN: we can define a gate that uses two control qubits and applies the operator $X \otimes Y$ to two targets.
+
+
+```python
+from bloqade import squin
+
+@squin.kernel
+def ccxy():
+    """Operator that uses two control qubits in order to apply X and Y to two distinct target qubits."""
+    x = squin.op.x()
+    y = squin.op.y()
+    xy = squin.op.kron(x, y)
+    return squin.op.control(xy, n_controls=2)
+```
+
+You can then call it from another kernel by just invoking the function
+
+```python
+@squin.kernel
+def main():
+    q = squin.qubit.new(4)
+    op = ccxy()
+
+    h = squin.op.h()
+
+    # broadcast applies an operator in parallel to the list of qubits, in this case the first two
+    squin.qubit.broadcast(h, [q[0], q[1]])
+
+    # the first two qubits are used as controls
+    squin.qubit.apply(op, q[0], q[1], q[2], q[3])
+```
+
+
+## Standard library for gate applications
+
+While constructing operators is certainly powerful, most of the time you may want to simply apply standard quantum gates.
+Fortunately, this can easily be represented by operators, so all you need is a library defining the most common quantum gates, which in squin is just the `squin.gate` library.
+
 So you can also just write a squin program like you would a quantum circuit.
 Here's a short example:
 
@@ -19,32 +81,6 @@ def main():
     q = squin.qubit.new(2)
     squin.gate.h(q[0])
     squin.gate.cx(q[0], q[1])
-    return squin.qubit.measure(q)
-
-# have a look at the IR
-main.print()
-```
-
-As mentioned above, you can also build up more complex "operators" that are then applied to any number of qubits.
-To show how you can do that, here's an example on how to write the above kernel defining the gates as separate operators.
-This isn't exactly a practical use-case, but serves as an example.
-
-```python
-from bloqade import squin
-
-@squin.kernel
-def main():
-    q = squin.qubit.new(2)
-    h = squin.op.h()
-
-    # apply a hadamard to only the first qubit
-    h1 = squin.op.kron(h, squin.op.identity(sites=1))
-
-    squin.qubit.apply(h1, q[0], q[1])
-
-    cx = squin.op.cx()
-    squin.qubit.apply(cx, q[0], q[1])
-
     return squin.qubit.measure(q)
 
 # have a look at the IR
@@ -79,6 +115,13 @@ def main_noisy():
 
 # have a look at the IR
 main_noisy.print()
+```
+
+Note, that you could equivalently write the depolarization error in the above as
+
+```python
+dpl = squin.noise.depolarize(p=0.1)
+squin.qubit.apply(dpl, q[0])
 ```
 
 ## See also
