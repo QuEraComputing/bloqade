@@ -8,11 +8,9 @@ authors:
 
 # Simulating noisy circuits for near-term quantum hardware
 
-We should change the name of this file eventually, but I'm excited about the final post of 2025: "Return of the Gemini."
-
 With recent experimental demonstrations of digital quantum circuits executed on neutral atom devices, a new era is beginning for the still nascent technology. At QuEra, we have used our newly completed Gemini-class quantum computer to demonstrate a key building block of fault-tolerant quantum computation: [magic state distillation](https://www.nature.com/articles/s41586-025-09367-3). By both leveraging the universal quantum gate-set and all-to-all connectivity offered by our hardware, while also maximizing parallelism, this work demonstrates the potential of neutral atom QPUs. As the availability of Gemini-class machines increases in the near future, it is paramount to provide researchers with tools to develop quantum circuits that are well suited for Gemini. With that goal in mind, we have released circuit-level noise models in bloqade that closely mimic the performance of the device for small system sizes, allowing for circuit optimization and feasibility checks.
 
-## Motivate: Gemini-class digital QPUs (Luis)
+## Motivation for Gemini-class digital QPUs
 
 Operating in an analog mode of quantum computation has opened to us exciting opportunities to leverage the flexibility of a neutral atom platform in exploring the application forefront (such as optimization problems, and machine learning), as well as in addressing more scientifically oriented questions (preparation of exotic phases of matter).
 
@@ -21,7 +19,7 @@ In our journey towards building uselful quantum computers, however, we find that
 Furthermore, we need full control in the quantum device to encode interactions and tunneling parameters between the fermionic modes that discretize our target molecules and materials.
 In our quest to reach this level of maturity in quantum hardware, we introduce Gemini-class devices, that incorporate digital programmability features in our neutral atom quantum computing platform.
 
-## Circuit-level compared to hardware-level programming (David)
+## Circuit-level compared to hardware-level programming
 
 Gemini-class devices are digital quantum computers.
 This allows the user to work on the circuit-level of abstraction rather than the hardware-level.
@@ -52,7 +50,7 @@ represent the infidelity of the gates executed on the particular hardware (in th
 In order to provide users with the required set of tools, we have spent considerable time researching and implementing
 an easy-to-use framework that allows you to include Gemini's particular noise processes in a high-level circuit.
 
-## Heuristic approach to noise (Tyler)
+## Heuristic approach to noise
 
 The abstraction of noise to the circuit-level allows all the noise sources on the device to be conglomerated into
 "effective" Pauli noise channels. The effective channels are heuristic in nature, designed to capture the average
@@ -100,7 +98,7 @@ heuristic noise models.
 We'll discuss some underlying concepts and highlight interesting parts of the tutorial in this section.
 If you want all the details, please find [the full example here](../../../digital/examples/noisy_ghz.py).
 
-### Flow chart (Tyler)
+### Flow chart
 
 The intended workflow for using the circuit-level noise models is described in the flow chart below. The first step for
 a user interested in testing a specific quantum algorithm is to write an explicit circuit
@@ -119,7 +117,7 @@ hardware-level programs for execution on Gemini.
 
 ![cirq_utils_flowchart](./flowchart.png)
 
-### Annotated circuit (Luis)
+### Annotated circuit
 
 In practice, our heuristic noise models are used to annotate circuits with incoherent channels, with a "coarse-grained"
 awareness of hardware. As a simple example, let's consider the following that assumes noise annotation according to a
@@ -133,7 +131,7 @@ To capture the cost of moves to reach a given configuration, we need to take a c
 
 Finally, noise is annotated after gates, where it is assumed that entangling gates are executed in hardware before single qubit gates. In doing so, qubits that are not participant in the entangling gates receive unpaired cz error (green pentagons).
 
-### GHZ data (David)
+### GHZ data
 
 Now, let's look at some results of [the example](../../../digital/examples/noisy_ghz.py) that compares the different
 noise processes.
