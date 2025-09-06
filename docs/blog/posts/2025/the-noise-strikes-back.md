@@ -102,7 +102,7 @@ If you want all the details, please find [the full example here](../../../digita
 
 The intended workflow for using the circuit-level noise models is described in the flow chart below. The first step for
 a user interested in testing a specific quantum algorithm is to write an explicit circuit
-in [cirq](https://quantumai.google/cirq). Once defined in Cirq, the circuit operations can be visualized with
+in [Cirq](https://quantumai.google/cirq). Once defined in Cirq, the circuit operations can be visualized with
 `print(circuit)`, which can be used to inspect the circuit after being passed through the various transformers within `bloqade`.
 Also, at any point, one may choose to simulate the result of the circuit with the tools provided by Cirq.
 
