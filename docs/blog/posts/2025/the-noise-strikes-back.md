@@ -123,7 +123,7 @@ In practice, our heuristic noise models are used to annotate circuits with incoh
 awareness of hardware. As a simple example, let's consider the following that assumes noise annotation according to a
 two-zone layout using  the `GeminiTwoZoneNoiseModel` in `bloqade-circuit.cirq_utils.noise.models`:
 
-![Noise annotation example. Two zone model](../../../digital/examples/example_annotation_fixed.svg)
+![Noise annotation example. Two zone model](example_annotation.svg)
 
 In our annotation scheme, assume that we are iterating sequentially over the layers of a quantum circuit, and we encounter the layer depicted in a) on which we will add the noise channels. One important assumption in our two-zone model to keep in mind is that the qubits corresponding to the gates appearing in a given layer will be treated as being in the gate zone, and thus the rest of the qubits are assumed to be in the storage zone. 
 
