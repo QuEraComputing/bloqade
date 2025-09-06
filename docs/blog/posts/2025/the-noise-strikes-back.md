@@ -8,7 +8,7 @@ authors:
 
 # Simulating noisy circuits for near-term quantum hardware
 
-With recent experimental demonstrations of digital quantum circuits executed on neutral atom devices, a new era is beginning for this still-nascent technology. At QuEra, we have used our newly completed **Gemini-class quantum computer** to demonstrate a key building block of fault-tolerant quantum computation: [magic state distillation](https://www.nature.com/articles/s41586-025-09367-3). By both leveraging the universal quantum gate-set and all-to-all connectivity offered by our hardware, while also maximizing parallelism, this work demonstrates the potential of neutral atom QPUs. As the availability of Gemini-class machines increases in the near future, it is paramount to provide researchers with tools to develop quantum circuits that are well-suited for Gemini. With that goal in mind, we have released circuit-level noise models in bloqade that closely mimic the performance of the device for small system sizes, allowing for circuit optimization and feasibility checks.
+With recent experimental demonstrations of digital quantum circuits executed on neutral atom devices, a new era is beginning for this still-nascent technology. At QuEra, we have used our newly completed **Gemini-class quantum computer** to demonstrate a key building block of fault-tolerant quantum computation: [logical magic state distillation](https://www.nature.com/articles/s41586-025-09367-3). By both leveraging the universal quantum gate-set and all-to-all connectivity offered by our hardware, while also maximizing parallelism, this work demonstrates the potential of neutral atom QPUs. As the availability of Gemini-class machines increases in the near future, it is paramount to provide researchers with tools to develop quantum circuits that are well-suited for Gemini. With that goal in mind, we have released circuit-level noise models in bloqade that closely mimic the performance of the device for small system sizes, allowing for circuit optimization and feasibility checks.
 
 ## Motivation for Gemini-class digital QPUs
 
@@ -61,14 +61,8 @@ main noise channels:
 
 1. Global single qubit gate error
     - Depolarizing error applied to all qubits after a single qubit gate is applied to all qubits in parallel.
-
-![Global single qubit gate error](./global_single_qubit_gate_error.png)
-
 2. Local single qubit gate error
     - Depolarizing error applied to gated single qubits after a single qubit gate is applied to a subset of qubits.
-
-![Local single qubit gate error](./local_single_qubit_gate_error.png)
-
 3. CZ gate error
     - Pauli error channel that is biased towards phase errors applied to both qubits that are within the blockade radius
       during a Rydberg pulse.
@@ -77,9 +71,6 @@ main noise channels:
     - Pauli error channel is biased towards phase errors applied to single qubits that experience a Rydberg pulse but do
       not have a partner qubit within the blockade radius.
     - Incorporates errors from the Rydberg pulse and dynamical decoupling.
-
-![Errors due to Rydberg pulses](./rydberg_error.png)
-
 5. Mover error
     - Pauli error channel that is also biased towards phase errors applied to qubits that must move during a circuit.
     - Incorporates errors from transferring atoms from fixed tweezer traps to dynamical traps for moves, dynamical
@@ -88,7 +79,6 @@ main noise channels:
     - Pauli error channel that is applied to atoms that are stationary while other atoms are moving.
     - Incorporates errors from dynamical decoupling and idling errors.
 
-![Errors due to atom moves](./move_error.png)
 
 ## Example: Noise in the GHZ state
 
@@ -152,4 +142,4 @@ particular application.
 
 ## Learn more
 
-The future for Gemini is bright! Apart from demonstrating [magic state distillation](https://arxiv.org/abs/2412.15165), Gemini-class QPUs also form the foundation of QuEra's participation in the [Quantum for Bio](https://www.quera.com/press-releases/two-projects-powered-by-quera-computing-contributions-move-to-phase-three-of-wellcome-leaps-quantum-for-bio-challenge-focused-on-healthcare-and-biology-applications) program. QuEra will serve as the hardware provider for 2 of 6 of the teams that have advanced to the final phase of the challenge. With an eye towards general availability of Gemini-class devices, there's no better time for quantum developers to begin crafting circuits that are well-suited for Gemini. The [documentation for Bloqade-circuit](https://bloqade.quera.com/latest/digital/) as well as our [tutorial guides](https://bloqade.quera.com/latest/digital/tutorials_index/) are a great place to start.
+The future for Gemini is bright! Apart from demonstrating [logical magic state distillation](https://arxiv.org/abs/2412.15165), Gemini-class QPUs also form the foundation of QuEra's participation in the [Quantum for Bio](https://www.quera.com/press-releases/two-projects-powered-by-quera-computing-contributions-move-to-phase-three-of-wellcome-leaps-quantum-for-bio-challenge-focused-on-healthcare-and-biology-applications) program. QuEra will serve as the hardware provider for 2 of 6 of the teams that have advanced to the final phase of the challenge. With an eye towards general availability of Gemini-class devices, there's no better time for quantum developers to begin crafting circuits that are well-suited for Gemini. The [documentation for Bloqade-circuit](https://bloqade.quera.com/latest/digital/) as well as our [tutorial guides](https://bloqade.quera.com/latest/digital/tutorials_index/) are a great place to start.
