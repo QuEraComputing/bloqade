@@ -10,6 +10,8 @@ authors:
 
 We should change the name of this file eventually, but I'm excited about the final post of 2025: "Return of the Gemini."
 
+With recent experimental demonstrations of digital quantum circuits executed on neutral atom devices, a new era is beginning for the still nascent technology. At QuEra, we have used our newly completed Gemini-class quantum computer to demonstrate a key building block of fault-tolerant quantum computation: [magic state distillation](https://www.nature.com/articles/s41586-025-09367-3). By both leveraging the universal quantum gate-set and all-to-all connectivity offered by our hardware, while also maximizing parallelism, this work demonstrates the potential of neutral atom QPUs. As the availability of Gemini-class machines increases in the near future, it is paramount to provide researchers with tools to develop quantum circuits that are well suited for Gemini. With that goal in mind, we have released circuit-level noise models in bloqade that closely mimic the performance of the device for small system sizes, allowing for circuit optimization and feasibility checks.
+
 ## Motivate: Gemini-class digital QPUs (Luis)
 
 Operating in an analog mode of quantum computation has opened to us exciting opportunities to leverage the flexibility of a neutral atom platform in exploring the application forefront (such as optimization problems, and machine learning), as well as in addressing more scientifically oriented questions (preparation of exotic phases of matter).
