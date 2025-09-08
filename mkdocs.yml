@@ -156,7 +156,8 @@ plugins:
       nav_file: SUMMARY_BLOQADE_CIRCUIT.md
   - minify:
       minify_html: false
-  - blog
+  - blog:
+      post_excerpt_max_authors: 5
   - mkdocs-jupyter:
       execute: !ENV ["EXECUTE_NOTEBOOKS", false]
       allow_errors: false
