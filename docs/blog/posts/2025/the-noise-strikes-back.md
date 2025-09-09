@@ -128,7 +128,7 @@ noise processes.
 
 The different noise models lead to overall different infidelities of the circuit:
 
-![GHZ circuit fidelity with different noise models](../../../digital/examples/noisy_ghz_fidelity.svg)
+![GHZ circuit fidelity with different noise models](../../../digital/examples/interop/noisy_ghz_fidelity.svg)
 
 As you'd expect, the general trend is that fidelity decreases with a growing number of qubits.
 Depending on how many qubits you need, you may want to run the above simulation in order to decide whether you'd want to
