@@ -72,7 +72,7 @@ def simd_cz(controls: ilist.IList[qasm2.Qubit, Any], targets: ilist.IList[qasm2.
 
 Both will ultimately emit the exact same QASM code, but the latter snippet represents the kind of parallelism that can be leveraged by reconfigurable neutral atom hardware to more efficiently execute a program.
 
-!!! note
+!!! warning
     Since `qasm2.extended` has more advanced features that QASM2 in general, it is not always possible to emit a valid QASM2 program from a `qasm2.extended` kernel.
     You have to make sure that the control flow is simple enough it can be unrolled. See below for an example of such a case.
     Alternatively, a sure-fire, but restrictive, way is to stick to writing your kernel using `qasm2.main`.

@@ -7,7 +7,7 @@ For a list of available dialects [see blow](#available-dialects).
 Once you have defined your kernel, you can inspect their Intermediate Representation (IR), apply different optimizations using compiler passes, or run them on a [(simulator) device](../simulator_device/simulator_device.md).
 
 !!! info "Kernels & dialects in a nutshell"
-    A **kernel** function is a piece of code that runs on specialized hardware such as a quantum computer.
+    A **kernel** function is a piece of code that runs on specialized hardware such as a quantum computer or a GPU.
 
     A **dialect** is a domain-specific language (DSL) with which you can write such a kernel.
     Each dialect comes with a specific set of statements and instructions you can use in order to write your program.
@@ -44,7 +44,7 @@ Bloqade offers a few different dialects with which you can write your programs.
 All dialects have some advantages for particular applications.
 
 If you are unsure which dialect best suits your needs, have a look at the high-level overview of the (non-exhaustive) list of use cases below.
-Also, we recommend having a look at [the Structrual QUantum INstructions (SQUIN) dialect](./squin.md) as it is the most general purpose dialect available and is centrally used in the compilation pipeline.
+Also, we recommend having a look at [the Structural QUantum INstructions (SQUIN) dialect](./squin.md) as it is the most general purpose dialect available and is centrally used in the compilation pipeline.
 
 While the documentation in this section provides some information on the background and a high-level overview, it is also often convenient to learn from examples.
 Have a look at the (growing) [examples collection](../examples/), where you can find different implementations of quantum programs using different dialects.

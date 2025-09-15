@@ -46,7 +46,7 @@ extended = structural_no_opt.union(
  )
 ```
 
-where `structural_no_opt` is the base dialect group that provides the basic control flow, common Python expressions (but not all), then:
+where `structural_no_opt` is the base dialect group (defined in [`kirn`](https://queracomputing.github.io/kirin/latest/)) that provides the basic control flow, common Python expressions (but not all), then:
 
 - `core` provides the core QASM2 operations such as register allocation, measurement and reset.
 - `uop` provides the unary operations, such as standard Pauli gates, rotation gates, etc.
@@ -60,7 +60,8 @@ The following dialects are specific to neutral atom quantum computing as an exte
 
 ### Strict QASM2 mode
 
-While the `qasm2.extended` decorator provides a lot of high-level features as an extension of QASM2, you may want to program in strict QASM2 mode for compatibility reasons. You can do this by using the `qasm2.main` and `qasm2.gate` decorators:
+While the `qasm2.extended` decorator provides a lot of high-level features as an extension of QASM2, you may want to program in strict QASM2 mode for compatibility reasons. You can do this by using the `qasm2.main` and `qasm2.gate` decorators.
+Note that `qasm2.main` features all standard QASM2 instructions, whereas `qasm2.gate` adds the functionality for defining custom gate subroutines.
 
 ```python
 @qasm2.main
