@@ -8,7 +8,7 @@ Thank you for your interest in contributing to the project! We welcome all contr
 - [Reporting a Bug ](reporting-a-bug.md)
 - [Reporting Documentation Issues](documentation-issues.md)
 - [Feature Requests](feature-requests.md)
-- [Developing Bloqade](developing-bloqade.md)
+- [Developing Bloqade](../../contrib.md)
 - [Design Philosophy and Architecture](design-philosophy-and-architecture.md)
 - [Community Slack](community-slack.md)
 - [Ask a Question](asking-a-question.md)

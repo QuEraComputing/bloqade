@@ -14,49 +14,19 @@ nav:
       - Background: background.md
       - Manifesto: manifesto.md
       - Quick Start:
-        - Circuits:
+        - Bloqade Digital:
           - quick_start/circuits/index.md
-          - Examples:
-            - QASM2 examples:
-              - Quantum Fourier Transform: "digital/examples/qasm2/qft.py"
-              - GHZ state preparation: "digital/examples/qasm2/ghz.py"
-              - Pauli Exponential: "digital/examples/qasm2/pauli_exponentiation.py"
-              - Repeat Until Success: "digital/examples/qasm2/repeat_until_success.py"
-              - QAOA: "digital/examples/qasm2/qaoa.py"
-            - Squin dialect examples:
-              - Deutsch-Jozsa Algorithm: digital/examples/squin/deutsch_squin.py
-              - GHZ state preparation with noise: digital/examples/squin/ghz.py
-            - Integration with other SDKs:
-              - Noisy GHZ states with cirq: "digital/examples/interop/noisy_ghz.py"
-          - Compiler passes:
-            - quick_start/circuits/compiler_passes/index.md
-            - Native gate rewrite: quick_start/circuits/compiler_passes/native_gate_rewrite.md
-            - ASAP Parallelism: quick_start/circuits/compiler_passes/asap_parallelism.md
-            - Circuit simplification: quick_start/circuits/compiler_passes/circuit_simplification.md
-          - Interpreters and analysis:
-            - quick_start/circuits/interpreters_and_analysis/index.md
-            - QASM2 Codegen: quick_start/circuits/interpreters_and_analysis/qasm2_codegen.md
-            - PyQrack emulator: quick_start/circuits/interpreters_and_analysis/pyqrack_emulator.md
-          - Circuit dialect API:
-            - QASM2 Core: quick_start/circuits/API/qasm2_core.md
-            - QASM2 Noise: quick_start/circuits/API/qasm2_noise.md
-            - QASM2 Parallel: quick_start/circuits/API/qasm2_parallel.md
-            - QASM2 Uop: quick_start/circuits/API/qasm2_uop.md
-        - Analog:
+        - Bloqade Analog:
           - quick_start/analog/index.md
       - Contributing: contrib.md
   - Bloqade Digital:
     - digital/index.md
-    - digital/dialects_and_kernels.md
-    - Simulator Device:
-      - digital/simulator_device/simulator_device.md
-      - digital/simulator_device/tasks.md
-    - Interoperability with Cirq:
-      - "digital/cirq_interop/index.md"
-      - "digital/cirq_interop/cirq_to_squin.md"
-      - "digital/cirq_interop/squin_to_cirq.md"
+    - Domain specific languages: digital/dialects_and_kernels/
+    - Compilation process: digital/compilation.md
+    - Simulation: digital/simulator_device/
+    - Interoperability with Cirq: digital/cirq_interop/
   - Digital Tutorials:
-    - digital/tutorials_index.md
+    - digital/examples/index.md
     - QASM2 examples:
       - Quantum Fourier Transform: "digital/examples/qasm2/qft.py"
       - GHZ state preparation: "digital/examples/qasm2/ghz.py"
