@@ -2,23 +2,23 @@
 
 The compilation process is divided into several stages:
 
-1. **Lowering**: a decorator such as `qasm2.extended` takes the Python Abstract Syntax Tree (AST) and lowers it into Kirin IR in the Static Single Assignment (SSA) form.
+1. **Lowering**: a decorator such as `qasm2.extended` takes the Python Abstract Syntax Tree (AST) and lowers it into Kirin's Intermediate Representation (IR) which follows Static Single Assignment (SSA) form.
 2. **Interpretation**: when invoking a backend, such as the PyQrack simulator, the IR code is interpreted by an interpreter featuring the corresponding method tables for the runtime evaluation of the dialect statements.
 3. **Target code generation**: when emitting code, several steps can be involved before the actual code emission, depending on the target. Similar to interpretation, each statement will be translated to one that fits the chosen target. For example, when emitting QASM2, the following steps occur:
    1. The IR code gets aggressively inlined and all constant expressions are evaluated.
    2. All loops and control flow are unrolled.
-   3. All compatible Python expressions (e.g `sin`, arithmetics) are translated into QASM2 expression.
+   3. All compatible Python expressions (e.g `sin`, arithmetics) are translated into QASM2 expressions.
    4. The QASM2 code is emitted as QASM2 AST for pretty printing.
 
 ### Progressive compilation
 
 As well as writing circuit executions, you can also progressively transform and compile that circuit.
-While it is possible to write your own compiler passes and optimizations - for that, please refer to the [kirin](https://queracomputing.github.io/kirin/latest/) documentation - bloqade-circuit also offers a number of different, pre-defined optimizations.
+While it is possible to write your own compiler passes and optimizations - for that, please refer to the [`kirin`](https://queracomputing.github.io/kirin/latest/) documentation - `bloqade-circuit` also offers a number of different, pre-defined optimizations.
 
 !!! warning
     Compiler and optimization passes are currently under development.
     While quite a lot of them are used internally, they are not in a user-friendly state.
-    Please skip this step for the time being.
+    Please proceed with caution!
 
 
 ## Dialect groups
@@ -56,7 +56,7 @@ The following dialects are specific to neutral atom quantum computing as an exte
 - `glob` provides the global gates (Rydberg specific)
 - `noise` provides the noise channels
 - `parallel` provides the parallel gate support (Rydberg specific).
-- `inline` dialect provides the inline QASM string
+- `inline` provides the inline QASM string
 
 ### Strict QASM2 mode
 
@@ -87,4 +87,4 @@ measure q[0] -> c[0];
 measure q[1] -> c[1];
 ```
 
-Note that the `return` values are not supported in QASM2 and are therefore omitted in the code above.
+Note that `return` is not supported in QASM2 and are therefore omitted in the code above.

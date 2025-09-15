@@ -10,7 +10,7 @@ For details on the language, see the [specification](https://arxiv.org/abs/1707.
 ## qasm2.main
 
 This dialect allows you to write native QASM2 programs, with all its features and restricitions.
-As such, it includes definitions gates, measurements and quantum and classical registers, which are part of the QASM2 specification.
+As such, it includes definitions for gates, measurements and registers (quantum and classical), which are part of the QASM2 specification.
 
 Here's an example kernel
 
@@ -47,7 +47,7 @@ The QASM2 dialect is a simple quantum assembly language that allows you to write
 
 For example, there is a separation of **gate routines** declared with `gate` and main program written as a sequence of gate applications. While the gate routine is similar to a function in many ways, it does not support high-level features such as recursion (due to lack of `if` statement support inside) or control flows.
 
-Indeed, bloqade-circuits is designed with the notion of [kernels](https://queracomputing.github.io/kirin/latest/blog/2025/02/28/introducing-kirin-a-new-open-source-software-development-tool-for-fault-tolerant-quantum-computing/?h=kernel#what-are-kernel-functions) in mind by decorating functions with a `@qasm2.extended` decorator. The python code is interpreted and parsed by the [Kirin](https://queracomputing.github.io/kirin/latest/) compiler toolchain and lowered to an abstract representation of the program. These kernels can include classical computation and the usual programming structures-- if/else, for and while loops, function inputs, and the like, as one is used to in Python.
+Indeed, `bloqade-circuit` is designed with the notion of [kernels](https://queracomputing.github.io/kirin/latest/blog/2025/02/28/introducing-kirin-a-new-open-source-software-development-tool-for-fault-tolerant-quantum-computing/?h=kernel#what-are-kernel-functions) in mind by decorating functions with a `@qasm2.extended` decorator. The Python code is interpreted and parsed by the [Kirin](https://queracomputing.github.io/kirin/latest/) compiler toolchain and lowered to an abstract representation of the program. These kernels can include classical computation and the usual programming structures-- if/else, for and while loops, function inputs, and the like, as one is used to in Python.
 
 Additionally, the QASM2 representations of bloqade-circuits have been extended to include a key advantage of reconfigurable neutral atom hardware: parallelism. For example, one can represent a CZ gate applied to many qubit pairs at once as
 
@@ -62,7 +62,7 @@ def parallel_cz(controls: ilist.IList[qasm2.Qubit, Any], targets: ilist.IList[qa
         qasm2.cz(ctrl=controls[0],qarg=targets[1])
 ```
 
-or equivalently use a SIMD (single instruction multiple data)-like instruction to explicitly flag the parallelism
+or equivalently use a SIMD (Single Instruction Multiple Data)-like instruction to explicitly flag the parallelism
 
 ```python
 @qasm2.extended
@@ -101,7 +101,7 @@ qft.print()
 ```
 
 While the syntax is similar to Python, the `qasm2.extended` decorator actually compiles the `qft` function
-into lower-level intermediate representation (IR) code that can be later interpreted, analyzed, or executed on quantum hardware. Observe that this function cannot immediately compile down to QASM as it takes parametrized inputs, and is called recursively.
+into lower-level Intermediate Representation (IR) code that can be later interpreted, analyzed, or executed on quantum hardware. Observe that this function cannot immediately compile down to QASM as it takes parametrized inputs, and is called recursively.
 
 You can inspect the initial IR code by calling the pretty printer:
 
@@ -112,7 +112,7 @@ qft.print()
 ![QFT IR](qft-pprint.png)
 
 We can also emit QASM2 code from it.
-Note, that native QASM2 does not support arguments or return values.
+Note that native QASM2 does not support arguments or return values.
 Therefore, we wrap the `qft` kernel from above in another one, that simply invokes `qft` for a specific set of arguments.
 Then, we emit this new kernel as a QASM2 program.
 
@@ -140,7 +140,7 @@ pprint(ast)
 You can represent different noise processes in your QASM2 kernel.
 As of now, there are essentially two different noise channels:
 
-* A pauli noise channel, which can represent different types of decoherence.
+* A Pauli noise channel, which can represent different types of decoherence.
 * An atomic loss channel, which can be used to model effects of losing a qubit during the execution of a program.
 
 Usually, you don't want to write noise statements directly.

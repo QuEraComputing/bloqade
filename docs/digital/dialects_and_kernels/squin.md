@@ -20,12 +20,11 @@ Furthermore, there are two standard library modules, which are mainly used for c
 * `squin.gate`, which combines `squin.op` and `squin.qubit`, so you can write gates as you would when defining a quantum circuit.
 * `squin.channel`, which combines `squin.noise` operators and `squin.qubit` in a similar way.
 
-Read on for more detailed explanations.
 
 ## Operators: Separating Quantum Gates from Qubits
 
-When you define a quantum circuit, you usually think about gates applying to a fixed number of qubits.
-What this actually means in terms of the underlying Physics is that a unitary operator, that describes the time evolution with a Hamiltonian corresponding to the gate you want to apply, is applied to the qubits of interest.
+When you define a quantum circuit, you usually think about gates applied to a fixed number of qubits.
+What this actually means in terms of the underlying physics is that a unitary operator (describing the time evolution of a Hamiltonian corresponding to the gate you want to apply) is applied to the qubits of interest.
 
 In the SQUIN dialect, the notion of operators is introduced to reflect that lower level: you can define gates as operators, without applying them to a qubit right away.
 Furthermore, you can perform algebraic operations on these operators, which will result in yet another operator that you can apply to qubits.
@@ -68,7 +67,7 @@ def main():
 ## Standard library for gate applications
 
 While constructing operators is certainly powerful, most of the time you may want to simply apply standard quantum gates.
-Fortunately, this can easily be represented by operators, so all you need is a library defining the most common quantum gates, which in squin is just the `squin.gate` library.
+Fortunately, these can be represented as operators and are provided in SQUIN through the `squin.gate` library.
 
 So you can also just write a squin program like you would a quantum circuit.
 Here's a short example:
@@ -89,14 +88,14 @@ main.print()
 
 ## Noise
 
-The squin dialect also includes noise.
-Each noise channel is again represented by an operator.
+The squin dialect also includes noise, with each noise channel represented by an operator.
 Therefore, you can separate the application of a noise channel from the qubits and do algebra on them.
 These noise channel operators are available under the `squin.noise` module.
 For example, you can create a depolarization channel with a set probability inside a kernel with `squin.noise.depolarize(p=0.1)`.
 
-To make it easier to use if you are just writing a circuit, however, there is again a standard library for short-hand applications.
-That standard library is called `squin.channel`. For example, we can use this to add noise into the simple kernel from before, which entangles two qubits:
+To make it easier to use if you are just writing a circuit, however, there is again a standard library for short-hand applications available through `squin.channel`.
+
+For example, we can use this to add noise into the simple kernel from before, which entangles two qubits:
 
 ```python
 from bloqade import squin

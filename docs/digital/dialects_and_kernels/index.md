@@ -1,10 +1,10 @@
 # Dialects and kernels
 
 Bloqade provides a set of pre-defined domain specific languages (DSLs), with which you can write your programs and circuits.
-We call these DSLs dialects.
+We call these DSLs *dialects*.
 For a list of available dialects [see blow](#available-dialects).
 
-Once you have defined your kernel, you can inspect their intermediate representation (IR), apply different optimizations using compiler passes, or run them on a [(simulator) device](../simulator_device/simulator_device.md).
+Once you have defined your kernel, you can inspect their Intermediate Representation (IR), apply different optimizations using compiler passes, or run them on a [(simulator) device](../simulator_device/simulator_device.md).
 
 !!! info "Kernels & dialects in a nutshell"
     A **kernel** function is a piece of code that runs on specialized hardware such as a quantum computer.
@@ -14,7 +14,7 @@ Once you have defined your kernel, you can inspect their intermediate representa
 
 
 When running code that targets a specialized execution environment, there are typically several layers involved.
-At the surface, the programmer writes functions in a syntax that may resemble a host language (e.g., Python), but is actually expressed in a dialect— a domain-specific variant with its own semantics.
+At the surface, the programmer writes functions in a syntax that may resemble a host language (e.g., Python), but is actually expressed in a dialect — a domain-specific variant with its own semantics.
 A decorator marks these functions so they can be intercepted before normal host-language execution.
 All dialects can be used by decorating a function.
 
@@ -28,13 +28,13 @@ Instead of running directly, the kernel function body is parsed and translated (
 This IR can be manipulated (e.g. to perform optimizations) and can later be executed by an interpreter that understands the dialect's semantics.
 The interpreter uses an internal instruction set to execute the code on the intended backend, which may be a simulator, virtual machine, or physical device.
 This separation lets developers write high-level, expressive code while the interpreter ensures it runs correctly in the target environment.
-[QuEra's Kirin](https://queracomputing.github.io/kirin/latest/) infrastructure uses this concept by defining custom dialects that are tailored towards the needs to program neutral atom quantum computers.
-While the dialects are not python syntax, Kirin still uses the python interpreter to execute the code.
+[QuEra's Kirin](https://queracomputing.github.io/kirin/latest/) provides the infrastructure that allows us to define custom dialects tailored towards the needs of programming neutral atom quantum computers in Bloqade
+While the dialects are not Python syntax, Kirin still uses the Python interpreter to execute the code.
 
 
 !!! warning "Note"
     It is important to understand that when you are writing a kernel function in a dialect you are generally **not writing Python** code, even though it looks a lot like it.
-    Therefore, kernel functions can usually not be called directly.
+    Therefore, kernel functions are not (usually) directly callable.
     Think of this as trying to execute another programming language with the Python interpreter: of course, that will error.
 
 
@@ -44,7 +44,7 @@ Bloqade offers a few different dialects with which you can write your programs.
 All dialects have some advantages for particular applications.
 
 If you are unsure which dialect best suits your needs, have a look at the high-level overview of the (non-exhaustive) list of use cases below.
-Also, we recommend having a look at [squin](./squin.md) as it is the most general purpose dialect available and is centrally used in the compilation pipeline.
+Also, we recommend having a look at [the Structrual QUantum INstructions (SQUIN) dialect](./squin.md) as it is the most general purpose dialect available and is centrally used in the compilation pipeline.
 
 While the documentation in this section provides some information on the background and a high-level overview, it is also often convenient to learn from examples.
 Have a look at the (growing) [examples collection](../examples/), where you can find different implementations of quantum programs using different dialects.
