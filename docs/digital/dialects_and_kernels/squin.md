@@ -86,6 +86,10 @@ def main():
 main.print()
 ```
 
+The resulting IR looks like this:
+
+![main IR](./squin-ir-1.png)
+
 ## Noise
 
 The squin dialect also includes noise, with each noise channel represented by an operator.
@@ -115,6 +119,10 @@ def main_noisy():
 # have a look at the IR
 main_noisy.print()
 ```
+
+The result looks like this:
+
+![main_noisy IR](./squin-ir-2.png)
 
 Note, that you could equivalently write the depolarization error in the above as
 
