@@ -13904,8 +13904,8 @@ As such, it includes definitions for gates, measurements and registers (quantum 
     <span class="n">qasm2</span><span class="o">.</span><span class="n">parallel</span><span class="o">.</span><span class="n">cz</span><span class="p">(</span><span class="n">ctrls</span><span class="o">=</span><span class="n">controls</span><span class="p">,</span><span class="n">qargs</span><span class="o">=</span><span class="n">targets</span><span class="p">)</span>
 </code></pre></div>
 <p>Both will ultimately emit the exact same QASM code, but the latter snippet represents the kind of parallelism that can be leveraged by reconfigurable neutral atom hardware to more efficiently execute a program.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
 <p>Since <code>qasm2.extended</code> has more advanced features that QASM2 in general, it is not always possible to emit a valid QASM2 program from a <code>qasm2.extended</code> kernel.
 You have to make sure that the control flow is simple enough it can be unrolled. See below for an example of such a case.
 Alternatively, a sure-fire, but restrictive, way is to stick to writing your kernel using <code>qasm2.main</code>.</p>

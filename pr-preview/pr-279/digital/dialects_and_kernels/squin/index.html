@@ -13925,6 +13925,8 @@ Here's a short example:</p>
 <span class="c1"># have a look at the IR</span>
 <span class="n">main</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
 </code></pre></div>
+<p>The resulting IR looks like this:</p>
+<p><img alt="main IR" src="../squin-ir-1.png" /></p>
 <h2 id="noise">Noise</h2>
 <p>The squin dialect also includes noise, with each noise channel represented by an operator.
 Therefore, you can separate the application of a noise channel from the qubits and do algebra on them.
@@ -13949,6 +13951,8 @@ For example, you can create a depolarization channel with a set probability insi
 <span class="c1"># have a look at the IR</span>
 <span class="n">main_noisy</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
 </code></pre></div>
+<p>The result looks like this:</p>
+<p><img alt="main_noisy IR" src="../squin-ir-2.png" /></p>
 <p>Note, that you could equivalently write the depolarization error in the above as</p>
 <div class="highlight"><pre><span></span><code><span class="n">dpl</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">noise</span><span class="o">.</span><span class="n">depolarize</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">dpl</span><span class="p">,</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>

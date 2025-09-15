@@ -13891,7 +13891,7 @@ Please proceed with caution!</p>
      <span class="p">]</span>
  <span class="p">)</span>
 </code></pre></div>
-<p>where <code>structural_no_opt</code> is the base dialect group that provides the basic control flow, common Python expressions (but not all), then:</p>
+<p>where <code>structural_no_opt</code> is the base dialect group (defined in <a href="https://queracomputing.github.io/kirin/latest/"><code>kirn</code></a>) that provides the basic control flow, common Python expressions (but not all), then:</p>
 <ul>
 <li><code>core</code> provides the core QASM2 operations such as register allocation, measurement and reset.</li>
 <li><code>uop</code> provides the unary operations, such as standard Pauli gates, rotation gates, etc.</li>
@@ -13904,7 +13904,8 @@ Please proceed with caution!</p>
 <li><code>inline</code> provides the inline QASM string</li>
 </ul>
 <h3 id="strict-qasm2-mode">Strict QASM2 mode</h3>
-<p>While the <code>qasm2.extended</code> decorator provides a lot of high-level features as an extension of QASM2, you may want to program in strict QASM2 mode for compatibility reasons. You can do this by using the <code>qasm2.main</code> and <code>qasm2.gate</code> decorators:</p>
+<p>While the <code>qasm2.extended</code> decorator provides a lot of high-level features as an extension of QASM2, you may want to program in strict QASM2 mode for compatibility reasons. You can do this by using the <code>qasm2.main</code> and <code>qasm2.gate</code> decorators.
+Note that <code>qasm2.main</code> features all standard QASM2 instructions, whereas <code>qasm2.gate</code> adds the functionality for defining custom gate subroutines.</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@qasm2</span><span class="o">.</span><span class="n">main</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="n">qasm2</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
