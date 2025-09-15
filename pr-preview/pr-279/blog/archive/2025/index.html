@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.18">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.19">
     
     
       
@@ -13717,7 +13717,178 @@
       <nav class="md-post__authors md-typeset">
         
           <span class="md-author">
+            <img src="https://ca.slack-edge.com/T011VA51XJL-U08L2D8GMCY-abadd562fee2-512" alt="Tyler A Cochran">
+          </span>
+        
+          <span class="md-author">
+            <img src="https://github.com/lamq317.png" alt="Luis A. Martinez">
+          </span>
+        
+          <span class="md-author">
+            <img src="https://github.com/david-pl.png" alt="David Plankensteiner">
+          </span>
+        
+      </nav>
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2025-07-30 00:00:00+00:00">July 30, 2025</time></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              8 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="simulating-noisy-circuits-for-near-term-quantum-hardware"><a class="toclink" href="../../2025/07/30/simulating-noisy-circuits-for-near-term-quantum-hardware/">Simulating noisy circuits for near-term quantum hardware</a></h2>
+<p>With recent experimental demonstrations of digital quantum circuits executed on neutral atom devices, a new era is beginning for this still-nascent technology. At QuEra, we have used our newly completed <strong>Gemini-class quantum computer</strong> to demonstrate a key building block of fault-tolerant quantum computation: <a href="https://www.nature.com/articles/s41586-025-09367-3">logical magic state distillation</a>. By both leveraging the universal quantum gate-set and all-to-all connectivity offered by our hardware, while also maximizing parallelism, this work demonstrates the potential of neutral atom QPUs. As the availability of Gemini-class machines increases in the near future, it is paramount to provide researchers with tools to develop quantum circuits that are well-suited for Gemini. With that goal in mind, we have released circuit-level noise models in bloqade that closely mimic the performance of the device for small system sizes, allowing for circuit optimization and feasibility checks.</p>
+<h3 id="motivation-for-gemini-class-digital-qpus"><a class="toclink" href="../../2025/07/30/simulating-noisy-circuits-for-near-term-quantum-hardware/#motivation-for-gemini-class-digital-qpus">Motivation for Gemini-class digital QPUs</a></h3>
+<p>Operating in an analog mode of quantum computation QuEra's <a href="https://www.quera.com/aquila">Aquila</a> quantum computer has opened exciting opportunities to leverage the flexibility of a neutral atom platform to explore the application forefront (such as <a href="https://arxiv.org/abs/2407.02553">optimization problems</a>, and <a href="https://pubs.acs.org/doi/10.1021/acs.jcim.5c00958">machine learning</a>), as well as to address more scientifically oriented questions (preparation of <a href="https://www.nature.com/articles/s41586-025-09051-6">exotic phases of matter</a>).</p>
+<p>In our journey towards building useful quantum computers, however, we find that operating in an analog mode limits the range of problems that we can address, as we only have control of a handful of parameters of the underlying device Hamiltonian. This is where a fully programmable digital quantum computer comes into the picture. The promise of this mode of operation is the ability to encode non-native problems to the neutral atom platform. For instance, one of the envisioned and most exciting applications of quantum computers is the accurate simulation (in terms of estimating ground state energy) of electrons in molecules and materials. The fermionic statistics of the target particles to simulate stand in contrast to the bosonic nature of the Rubidium atoms that constitute the building blocks of our platform. </p>
+<p>Furthermore, we need full control in the quantum device to encode interactions and tunneling parameters between the fermionic modes that discretize our target molecules and materials.
+In our quest to reach this level of maturity in quantum hardware, we introduce Gemini-class devices, that incorporate digital programmability features into our neutral atom quantum computing platform.</p>
+<h3 id="circuit-level-compared-to-hardware-level-programming"><a class="toclink" href="../../2025/07/30/simulating-noisy-circuits-for-near-term-quantum-hardware/#circuit-level-compared-to-hardware-level-programming">Circuit-level compared to hardware-level programming</a></h3>
+<p>Gemini-class devices are digital quantum computers.
+This allows the user to work on the circuit-level of abstraction rather than the hardware-level.
+While this opens many new classes of problems for study with our quantum hardware, in the current era of noisy intermediate scale quantum devices, it is imperative to
+consider potential noise processes when developing quantum programs.</p>
+<p>When writing a circuit, noise processes can be taken into account as channels that cause decoherence, thereby reducing
+the overall circuit fidelity.
+If the fidelity is too low, the results of the computation may include unwanted bias or the signal may be suppressed towards zero.
+Therefore, before executing a circuit it is critical to know whether this circuit will actually yield the desired results.
+This is where emulation comes in, which, in order to faithfully represent the results of Gemini, needs to account
+for noise.</p>
+<p>At the hardware level, quantum circuit design always needs to incorporate (or work around) the noise that is inherent to the QPU system.
+This comes at the loss of abstraction and subsequently high-level tooling.
+At the same time, however, it enables researchers to devise individual strategies in order to suppress noise in specific
+applications, which will oftentimes outperform today's general-use compilers.
+Here, we will focus on circuit-level programming, but please refer
+to <a href="https://queracomputing.github.io/bloqade-shuttle/dev/">bloqade-shuttle</a> to learn more about our hardware-level
+programming capabilities.</p>
+<p>Even including noise channels, circuit-level programming remains abstract in that you do not have to consider the
+specific hardware you are running the circuit on.
+However, it is the very nature of the noise channels, where the details of the hardware come into play.
+To know whether a circuit will execute with a sufficiently high fidelity, the noise parameters and channels need to
+represent the infidelity of the gates executed on the particular hardware (in this case, Gemini).</p>
+<p>In order to provide users with the required set of tools, we have spent considerable time researching and implementing
+an easy-to-use framework that allows you to include Gemini's particular noise processes in a high-level circuit.</p>
+<h3 id="heuristic-approach-to-noise"><a class="toclink" href="../../2025/07/30/simulating-noisy-circuits-for-near-term-quantum-hardware/#heuristic-approach-to-noise">Heuristic approach to noise</a></h3>
+<p>The abstraction of noise to the circuit level allows all the noise sources on the device to be combined into
+"effective" Pauli noise channels. The effective channels are heuristic in nature, designed to capture the average
+behavior of atoms when the system performs certain circuit-level operations. The quantitative error probabilities are based on
+benchmarking experiments on Gemini hardware. They also take into account the dynamical decoupling that is needed to
+eliminate the effects of differential stark shifts during atom moves. Overall, the models can be expressed by six
+main noise channels:</p>
+<ol>
+<li>Global single qubit gate error<ul>
+<li>Depolarizing error applied to all qubits after a single qubit gate is applied to all qubits in parallel.</li>
+</ul>
+</li>
+<li>Local single qubit gate error<ul>
+<li>Depolarizing error applied to gated single qubits after a single qubit gate is applied to a subset of qubits.</li>
+</ul>
+</li>
+<li>CZ gate error<ul>
+<li>Pauli error channel that is biased towards phase errors applied to both qubits that are within the blockade radius
+  during a Rydberg pulse.</li>
+<li>Incorporates errors from the Rydberg pulse and dynamical decoupling.</li>
+</ul>
+</li>
+<li>Unpaired Rydberg error<ul>
+<li>Pauli error channel is biased towards phase errors applied to single qubits that experience a Rydberg pulse but do
+  not have a partner qubit within the blockade radius.</li>
+<li>Incorporates errors from the Rydberg pulse and dynamical decoupling.</li>
+</ul>
+</li>
+<li>Mover error<ul>
+<li>Pauli error channel that is also biased towards phase errors applied to qubits that must move during a circuit.</li>
+<li>Incorporates errors from transferring atoms from fixed tweezer traps to dynamical traps for moves, dynamical
+  decoupling, move errors, and idling errors.</li>
+</ul>
+</li>
+<li>Sitter error<ul>
+<li>Pauli error channel that is applied to atoms that are stationary while other atoms are moving.</li>
+<li>Incorporates errors from dynamical decoupling and idling errors.</li>
+</ul>
+</li>
+</ol>
+<h3 id="example-noise-in-the-ghz-state"><a class="toclink" href="../../2025/07/30/simulating-noisy-circuits-for-near-term-quantum-hardware/#example-noise-in-the-ghz-state">Example: Noise in the GHZ state</a></h3>
+<p>It is often most convenient to study an example in order to learn how to use a set of tools.
+To this end, we included a tutorial that shows how to annotate a GHZ preparation circuit using the different
+heuristic noise models.
+We'll discuss some underlying concepts and highlight interesting parts of the tutorial in this section.
+If you want all the details, please find <a href="../../../digital/examples/noisy_ghz.py">the full example here</a>.</p>
+<h4 id="flow-chart"><a class="toclink" href="../../2025/07/30/simulating-noisy-circuits-for-near-term-quantum-hardware/#flow-chart">Flow chart</a></h4>
+<p>The intended workflow for using the circuit-level noise models is described in the flow chart below. The first step for
+a user interested in testing a specific quantum algorithm is to write an explicit circuit
+in <a href="https://quantumai.google/cirq">Cirq</a>. Once defined in Cirq, the circuit operations can be visualized with
+<code>print(circuit)</code>, which can be used to inspect the circuit after being passed through the various transformers within <code>bloqade</code>.
+Also, at any point, one may choose to simulate the result of the circuit with the tools provided by Cirq.</p>
+<p>By passing the circuit through the transformers in <code>parallelize.py</code>, within the <code>bloqade-circuit.cirq_utils</code> repository,
+the circuit structure can be brought closer to optimal for the neutral atom platform. Then, by using the transformers
+in <code>noise.transform.py</code>, Pauli error channels are locally added to the circuit. The function <code>transform_circuit</code> acts as 
+a wrapper for the different noise models, which correspond to different modes of hardware operation.</p>
+<p>Finally, we maintain interoperability between Squin (Bloqade's circuit-level intermediate representation) and
+Cirq. Squin allows for simulation with different backends, including PyQrack, while also allowing for lowering to
+hardware-level programs for execution on Gemini.</p>
+<p><img alt="cirq_utils_flowchart" src="../../2025/flowchart.png" /></p>
+<h4 id="annotated-circuit"><a class="toclink" href="../../2025/07/30/simulating-noisy-circuits-for-near-term-quantum-hardware/#annotated-circuit">Annotated circuit</a></h4>
+<p>In practice, our heuristic noise models are used to annotate circuits with incoherent channels, with a "coarse-grained"
+awareness of hardware. As a simple example, let's consider the following that assumes noise annotation according to a
+two-zone layout using  the <code>GeminiTwoZoneNoiseModel</code> in <code>bloqade-circuit.cirq_utils.noise.models</code>:</p>
+<p><img alt="Noise annotation example. Two zone model" src="../../2025/example_annotation.svg" /></p>
+<p>In our annotation scheme, assume that we are iterating sequentially over the layers of a quantum circuit, and we encounter the layer depicted in a) on which we will add the noise channels. One important assumption in our two-zone model to keep in mind is that the qubits corresponding to the gates appearing in a given layer will be treated as being in the gate zone, and thus the rest of the qubits are assumed to be in the storage zone. </p>
+<p>To capture the cost of moves to reach a given configuration, we need to take a closer look at the layer that precedes our current target layer. In b), we explicitly show the layer that was annotated with noise in the previous iteration, with its corresponding qubit spatial layout below it. The move cost to reach the target qubit configuration before qubit execution is shown in c), and noise annotation is carried out according to three sequential stages: 1) qubits that need to be removed from the gate zone undergo move error (orange crosses), and the rest get sitter error, 2) similarly, qubits that need to be added to the gate zone get move error and the rest get sitter noise, and 3) additional move error to "pair up" qubits is added before gate execution (notice that more than one layer might be needed to account for this cost).</p>
+<p>Finally, noise is annotated after gates, where it is assumed that entangling gates are executed in hardware before single qubit gates. In doing so, qubits that are not participant in the entangling gates receive unpaired cz error (green pentagons).</p>
+<h4 id="ghz-data"><a class="toclink" href="../../2025/07/30/simulating-noisy-circuits-for-near-term-quantum-hardware/#ghz-data">GHZ data</a></h4>
+<p>Now, let's look at some results of <a href="../../../digital/examples/noisy_ghz.py">the example</a> that compares the different
+noise processes.</p>
+<p>The different noise models lead to overall different infidelities of the circuit:</p>
+<p><img alt="GHZ circuit fidelity with different noise models" src="../../../digital/examples/interop/noisy_ghz_fidelity.svg" /></p>
+<p>As you'd expect, the general trend is that fidelity decreases with a growing number of qubits.
+Depending on how many qubits you need, you may want to run the above simulation in order to decide whether you'd want to
+operate Gemini in a one-zone or a two-zone setup.</p>
+<p>On a more abstract level, you may also want to optimize the circuit that you use to obtain the result you want.
+The example uses a linear-depth GHZ algorithm, which is arguably not the best choice to prepare a GHZ state.</p>
+<p>Using our noise framework, you can explore and analyze different strategies to find the one best suited for your
+particular application.</p>
+<h3 id="learn-more"><a class="toclink" href="../../2025/07/30/simulating-noisy-circuits-for-near-term-quantum-hardware/#learn-more">Learn more</a></h3>
+<p>The future for Gemini is bright! Apart from demonstrating <a href="https://arxiv.org/abs/2412.15165">logical magic state distillation</a>, Gemini-class QPUs also form the foundation of QuEra's participation in the <a href="https://www.quera.com/press-releases/two-projects-powered-by-quera-computing-contributions-move-to-phase-three-of-wellcome-leaps-quantum-for-bio-challenge-focused-on-healthcare-and-biology-applications">Quantum for Bio</a> program. QuEra will serve as the hardware provider for 2 of 6 of the teams that have advanced to the final phase of the challenge. With an eye towards general availability of Gemini-class devices, there's no better time for quantum developers to begin crafting circuits that are well-suited for Gemini. The <a href="https://bloqade.quera.com/latest/digital/">documentation for Bloqade-circuit</a> as well as our <a href="https://bloqade.quera.com/latest/digital/tutorials_index/">tutorial guides</a> are a great place to start.</p>
+    
+  </div>
+</article>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+      <nav class="md-post__authors md-typeset">
+        
+          <span class="md-author">
             <img src="https://github.com/jon-wurtz.png" alt="Jonathan Wurtz">
+          </span>
+        
+          <span class="md-author">
+            <img src="https://github.com/Roger-luo.png" alt="Xiuzhe (Roger) Luo">
+          </span>
+        
+          <span class="md-author">
+            <img src="https://github.com/kaihsin.png" alt="Kai-Hsin Wu">
+          </span>
+        
+          <span class="md-author">
+            <img src="https://github.com/weinbe58.png" alt="Phillip Weinberg">
+          </span>
+        
+          <span class="md-author">
+            <img src="https://github.com/johnzl-777.png" alt="John Long">
           </span>
         
       </nav>

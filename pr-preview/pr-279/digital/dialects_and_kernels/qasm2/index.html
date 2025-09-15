@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.18">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.19">
     
     
       
@@ -13861,7 +13861,7 @@
 For details on the language, see the <a href="https://arxiv.org/abs/1707.03429">specification</a>.</p>
 <h2 id="qasm2main">qasm2.main</h2>
 <p>This dialect allows you to write native QASM2 programs, with all its features and restricitions.
-As such, it includes definitions gates, measurements and quantum and classical registers, which are part of the QASM2 specification.</p>
+As such, it includes definitions for gates, measurements and registers (quantum and classical), which are part of the QASM2 specification.</p>
 <p>Here's an example kernel</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">qasm2</span>
 
@@ -13887,7 +13887,7 @@ As such, it includes definitions gates, measurements and quantum and classical r
 <h2 id="qasm2extended">qasm2.extended</h2>
 <p>The QASM2 dialect is a simple quantum assembly language that allows you to write quantum circuits in a human-readable format. However, one should note that QASM2 is a very restricted language and does not support all the features of a high-level language.</p>
 <p>For example, there is a separation of <strong>gate routines</strong> declared with <code>gate</code> and main program written as a sequence of gate applications. While the gate routine is similar to a function in many ways, it does not support high-level features such as recursion (due to lack of <code>if</code> statement support inside) or control flows.</p>
-<p>Indeed, bloqade-circuits is designed with the notion of <a href="https://queracomputing.github.io/kirin/latest/blog/2025/02/28/introducing-kirin-a-new-open-source-software-development-tool-for-fault-tolerant-quantum-computing/?h=kernel#what-are-kernel-functions">kernels</a> in mind by decorating functions with a <code>@qasm2.extended</code> decorator. The python code is interpreted and parsed by the <a href="https://queracomputing.github.io/kirin/latest/">Kirin</a> compiler toolchain and lowered to an abstract representation of the program. These kernels can include classical computation and the usual programming structures-- if/else, for and while loops, function inputs, and the like, as one is used to in Python.</p>
+<p>Indeed, <code>bloqade-circuit</code> is designed with the notion of <a href="https://queracomputing.github.io/kirin/latest/blog/2025/02/28/introducing-kirin-a-new-open-source-software-development-tool-for-fault-tolerant-quantum-computing/?h=kernel#what-are-kernel-functions">kernels</a> in mind by decorating functions with a <code>@qasm2.extended</code> decorator. The Python code is interpreted and parsed by the <a href="https://queracomputing.github.io/kirin/latest/">Kirin</a> compiler toolchain and lowered to an abstract representation of the program. These kernels can include classical computation and the usual programming structures-- if/else, for and while loops, function inputs, and the like, as one is used to in Python.</p>
 <p>Additionally, the QASM2 representations of bloqade-circuits have been extended to include a key advantage of reconfigurable neutral atom hardware: parallelism. For example, one can represent a CZ gate applied to many qubit pairs at once as</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">qasm2</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kirin.dialects</span><span class="w"> </span><span class="kn">import</span> <span class="n">ilist</span>
@@ -13898,7 +13898,7 @@ As such, it includes definitions gates, measurements and quantum and classical r
     <span class="k">for</span> <span class="n">ctr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">controls</span><span class="p">)):</span>
         <span class="n">qasm2</span><span class="o">.</span><span class="n">cz</span><span class="p">(</span><span class="n">ctrl</span><span class="o">=</span><span class="n">controls</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">qarg</span><span class="o">=</span><span class="n">targets</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 </code></pre></div>
-<p>or equivalently use a SIMD (single instruction multiple data)-like instruction to explicitly flag the parallelism</p>
+<p>or equivalently use a SIMD (Single Instruction Multiple Data)-like instruction to explicitly flag the parallelism</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@qasm2</span><span class="o">.</span><span class="n">extended</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">simd_cz</span><span class="p">(</span><span class="n">controls</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">qasm2</span><span class="o">.</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">targets</span><span class="p">:</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">qasm2</span><span class="o">.</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
     <span class="n">qasm2</span><span class="o">.</span><span class="n">parallel</span><span class="o">.</span><span class="n">cz</span><span class="p">(</span><span class="n">ctrls</span><span class="o">=</span><span class="n">controls</span><span class="p">,</span><span class="n">qargs</span><span class="o">=</span><span class="n">targets</span><span class="p">)</span>
@@ -13929,13 +13929,13 @@ Alternatively, a sure-fire, but restrictive, way is to stick to writing your ker
 <span class="n">qft</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
 </code></pre></div>
 <p>While the syntax is similar to Python, the <code>qasm2.extended</code> decorator actually compiles the <code>qft</code> function
-into lower-level intermediate representation (IR) code that can be later interpreted, analyzed, or executed on quantum hardware. Observe that this function cannot immediately compile down to QASM as it takes parametrized inputs, and is called recursively.</p>
+into lower-level Intermediate Representation (IR) code that can be later interpreted, analyzed, or executed on quantum hardware. Observe that this function cannot immediately compile down to QASM as it takes parametrized inputs, and is called recursively.</p>
 <p>You can inspect the initial IR code by calling the pretty printer:</p>
 <div class="highlight"><pre><span></span><code><span class="n">qft</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
 </code></pre></div>
 <p><img alt="QFT IR" src="../qft-pprint.png" /></p>
 <p>We can also emit QASM2 code from it.
-Note, that native QASM2 does not support arguments or return values.
+Note that native QASM2 does not support arguments or return values.
 Therefore, we wrap the <code>qft</code> kernel from above in another one, that simply invokes <code>qft</code> for a specific set of arguments.
 Then, we emit this new kernel as a QASM2 program.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.qasm2.emit</span><span class="w"> </span><span class="kn">import</span> <span class="n">QASM2</span> <span class="c1"># the QASM2 target</span>
@@ -13957,7 +13957,7 @@ Then, we emit this new kernel as a QASM2 program.</p>
 <p>You can represent different noise processes in your QASM2 kernel.
 As of now, there are essentially two different noise channels:</p>
 <ul>
-<li>A pauli noise channel, which can represent different types of decoherence.</li>
+<li>A Pauli noise channel, which can represent different types of decoherence.</li>
 <li>An atomic loss channel, which can be used to model effects of losing a qubit during the execution of a program.</li>
 </ul>
 <p>Usually, you don't want to write noise statements directly.

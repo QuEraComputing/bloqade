@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.18">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.19">
     
     
       
@@ -13724,9 +13724,9 @@
 
 <h1 id="dialects-and-kernels">Dialects and kernels</h1>
 <p>Bloqade provides a set of pre-defined domain specific languages (DSLs), with which you can write your programs and circuits.
-We call these DSLs dialects.
+We call these DSLs <em>dialects</em>.
 For a list of available dialects <a href="#available-dialects">see blow</a>.</p>
-<p>Once you have defined your kernel, you can inspect their intermediate representation (IR), apply different optimizations using compiler passes, or run them on a <a href="../simulator_device/simulator_device/">(simulator) device</a>.</p>
+<p>Once you have defined your kernel, you can inspect their Intermediate Representation (IR), apply different optimizations using compiler passes, or run them on a <a href="../simulator_device/simulator_device/">(simulator) device</a>.</p>
 <div class="admonition info">
 <p class="admonition-title">Kernels &amp; dialects in a nutshell</p>
 <p>A <strong>kernel</strong> function is a piece of code that runs on specialized hardware such as a quantum computer.</p>
@@ -13734,7 +13734,7 @@ For a list of available dialects <a href="#available-dialects">see blow</a>.</p>
 Each dialect comes with a specific set of statements and instructions you can use in order to write your program.</p>
 </div>
 <p>When running code that targets a specialized execution environment, there are typically several layers involved.
-At the surface, the programmer writes functions in a syntax that may resemble a host language (e.g., Python), but is actually expressed in a dialect— a domain-specific variant with its own semantics.
+At the surface, the programmer writes functions in a syntax that may resemble a host language (e.g., Python), but is actually expressed in a dialect — a domain-specific variant with its own semantics.
 A decorator marks these functions so they can be intercepted before normal host-language execution.
 All dialects can be used by decorating a function.</p>
 <div class="admonition info">
@@ -13747,19 +13747,19 @@ Decorators are used with the <code>@</code> syntax.</p>
 This IR can be manipulated (e.g. to perform optimizations) and can later be executed by an interpreter that understands the dialect's semantics.
 The interpreter uses an internal instruction set to execute the code on the intended backend, which may be a simulator, virtual machine, or physical device.
 This separation lets developers write high-level, expressive code while the interpreter ensures it runs correctly in the target environment.
-<a href="https://queracomputing.github.io/kirin/latest/">QuEra's Kirin</a> infrastructure uses this concept by defining custom dialects that are tailored towards the needs to program neutral atom quantum computers.
-While the dialects are not python syntax, Kirin still uses the python interpreter to execute the code.</p>
+<a href="https://queracomputing.github.io/kirin/latest/">QuEra's Kirin</a> provides the infrastructure that allows us to define custom dialects tailored towards the needs of programming neutral atom quantum computers in Bloqade
+While the dialects are not Python syntax, Kirin still uses the Python interpreter to execute the code.</p>
 <div class="admonition warning">
 <p class="admonition-title">Note</p>
 <p>It is important to understand that when you are writing a kernel function in a dialect you are generally <strong>not writing Python</strong> code, even though it looks a lot like it.
-Therefore, kernel functions can usually not be called directly.
+Therefore, kernel functions are not (usually) directly callable.
 Think of this as trying to execute another programming language with the Python interpreter: of course, that will error.</p>
 </div>
 <h1 id="available-dialects">Available dialects</h1>
 <p>Bloqade offers a few different dialects with which you can write your programs.
 All dialects have some advantages for particular applications.</p>
 <p>If you are unsure which dialect best suits your needs, have a look at the high-level overview of the (non-exhaustive) list of use cases below.
-Also, we recommend having a look at <a href="squin/">squin</a> as it is the most general purpose dialect available and is centrally used in the compilation pipeline.</p>
+Also, we recommend having a look at <a href="squin/">the Structrual QUantum INstructions (SQUIN) dialect</a> as it is the most general purpose dialect available and is centrally used in the compilation pipeline.</p>
 <p>While the documentation in this section provides some information on the background and a high-level overview, it is also often convenient to learn from examples.
 Have a look at the (growing) <a href="../examples/">examples collection</a>, where you can find different implementations of quantum programs using different dialects.</p>
 <h2 id="squin"><a href="squin/">squin</a></h2>
