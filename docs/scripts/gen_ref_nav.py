@@ -38,6 +38,7 @@ skip_keywords = [
     "tests/",
     "test_utils",
     "docs/",
+    "debug/",
     "squin/cirq/emit/",  # NOTE: this fails when included because there is an __init__.py missing, but the files have no docs anyway and it will be moved so safe to ignore
 ]
 
