@@ -371,76 +371,7 @@ print(statevector)
 
 
 # %% [markdown]
-# If the output is randomized, one can average over many runs. The following cells are some helper functions which will likely be integrated directly into bloqade after iteration.
-
-# %%
-from bloqade.pyqrack.task import PyQrackSimulatorTask
-from bloqade.pyqrack.device import PyQrackSimulatorBase
-from typing import Any
-from collections import Counter
-
-def canonicalize(state:np.linalg._linalg.EighResult,tol:float=1e-7)-> np.linalg._linalg.EighResult:
-    """
-    Canonicalize the state by re-orthogonalizing the basis.
-    """
-    s,v,d = np.linalg.svd(state.eigenvectors*np.sqrt(state.eigenvalues), full_matrices=False)
-    mask = v>tol
-    v = v[mask]**2
-    s = s[:,mask]
-    return np.linalg._linalg.EighResult(eigenvalues=v, eigenvectors=s)
-
-
-def multirun(task:PyQrackSimulatorTask,nshots:int, return_state:bool=False)-> dict[Any, float] | tuple[dict[Any, float], np.linalg._linalg.EighResult]:
-    """
-    Run the same task many times, collecting the measurement results
-    task - A PyQrackSimulatorTask object created from a kernel
-    nshots - The number of times to run the task
-    return_state - If True, also return the density matrix of the qubits after all runs
-    """
-    rho_all:list[np.linalg._linalg.EighResult] = []
-    results = []
-    for _ in range(nshots):
-        result = task.run()
-        results.append(result)
-        if return_state:
-            rho_all.append(PyQrackSimulatorBase.quantum_state(task.qubits()))
-    
-    # Convert ilist to tuple so that it is hashable by Counter
-    def convert(data):
-        if isinstance(data, (list,IList)):
-            return tuple(convert(item) for item in data)
-        return data
-    results = convert(results)
-    
-    data = {key: value/len(results) for key, value in Counter(results).items()} # Normalize to probabilities
-    
-    if return_state:
-        state = np.linalg._linalg.EighResult(eigenvectors = np.concatenate([state.eigenvectors for state in rho_all], axis=1),
-                            eigenvalues = np.concatenate([state.eigenvalues for state in rho_all], axis=0)/len(rho_all))
-        state = canonicalize(state)
-        return data, state
-    else:
-        return data
-
-
-def multistate(task:PyQrackSimulatorTask,nshots:int)-> np.linalg._linalg.EighResult:
-    """
-    Collect the state of the qubits returned by a kernel run by a task.
-    This is similar to multirun, but assumes that the signature of the task's kernel
-    returns a list of qubits.
-    
-    task - A PyQrackSimulatorTask object created from a kernel, whose return signature is a list of qubits
-    nshots - The number of times to run the task
-    """
-    states = []
-    for _ in range(nshots):
-        qbs = task.run()
-        states.append(emulator.quantum_state(qbs))
-        
-    state = np.linalg._linalg.EighResult(eigenvectors = np.concatenate([state.eigenvectors for state in states], axis=1),
-                            eigenvalues = np.concatenate([state.eigenvalues for state in states], axis=0)/len(states))
-    
-    return canonicalize(state)
+# If the output is randomized, one can average over many runs.
 
 
 # %%
@@ -448,9 +379,8 @@ def multistate(task:PyQrackSimulatorTask,nshots:int)-> np.linalg._linalg.EighRes
 # Define the emulator and task
 emulator = StackMemorySimulator()
 task = emulator.task(coinflip)
-results, rho = multirun(task, nshots=1000, return_state=True)
+results = task.batch_run(shots=1000)
 print("Results:", results)
-print("State:  ", rho)
 
 # %% [markdown]
 # # Composition of kernels
@@ -635,7 +565,7 @@ def t_teleport_wrapper()-> Register:
 # And run it
 emulator = StackMemorySimulator(min_qubits=2)
 task = emulator.task(t_teleport_wrapper)
-state = multistate(task, nshots=1000)
+state = task.batch_state(shots=1000)
 # Even though there is measurement and feedforward, the final state is still pure. Neat!
 print(state)
 
@@ -686,9 +616,9 @@ def ghz_constant_depth(n_qubits: int):
 emulator = StackMemorySimulator(min_qubits=7)
 task = emulator.task(ghz_constant_depth(3))
 
-state = multistate(task, nshots=1000)
+state = task.batch_state(shots=1000)
 # Even though there is measurement and feedforward, the final state is still pure. Neat!
-print(state)
+print(state.eigenvalues)
 
 # %% [markdown]
 # As a final note, consider how difficult it would be to represent this circuit in Cirq. In particular, there is a for loop, where inside the for loop there is an algebraic operation (XOR) that feeds forward onto a variable (parity). This circuit is inexpressible in Cirq without some serious hacking of ancilla qubit registers.
