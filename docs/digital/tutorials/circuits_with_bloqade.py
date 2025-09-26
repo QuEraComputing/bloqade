@@ -33,10 +33,15 @@ def hello_world(theta:float) -> IList[bool, Any]:
 # as used internally by Kirin.
 hello_world.print()
 
+#%% [markdown]
+# ### Anatomy of a Bloqade kernel
+#
+# A kernel is a representation of a hybrid quantum/classical execution that will run "on hardware". The decorator @squin.kernel can be considered as the "label" to represent this fact. A kernel can take arguments (such as `theta` here), and can return values (such as `bits` here). To help the compiler, the inputs and outputs must be decorated with a type. The return values can be considered as the "results" which are returned from the quantum computer, though they can also be intermediate values that are used as a part of a larger computation (e.g. a function call). Note that shot-level execution and averaging is hanldled outside of the kernel itself: averaging over multiple shots within a kernel is an anti-pattern to avoid.
+
 # %% [markdown]
-# ### Squin kernel statements
+# ## Squin kernel statements
 # 
-# To represent quantum executions, we must write and construct squin kernels. These kernels can use the typical structure of python functions -- inputs, outputs, for loops, control flow, subroutines, and so forth -- as a feature of the underlying base Kirin statements. Because one can intermix control flow with operations and measurement, arbitrary mid-circuit feed forward comes for "free".
+# To represent quantum executions, we write and construct squin kernels. These kernels can use the typical structure of python functions -- inputs, outputs, for loops, control flow, subroutines, and so forth -- as a feature of the underlying base Kirin statements. Because one can intermix control flow with operations and measurement, arbitrary mid-circuit feed forward comes for "free".
 # 
 # There are four sets of statements which you can use to represent quantum programs:
 # 1. `squin.qubit` - Manipulation and declaration of the qubits themselves.
@@ -44,100 +49,16 @@ hello_world.print()
 # 3. `squin.op` - The wider class of quantum operations on qubits, on which to build custom gates
 # 4. `squin.noise` - Representing noise effects on the qubits.
 # 
-# The first set of expressions are the familiar representations of quantum gates, measurements, and qubits. These are under the `squin.qubit` and `squin.gate` namespaces
-
-# %%
-@squin.kernel
-def _gates():
-    
-    # Create n_qubits new qubits in a list
-    qreg:Register = squin.qubit.new(3)
-    
-    # Measure a list of qubits and return the measurement results
-    output:IList[bool,Any] = squin.qubit.measure(qreg)
-    # Alternatively, measure a single qubit
-    output_single:bool = squin.qubit.measure(qreg[0])
-    
-    # Gates are defined as standard library kernel functions, under `squin.gate` namespace.
-    # The signature of these functions is to have the parameterized variables as the first inputs,
-    # and the last variable be a qubit or list of qubits
-    squin.gate.cx(qreg[0], qreg[1]) # A controlled-X gate, or CNOT
-    squin.gate.cy(qreg[0], qreg[1]) # A controlled-Y gate
-    squin.gate.cz(qreg[0], qreg[1]) # A controlled-Z gate
-    squin.gate.ch(qreg[0], qreg[1]) # A controlled-Hadamard gate
-    squin.gate.h(qreg[0]) # Hadamard gate, or H gate
-    squin.gate.s(qreg[0]) # S gate, or phase gate
-    squin.gate.s_adj(qreg[0]) # S-dagger gate, or conjugate phase gate
-    squin.gate.t(qreg[0]) # T gate
-    squin.gate.t_adj(qreg[0]) # Conjugate T gate
-    squin.gate.x(qreg[0]) # Pauli-X gate, or NOT gate
-    squin.gate.y(qreg[0]) # Pauli-Y gate
-    squin.gate.z(qreg[0]) # Pauli-Z gate
-    squin.gate.sqrt_x(qreg[0]) # Square root of Pauli-X gate X^0.5
-    squin.gate.sqrt_x_adj(qreg[0]) # Square root of conjugate Pauli-X gate X^-0.5
-    squin.gate.sqrt_y(qreg[0]) # Square root of Pauli-Y gate Y^0.5
-    squin.gate.sqrt_y_adj(qreg[0]) # Square root of conjugate Pauli-Y gate Y^-0.5
-    squin.gate.sqrt_z(qreg[0]) # Square root of Pauli-Z gate; alias for `squin.gate.s`
-    squin.gate.sqrt_z_adj(qreg[0]) # Alias for `squin.gate.s_dag`
-    squin.gate.rx(theta=0.1, qubit=qreg[0]) # Rotation around X axis by angle theta; exp(i*theta*X)
-    squin.gate.ry(theta=0.1, qubit=qreg[0]) # Rotation around Y axis by angle theta; exp(i*theta*Y)
-    squin.gate.rz(theta=0.1, qubit=qreg[0]) # Rotation around Z axis by angle theta; exp(i*theta*Z)
-    squin.gate.u(theta=0.1, phi=0.2, lam=0.3, qubit=qreg[0]) # General single qubit rotation
-    
+# The first set of expressions are the familiar representations of quantum gates, measurements, and qubits, nder the `squin.qubit` and `squin.gate` namespaces. The gate namespace is a collection of common gates written as methods; [the gate API documentation is here](https://bloqade.quera.com/latest/reference/bloqade-circuit/src/bloqade/squin/stdlib/gate/).  The qubit namespace is used to create, measure, and apply operations to qubits; [the qubit API documentation is here](https://bloqade.quera.com/latest/reference/bloqade-circuit/src/bloqade/squin/qubit/).
+#
+# You are also able to define your own custom gates using the `op` dialects. [The op API documentation is here](https://bloqade.quera.com/latest/reference/bloqade-circuit/src/bloqade/squin/op/stdlib/). Operators are gates and other quantum operations decoupled from application on particular target qubits. Each `squin.gate` method is actually its own kernel which creates an operation and then applies it to a particular qubit. Separating the definition of operators from their application to qubits enables several convenient analysis techniques, such as identifying equivalent gates with common subexpressions elimination. Note that operators do not necessarily have to be unitary, and can more widely represent objects such as observables and Hamiltonians.
+#
+# Finally, the `squin.noise` namespace contains statements to represent noise. [The API documentation is here](https://bloqade.quera.com/latest/reference/bloqade-circuit/src/bloqade/squin/noise/stmts/).
 
 # %% [markdown]
-# You are also able to define your own custom gates using the `op` dialects. Operators are gates and other quantum operations decoupled from application on particular target qubits. Each `squin.gate` method is actually its own kernel which creates an operation and then applies it to a particular qubit. Separating the definition of operators from their application to qubits enables several convenient analysis techniques, such as identifying equivalent gates with common subexpressions elimination. Note that operators do not necessarily have to be unitary, and can more widely represent objects such as observables and Hamiltonians.
-
-# %%
-# All expressed operators:
-
-@squin.kernel
-def _operators():
-    # Gates and operations are defined independently of qubits.
-    # One must first define the operator, then apply it to qubits.
-    # Directly building gates:
-    cx = squin.op.cx() # A controlled-X gate
-    cy = squin.op.cy() # A controlled-Y gate
-    cz = squin.op.cz() # A controlled-Z gate
-    ch = squin.op.ch() # A controlled-H gate
-    h = squin.op.h() # A Hadamard gate
-    s = squin.op.s() # An S gate
-    t = squin.op.t() # A T gate
-    X = squin.op.x() # The Pauli-X operator
-    Y = squin.op.y() # The Pauli-Y operator
-    Z = squin.op.z() # The Pauli-Z operator
-    sqrt_X = squin.op.sqrt_x() # The square root of the Pauli-X operator e^i pi/2 X
-    sqrt_Y = squin.op.sqrt_y() # The square root of the Pauli-Y operator e^i pi/2 Y
-    sqrt_Z = squin.op.sqrt_z() # The square root of the Pauli-Z operator e^i pi/2 Z
-    u = squin.op.u(theta=0.1, phi=0.2, lam=0.3) # An arbitrary single-qubit gate
-    
-    
-    # Non-unitary operators:
-    squin.op.p0() # Projector onto the |0> state
-    squin.op.p1() # Projector onto the |1> state
-    squin.op.spin_n() # The S- operator |0><1|
-    squin.op.spin_p() # The S+ operator |1><0|
-    squin.op.reset() # Reset a qubit to the |0> state
-    squin.op.phase(theta=0.1) # Add a global phase to the qubits
-    # Transforming gates into new operators:
-    squin.op.control(X,n_controls=2) # An X gate conditional on 2 qubits, aka a Toffoli gate
-    squin.op.rot(axis=X, angle=0.5) # A rotation around the X axis by 0.5 radians
-    squin.op.adjoint(t) # The inverse of a gate
-    
-    # Operators that are not unitaries to represent Paulis
-    squin.op.scale(op=X, factor=0.1) # Scale an operator by some factor, eg 0.1*X
-    squin.op.kron(lhs=X,rhs=Y) # The Kroneker product of two operators to act on multiple qubits, eg X ⊗ Y
-    squin.op.mult # Is this necessary?
-    squin.op.identity # The identity operator, which does nothing
-    squin.op.pauli_string(string="XXYZ") # A simpler alias for squin.op.kron(squin.op.X(), ...)
-    
-    # Finally, operators can be applied to qubits.
-    qbs:IList[bloqade.types.Qubit,Any] = squin.qubit.new(2) # Create a list of 2 new qubits
-    squin.qubit.apply(cx, qbs[0], qbs[1]) # Apply the operator to a list of qubits
-
-
-# %% [markdown]
-# For example, let's make some operators and gates that go beyond the basic operators. Note that more complicated functionalities, such as T state teleportation, need function signatures that do not match that of the builtin `squin.gate` functions, and might need to be written using `op`. For example, consider a kernel that applies a controlled T gate to a register of qubits
+# ### Writing custom gates with the `squin.op` dialect
+#
+# Let's make some operators and gates that go beyond the basic operators using the `squin.op` dialects. Note that more complicated functionalities, such as T state teleportation, may need function signatures that do not match that of the builtin `squin.gate` functions, and might need to be written using `op`. For example, consider a kernel that applies a controlled T gate to a register of qubits:
 
 # %%
 @squin.kernel
@@ -153,30 +74,12 @@ def controlled_t(qubit1: bloqade.types.Qubit, qubit2: bloqade.types.Qubit):
     squin.qubit.apply(ctrl, qubit1, qubit2)
 
 
-# %% [markdown]
-# Finally, you can also define noise on qubits using the `squin.noise` namespace. Like `op`, `noise` operators are defined separately from their application to qubits.
-
-# %%
-@squin.kernel
-def _noise():
-
-    X = squin.op.x()
-    squin.noise.pauli_error(basis=X, p=0.1) # An X flip with probability 0.1
-    loss = squin.noise.qubit_loss(p=0.1) # A qubit loss with probability 0.1
-    squin.noise.depolarize(p=0.1) # Depolarizing channel https://quantumai.google/reference/python/cirq/DepolarizingChannel
-    
-    squin.noise.single_qubit_pauli_channel # An arbitrary single-qubit pauli channel, charcterized by a list of 3 floats representing the probabilities of X, Y, and Z flips.
-    squin.noise.two_qubit_pauli_channel # An arbitrary two-qubit pauli channel, characterized by a list of 15 floats representing the probabilities of each Pauli operation on the two qubits.
-    
-    # Noise is applied to qubits in the same way as operators.
-    qubit = squin.qubit.new(1)[0]
-    squin.qubit.apply(loss, qubit)
 
 # %% [markdown]
-# ## Using Bloqade kernels
+# # Using Bloqade kernels
 # A key feature of kernels is the ability to do complex control flow similar to how one might program python. For example, one can use a for loop to apply the same gate to multiple qubits to prepare a GHZ state.
 # 
-# A useful pattern is to use factory functions that return bloqade kernels. This way, you can fix parameters (such as the number of qubits) pythonically without needing to introduce the variable directly into the kernel itself.
+# A useful pattern is to use factory functions that return bloqade kernels. This way, you can fix parameters (such as the number of qubits) pythonically without needing to introduce the variable directly into the kernel itself, using closure.
 
 # %%
 # Bell state prep.
@@ -195,7 +98,7 @@ kernel = GHZ_method_factory(8)
 kernel.print()
 
 # %% [markdown]
-# Alternatively, kernels could be parameterized; for example, we could write the same GHZ state preparation, except it prepares a variable number of qubits that is not declared until the kernel is run. In order to run in some `main` function, the qubits need to be declared elsewhere.
+# Alternatively, kernels could be parameterized; for example, we could write the same GHZ state preparation, except it prepares a variable number of qubits that is not declared until the kernel is run. In order to run in some `main` function, the qubits need to be declared elsewhere, either in the task declaration or within a larger kernel that calls this method as a subroutine.
 
 # %%
 @squin.kernel
@@ -210,7 +113,7 @@ GHZ_state_factory.print()
 
 # %% [markdown]
 # ## Building circuits in Cirq and other SDKs
-# Instead of writing your circuit directly in bloqade, it is also possible to build circuits using Cirq or other SDKs, and then lower them to and from bloqade kernels. This has the advantage of being able to leverage the excellent and in-depth resources of transpilation and circuit optimization without having to reinvent the wheel. However, for certain programs, such as those requiring more complex mid-circuit feed-forward, it is still required to write bloqade kernels as there is no adequate representation in other SDKs.
+# Instead of writing your circuit directly in bloqade, you may build circuits using Cirq or other SDKs, and then lower them to and from bloqade kernels. This has the advantage of being able to leverage the excellent and in-depth resources of transpilation and circuit optimization without having to reinvent the wheel. However, for certain programs, such as those requiring more complex mid-circuit feed-forward, it is still required to write bloqade kernels as there is no adequate representation in other SDKs.
 # 
 # Let us begin by writing a simple GHZ state preparation circuit, in analogy to the bloqade kernel above. Observe that the resulting object is a static representation of a circuit, similar to the `GHZ_state` kernel, and differentiated from the dynamic `GHZ_state_factory` kernel which can return a dynamically sized GHZ state.
 
@@ -307,7 +210,7 @@ print(circuit)
 # 2. **The task object** - Binding together the emulator, kernel execution, and input parameters for that kernel. This task is not executed until the `*.run` method is called. Upon calling `run`, the kernel is interpreted, the quantum circuit is executed, any classical co-processing is done, and the kernel completes. Repeated calling of `run` will "reset" the executor into its initial state and rerun the kernel. After running, returns...
 # 3. **The results object** - Whatever the `return` of the kernel is is returned here, with the same type signature. These could be qubits or qubit registers (list of qubits), values, or really whatever object you like.
 # 
-# Each `*.run` call can be considered as a single "measurement shot" on hardware. To average across multiple measurements, one must call `*.run` multiple times, as is done a few cells below.
+# Each `*.run` call can be considered as a single "measurement shot" on hardware. To average across multiple measurements, one may call `*.batch_run` or `*.batch_state`.
 
 # %%
 from bloqade.pyqrack import StackMemorySimulator, DynamicMemorySimulator
@@ -332,21 +235,15 @@ def foo(x:int,y:int) -> bool:
     return x<y
 assert foo(1,2)==True
 
-# %%
-
 
 # %% [markdown]
-# ### Quantum states
+# ## Extracting quantum states
 # 
 # PyQRack is mainly intended as an *emulator*, attempting to recreate the physical action and interaction of quantum hardware with classical controls. However, it is often useful for user analysis and debugging to extract out non-physical values, such as the quantum statevector, fidelity, or exact expectation values of observables and correlation functions.
 # 
 # These nonphysical values are based in being able to directly observe and evaluate the quantum state. The state can be extracted via the `PyQrackSimulator.quantum_state` method, with an input signature of a list of (pyqrack) qubits. These qubits can be generated as a return value from a kernel (as is the case for the `GHZ_state_factory` function) or from the `task.qubits()` method.
 # 
 # The resulting state is a reduced density matrix represented by its eigensystem of eigenvalues and eigenvectors.
-# The state vector basis is the Z basis
-# The edannes of the basis is consistent with cirq, with the basis index representing the binary value: the 0th index representing |00000>, 1st representing |00001>, 5th representing |00101> and so forth, with |00001> representing a flip of the last qubit in the list.
-# The RDM form is chosen because the qubit list may be an entangled subset of the entire register, and thus may be a mixed state. The eigensystem form is chosen because if the state is pure -- or only slightly entangled -- the resulting state will be efficiently represented by only carrying the nonzero eigenvectors of the density matrix. Consistent with `np.linalg.eigh`, the first index indexes the eigenvector (e.g. `eigenvector[:,3]` is the 4th eigenvector with eigenvalue `eigenvalue[3]`)
-
 # %%
 from bloqade.pyqrack import PyQrackQubit
 # This kernel returns a list of Qubit objects. We can use these to analyze the
@@ -371,8 +268,7 @@ print(statevector)
 
 
 # %% [markdown]
-# If the output is randomized, one can average over many runs.
-
+# If the output is randomized, one can average over many runs using `task.batch_run`. This returns a dictionary of probabilities of each output. Note that the output must be hashable.
 
 # %%
 
@@ -380,7 +276,9 @@ print(statevector)
 emulator = StackMemorySimulator()
 task = emulator.task(coinflip)
 results = task.batch_run(shots=1000)
+state = task.batch_state(shots=1000)
 print("Results:", results)
+print("State:", state)
 
 # %% [markdown]
 # # Composition of kernels
@@ -623,5 +521,3 @@ print(state.eigenvalues)
 # %% [markdown]
 # As a final note, consider how difficult it would be to represent this circuit in Cirq. In particular, there is a for loop, where inside the for loop there is an algebraic operation (XOR) that feeds forward onto a variable (parity). This circuit is inexpressible in Cirq without some serious hacking of ancilla qubit registers.
 
-
-# %%
