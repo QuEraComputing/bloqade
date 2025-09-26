@@ -463,7 +463,7 @@ def t_teleport_wrapper()-> Register:
 # And run it
 emulator = StackMemorySimulator(min_qubits=2)
 task = emulator.task(t_teleport_wrapper)
-state = task.batch_state(shots=1000)
+state = task.batch_state(shots=1000, qubit_map=lambda x:x)
 # Even though there is measurement and feedforward, the final state is still pure. Neat!
 print(state)
 
@@ -514,7 +514,7 @@ def ghz_constant_depth(n_qubits: int):
 emulator = StackMemorySimulator(min_qubits=7)
 task = emulator.task(ghz_constant_depth(3))
 
-state = task.batch_state(shots=1000)
+state = task.batch_state(shots=1000, qubit_map=lambda x:x)
 # Even though there is measurement and feedforward, the final state is still pure. Neat!
 print(state.eigenvalues)
 
