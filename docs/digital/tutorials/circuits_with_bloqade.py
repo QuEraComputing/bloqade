@@ -6,7 +6,7 @@ import numpy as np
 from kirin.dialects.ilist import IList
 import bloqade.types
 from typing import Any
-from kirin.types import Method
+from kirin.ir import Method
 
 Register = IList[bloqade.types.Qubit, Any]
 
@@ -39,7 +39,7 @@ hello_world.print()
 # %% [markdown]
 # ### Anatomy of a Bloqade kernel
 #
-# A kernel is a representation of a hybrid quantum/classical execution that will run "on hardware". The decorator @squin.kernel can be considered as the "label" to represent this fact. A kernel can take arguments (such as `theta` here), and can return values (such as `bits` here). To help the compiler, the inputs and outputs must be decorated with a type. The return values can be considered as the "results" which are returned from the quantum computer, though they can also be intermediate values that are used as a part of a larger computation (e.g. a function call). Note that shot-level execution and averaging is hanldled outside of the kernel itself: averaging over multiple shots within a kernel is an anti-pattern to avoid.
+# A kernel is a representation of a hybrid quantum/classical execution that will run "on hardware". The decorator @squin.kernel can be considered as the "label" to represent this fact. A kernel can take arguments (such as `theta` here), and can return values (such as `bits` here). To help the compiler, the inputs and outputs must be decorated with a type. The return values can be considered as the "results" which are returned from the quantum computer, though they can also be intermediate values that are used as a part of a larger computation (e.g. a function call). Note that shot-level execution and averaging is handled outside of the kernel itself: averaging over multiple shots within a kernel is an anti-pattern to avoid.
 
 # %% [markdown]
 # ## Squin kernel statements
@@ -52,7 +52,7 @@ hello_world.print()
 # 3. `squin.op` - The wider class of quantum operations on qubits, on which to build custom gates
 # 4. `squin.noise` - Representing noise effects on the qubits.
 #
-# The first set of expressions are the familiar representations of quantum gates, measurements, and qubits, nder the `squin.qubit` and `squin.gate` namespaces. The gate namespace is a collection of common gates written as methods; [the gate API documentation is here](https://bloqade.quera.com/latest/reference/bloqade-circuit/src/bloqade/squin/stdlib/gate/).  The qubit namespace is used to create, measure, and apply operations to qubits; [the qubit API documentation is here](https://bloqade.quera.com/latest/reference/bloqade-circuit/src/bloqade/squin/qubit/).
+# The first set of expressions are the familiar representations of quantum gates, measurements, and qubits, under the `squin.qubit` and `squin.gate` namespaces. The gate namespace is a collection of common gates written as methods; [the gate API documentation is here](https://bloqade.quera.com/latest/reference/bloqade-circuit/src/bloqade/squin/stdlib/gate/).  The qubit namespace is used to create, measure, and apply operations to qubits; [the qubit API documentation is here](https://bloqade.quera.com/latest/reference/bloqade-circuit/src/bloqade/squin/qubit/).
 #
 # You are also able to define your own custom gates using the `op` dialects. [The op API documentation is here](https://bloqade.quera.com/latest/reference/bloqade-circuit/src/bloqade/squin/op/stdlib/). Operators are gates and other quantum operations decoupled from application on particular target qubits. Each `squin.gate` method is actually its own kernel which creates an operation and then applies it to a particular qubit. Separating the definition of operators from their application to qubits enables several convenient analysis techniques, such as identifying equivalent gates with common subexpressions elimination. Note that operators do not necessarily have to be unitary, and can more widely represent objects such as observables and Hamiltonians.
 #
@@ -82,7 +82,7 @@ def controlled_t(qubit1: bloqade.types.Qubit, qubit2: bloqade.types.Qubit):
 # # Using Bloqade kernels
 # A key feature of kernels is the ability to do complex control flow similar to how one might program python. For example, one can use a for loop to apply the same gate to multiple qubits to prepare a GHZ state.
 #
-# A useful pattern is to use factory functions that return bloqade kernels. This way, you can fix parameters (such as the number of qubits) pythonically without needing to introduce the variable directly into the kernel itself, using closure.
+# A useful pattern is to use factory functions that return bloqade kernels. This way, you can fix parameters (such as the number of qubits) pythonically without needing to introduce the variable directly into the kernel itself, using a closure.
 
 # %%
 # Bell state prep.
@@ -155,7 +155,7 @@ kernel = squin.cirq.load_circuit(
 )  # If the resulting kernel should return the register of the qubits it acts on.
 
 # Then, we can convert the circuit back to cirq.
-# Not that this is NOT POSSIBLE in a general case due to the fact that
+# Note that this is **not possible** in a general case due to the fact that
 # cirq cannot represent complex control flow.
 circuit2: cirq.Circuit = squin.cirq.emit_circuit(kernel, ignore_returns=True)
 print(circuit2)
@@ -176,7 +176,7 @@ kernel = squin.cirq.load_circuit(
 )
 kernel.print()
 # %% [markdown]
-# Due to the difficulty of representing mid-circuit control flow in cirq, attempting to lower these kernels back to cirq will result in an error
+# Due to the difficulty of representing mid-circuit control flow in cirq, attempting to lower these kernels back to cirq will result in an error.
 
 
 # %%
@@ -293,7 +293,7 @@ print("State:", state)
 # %% [markdown]
 # # Composition of kernels
 #
-# Bloqade kernels is allow all of the typical syntax of for loops, if-else statements, function calls, and other powerful abstractions. Let us use this to write efficient representations of complex circuits.
+# Bloqade kernels allow all of the typical syntax of for loops, if-else statements, function calls, and other powerful abstractions. Let us use this to write efficient representations of complex circuits.
 #
 # For this example, we will use a [Trotterization of the 1d Transverse Ising model](https://qiskit-community.github.io/qiskit-algorithms/tutorials/13_trotterQRTE.html).
 #
