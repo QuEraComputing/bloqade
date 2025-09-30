@@ -4,6 +4,7 @@ import numpy as np
 
 # Some types we will use, useful for type hints
 from kirin.dialects.ilist import IList
+from bloqade.squin.types import MeasurementResult
 import bloqade.types
 from typing import Any
 from kirin.ir import Method
@@ -21,7 +22,7 @@ Register = IList[bloqade.types.Qubit, Any]
 
 # %%
 @squin.kernel
-def hello_world(theta: float) -> IList[bool, Any]:
+def hello_world(theta: float) -> IList[MeasurementResult, Any]:
     """
     Prepare a Bell state and measure in a basis that might have a Bell violation
     """
@@ -39,7 +40,7 @@ hello_world.print()
 # %% [markdown]
 # ### Anatomy of a Bloqade kernel
 #
-# A kernel is a representation of a hybrid quantum/classical execution that will run "on hardware". The decorator @squin.kernel can be considered as the "label" to represent this fact. A kernel can take arguments (such as `theta` here), and can return values (such as `bits` here). To help the compiler, the inputs and outputs must be decorated with a type. The return values can be considered as the "results" which are returned from the quantum computer, though they can also be intermediate values that are used as a part of a larger computation (e.g. a function call). Note that shot-level execution and averaging is handled outside of the kernel itself: averaging over multiple shots within a kernel is an anti-pattern to avoid.
+# A kernel is a representation of a hybrid quantum/classical execution that will run "on hardware". The decorator @squin.kernel can be considered as the "label" to represent this fact. A kernel can take arguments (such as `theta` here), and can return values (such as `bits` here). To help the compiler, the inputs and outputs must be decorated with a type. The return values can be considered as the "results" which are returned from the quantum computer, though they can also be intermediate values that are used as a part of a larger computation (e.g. a function call). A kernel can represent both quantum and classical execution: while lots of classical computation is supported (control flow, algebra, etc.) there is less support for arbitrary python calls, as this won't necessarily be supported on the microcontroller "on hardware". Note that shot-level execution and averaging is handled outside of the kernel itself: averaging over multiple shots within a kernel is an anti-pattern to avoid.
 
 # %% [markdown]
 # ## Squin kernel statements
@@ -66,7 +67,7 @@ hello_world.print()
 
 # %%
 @squin.kernel
-def controlled_t(qubit1: bloqade.types.Qubit, qubit2: bloqade.types.Qubit):
+def controlled_t(qubit1: bloqade.types.Qubit, qubit2: bloqade.types.Qubit) -> None:
     """
     A controlled T gate, aka a sqrt{CZ} gate.
     ---o---
@@ -119,8 +120,8 @@ def GHZ_state_factory(nqubits: int) -> Register:
 
 GHZ_state_factory.print()
 # %% [markdown]
-# ## Building circuits in Cirq and other SDKs
-# Instead of writing your circuit directly in bloqade, you may build circuits using Cirq or other SDKs, and then lower them to and from bloqade kernels. This has the advantage of being able to leverage the excellent and in-depth resources of transpilation and circuit optimization without having to reinvent the wheel. However, for certain programs, such as those requiring more complex mid-circuit feed-forward, it is still required to write bloqade kernels as there is no adequate representation in other SDKs.
+# ## Building circuits in Cirq
+# Instead of writing your circuit directly in bloqade, you may build circuits using Cirq, and then lower them to and from bloqade kernels. This has the advantage of being able to leverage the excellent and in-depth resources of transpilation and circuit optimization without having to reinvent the wheel. However, for certain programs, such as those requiring more complex mid-circuit feed-forward, it is still required to write bloqade kernels as there is no adequate representation in other SDKs. Cirq is our initial choice of SDK, and other transpilations are coming soon-- though in principle interoperability with many SDK is possible through an intermediate Cirq representation.
 #
 # Let us begin by writing a simple GHZ state preparation circuit, in analogy to the bloqade kernel above. Observe that the resulting object is a static representation of a circuit, similar to the `GHZ_state` kernel, and differentiated from the dynamic `GHZ_state_factory` kernel which can return a dynamically sized GHZ state.
 
@@ -151,8 +152,8 @@ kernel = squin.cirq.load_circuit(
     ghz_prep(4),
     kernel_name="ghz_prep_cirq",  # Define the name of the kernel as if one were using @squin.kernel on a function
     register_as_argument=False,  # If the resulting kernel should take in a qubit register (True) or make a new one (False)
-    return_register=True,
-)  # If the resulting kernel should return the register of the qubits it acts on.
+    return_register=True, # If the resulting kernel should return the register of the qubits it acts on.
+) 
 
 # Then, we can convert the circuit back to cirq.
 # Note that this is **not possible** in a general case due to the fact that
@@ -181,7 +182,7 @@ kernel.print()
 
 # %%
 @squin.kernel
-def t_teleport_noargs():
+def t_teleport_noargs() -> None:
     """
     A simple T teleportation circuit that requires mid circuit control flow.
     """
@@ -203,7 +204,7 @@ except Exception as e:
 
 # Though measurement without feedforward is possible
 @squin.kernel
-def coinflip():
+def coinflip()->MeasurementResult:
     qubit = squin.qubit.new(1)[0]
     squin.gate.h(qubit)
     return squin.qubit.measure(qubit)
@@ -216,12 +217,11 @@ print(circuit)
 #
 # A kernel is simply a representation of an execution, and is not much use without being able to analyze and execute that kernel. We can simulate the action of kernels using concrete interpreters. The emulator must a) keep track of the classical state of the variables, b) keep track of the quantum state of the qubits, and thus c) faithfully represent the execution of that program as if it was run on a hybrid quantum/classical computer. Bloqade's emulator is built on top of the excellent [PyQrack quantum simulator](https://pyqrack.readthedocs.io/en/latest/) and satisfies the three goals above.
 #
-# There are three main objects when considering simulation:
-# 1. **The emulator object** - Representing the thing that some kernel is going to be executed on. Today it is the PyQrack simulator, but eventually it could also include other simulators or physical hardware. The `*.task` method builds...
-# 2. **The task object** - Binding together the emulator, kernel execution, and input parameters for that kernel. This task is not executed until the `*.run` method is called. Upon calling `run`, the kernel is interpreted, the quantum circuit is executed, any classical co-processing is done, and the kernel completes. Repeated calling of `run` will "reset" the executor into its initial state and rerun the kernel. After running, returns...
-# 3. **The results object** - Whatever the `return` of the kernel is is returned here, with the same type signature. These could be qubits or qubit registers (list of qubits), values, or really whatever object you like.
-#
-# Each `*.run` call can be considered as a single "measurement shot" on hardware. To average across multiple measurements, one may call `*.batch_run` or `*.batch_state`.
+# There are four main objects when considering simulation:
+# 1. **The emulator object** - Representing the thing that some kernel is going to be executed on. Today it is the PyQrack simulator, but eventually it could also include other simulators or physical hardware. The `*.task` method of the `emulator` object builds...
+# 2. **The task object** - Binding together the emulator, kernel, and input parameters for that kernel. This task is not executed until the `*.run` method is called. Upon calling `run`, the kernel is interpreted, the quantum circuit is executed, any classical co-processing is done, and the kernel completes, returning . Repeated calling of `run` will "reset" the executor into its initial state and rerun the kernel. Alternatively, one could call `*.batch_run` to repeatedly run the kernel's result to get stochastic averaging. The user can then analyze...
+# 3. **The results object** - Whatever the `return` of the kernel is is returned, with the same type signature. This is generated from `*run()` (as a ResultType) or `*.batch_run` (as a dict keyed by ResultType and valued by frequency) These could be qubits or qubit registers (list of qubits), values, or really whatever object you like.
+# 4. **The QuantumState object** - The final quantum state of the emulator object. While this is a nonphysical quantity, the QuantumState is useful for debugging and analysis. This can be extracted from either the `emulator.quantum_state` method (for a single run after the `run()` method), or with `task.batch_state` (for a stochastic average over many samples). The quantum state is effeciently represented as an eigensystem of a reduced density matrix.
 
 # %%
 from bloqade.pyqrack import StackMemorySimulator, DynamicMemorySimulator
@@ -254,7 +254,7 @@ assert foo(1, 2) == True
 #
 # These nonphysical values are based in being able to directly observe and evaluate the quantum state. The state can be extracted via the `PyQrackSimulator.quantum_state` method, with an input signature of a list of (pyqrack) qubits. These qubits can be generated as a return value from a kernel (as is the case for the `GHZ_state_factory` function) or from the `task.qubits()` method.
 #
-# The resulting state is a reduced density matrix represented by its eigensystem of eigenvalues and eigenvectors.
+# The resulting state is a reduced density matrix represented by its eigensystem of eigenvalues and eigenvectors, or a dense $2^N \times 2^N$ array.
 # %%
 from bloqade.pyqrack import PyQrackQubit
 
@@ -268,8 +268,10 @@ results: list[PyQrackQubit] = task.run()
 # will be in the order they were added. The StackMemorySimulator may have extra qubits.
 qubits: list[PyQrackQubit] = task.qubits()
 
-# Extract the quantum state as a reduced density matrix
+# Extract the quantum state as a reduced density matrix. Note that he qubits themselves
+# point to the internal state of the emulator
 state = emulator.quantum_state(results)
+density_matrix = emulator.reduced_density_matrix(results)
 
 # Note that the RDM is represented in its eigenbasis for efficiency.
 # If the state is pure, there is only one nonzero eigenvalue. This is the case for the GHZ state.
@@ -370,7 +372,7 @@ def factory_trotter(N: int, dt: float = 0.01, J: float = 1, h: float = 1) -> Met
 # %%
 # Define an operator that looks like the ZZ power gate
 @squin.kernel
-def op_zz(theta: float, qb1: bloqade.types.Qubit, qb2: bloqade.types.Qubit):
+def op_zz(theta: float, qb1: bloqade.types.Qubit, qb2: bloqade.types.Qubit) -> None:
     """
     A kernel that returns an operator that looks like ZZ^{theta/2pi}
     """
@@ -380,7 +382,7 @@ def op_zz(theta: float, qb1: bloqade.types.Qubit, qb2: bloqade.types.Qubit):
 
 
 @squin.kernel
-def bloqade_trotter(N: int, steps: int, dt: float = 0.01, J: float = 1, h: float = 1):
+def bloqade_trotter(N: int, steps: int, dt: float = 0.01, J: float = 1, h: float = 1)-> Register:
     """
     Main function that runs the Trotter circuit for a given number of steps
     """
@@ -456,18 +458,20 @@ def t_teleport(target: squin.qubit.Qubit) -> squin.qubit.Qubit:
 # And now lets wrap it into a larger context to run. In this case,
 # apply to a |+> state and see that we get a T|+> state out.
 @squin.kernel
-def t_teleport_wrapper() -> Register:
+def t_teleport_wrapper() -> squin.qubit.Qubit:
 
     target = squin.qubit.new(1)[0]
     squin.gate.h(target)
     target = t_teleport(target)
-    return IList([target])
+    return target
 
 
-# And run it
+# And run it. Observe that the batch_state uses a qubit_map to select which qubits to include in the batch state.
+# This is important because there are two qubits total (the target and the ancilla) but we only want inspect
+# the state of the output qubit.
 emulator = StackMemorySimulator(min_qubits=2)
 task = emulator.task(t_teleport_wrapper)
-state = task.batch_state(shots=1000, qubit_map=lambda x: x)
+state = task.batch_state(shots=1000, qubit_map=lambda x: [x])
 # Even though there is measurement and feedforward, the final state is still pure. Neat!
 print(state)
 # %% [markdown]
@@ -521,4 +525,4 @@ state = task.batch_state(shots=1000, qubit_map=lambda x: x)
 # Even though there is measurement and feedforward, the final state is still pure. Neat!
 print(state.eigenvalues)
 # %% [markdown]
-# As a final note, consider how difficult it would be to represent this circuit in Cirq. In particular, there is a for loop, where inside the for loop there is an algebraic operation (XOR) that feeds forward onto a variable (parity). This circuit is inexpressible in Cirq without some serious hacking of ancilla qubit registers.
+# As a final note, consider how difficult it would be to represent this circuit in Cirq. In particular, there is a for loop, where inside the for loop there is an algebraic operation (XOR) that feeds forward onto a variable (parity). This circuit is very hard to express in Cirq without some serious hacking of ancilla registers.
