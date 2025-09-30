@@ -13,14 +13,12 @@ from bloqade.squin.types import MeasurementResult
 
 Register = IList[bloqade.types.Qubit, Any]
 
-
 # %% [markdown]
 # # Circuits with Bloqade
 #
-# In this tutorial we will demonstrate how to write circuits and quantum executions with Bloqade. Specifically, we will use the `squin` dialect set from the compiler toolchain `kirin`. `SQUIN` stands for `S`tructural `Qu`antum `IN`struction set and is the circuit-level representation of quantum executions. It is built on top of the `kirin` framework, an [open-source compiler toolchain](https://queracomputing.github.io/kirin/latest/) for embedded domain-specific languages (eDSLs) that target scientific computing kernels. A key feature of squin is the _kernel_, which can roughly be seen as the object which will be executed on the target hardware. Naturally, this hardware could be a quantum computer but it also extends to classical execution as well, such as mid-circuit feedforward or even non-quantum execution such as robotics.
+# In this tutorial we will demonstrate how to write circuits and quantum executions with Bloqade. Specifically, we will use the `squin` dialect set from the compiler toolchain `kirin`. `SQUIN` stands for `S`tructural `Qu`antum `IN`struction set and is the circuit-level representation of quantum executions. It is built on top of the `kirin` framework, an [open-source compiler toolchain](https://queracomputing.github.io/kirin/latest/) for embedded domain-specific languages (eDSLs) that target scientific computing kernels. A key feature of squin is the _kernel_, which can roughly be seen as the object which will be executed on the target hardware. Naturally, this hardware could be a quantum computer, but it also extends to classical execution as well, such as mid-circuit feedforward or even non-quantum execution such as robotics.
 #
 # These kernels can be built using decorators of python functions. We will use the `@squin.kernel` decorator in this notebook but keep in mind that other eDSLs have different decorators inherited from base Kirin decorators. The decorator lowers Python's abstract syntax tree (AST) into a kirin SSA (single static assignment) form, which is a useful intermediate representation for compiler analysis. You don't have to worry too much about SSA or compilers here, but if you want to learn more check out the [kirin documentation](https://queracomputing.github.io/kirin/latest/).
-
 
 # %%
 @squin.kernel
@@ -35,14 +33,13 @@ def hello_world(theta: float) -> IList[MeasurementResult, Any]:
     bits = squin.qubit.measure(qubits)
     return bits
 
-
 # [kernel].print() prints the raw SSA, which is the intermediate representation of the kernel
 # as used internally by Kirin.
 hello_world.print()
 # %% [markdown]
 # ### Anatomy of a Bloqade kernel
 #
-# A kernel is a representation of a hybrid quantum/classical execution that will run "on hardware". The decorator @squin.kernel can be considered as the "label" to represent this fact. A kernel can take arguments (such as `theta` here), and can return values (such as `bits` here). To help the compiler, the inputs and outputs must be decorated with a type. The return values can be considered as the "results" which are returned from the quantum computer, though they can also be intermediate values that are used as a part of a larger computation (e.g. a function call). A kernel can represent both quantum and classical execution: while lots of classical computation is supported (control flow, algebra, etc.) there is less support for arbitrary python calls, as this won't necessarily be supported on the microcontroller "on hardware". Note that shot-level execution and averaging is handled outside of the kernel itself: averaging over multiple shots within a kernel is an anti-pattern to avoid.
+# A kernel is a representation of a hybrid quantum/classical execution that will run "on hardware". The decorator @squin.kernel can be considered as the "label" to represent this fact. A kernel can take arguments (such as `theta` here) and can return values (such as `bits` here). To help the compiler, the inputs and outputs must be decorated with a type. The return values can be considered as the "results" which are returned from the quantum computer, though they can also be intermediate values that are used as a part of a larger computation (e.g. a function call). A kernel can represent both quantum and classical execution: while lots of classical computation is supported (control flow, algebra, etc.) there is less support for arbitrary python calls, as this won't necessarily be supported on the microcontroller "on hardware". Note that shot-level execution and averaging is handled outside of the kernel itself: averaging over multiple shots within a kernel is an anti-pattern to avoid.
 
 # %% [markdown]
 # ## Squin kernel statements
@@ -57,15 +54,14 @@ hello_world.print()
 #
 # The first set of expressions are the familiar representations of quantum gates, measurements, and qubits, under the `squin.qubit` and `squin.gate` namespaces. The gate namespace is a collection of common gates written as methods; [the gate API documentation is here](https://bloqade.quera.com/latest/reference/bloqade-circuit/src/bloqade/squin/stdlib/gate/).  The qubit namespace is used to create, measure, and apply operations to qubits; [the qubit API documentation is here](https://bloqade.quera.com/latest/reference/bloqade-circuit/src/bloqade/squin/qubit/).
 #
-# You are also able to define your own custom gates using the `op` dialects. [The op API documentation is here](https://bloqade.quera.com/latest/reference/bloqade-circuit/src/bloqade/squin/op/stdlib/). Operators are gates and other quantum operations decoupled from application on particular target qubits. Each `squin.gate` method is actually its own kernel which creates an operation and then applies it to a particular qubit. Separating the definition of operators from their application to qubits enables several convenient analysis techniques, such as identifying equivalent gates with common subexpressions elimination. Note that operators do not necessarily have to be unitary, and can more widely represent objects such as observables and Hamiltonians.
+# You are also able to define your own custom gates using the `op` dialects. [The op API documentation is here](https://bloqade.quera.com/latest/reference/bloqade-circuit/src/bloqade/squin/op/stdlib/). Operators are gates and other quantum operations decoupled from application on particular target qubits. Each `squin.gate` method is actually its own kernel which creates an operation and then applies it to a particular qubit. Separating the definition of operators from their application to qubits enables several convenient analysis techniques, such as identifying equivalent gates with common subexpressions elimination. Note that operators do not necessarily have to be unitary and can more widely represent objects such as observables and Hamiltonians.
 #
 # Finally, the `squin.noise` namespace contains statements to represent noise. [The API documentation is here](https://bloqade.quera.com/latest/reference/bloqade-circuit/src/bloqade/squin/noise/stmts/).
 
 # %% [markdown]
 # ### Writing custom gates with the `squin.op` dialect
 #
-# Let's make some operators and gates that go beyond the basic operators using the `squin.op` dialects. Note that more complicated functionalities, such as T state teleportation, may need function signatures that do not match that of the builtin `squin.gate` functions, and might need to be written using `op`. For example, consider a kernel that applies a controlled T gate to a register of qubits:
-
+# Let's make some operators and gates that go beyond the basic operators using the `squin.op` dialects. Note that more complicated functionalities, such as T state teleportation, may need function signatures that do not match that of the built-in `squin.gate` functions, and might need to be written using `op`. For example, consider a kernel that applies a controlled T gate to a register of qubits:
 
 # %%
 @squin.kernel
@@ -80,7 +76,6 @@ def controlled_t(qubit1: bloqade.types.Qubit, qubit2: bloqade.types.Qubit) -> No
     ctrl = squin.op.control(t, n_controls=1)
     squin.qubit.apply(ctrl, qubit1, qubit2)
 
-
 # %% [markdown]
 # # Using Bloqade kernels
 # A key feature of kernels is the ability to do complex control flow similar to how one might program python. For example, one can use a for loop to apply the same gate to multiple qubits to prepare a GHZ state.
@@ -89,7 +84,6 @@ def controlled_t(qubit1: bloqade.types.Qubit, qubit2: bloqade.types.Qubit) -> No
 
 # %%
 # Bell state prep.
-
 
 def GHZ_method_factory(nqubits: int) -> Method:
     @squin.kernel
@@ -103,12 +97,10 @@ def GHZ_method_factory(nqubits: int) -> Method:
 
     return GHZ_state
 
-
 kernel = GHZ_method_factory(8)
 kernel.print()
 # %% [markdown]
 # Alternatively, kernels could be parameterized; for example, we could write the same GHZ state preparation, except it prepares a variable number of qubits that is not declared until the kernel is run. In order to run in some `main` function, the qubits need to be declared elsewhere, either in the task declaration or within a larger kernel that calls this method as a subroutine.
-
 
 # %%
 @squin.kernel
@@ -119,17 +111,15 @@ def GHZ_state_factory(nqubits: int) -> Register:
         squin.gate.cx(qubits[i], qubits[i + 1])
     return qubits
 
-
 GHZ_state_factory.print()
 # %% [markdown]
 # ## Building circuits in Cirq
-# Instead of writing your circuit directly in bloqade, you may build circuits using Cirq, and then lower them to and from bloqade kernels. This has the advantage of being able to leverage the excellent and in-depth resources of transpilation and circuit optimization without having to reinvent the wheel. However, for certain programs, such as those requiring more complex mid-circuit feed-forward, it is still required to write bloqade kernels as there is no adequate representation in other SDKs. Cirq is our initial choice of SDK, and other transformations are coming soon-- though in principle interoperability with many SDK is possible through an intermediate Cirq representation.
+# Instead of writing your circuit directly in bloqade, you may build circuits using Cirq and then lower them to and from bloqade kernels. This has the advantage of being able to leverage the excellent and in-depth resources of transpilation and circuit optimization without having to reinvent the wheel. However, for certain programs, such as those requiring more complex mid-circuit feed-forward, it is still required to write bloqade kernels as there is no adequate representation in other SDKs. Cirq is our initial choice of SDK, and other transformations are coming soon-- though in principle interoperability with many SDK is possible through an intermediate Cirq representation.
 #
 # Let us begin by writing a simple GHZ state preparation circuit, in analogy to the bloqade kernel above. Observe that the resulting object is a static representation of a circuit, similar to the `GHZ_state` kernel, and differentiated from the dynamic `GHZ_state_factory` kernel which can return a dynamically sized GHZ state.
 
 # %%
 import cirq
-
 
 def ghz_prep(nqubits: int) -> cirq.Circuit:
     """
@@ -142,7 +132,6 @@ def ghz_prep(nqubits: int) -> cirq.Circuit:
     for i in range(nqubits - 1):
         output.append(cirq.CX(qubits[i], qubits[i + 1]))
     return output
-
 
 print(ghz_prep(4))
 # %% [markdown]
@@ -158,7 +147,7 @@ kernel = squin.cirq.load_circuit(
 )
 
 # Then, we can convert the circuit back to cirq.
-# Note that this is **not possible** in a general case due to the fact that
+# Note that this is **not possible** in a general case because
 # cirq cannot represent complex control flow.
 circuit2: cirq.Circuit = squin.cirq.emit_circuit(kernel, ignore_returns=True)
 print(circuit2)
@@ -181,7 +170,6 @@ kernel.print()
 # %% [markdown]
 # Due to the difficulty of representing mid-circuit control flow in cirq, attempting to lower these kernels back to cirq will result in an error.
 
-
 # %%
 @squin.kernel
 def t_teleport_noargs() -> None:
@@ -196,13 +184,11 @@ def t_teleport_noargs() -> None:
         squin.gate.s(ancilla)
         squin.gate.x(ancilla)
 
-
 try:
     print(squin.cirq.emit_circuit(t_teleport_noargs))
     raise (RuntimeError("Oops this should have errored."))
 except Exception as e:
     print("ERROR:", e)
-
 
 # Though measurement without feedforward is possible
 @squin.kernel
@@ -211,18 +197,17 @@ def coinflip() -> MeasurementResult:
     squin.gate.h(qubit)
     return squin.qubit.measure(qubit)
 
-
 circuit = squin.cirq.emit_circuit(coinflip, ignore_returns=True)
 print(circuit)
 # %% [markdown]
 # ## Simulation, emulation, and analysis
 #
-# A kernel is simply a representation of an execution, and is not much use without being able to analyze and execute that kernel. We can simulate the action of kernels using concrete interpreters. The emulator must a) keep track of the classical state of the variables, b) keep track of the quantum state of the qubits, and thus c) faithfully represent the execution of that program as if it was run on a hybrid quantum/classical computer. Bloqade's emulator is built on top of the excellent [PyQrack quantum simulator](https://pyqrack.readthedocs.io/en/latest/) and satisfies the three goals above.
+# A kernel is simply a representation of an execution and is not much use without being able to analyze and execute that kernel. We can simulate the action of kernels using concrete interpreters. The emulator must a) keep track of the classical state of the variables, b) keep track of the quantum state of the qubits, and thus c) faithfully represent the execution of that program as if it was run on a hybrid quantum/classical computer. Bloqade's emulator is built on top of the excellent [PyQrack quantum simulator](https://pyqrack.readthedocs.io/en/latest/) and satisfies the three goals above.
 #
 # There are four main objects when considering simulation:
 # 1. **The emulator object** - Representing the thing that some kernel is going to be executed on. Today it is the PyQrack simulator, but eventually it could also include other simulators or physical hardware. The `*.task` method of the `emulator` object builds...
 # 2. **The task object** - Binding together the emulator, kernel, and input parameters for that kernel. This task is not executed until the `*.run` method is called. Upon calling `run`, the kernel is interpreted, the quantum circuit is executed, any classical co-processing is done, and the kernel completes, returning . Repeated calling of `run` will "reset" the executor into its initial state and rerun the kernel. Alternatively, one could call `*.batch_run` to repeatedly run the kernel's result to get stochastic averaging. The user can then analyze...
-# 3. **The results object** - Whatever the `return` of the kernel is is returned, with the same type signature. This is generated from `*run()` (as a ResultType) or `*.batch_run` (as a dict keyed by ResultType and valued by frequency) These could be qubits or qubit registers (list of qubits), values, or really whatever object you like.
+# 3. **The results object** - Whatever the `return` of the kernel is returned, with the same type signature. This is generated from `*run()` (as a ResultType) or `*.batch_run` (as a dict keyed by ResultType and valued by frequency) These could be qubits or qubit registers (list of qubits), values, or whatever object you like.
 # 4. **The QuantumState object** - The final quantum state of the emulator object. While this is a nonphysical quantity, the QuantumState is useful for debugging and analysis. This can be extracted from either the `emulator.quantum_state` method (for a single run after the `run()` method), or with `task.batch_state` (for a stochastic average over many samples). The quantum state is efficiently represented as an eigensystem of a reduced density matrix.
 
 # %%
@@ -234,19 +219,17 @@ emulator = StackMemorySimulator(min_qubits=8)
 
 task = emulator.task(GHZ_state_factory, args=(4,))
 results = task.run()
-# The results is the same ResultType as the kernel return.
+# The results are the same ResultType as the kernel return.
 # In this case, it is a list of qubits.
 print(results)
 # %% [markdown]
 # Note that, while it is instinctive to simply call `GHZ_state_factory(4)` and expect it to run, this isn't necessarily the correct abstraction. `emulator.task` links the kernel to a specific interpreter-- for example, if you wanted to run your program on a noisy emulator vs a perfect emulator vs. real hardware, this is the way you would specify it. Furthermore, the _instantiation_ of the task is not necessarily linked with the _execution_ of that task. For example, if that task must be run asynchronously on hardware, there must be an object which represents the run itself as well as the (future) results.
 #
-# For simpler kernels that only use kirin builtin statements -- such as control flow, for loops, arithmetic, and the like -- it is possible to directly call the kernel and use the default Kirin interpreter.
-
+# For simpler kernels that only use kirin built-in statements -- such as control flow, for loops, arithmetic, and the like -- it is possible to directly call the kernel and use the default Kirin interpreter.
 
 # %%
 def foo(x: int, y: int) -> bool:
     return x < y
-
 
 assert foo(1, 2) == True
 # %% [markdown]
@@ -293,15 +276,14 @@ state = task.batch_state(shots=1000)
 print("Results:", results)
 print("State:", state)
 
-
 # %% [markdown]
 # # Composition of kernels
 #
-# Bloqade kernels allow all of the typical syntax of for loops, if-else statements, function calls, and other powerful abstractions. Let us use this to write efficient representations of complex circuits.
+# Bloqade kernels allow all the typical syntax of for loops, if-else statements, function calls, and other powerful abstractions. Let us use this to write efficient representations of complex circuits.
 #
 # For this example, we will use a [Trotterization of the 1d Transverse Ising model](https://qiskit-community.github.io/qiskit-algorithms/tutorials/13_trotterQRTE.html).
 #
-# The first option we will explore is to write the entire circuit in Cirq, and then convert it into a bloqade kernel using the `squin.cirq.load_circuit` lowering. Observe that the return objects of these builder functions are static objects.
+# The first option we will explore is to write the entire circuit in Cirq and then convert it into a bloqade kernel using the `squin.cirq.load_circuit` lowering. Observe that the return objects of these builder functions are static objects.
 # %%
 def trotter_layer(
     qubits: list[cirq.Qid], dt: float = 0.01, J: float = 1, h: float = 1
@@ -321,7 +303,6 @@ def trotter_layer(
         circuit.append(op_x.on(qubits[i]))
     return circuit
 
-
 def trotter_circuit(
     N: int, steps: int = 10, dt: float = 0.01, J: float = 1, h: float = 1
 ) -> cirq.Circuit:
@@ -330,7 +311,6 @@ def trotter_circuit(
     for _ in range(steps):
         circuit += trotter_layer(qubits, dt, J, h)
     return circuit
-
 
 cirq_trotter_circuit = trotter_circuit(N=8, steps=4, dt=0.01, J=1, h=1)
 
@@ -345,7 +325,6 @@ bloqade_trotter_circuit = squin.cirq.load_circuit(
 )
 # %% [markdown]
 # As an intermediate, one can mix between writing kernels converted from Cirq circuits and direct bloqade kernels. For example, each layer has fixed parameters as defined by a cirq circuit, but a variable number of layers as parameterized by a kernel input and for loop. This option has the benefit of being able to use Cirq infrastructure to optimize and represent individual layers, while still being able to use bloqade kernels to represent parameterized circuits. In this case, the output kernel has the timestep and Ising parameters fixed (as they are fixed in the cirq circuit), but the number of steps is variable.
-
 
 # %%
 def factory_trotter(N: int, dt: float = 0.01, J: float = 1, h: float = 1) -> Method:
@@ -368,7 +347,6 @@ def factory_trotter(N: int, dt: float = 0.01, J: float = 1, h: float = 1) -> Met
 
     return trotter_for_loop
 
-
 # %% [markdown]
 # Alternatively, you could just write everything directly as a Bloqade kernel. Note that the ZZ operator that is native to Cirq must be expanded into its own "helper" kernel via a decomposition into cx / z / cx. The resulting kernel is fully parameterized, with the values not actually evaluated until runtime (or further compilation and folding).
 # %%
@@ -381,7 +359,6 @@ def op_zz(theta: float, qb1: bloqade.types.Qubit, qb2: bloqade.types.Qubit) -> N
     squin.gate.cx(qb1, qb2)
     squin.gate.rz(theta, qb2)
     squin.gate.cx(qb1, qb2)
-
 
 @squin.kernel
 def bloqade_trotter(
@@ -398,7 +375,6 @@ def bloqade_trotter(
         for i in range(0, len(qubits)):
             squin.qubit.apply(operator=xpow, qubits=[qubits[i]])
     return qubits
-
 
 # %% [markdown]
 # Of course, both Cirq and the (converted) Bloqade kernel have the same execution and same output state.
@@ -439,11 +415,10 @@ print(
     ** 2,
 )
 
-
 # %% [markdown]
 # # Mid-circuit feed forward
 #
-# Bloqade kernels are able to natively represent mid-circuit feed-forward using control flow represented by standard pythonic if-else and while structures. While the possibilities are endless, including measurement based quantum computing and error correction, we show two examples here.
+# Bloqade kernels can natively represent mid-circuit feed-forward using control flow represented by standard pythonic if-else and while structures. While the possibilities are endless, including measurement-based quantum computing and error correction, we show two examples here.
 #
 # The first is T state teleportation, which teleports a T gate that was applied to an ancilla (a "T state") onto the target state using only Clifford gates and feedforward. Due to the property of being Clifford, the circuit itself is fault tolerant and thus plays an important role in many error corrected algorithms.
 # %%
@@ -458,8 +433,7 @@ def t_teleport(target: squin.qubit.Qubit) -> squin.qubit.Qubit:
         squin.gate.s(ancilla)
     return ancilla  # The state of the target qubit is also teleported to the ancilla
 
-
-# And now lets wrap it into a larger context to run. In this case,
+# And now let’s wrap it into a larger context to run. In this case,
 # apply to a |+> state and see that we get a T|+> state out.
 @squin.kernel
 def t_teleport_wrapper() -> squin.qubit.Qubit:
@@ -468,7 +442,6 @@ def t_teleport_wrapper() -> squin.qubit.Qubit:
     squin.gate.h(target)
     target = t_teleport(target)
     return target
-
 
 # And run it. Observe that the batch_state uses a qubit_map to select which qubits to include in the batch state.
 # This is important because there are two qubits total (the target and the ancilla) but we only want inspect
@@ -488,7 +461,6 @@ print(state)
 # [2] [Constant-Depth Preparation of Matrix Product States with Adaptive Quantum Circuits](https://doi.org/10.1103/PRXQuantum.5.030344)
 #
 # The explicit circuit for the GHZ circuit is shown in Fig. 5 of [1]. There is classical feedforward in the form of a parity check, which requires a classical XOR operation that is irrepresentable by CIRQ.
-
 
 # %%
 def ghz_constant_depth(n_qubits: int):
@@ -519,7 +491,6 @@ def ghz_constant_depth(n_qubits: int):
 
     return main
 
-
 # %%
 # At this point, you know the drill. We can simulate this with multirun via PyQrack
 emulator = StackMemorySimulator(min_qubits=7)
@@ -530,3 +501,5 @@ state = task.batch_state(shots=1000, qubit_map=lambda x: x)
 print(state.eigenvalues)
 # %% [markdown]
 # As a final note, consider how difficult it would be to represent this circuit in Cirq. In particular, there is a for loop, where inside the for loop there is an algebraic operation (XOR) that feeds forward onto a variable (parity). This circuit is very hard to express in Cirq without some serious hacking of ancilla registers.
+
+
