@@ -1,13 +1,15 @@
 # %%
-from bloqade import squin
+from typing import Any
+
 import numpy as np
+from kirin.ir import Method
 
 # Some types we will use, useful for type hints
 from kirin.dialects.ilist import IList
-from bloqade.squin.types import MeasurementResult
+
 import bloqade.types
-from typing import Any
-from kirin.ir import Method
+from bloqade import squin
+from bloqade.squin.types import MeasurementResult
 
 Register = IList[bloqade.types.Qubit, Any]
 
@@ -152,8 +154,8 @@ kernel = squin.cirq.load_circuit(
     ghz_prep(4),
     kernel_name="ghz_prep_cirq",  # Define the name of the kernel as if one were using @squin.kernel on a function
     register_as_argument=False,  # If the resulting kernel should take in a qubit register (True) or make a new one (False)
-    return_register=True, # If the resulting kernel should return the register of the qubits it acts on.
-) 
+    return_register=True,  # If the resulting kernel should return the register of the qubits it acts on.
+)
 
 # Then, we can convert the circuit back to cirq.
 # Note that this is **not possible** in a general case due to the fact that
@@ -204,7 +206,7 @@ except Exception as e:
 
 # Though measurement without feedforward is possible
 @squin.kernel
-def coinflip()->MeasurementResult:
+def coinflip() -> MeasurementResult:
     qubit = squin.qubit.new(1)[0]
     squin.gate.h(qubit)
     return squin.qubit.measure(qubit)
@@ -382,7 +384,9 @@ def op_zz(theta: float, qb1: bloqade.types.Qubit, qb2: bloqade.types.Qubit) -> N
 
 
 @squin.kernel
-def bloqade_trotter(N: int, steps: int, dt: float = 0.01, J: float = 1, h: float = 1)-> Register:
+def bloqade_trotter(
+    N: int, steps: int, dt: float = 0.01, J: float = 1, h: float = 1
+) -> Register:
     """
     Main function that runs the Trotter circuit for a given number of steps
     """
