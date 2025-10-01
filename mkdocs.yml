@@ -27,6 +27,8 @@ nav:
     - Interoperability with Cirq: digital/cirq_interop/
   - Digital Tutorials:
     - digital/examples/index.md
+    - Tutorials:
+      - Circuits with Bloqade: "digital/tutorials/circuits_with_bloqade.py"
     - QASM2 examples:
       - Quantum Fourier Transform: "digital/examples/qasm2/qft.py"
       - GHZ state preparation: "digital/examples/qasm2/ghz.py"
