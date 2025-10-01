@@ -1,3 +1,10 @@
+# %% [markdown]
+# # Circuits with Bloqade
+#
+# In this tutorial we will demonstrate how to write circuits and quantum executions with Bloqade. Specifically, we will use the `squin` dialect set from the compiler toolchain `kirin`. `SQUIN` stands for `S`tructural `Qu`antum `IN`struction set and is the circuit-level representation of quantum executions. It is built on top of the `kirin` framework, an [open-source compiler toolchain](https://queracomputing.github.io/kirin/latest/) for embedded domain-specific languages (eDSLs) that target scientific computing kernels. A key feature of squin is the _kernel_, which can roughly be seen as the object which will be executed on the target hardware. Naturally, this hardware could be a quantum computer, but it also extends to classical execution as well, such as mid-circuit feedforward or even non-quantum execution such as robotics.
+#
+# These kernels can be built using decorators of python functions. We will use the `@squin.kernel` decorator in this notebook but keep in mind that other eDSLs have different decorators inherited from base Kirin decorators. The decorator lowers Python's abstract syntax tree (AST) into a kirin SSA (single static assignment) form, which is a useful intermediate representation for compiler analysis. You don't have to worry too much about SSA or compilers here, but if you want to learn more check out the [kirin documentation](https://queracomputing.github.io/kirin/latest/).
+
 # %%
 from typing import Any
 
@@ -12,14 +19,6 @@ from bloqade import squin
 from bloqade.squin.types import MeasurementResult
 
 Register = IList[bloqade.types.Qubit, Any]
-
-# %% [markdown]
-# # Circuits with Bloqade
-#
-# In this tutorial we will demonstrate how to write circuits and quantum executions with Bloqade. Specifically, we will use the `squin` dialect set from the compiler toolchain `kirin`. `SQUIN` stands for `S`tructural `Qu`antum `IN`struction set and is the circuit-level representation of quantum executions. It is built on top of the `kirin` framework, an [open-source compiler toolchain](https://queracomputing.github.io/kirin/latest/) for embedded domain-specific languages (eDSLs) that target scientific computing kernels. A key feature of squin is the _kernel_, which can roughly be seen as the object which will be executed on the target hardware. Naturally, this hardware could be a quantum computer, but it also extends to classical execution as well, such as mid-circuit feedforward or even non-quantum execution such as robotics.
-#
-# These kernels can be built using decorators of python functions. We will use the `@squin.kernel` decorator in this notebook but keep in mind that other eDSLs have different decorators inherited from base Kirin decorators. The decorator lowers Python's abstract syntax tree (AST) into a kirin SSA (single static assignment) form, which is a useful intermediate representation for compiler analysis. You don't have to worry too much about SSA or compilers here, but if you want to learn more check out the [kirin documentation](https://queracomputing.github.io/kirin/latest/).
-
 
 # %%
 @squin.kernel
@@ -219,8 +218,8 @@ print(circuit)
 # A kernel is simply a representation of an execution and is not much use without being able to analyze and execute that kernel. We can simulate the action of kernels using concrete interpreters. The emulator must a) keep track of the classical state of the variables, b) keep track of the quantum state of the qubits, and thus c) faithfully represent the execution of that program as if it was run on a hybrid quantum/classical computer. Bloqade's emulator is built on top of the excellent [PyQrack quantum simulator](https://pyqrack.readthedocs.io/en/latest/) and satisfies the three goals above.
 #
 # There are four main objects when considering simulation:
-# 1. **The emulator object** - Representing the thing that some kernel is going to be executed on. Today it is the PyQrack simulator, but eventually it could also include other simulators or physical hardware. The `*.task` method of the `emulator` object builds...
-# 2. **The task object** - Binding together the emulator, kernel, and input parameters for that kernel. This task is not executed until the `*.run` method is called. Upon calling `run`, the kernel is interpreted, the quantum circuit is executed, any classical co-processing is done, and the kernel completes, returning . Repeated calling of `run` will "reset" the executor into its initial state and rerun the kernel. Alternatively, one could call `*.batch_run` to repeatedly run the kernel's result to get stochastic averaging. The user can then analyze...
+# 1. **The emulator object** - Representing the thing that some kernel is going to be executed on. Today it is the PyQrack simulator, but eventually it could also include other simulators or physical hardware. The `*.task` method of the `emulator` object builds a `task` object.
+# 2. **The task object** - Binding together the emulator, kernel, and input parameters for that kernel. This task is not executed until the `*.run` method is called. Upon calling `run`, the kernel is interpreted, the quantum circuit is executed, any classical co-processing is done, and the kernel completes, returning . Repeated calling of `run` will "reset" the executor into its initial state and rerun the kernel. Alternatively, one could call `*.batch_run` to repeatedly run the kernel's result to get stochastic averaging. Products of the task include the `results` and `QuantumState` objects.
 # 3. **The results object** - Whatever the `return` of the kernel is returned, with the same type signature. This is generated from `*run()` (as a ResultType) or `*.batch_run` (as a dict keyed by ResultType and valued by frequency) These could be qubits or qubit registers (list of qubits), values, or whatever object you like.
 # 4. **The QuantumState object** - The final quantum state of the emulator object. While this is a nonphysical quantity, the QuantumState is useful for debugging and analysis. This can be extracted from either the `emulator.quantum_state` method (for a single run after the `run()` method), or with `task.batch_state` (for a stochastic average over many samples). The quantum state is efficiently represented as an eigensystem of a reduced density matrix.
 
