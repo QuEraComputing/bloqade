@@ -14732,8 +14732,19 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=7e01dd7e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2f484b45">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h1 id="circuits-with-bloqade">Circuits with Bloqade<a class="anchor-link" href="#circuits-with-bloqade">¶</a></h1><p>In this tutorial we will demonstrate how to write circuits and quantum executions with Bloqade. Specifically, we will use the <code>squin</code> dialect set from the compiler toolchain <code>kirin</code>. <code>SQUIN</code> stands for <code>S</code>tructural <code>Qu</code>antum <code>IN</code>struction set and is the circuit-level representation of quantum executions. It is built on top of the <code>kirin</code> framework, an <a href="https://queracomputing.github.io/kirin/latest/">open-source compiler toolchain</a> for embedded domain-specific languages (eDSLs) that target scientific computing kernels. A key feature of squin is the <em>kernel</em>, which can roughly be seen as the object which will be executed on the target hardware. Naturally, this hardware could be a quantum computer, but it also extends to classical execution as well, such as mid-circuit feedforward or even non-quantum execution such as robotics.</p>
+<p>These kernels can be built using decorators of python functions. We will use the <code>@squin.kernel</code> decorator in this notebook but keep in mind that other eDSLs have different decorators inherited from base Kirin decorators. The decorator lowers Python's abstract syntax tree (AST) into a kirin SSA (single static assignment) form, which is a useful intermediate representation for compiler analysis. You don't have to worry too much about SSA or compilers here, but if you want to learn more check out the <a href="https://queracomputing.github.io/kirin/latest/">kirin documentation</a>.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3eb264ab">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14783,20 +14794,8 @@ Register = IList[bloqade.types.Qubit, Any]</div>
 </div>
 </div>
 </div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5f838104">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="circuits-with-bloqade">Circuits with Bloqade<a class="anchor-link" href="#circuits-with-bloqade">¶</a></h1><p>In this tutorial we will demonstrate how to write circuits and quantum executions with Bloqade. Specifically, we will use the <code>squin</code> dialect set from the compiler toolchain <code>kirin</code>. <code>SQUIN</code> stands for <code>S</code>tructural <code>Qu</code>antum <code>IN</code>struction set and is the circuit-level representation of quantum executions. It is built on top of the <code>kirin</code> framework, an <a href="https://queracomputing.github.io/kirin/latest/">open-source compiler toolchain</a> for embedded domain-specific languages (eDSLs) that target scientific computing kernels. A key feature of squin is the <em>kernel</em>, which can roughly be seen as the object which will be executed on the target hardware. Naturally, this hardware could be a quantum computer, but it also extends to classical execution as well, such as mid-circuit feedforward or even non-quantum execution such as robotics.</p>
-<p>These kernels can be built using decorators of python functions. We will use the <code>@squin.kernel</code> decorator in this notebook but keep in mind that other eDSLs have different decorators inherited from base Kirin decorators. The decorator lowers Python's abstract syntax tree (AST) into a kirin SSA (single static assignment) form, which is a useful intermediate representation for compiler analysis. You don't have to worry too much about SSA or compilers here, but if you want to learn more check out the <a href="https://queracomputing.github.io/kirin/latest/">kirin documentation</a>.</p>
-</div>
-</div>
-</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=ed30ba1b">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=fef2e0b7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14853,7 +14852,7 @@ hello_world.print()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a0479735">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=825d3fc2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14864,7 +14863,7 @@ hello_world.print()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=356f702e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4c127cdd">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14885,7 +14884,7 @@ hello_world.print()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=46fa86f9">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=bd780ba4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14896,7 +14895,7 @@ hello_world.print()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=d358cbf3">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2461f112">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14943,7 +14942,7 @@ def controlled_t(qubit1: bloqade.types.Qubit, qubit2: bloqade.types.Qubit) -&gt;
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=36730872">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c959e470">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14955,7 +14954,7 @@ def controlled_t(qubit1: bloqade.types.Qubit, qubit2: bloqade.types.Qubit) -&gt;
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=26416792">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=d381b736">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15016,7 +15015,7 @@ kernel.print()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c2dc6822">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4016e070">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15027,7 +15026,7 @@ kernel.print()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a1ec984b">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6dcabe23">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15072,7 +15071,7 @@ GHZ_state_factory.print()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c32d7328">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2149e7c1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15084,7 +15083,7 @@ GHZ_state_factory.print()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=ccbd29f9">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=7bcab034">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15143,7 +15142,7 @@ print(ghz_prep(4))</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b2529ea9">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d4cd7882">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15154,7 +15153,7 @@ print(ghz_prep(4))</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=18c23950">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e9a53dc6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15205,7 +15204,7 @@ print(circuit2)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=56a59bb3">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b9b8cb89">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15216,7 +15215,7 @@ print(circuit2)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=dbe6c979">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4b7fd5c5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15265,7 +15264,7 @@ kernel.print()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=51d0ff8e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c5dee24a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15276,7 +15275,7 @@ kernel.print()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=0c364d8e">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c6549587">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15363,7 +15362,7 @@ print(circuit)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cd9d19b8">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1d01ba05">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15372,8 +15371,8 @@ print(circuit)</div>
 <h2 id="simulation-emulation-and-analysis">Simulation, emulation, and analysis<a class="anchor-link" href="#simulation-emulation-and-analysis">¶</a></h2><p>A kernel is simply a representation of an execution and is not much use without being able to analyze and execute that kernel. We can simulate the action of kernels using concrete interpreters. The emulator must a) keep track of the classical state of the variables, b) keep track of the quantum state of the qubits, and thus c) faithfully represent the execution of that program as if it was run on a hybrid quantum/classical computer. Bloqade's emulator is built on top of the excellent <a href="https://pyqrack.readthedocs.io/en/latest/">PyQrack quantum simulator</a> and satisfies the three goals above.</p>
 <p>There are four main objects when considering simulation:</p>
 <ol>
-<li><strong>The emulator object</strong> - Representing the thing that some kernel is going to be executed on. Today it is the PyQrack simulator, but eventually it could also include other simulators or physical hardware. The <code>*.task</code> method of the <code>emulator</code> object builds...</li>
-<li><strong>The task object</strong> - Binding together the emulator, kernel, and input parameters for that kernel. This task is not executed until the <code>*.run</code> method is called. Upon calling <code>run</code>, the kernel is interpreted, the quantum circuit is executed, any classical co-processing is done, and the kernel completes, returning . Repeated calling of <code>run</code> will "reset" the executor into its initial state and rerun the kernel. Alternatively, one could call <code>*.batch_run</code> to repeatedly run the kernel's result to get stochastic averaging. The user can then analyze...</li>
+<li><strong>The emulator object</strong> - Representing the thing that some kernel is going to be executed on. Today it is the PyQrack simulator, but eventually it could also include other simulators or physical hardware. The <code>*.task</code> method of the <code>emulator</code> object builds a <code>task</code> object.</li>
+<li><strong>The task object</strong> - Binding together the emulator, kernel, and input parameters for that kernel. This task is not executed until the <code>*.run</code> method is called. Upon calling <code>run</code>, the kernel is interpreted, the quantum circuit is executed, any classical co-processing is done, and the kernel completes, returning . Repeated calling of <code>run</code> will "reset" the executor into its initial state and rerun the kernel. Alternatively, one could call <code>*.batch_run</code> to repeatedly run the kernel's result to get stochastic averaging. Products of the task include the <code>results</code> and <code>QuantumState</code> objects.</li>
 <li><strong>The results object</strong> - Whatever the <code>return</code> of the kernel is returned, with the same type signature. This is generated from <code>*run()</code> (as a ResultType) or <code>*.batch_run</code> (as a dict keyed by ResultType and valued by frequency) These could be qubits or qubit registers (list of qubits), values, or whatever object you like.</li>
 <li><strong>The QuantumState object</strong> - The final quantum state of the emulator object. While this is a nonphysical quantity, the QuantumState is useful for debugging and analysis. This can be extracted from either the <code>emulator.quantum_state</code> method (for a single run after the <code>run()</code> method), or with <code>task.batch_state</code> (for a stochastic average over many samples). The quantum state is efficiently represented as an eigensystem of a reduced density matrix.</li>
 </ol>
@@ -15381,7 +15380,7 @@ print(circuit)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=08d07e00">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=5effa94a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15428,7 +15427,7 @@ print(results)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=33f65308">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4f0eb566">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15440,7 +15439,7 @@ print(results)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e7f798aa">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4a3bacb3">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15475,7 +15474,7 @@ assert foo(1, 2) == True</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=54060526">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=24939b62">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15488,7 +15487,7 @@ assert foo(1, 2) == True</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a038dbf6">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=408fc2ac">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15559,7 +15558,7 @@ print(statevector)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7ea5f799">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=fb66627a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15570,7 +15569,7 @@ print(statevector)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e07c60ea">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3023ede2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15609,7 +15608,7 @@ print("State:", state)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=eaaed3cf">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=337b51d4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15622,7 +15621,7 @@ print("State:", state)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9525ffc8">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=5e8958d7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15727,7 +15726,7 @@ bloqade_trotter_circuit = squin.cirq.load_circuit(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e54fb8dd">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=af1f06c7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15738,7 +15737,7 @@ bloqade_trotter_circuit = squin.cirq.load_circuit(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=227249c3">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2ba073ac">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15801,7 +15800,7 @@ bloqade_trotter_circuit = squin.cirq.load_circuit(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ff3f917c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cf528921">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15812,7 +15811,7 @@ bloqade_trotter_circuit = squin.cirq.load_circuit(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=423ea2fb">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=d260c12d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15889,7 +15888,7 @@ def bloqade_trotter(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=45da6e6a">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9f558b89">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15900,7 +15899,7 @@ def bloqade_trotter(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6b04c2c3">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e31836a0">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15967,7 +15966,7 @@ print(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=691a5857">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e009b0c8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15978,7 +15977,7 @@ print(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3e7ab415">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=d81df561">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16021,7 +16020,7 @@ print(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f7dbc768">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a34d8f25">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16033,7 +16032,7 @@ print(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3cec9f5b">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=48b1157f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16120,7 +16119,7 @@ print(state)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4ca4ee6c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=00c4a1a4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16134,7 +16133,7 @@ print(state)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=7c991e85">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=dda5eae3">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16158,24 +16157,21 @@ print(state)</div>
     <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Register</span><span class="p">:</span>
         <span class="n">qreg</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
         <span class="n">ancilla</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">n_qubits</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">h</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">h</span><span class="p">()</span>
-        <span class="n">cx</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">cx</span><span class="p">()</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">x</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
-            <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">qreg</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">squin</span><span class="o">.</span><span class="n">gate</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">cx</span><span class="p">,</span> <span class="n">qreg</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ancilla</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">squin</span><span class="o">.</span><span class="n">gate</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ancilla</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">cx</span><span class="p">,</span> <span class="n">qreg</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">ancilla</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">squin</span><span class="o">.</span><span class="n">gate</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">ancilla</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
         <span class="n">parity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">bits</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">ancilla</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">parity</span> <span class="o">=</span> <span class="n">parity</span> <span class="o">^</span> <span class="n">bits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">parity</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">qreg</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="n">squin</span><span class="o">.</span><span class="n">gate</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">qreg</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">qreg</span>
 
     <span class="k">return</span> <span class="n">main</span>
@@ -16186,24 +16182,21 @@ print(state)</div>
     def main() -&gt; Register:
         qreg = squin.qubit.new(n_qubits)
         ancilla = squin.qubit.new(n_qubits - 1)
-        h = squin.op.h()
-        cx = squin.op.cx()
-        x = squin.op.x()
 
         for i in range(n_qubits):
-            squin.qubit.apply(h, qreg[i])
+            squin.gate.h(qreg[i])
 
         for i in range(n_qubits - 1):
-            squin.qubit.apply(cx, qreg[i], ancilla[i])
+            squin.gate.cx(qreg[i], ancilla[i])
         for i in range(n_qubits - 1):
-            squin.qubit.apply(cx, qreg[i + 1], ancilla[i])
+            squin.gate.cx(qreg[i + 1], ancilla[i])
 
         parity: int = 0
         bits = squin.qubit.measure(ancilla)
         for i in range(n_qubits - 1):
             parity = parity ^ bits[i]
             if parity == 1:
-                squin.qubit.apply(x, qreg[i + 1])
+                squin.gate.x(qreg[i + 1])
         return qreg
 
     return main</div>
@@ -16213,7 +16206,7 @@ print(state)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=0c797282">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=ddb01598">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16252,7 +16245,7 @@ print(state.eigenvalues)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6cfbdbcd">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=39fc5c92">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>

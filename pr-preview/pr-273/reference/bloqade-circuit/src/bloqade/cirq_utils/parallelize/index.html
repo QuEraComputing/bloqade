@@ -3242,18 +3242,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bloqade.cirq_utils.parallelize.no_similarity" class="md-nav__link">
+  <a href="#bloqade.cirq_utils.parallelize.parallelize" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;no_similarity
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;parallelize
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#bloqade.cirq_utils.parallelize.parallelize" class="md-nav__link">
+  <a href="#bloqade.cirq_utils.parallelize.remove_tags" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;parallelize
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;remove_tags
     </span>
   </a>
   
@@ -14360,18 +14360,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bloqade.cirq_utils.parallelize.no_similarity" class="md-nav__link">
+  <a href="#bloqade.cirq_utils.parallelize.parallelize" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;no_similarity
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;parallelize
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#bloqade.cirq_utils.parallelize.parallelize" class="md-nav__link">
+  <a href="#bloqade.cirq_utils.parallelize.remove_tags" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;parallelize
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;remove_tags
     </span>
   </a>
   
@@ -14756,8 +14756,7 @@ inner list contains gates that can be executed in parallel.</p>
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">281</span>
-<span class="normal">282</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">282</span>
 <span class="normal">283</span>
 <span class="normal">284</span>
 <span class="normal">285</span>
@@ -14823,7 +14822,8 @@ inner list contains gates that can be executed in parallel.</p>
 <span class="normal">345</span>
 <span class="normal">346</span>
 <span class="normal">347</span>
-<span class="normal">348</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">colorize</span><span class="p">(</span>
+<span class="normal">348</span>
+<span class="normal">349</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">colorize</span><span class="p">(</span>
     <span class="n">epochs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Unique</span><span class="p">[</span><span class="n">cirq</span><span class="o">.</span><span class="n">GateOperation</span><span class="p">]]],</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -14915,8 +14915,7 @@ inner list contains gates that can be executed in parallel.</p>
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">256</span>
-<span class="normal">257</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">257</span>
 <span class="normal">258</span>
 <span class="normal">259</span>
 <span class="normal">260</span>
@@ -14937,7 +14936,8 @@ inner list contains gates that can be executed in parallel.</p>
 <span class="normal">275</span>
 <span class="normal">276</span>
 <span class="normal">277</span>
-<span class="normal">278</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">generate_epochs</span><span class="p">(</span>
+<span class="normal">278</span>
+<span class="normal">279</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">generate_epochs</span><span class="p">(</span>
     <span class="n">solution</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">NodeType</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
     <span class="n">tol</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">,</span>
 <span class="p">):</span>
@@ -15044,61 +15044,6 @@ weight: float - the weight to assign to each block of gates.</p>
 <div class="doc doc-object doc-function">
 
 
-<h2 id="bloqade.cirq_utils.parallelize.no_similarity" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">no_similarity</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">no_similarity</span><span class="p">(</span><span class="n">circuit</span><span class="p">:</span> <span class="n">Circuit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Removes all tags from the circuit</p>
-<p>Inputs:
-circuit: cirq.Circuit - the circuit to remove tags from.</p>
-<p>Returns:
-[0] - cirq.Circuit - the circuit with all tags removed.</p>
-
-
-            <details class="quote">
-              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">no_similarity</span><span class="p">(</span><span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Removes all tags from the circuit</span>
-
-<span class="sd">    Inputs:</span>
-<span class="sd">    circuit: cirq.Circuit - the circuit to remove tags from.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">    [0] - cirq.Circuit - the circuit with all tags removed.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">new_moments</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">moment</span> <span class="ow">in</span> <span class="n">circuit</span><span class="o">.</span><span class="n">moments</span><span class="p">:</span>
-        <span class="n">new_moments</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">gate</span><span class="o">.</span><span class="n">untagged</span> <span class="k">for</span> <span class="n">gate</span> <span class="ow">in</span> <span class="n">moment</span><span class="o">.</span><span class="n">operations</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">(</span><span class="n">new_moments</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
 <h2 id="bloqade.cirq_utils.parallelize.parallelize" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">parallelize</span>
 
@@ -15139,8 +15084,7 @@ hyperparameters: dict[str, float] - hyperparameters for the optimization
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">351</span>
-<span class="normal">352</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">352</span>
 <span class="normal">353</span>
 <span class="normal">354</span>
 <span class="normal">355</span>
@@ -15190,7 +15134,10 @@ hyperparameters: dict[str, float] - hyperparameters for the optimization
 <span class="normal">399</span>
 <span class="normal">400</span>
 <span class="normal">401</span>
-<span class="normal">402</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parallelize</span><span class="p">(</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parallelize</span><span class="p">(</span>
     <span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span>
     <span class="n">hyperparameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">auto_tag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -15241,7 +15188,66 @@ hyperparameters: dict[str, float] - hyperparameters for the optimization
     <span class="p">)</span>
     <span class="c1"># Convert the epochs to a cirq circuit.</span>
     <span class="n">moments</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">cirq</span><span class="o">.</span><span class="n">Moment</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">(</span><span class="n">moments</span><span class="p">)</span>
+    <span class="n">circuit</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">(</span><span class="n">moments</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">remove_tags</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="bloqade.cirq_utils.parallelize.remove_tags" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">remove_tags</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">remove_tags</span><span class="p">(</span><span class="n">circuit</span><span class="p">:</span> <span class="n">Circuit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Removes all tags from the circuit</p>
+<p>Inputs:
+circuit: cirq.Circuit - the circuit to remove tags from.</p>
+<p>Returns:
+[0] - cirq.Circuit - the circuit with all tags removed.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">remove_tags</span><span class="p">(</span><span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Removes all tags from the circuit</span>
+
+<span class="sd">    Inputs:</span>
+<span class="sd">    circuit: cirq.Circuit - the circuit to remove tags from.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    [0] - cirq.Circuit - the circuit with all tags removed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_tag</span><span class="p">(</span><span class="n">op</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Operation</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">untagged</span>
+
+    <span class="k">return</span> <span class="n">cirq</span><span class="o">.</span><span class="n">map_operations</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">remove_tag</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -15270,8 +15276,7 @@ hyperparameters: dict[str, float] - hyperparameters for the optimization
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">206</span>
-<span class="normal">207</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">207</span>
 <span class="normal">208</span>
 <span class="normal">209</span>
 <span class="normal">210</span>
@@ -15317,7 +15322,8 @@ hyperparameters: dict[str, float] - hyperparameters for the optimization
 <span class="normal">250</span>
 <span class="normal">251</span>
 <span class="normal">252</span>
-<span class="normal">253</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">solve_epochs</span><span class="p">(</span>
+<span class="normal">253</span>
+<span class="normal">254</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">solve_epochs</span><span class="p">(</span>
     <span class="n">directed</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">,</span>
     <span class="n">group_weights</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Hashable</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
     <span class="n">hyperparameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -15440,8 +15446,7 @@ This is useful for analyzing the circuit structure and dependencies.</p>
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/cirq_utils/parallelize.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">155</span>
-<span class="normal">156</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">156</span>
 <span class="normal">157</span>
 <span class="normal">158</span>
 <span class="normal">159</span>
@@ -15465,7 +15470,8 @@ This is useful for analyzing the circuit structure and dependencies.</p>
 <span class="normal">177</span>
 <span class="normal">178</span>
 <span class="normal">179</span>
-<span class="normal">180</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_dag_circuit</span><span class="p">(</span><span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="n">can_reorder</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">:</span>
+<span class="normal">180</span>
+<span class="normal">181</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_dag_circuit</span><span class="p">(</span><span class="n">circuit</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">,</span> <span class="n">can_reorder</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a cirq.Circuit to a directed acyclic graph (DAG) representation.</span>
 <span class="sd">    This is useful for analyzing the circuit structure and dependencies.</span>
