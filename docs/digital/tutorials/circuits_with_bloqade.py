@@ -495,24 +495,21 @@ def ghz_constant_depth(n_qubits: int):
     def main() -> Register:
         qreg = squin.qubit.new(n_qubits)
         ancilla = squin.qubit.new(n_qubits - 1)
-        h = squin.op.h()
-        cx = squin.op.cx()
-        x = squin.op.x()
 
         for i in range(n_qubits):
-            squin.qubit.apply(h, qreg[i])
+            squin.gate.h(qreg[i])
 
         for i in range(n_qubits - 1):
-            squin.qubit.apply(cx, qreg[i], ancilla[i])
+            squin.gate.cx(qreg[i], ancilla[i])
         for i in range(n_qubits - 1):
-            squin.qubit.apply(cx, qreg[i + 1], ancilla[i])
+            squin.gate.cx(qreg[i + 1], ancilla[i])
 
         parity: int = 0
         bits = squin.qubit.measure(ancilla)
         for i in range(n_qubits - 1):
             parity = parity ^ bits[i]
             if parity == 1:
-                squin.qubit.apply(x, qreg[i + 1])
+                squin.gate.x(qreg[i + 1])
         return qreg
 
     return main
