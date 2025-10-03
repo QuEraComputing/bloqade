@@ -44,3 +44,18 @@ authors:
     description: Quantum Solutions Lead at QuEra Computing Inc.
     avatar: https://github.com/jon-wurtz.png
     url: https://www.linkedin.com/in/jonathan-wurtz-7a4855181/
+  dplankensteiner:
+    name: David Plankensteiner
+    description: Scientific Software Engineer at QuEra Computing Inc.
+    avatar: https://github.com/david-pl.png
+    url: https://github.com/david-pl
+  lmartinez:
+    name: Luis A. Martinez
+    description: Research Scientist at QuEra Computing Inc.
+    avatar: https://github.com/lamq317.png
+    url: https://github.com/lamq317
+  tcochran:
+    name: Tyler A Cochran
+    description: Quantum Scientist at QuEra Computing Inc.
+    avatar: https://ca.slack-edge.com/T011VA51XJL-U08L2D8GMCY-abadd562fee2-512
+    url: https://github.com/tcochran-quera
