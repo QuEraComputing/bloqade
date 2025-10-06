@@ -14804,7 +14804,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=13a415a3">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0f2c0c23">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14815,7 +14815,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=fe42cb31">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=91f46aca">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14835,7 +14835,7 @@ In the following example, we will not be considering these two, but they are int
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=18831bb4">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0475d518">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14849,7 +14849,7 @@ However, you can already rely on <a href="../../../cirq_interop">interoperabilit
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=50f77f93">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8fe482cf">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14861,7 +14861,7 @@ However, you can already rely on <a href="../../../cirq_interop">interoperabilit
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e73046e2">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a6d5ebc1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14882,9 +14882,7 @@ However, you can already rely on <a href="../../../cirq_interop">interoperabilit
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cirq</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.cirq_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">noise</span><span class="p">,</span> <span class="n">transpile</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.cirq_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">noise</span><span class="p">,</span> <span class="n">transpile</span><span class="p">,</span> <span class="n">load_circuit</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">ghz_circuit</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span><span class="p">:</span>
@@ -14902,9 +14900,7 @@ However, you can already rely on <a href="../../../cirq_interop">interoperabilit
 <div class="clipboard-copy-txt" id="cell-1">import cirq
 import numpy as np
 import matplotlib.pyplot as plt
-from bloqade.cirq_utils import noise, transpile
-
-from bloqade import squin
+from bloqade.cirq_utils import noise, transpile, load_circuit
 
 
 def ghz_circuit(n: int) -&gt; cirq.Circuit:
@@ -14924,7 +14920,7 @@ def ghz_circuit(n: int) -&gt; cirq.Circuit:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1e0d657a">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0705ac44">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14935,7 +14931,7 @@ def ghz_circuit(n: int) -&gt; cirq.Circuit:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f869aa86">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e421b706">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14946,7 +14942,7 @@ def ghz_circuit(n: int) -&gt; cirq.Circuit:
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=10973192">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=d10cb839">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14975,7 +14971,7 @@ print(ghz_circuit_3)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5e39567f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a3aada3c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14988,7 +14984,7 @@ Now, we will convert the circuit above to a noisy one using bloqade's <code>cirq
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c305441f">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=48508537">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15019,7 +15015,7 @@ print(noisy_ghz_circuit_3)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ef1a63ad">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9967ef3a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15037,7 +15033,7 @@ However, the circuit also looks very different in terms of its gates.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=93359fa8">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=57c06c25">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15066,7 +15062,7 @@ print(native_ghz_3)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c4605859">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=fd87c753">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15078,7 +15074,7 @@ print(native_ghz_3)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f3f86f6f">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=566f1c33">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15107,7 +15103,7 @@ print(noisy_ghz_circuit_3)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=50ab881f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b6dc7c27">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15121,7 +15117,7 @@ By fidelity, we simply mean the overlap of the final state with the perfect GHZ 
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=843ad8ce">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3e8f6a62">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15139,7 +15135,7 @@ By fidelity, we simply mean the overlap of the final state with the perfect GHZ 
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4dd4bfb4">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=16293bc7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15208,7 +15204,7 @@ for n in qubits:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2774030e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9de27def">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15219,7 +15215,7 @@ for n in qubits:
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=5ffd91ae">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a2aa3672">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15254,7 +15250,7 @@ plt.legend()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=709a227b">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3bc1d9a5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15269,7 +15265,7 @@ plt.legend()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ee3aeff0">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2fb4a506">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15285,7 +15281,7 @@ For example, you can <a href="../../qasm2/ghz">reduce the circuit depth</a></p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a7d2708c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cfbaadf0">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15315,7 +15311,7 @@ We can query the default move errors from the <code>cirq</code> noise model:</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=85ad67b4">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=7ed39502">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15350,7 +15346,7 @@ print(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2668937a">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9993ebd6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15361,7 +15357,7 @@ print(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=de58e53d">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e6266d04">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15410,7 +15406,7 @@ for n in qubits:
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=476109c0">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=1728e768">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15445,7 +15441,7 @@ plt.legend()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f0523adb">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7ae9ca9e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15460,7 +15456,7 @@ plt.legend()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=885db1c0">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=621a1d71">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15471,7 +15467,7 @@ plt.legend()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e303a1bb">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5cca54ee">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15484,7 +15480,7 @@ For example, it would allow you to run the <code>pyqrack</code> simulator instea
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=19ad1d15">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2a96ed1e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15513,7 +15509,7 @@ noisy_circuit = noise.transform_circuit(circuit, model=noise.GeminiOneZoneNoiseM
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=fd2e6dc3">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=7c91a99a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15531,12 +15527,12 @@ noisy_circuit = noise.transform_circuit(circuit, model=noise.GeminiOneZoneNoiseM
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">kernel</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">cirq</span><span class="o">.</span><span class="n">load_circuit</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">kernel_name</span><span class="o">=</span><span class="s2">"kernel"</span><span class="p">)</span>
-<span class="n">noisy_kernel</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">cirq</span><span class="o">.</span><span class="n">load_circuit</span><span class="p">(</span><span class="n">noisy_circuit</span><span class="p">,</span> <span class="n">kernel_name</span><span class="o">=</span><span class="s2">"noisy_kernel"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">kernel</span> <span class="o">=</span> <span class="n">load_circuit</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">kernel_name</span><span class="o">=</span><span class="s2">"kernel"</span><span class="p">)</span>
+<span class="n">noisy_kernel</span> <span class="o">=</span> <span class="n">load_circuit</span><span class="p">(</span><span class="n">noisy_circuit</span><span class="p">,</span> <span class="n">kernel_name</span><span class="o">=</span><span class="s2">"noisy_kernel"</span><span class="p">)</span>
 <span class="n">kernel</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-12">kernel = squin.cirq.load_circuit(circuit, kernel_name="kernel")
-noisy_kernel = squin.cirq.load_circuit(noisy_circuit, kernel_name="noisy_kernel")
+<div class="clipboard-copy-txt" id="cell-12">kernel = load_circuit(circuit, kernel_name="kernel")
+noisy_kernel = load_circuit(noisy_circuit, kernel_name="noisy_kernel")
 kernel.print()</div>
 </div>
 </div>
