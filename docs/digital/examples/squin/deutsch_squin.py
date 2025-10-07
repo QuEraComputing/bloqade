@@ -42,7 +42,7 @@ n_bits = 2
 @squin.kernel
 def f_constant(q: ilist.IList[Qubit, Any]):
     # flip the final (result) qubit -- every bit string is mapped to 1
-    squin.gate.x(q[-1])
+    squin.x(q[-1])
 
 
 # %% [markdown]
@@ -54,7 +54,7 @@ def f_constant(q: ilist.IList[Qubit, Any]):
 # %%
 @squin.kernel
 def f_balanced(q: ilist.IList[Qubit, Any]):
-    squin.gate.cx(q[0], q[-1])
+    squin.cx(q[0], q[-1])
 
 
 # %% [markdown]
@@ -65,16 +65,15 @@ def f_balanced(q: ilist.IList[Qubit, Any]):
 @squin.kernel
 def deutsch_algorithm(f):
     q = squin.qubit.new(n_qubits=n_bits + 1)
-    squin.gate.x(q[-1])
+    squin.x(q[-1])
 
     # broadcast for parallelism
-    h = squin.op.h()
-    squin.qubit.broadcast(h, q)
+    squin.broadcast.h(q)
 
     # apply the oracle function
     f(q)
 
-    squin.qubit.broadcast(h, q[:-1])
+    squin.broadcast.h(q[:-1])
 
     return squin.qubit.measure(q[:-1])
 

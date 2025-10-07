@@ -9,16 +9,17 @@
 from typing import Any
 
 import numpy as np
+import bloqade.types
 from kirin.ir import Method
+from bloqade.types import Qubit, MeasurementResult
 
 # Some types we will use, useful for type hints
 from kirin.dialects.ilist import IList
 
-import bloqade.types
 from bloqade import squin
-from bloqade.squin.types import MeasurementResult
 
-Register = IList[bloqade.types.Qubit, Any]
+Register = IList[Qubit, Any]
+
 
 # %%
 @squin.kernel
@@ -27,9 +28,9 @@ def hello_world(theta: float) -> IList[MeasurementResult, Any]:
     Prepare a Bell state and measure in a basis that might have a Bell violation
     """
     qubits = squin.qubit.new(2)
-    squin.gate.h(qubits[0])
-    squin.gate.cx(qubits[0], qubits[1])
-    squin.gate.rx(theta, qubits[0])
+    squin.h(qubits[0])
+    squin.cx(qubits[0], qubits[1])
+    squin.rx(theta, qubits[0])
     bits = squin.qubit.measure(qubits)
     return bits
 
@@ -45,38 +46,39 @@ hello_world.print()
 # %% [markdown]
 # ## Squin kernel statements
 #
-# To represent quantum executions, we write and construct squin kernels. These kernels can use the typical structure of python functions -- inputs, outputs, for loops, control flow, subroutines, and so forth -- as a feature of the underlying base Kirin statements. Because one can intermix control flow with operations and measurement, arbitrary mid-circuit feed forward comes for "free".
+# To represent quantum executions, we write and construct squin kernels.
+# These kernels can use the typical structure of python functions -- inputs, outputs, for loops, control flow, subroutines, and so forth -- as a feature of the underlying base Kirin statements.
+# Because one can intermix control flow with operations and measurement, arbitrary mid-circuit feed forward comes for "free".
 #
-# There are four sets of statements which you can use to represent quantum programs:
-# 1. `squin.qubit` - Manipulation and declaration of the qubits themselves.
-# 2. `squin.gate` - Wrapper functions around operations which execute gates on qubits
-# 3. `squin.op` - The wider class of quantum operations on qubits, on which to build custom gates
-# 4. `squin.noise` - Representing noise effects on the qubits.
+# There are three dialects that comprise the domain-specific language
+# 1. `squin.qubit` - Manipulation and declaration of the qubits themselves, mainly allocating new ones and measuring them.
+# 2. `squin.gate` - Application of quantum gates on qubits.
+# 3. `squin.noise` - Representing noise effects on the qubits.
 #
-# The first set of expressions are the familiar representations of quantum gates, measurements, and qubits, under the `squin.qubit` and `squin.gate` namespaces. The gate namespace is a collection of common gates written as methods; [the gate API documentation is here](https://bloqade.quera.com/latest/reference/bloqade-circuit/src/bloqade/squin/stdlib/gate/).  The qubit namespace is used to create, measure, and apply operations to qubits; [the qubit API documentation is here](https://bloqade.quera.com/latest/reference/bloqade-circuit/src/bloqade/squin/qubit/).
+# While you can interact with `squin.qubit` directly, the other two dialects are exposed via wrapper functions that are available directly under the `squin` namespace, or under `squin.broadcast` for parallelized versions of the gates and noise processes, respectively.
 #
-# You are also able to define your own custom gates using the `op` dialects. [The op API documentation is here](https://bloqade.quera.com/latest/reference/bloqade-circuit/src/bloqade/squin/op/stdlib/). Operators are gates and other quantum operations decoupled from application on particular target qubits. Each `squin.gate` method is actually its own kernel which creates an operation and then applies it to a particular qubit. Separating the definition of operators from their application to qubits enables several convenient analysis techniques, such as identifying equivalent gates with common subexpressions elimination. Note that operators do not necessarily have to be unitary and can more widely represent objects such as observables and Hamiltonians.
-#
-# Finally, the `squin.noise` namespace contains statements to represent noise. [The API documentation is here](https://bloqade.quera.com/latest/reference/bloqade-circuit/src/bloqade/squin/noise/stmts/).
+# Refer to the [API documentation](../../../reference/bloqade-circuit/src/bloqade/squin/stdlib/) for a full list of the available functionality.
+# Note that you are also able to define your own custom gates by defining similar functions.
 
 # %% [markdown]
-# ### Writing custom gates with the `squin.op` dialect
+# ### Defining custom gates with the `squin.gate` dialect
 #
-# Let's make some operators and gates that go beyond the basic operators using the `squin.op` dialects. Note that more complicated functionalities, such as T state teleportation, may need function signatures that do not match that of the built-in `squin.gate` functions, and might need to be written using `op`. For example, consider a kernel that applies a controlled T gate to a register of qubits:
+# Let's define a gate that goes beyond the basic operators by writing a function akin to the ones available in the standard library.
+# For example, consider a kernel that applies a controlled H gate to a pair of qubits:
 
 
 # %%
 @squin.kernel
-def controlled_t(qubit1: bloqade.types.Qubit, qubit2: bloqade.types.Qubit) -> None:
+def controlled_h(control: bloqade.types.Qubit, target: bloqade.types.Qubit) -> None:
     """
-    A controlled T gate, aka a sqrt{CZ} gate.
+    A controlled H gate, decomposed into Ry & CZ
     ---o---
        |
-    ---T---
+    ---H---
     """
-    t = squin.op.t()
-    ctrl = squin.op.control(t, n_controls=1)
-    squin.qubit.apply(ctrl, qubit1, qubit2)
+    squin.ry(np.pi / 4, target)
+    squin.cz(control, target)
+    squin.ry(-np.pi / 4, target)
 
 
 # %% [markdown]
@@ -93,9 +95,9 @@ def GHZ_method_factory(nqubits: int) -> Method:
     @squin.kernel
     def GHZ_state() -> Register:
         qubits = squin.qubit.new(nqubits)
-        squin.gate.h(qubits[0])
+        squin.h(qubits[0])
         for i in range(nqubits):
-            squin.gate.cx(qubits[i], qubits[i + 1])
+            squin.cx(qubits[i], qubits[i + 1])
 
         return qubits
 
@@ -112,9 +114,9 @@ kernel.print()
 @squin.kernel
 def GHZ_state_factory(nqubits: int) -> Register:
     qubits = squin.qubit.new(nqubits)
-    squin.gate.h(qubits[0])
+    squin.h(qubits[0])
     for i in range(nqubits - 1):
-        squin.gate.cx(qubits[i], qubits[i + 1])
+        squin.cx(qubits[i], qubits[i + 1])
     return qubits
 
 
@@ -144,11 +146,13 @@ def ghz_prep(nqubits: int) -> cirq.Circuit:
 
 print(ghz_prep(4))
 # %% [markdown]
-# The cirq circuit can be converted to a bloqade kernel with a transpilation function `squin.cirq.load_circuit`. The kernel can be considered as a transformation on the register of qubits it is applied to as arguments, with the return being the qubits that still persist.
+# The cirq circuit can be converted to a bloqade kernel with a transpilation function `load_circuit`. The kernel can be considered as a transformation on the register of qubits it is applied to as arguments, with the return being the qubits that still persist.
 
 # %%
+from bloqade.cirq_utils import emit_circuit, load_circuit
+
 # Load a cirq circuit into squin
-kernel = squin.cirq.load_circuit(
+kernel = load_circuit(
     ghz_prep(4),
     kernel_name="ghz_prep_cirq",  # Define the name of the kernel as if one were using @squin.kernel on a function
     register_as_argument=False,  # If the resulting kernel should take in a qubit register (True) or make a new one (False)
@@ -158,7 +162,7 @@ kernel = squin.cirq.load_circuit(
 # Then, we can convert the circuit back to cirq.
 # Note that this is **not possible** in a general case because
 # cirq cannot represent complex control flow.
-circuit2: cirq.Circuit = squin.cirq.emit_circuit(kernel, ignore_returns=True)
+circuit2: cirq.Circuit = emit_circuit(kernel, ignore_returns=True)
 print(circuit2)
 # %% [markdown]
 # The circuit loading also works with classical feed forward, though it is generally more difficult to extract a cirq circuit from a generic feedforward cirq kernel. For example, the T teleportation gadget can be written and loaded as
@@ -172,7 +176,7 @@ circuit.append(cirq.measure(reg[0], key="m"))
 circuit.append(cirq.S(reg[1]).with_classical_controls("m"))
 circuit.append(cirq.X(reg[1]).with_classical_controls("m"))
 print(circuit)
-kernel = squin.cirq.load_circuit(
+kernel = load_circuit(
     circuit, kernel_name="teleport", register_as_argument=True, return_register=True
 )
 kernel.print()
@@ -188,15 +192,15 @@ def t_teleport_noargs() -> None:
     """
     ancilla = squin.qubit.new(1)[0]
     target = squin.qubit.new(1)[0]
-    squin.gate.t(ancilla)
-    squin.gate.cx(target, ancilla)
+    squin.t(ancilla)
+    squin.cx(target, ancilla)
     if squin.qubit.measure(target):
-        squin.gate.s(ancilla)
-        squin.gate.x(ancilla)
+        squin.s(ancilla)
+        squin.x(ancilla)
 
 
 try:
-    print(squin.cirq.emit_circuit(t_teleport_noargs))
+    print(emit_circuit(t_teleport_noargs))
     raise (RuntimeError("Oops this should have errored."))
 except Exception as e:
     print("ERROR:", e)
@@ -206,11 +210,11 @@ except Exception as e:
 @squin.kernel
 def coinflip() -> MeasurementResult:
     qubit = squin.qubit.new(1)[0]
-    squin.gate.h(qubit)
+    squin.h(qubit)
     return squin.qubit.measure(qubit)
 
 
-circuit = squin.cirq.emit_circuit(coinflip, ignore_returns=True)
+circuit = emit_circuit(coinflip, ignore_returns=True)
 print(circuit)
 # %% [markdown]
 # ## Simulation, emulation, and analysis
@@ -299,7 +303,7 @@ print("State:", state)
 #
 # For this example, we will use a [Trotterization of the 1d Transverse Ising model](https://qiskit-community.github.io/qiskit-algorithms/tutorials/13_trotterQRTE.html).
 #
-# The first option we will explore is to write the entire circuit in Cirq and then convert it into a bloqade kernel using the `squin.cirq.load_circuit` lowering. Observe that the return objects of these builder functions are static objects.
+# The first option we will explore is to write the entire circuit in Cirq and then convert it into a bloqade kernel using the `load_circuit` lowering. Observe that the return objects of these builder functions are static objects.
 # %%
 def trotter_layer(
     qubits: list[cirq.Qid], dt: float = 0.01, J: float = 1, h: float = 1
@@ -335,7 +339,7 @@ cirq_trotter_circuit = trotter_circuit(N=8, steps=4, dt=0.01, J=1, h=1)
 print(cirq_trotter_circuit)
 
 # Convert the circuit to a bloqade kernel
-bloqade_trotter_circuit = squin.cirq.load_circuit(
+bloqade_trotter_circuit = load_circuit(
     cirq_trotter_circuit,
     kernel_name="trotter",
     register_as_argument=False,
@@ -347,7 +351,7 @@ bloqade_trotter_circuit = squin.cirq.load_circuit(
 
 # %%
 def factory_trotter(N: int, dt: float = 0.01, J: float = 1, h: float = 1) -> Method:
-    bloqade_trotter_layer = squin.cirq.load_circuit(
+    bloqade_trotter_layer = load_circuit(
         trotter_layer(qubits=cirq.LineQubit.range(N), dt=dt, J=J, h=h),
         kernel_name="trotter",
         register_as_argument=True,
@@ -376,9 +380,9 @@ def op_zz(theta: float, qb1: bloqade.types.Qubit, qb2: bloqade.types.Qubit) -> N
     """
     A kernel that returns an operator that looks like ZZ^{theta/2pi}
     """
-    squin.gate.cx(qb1, qb2)
-    squin.gate.rz(theta, qb2)
-    squin.gate.cx(qb1, qb2)
+    squin.cx(qb1, qb2)
+    squin.rz(theta, qb2)
+    squin.cx(qb1, qb2)
 
 
 @squin.kernel
@@ -389,12 +393,11 @@ def bloqade_trotter(
     Main function that runs the Trotter circuit for a given number of steps
     """
     qubits = squin.qubit.new(N)
-    xpow = squin.op.rot(squin.op.x(), angle=dt * h)
     for _ in range(steps):
         for i in range(0, len(qubits) - 1):
             op_zz(theta=dt * J, qb1=qubits[i], qb2=qubits[i + 1])
         for i in range(0, len(qubits)):
-            squin.qubit.apply(operator=xpow, qubits=[qubits[i]])
+            squin.rx(angle=dt * h, qubit=qubits[i])
     return qubits
 
 
@@ -407,7 +410,7 @@ cirq_trotter = trotter_circuit(N=12, steps=10, dt=0.01, J=1, h=1)
 cirq_statevector = cirq.Simulator().simulate(cirq_trotter).state_vector()
 
 # Or converting to a bloqade kernel and simulating with PyQrack
-cirq_trotter_kernel = squin.cirq.load_circuit(
+cirq_trotter_kernel = load_circuit(
     cirq_trotter,
     kernel_name="cirq_trotter",
     register_as_argument=False,
@@ -448,12 +451,12 @@ print(
 @squin.kernel
 def t_teleport(target: squin.qubit.Qubit) -> squin.qubit.Qubit:
     ancilla = squin.qubit.new(1)[0]
-    squin.gate.h(ancilla)
-    squin.gate.t(ancilla)
-    squin.gate.cx(control=target, target=ancilla)
+    squin.h(ancilla)
+    squin.t(ancilla)
+    squin.cx(control=target, target=ancilla)
     bit = squin.qubit.measure(target)
     if bit:
-        squin.gate.s(ancilla)
+        squin.s(ancilla)
     return ancilla  # The state of the target qubit is also teleported to the ancilla
 
 
@@ -463,7 +466,7 @@ def t_teleport(target: squin.qubit.Qubit) -> squin.qubit.Qubit:
 def t_teleport_wrapper() -> squin.qubit.Qubit:
 
     target = squin.qubit.new(1)[0]
-    squin.gate.h(target)
+    squin.h(target)
     target = t_teleport(target)
     return target
 
@@ -497,19 +500,19 @@ def ghz_constant_depth(n_qubits: int):
         ancilla = squin.qubit.new(n_qubits - 1)
 
         for i in range(n_qubits):
-            squin.gate.h(qreg[i])
+            squin.h(qreg[i])
 
         for i in range(n_qubits - 1):
-            squin.gate.cx(qreg[i], ancilla[i])
+            squin.cx(qreg[i], ancilla[i])
         for i in range(n_qubits - 1):
-            squin.gate.cx(qreg[i + 1], ancilla[i])
+            squin.cx(qreg[i + 1], ancilla[i])
 
         parity: int = 0
         bits = squin.qubit.measure(ancilla)
         for i in range(n_qubits - 1):
             parity = parity ^ bits[i]
             if parity == 1:
-                squin.gate.x(qreg[i + 1])
+                squin.x(qreg[i + 1])
         return qreg
 
     return main

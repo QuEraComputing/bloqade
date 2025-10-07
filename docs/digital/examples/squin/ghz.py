@@ -26,9 +26,6 @@
 # ![GHZ linear circuit](../../ghz_linear_circuit.svg)
 
 # %% [markdown]
-# Since this circuit is rather simple, we can stick to the Squin standard library in order to implement it.
-# The gates are defined in the `squin.gate` submodule.
-#
 # Let's start by importing Squin and writing our circuit for an arbitrary number of qubits.
 
 # %%
@@ -40,9 +37,9 @@ from bloqade import squin
 @squin.kernel
 def ghz_linear(n: int):
     q = squin.qubit.new(n)
-    squin.gate.h(q[0])
+    squin.h(q[0])
     for i in range(1, n):
-        squin.gate.cx(q[i - 1], q[i])
+        squin.cx(q[i - 1], q[i])
 
 
 ghz_linear.print()
@@ -114,18 +111,12 @@ print(sim.state_vector(ghz_linear, args=(2,)))
 def noisy_linear_ghz(n: int, p_single: float, p_paired: float):
     q = squin.qubit.new(n)
 
-    # define the noise operator for the single qubit
-    single_qubit_noise = squin.noise.depolarize(p_single)
-
-    squin.gate.h(q[0])
-    squin.qubit.apply(single_qubit_noise, q[0])
-
-    # pair qubit noise operator
-    two_qubit_noise = squin.noise.depolarize2(p_paired)
+    squin.h(q[0])
+    squin.depolarize(p_single, q[0])
 
     for i in range(1, n):
-        squin.gate.cx(q[i - 1], q[i])
-        squin.qubit.apply(two_qubit_noise, q[i - 1], q[i])
+        squin.cx(q[i - 1], q[i])
+        squin.depolarize2(p_paired, q[i - 1], q[i])
 
     return squin.qubit.measure(q)
 
