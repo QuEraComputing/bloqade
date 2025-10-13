@@ -1458,21 +1458,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Squin kernel statements">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#defining-custom-gates-with-the-dialect" class="md-nav__link">
-    <span class="md-ellipsis">
-      Defining custom gates with the dialect
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
@@ -14247,21 +14232,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Squin kernel statements">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#defining-custom-gates-with-the-dialect" class="md-nav__link">
-    <span class="md-ellipsis">
-      Defining custom gates with the dialect
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
@@ -14732,7 +14702,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=66d9c20b">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=186d2ec4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14744,7 +14714,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=00a21d16">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a3902d31">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14795,7 +14765,7 @@ Register = IList[Qubit, Any]</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3e63eaaa">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=1bd1326f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14852,7 +14822,7 @@ hello_world.print()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ff2f6b9f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1d51f03c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14863,7 +14833,7 @@ hello_world.print()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f92456ba">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f6dd0492">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14879,72 +14849,13 @@ Because one can intermix control flow with operations and measurement, arbitrary
 <li><code>squin.noise</code> - Representing noise effects on the qubits.</li>
 </ol>
 <p>While you can interact with <code>squin.qubit</code> directly, the other two dialects are exposed via wrapper functions that are available directly under the <code>squin</code> namespace, or under <code>squin.broadcast</code> for parallelized versions of the gates and noise processes, respectively.</p>
-<p>Refer to the <a href="../../../reference/bloqade-circuit/src/bloqade/squin/stdlib/">API documentation</a> for a full list of the available functionality.
+<p>Refer to the <a href="../../../reference/bloqade-circuit/src/bloqade/squin/stdlib/simple/gate">API documentation</a> for a full list of the available functionality.
 Note that you are also able to define your own custom gates by defining similar functions.</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=eb3a6ca0">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="defining-custom-gates-with-the-squingate-dialect">Defining custom gates with the <code>squin.gate</code> dialect<a class="anchor-link" href="#defining-custom-gates-with-the-squingate-dialect">¶</a></h3><p>Let's define a gate that goes beyond the basic operators by writing a function akin to the ones available in the standard library.
-For example, consider a kernel that applies a controlled H gate to a pair of qubits:</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8765fe71">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-3">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">controlled_h</span><span class="p">(</span><span class="n">control</span><span class="p">:</span> <span class="n">bloqade</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">bloqade</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Qubit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    A controlled H gate, decomposed into Ry &amp; CZ</span>
-<span class="sd">    ---o---</span>
-<span class="sd">       |</span>
-<span class="sd">    ---H---</span>
-<span class="sd">    """</span>
-    <span class="n">squin</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-    <span class="n">squin</span><span class="o">.</span><span class="n">cz</span><span class="p">(</span><span class="n">control</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-    <span class="n">squin</span><span class="o">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-3">@squin.kernel
-def controlled_h(control: bloqade.types.Qubit, target: bloqade.types.Qubit) -&gt; None:
-    """
-    A controlled H gate, decomposed into Ry &amp; CZ
-    ---o---
-       |
-    ---H---
-    """
-    squin.ry(np.pi / 4, target)
-    squin.cz(control, target)
-    squin.ry(-np.pi / 4, target)</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=14467372">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2b463b3e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14956,7 +14867,7 @@ def controlled_h(control: bloqade.types.Qubit, target: bloqade.types.Qubit) -&gt
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=fb566190">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e48236b1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14964,7 +14875,7 @@ def controlled_h(control: bloqade.types.Qubit, target: bloqade.types.Qubit) -&gt
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-4">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-3">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -14993,7 +14904,7 @@ def controlled_h(control: bloqade.types.Qubit, target: bloqade.types.Qubit) -&gt
 <span class="n">kernel</span> <span class="o">=</span> <span class="n">GHZ_method_factory</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
 <span class="n">kernel</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4"># Bell state prep.
+<div class="clipboard-copy-txt" id="cell-3"># Bell state prep.
 
 
 def GHZ_method_factory(nqubits: int) -&gt; Method:
@@ -15017,7 +14928,7 @@ kernel.print()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b1f6bc78">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=521059e1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15028,7 +14939,7 @@ kernel.print()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8352da9b">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=907ff3b6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15036,7 +14947,7 @@ kernel.print()</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-4">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -15057,7 +14968,7 @@ kernel.print()</div>
 
 <span class="n">GHZ_state_factory</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5">@squin.kernel
+<div class="clipboard-copy-txt" id="cell-4">@squin.kernel
 def GHZ_state_factory(nqubits: int) -&gt; Register:
     qubits = squin.qubit.new(nqubits)
     squin.h(qubits[0])
@@ -15073,7 +14984,7 @@ GHZ_state_factory.print()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5aae78c2">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0cec6ba5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15085,7 +14996,7 @@ GHZ_state_factory.print()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=68791205">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8a9578b6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15093,7 +15004,7 @@ GHZ_state_factory.print()</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -15121,7 +15032,7 @@ GHZ_state_factory.print()</div>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">ghz_prep</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-6">import cirq
+<div class="clipboard-copy-txt" id="cell-5">import cirq
 
 
 def ghz_prep(nqubits: int) -&gt; cirq.Circuit:
@@ -15144,7 +15055,7 @@ print(ghz_prep(4))</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d3a4cffe">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=df1577f8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15155,7 +15066,7 @@ print(ghz_prep(4))</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=0bc611a0">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4c5e2bd0">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15163,7 +15074,7 @@ print(ghz_prep(4))</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-7">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -15189,7 +15100,7 @@ print(ghz_prep(4))</div>
 <span class="n">circuit2</span><span class="p">:</span> <span class="n">cirq</span><span class="o">.</span><span class="n">Circuit</span> <span class="o">=</span> <span class="n">emit_circuit</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">ignore_returns</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">circuit2</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-7">from bloqade.cirq_utils import emit_circuit, load_circuit
+<div class="clipboard-copy-txt" id="cell-6">from bloqade.cirq_utils import emit_circuit, load_circuit
 
 # Load a cirq circuit into squin
 kernel = load_circuit(
@@ -15210,7 +15121,7 @@ print(circuit2)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=088ec8da">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b1bfed08">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15221,7 +15132,7 @@ print(circuit2)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a0afdb98">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=27e9695b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15229,7 +15140,7 @@ print(circuit2)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-8">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-7">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -15252,7 +15163,7 @@ print(circuit2)</div>
 <span class="p">)</span>
 <span class="n">kernel</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-8">reg = cirq.LineQubit.range(2)
+<div class="clipboard-copy-txt" id="cell-7">reg = cirq.LineQubit.range(2)
 circuit = cirq.Circuit()
 circuit.append(cirq.T(reg[0]))
 circuit.append(cirq.CNOT(reg[1], reg[0]))
@@ -15270,7 +15181,7 @@ kernel.print()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=bc225e0e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=336c8c19">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15281,7 +15192,7 @@ kernel.print()</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6c9b19b4">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=55311e24">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15289,7 +15200,7 @@ kernel.print()</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-9">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-8">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -15331,7 +15242,7 @@ kernel.print()</div>
 <span class="n">circuit</span> <span class="o">=</span> <span class="n">emit_circuit</span><span class="p">(</span><span class="n">coinflip</span><span class="p">,</span> <span class="n">ignore_returns</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-9">@squin.kernel
+<div class="clipboard-copy-txt" id="cell-8">@squin.kernel
 def t_teleport_noargs() -&gt; None:
     """
     A simple T teleportation circuit that requires mid circuit control flow.
@@ -15368,7 +15279,7 @@ print(circuit)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=52145147">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=dbb733c1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15386,7 +15297,7 @@ print(circuit)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=969303b3">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=12bf4a44">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15394,7 +15305,7 @@ print(circuit)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-9">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -15416,7 +15327,7 @@ print(circuit)</div>
 <span class="c1"># In this case, it is a list of qubits.</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-10">from bloqade.pyqrack import StackMemorySimulator, DynamicMemorySimulator
+<div class="clipboard-copy-txt" id="cell-9">from bloqade.pyqrack import StackMemorySimulator, DynamicMemorySimulator
 
 # StackMemorySimulator - static number of qubits
 # DynamicMemorySimulator - dynamic number of qubits, but slower. Use if you don't know how many qubits you need in advance.
@@ -15433,7 +15344,7 @@ print(results)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c2a9e1bf">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ffa7c2ac">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15445,7 +15356,7 @@ print(results)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6f9ea27b">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=381ccfe2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15453,7 +15364,7 @@ print(results)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-11">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -15469,7 +15380,7 @@ print(results)</div>
 
 <span class="k">assert</span> <span class="n">foo</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-11">def foo(x: int, y: int) -&gt; bool:
+<div class="clipboard-copy-txt" id="cell-10">def foo(x: int, y: int) -&gt; bool:
     return x &lt; y
 
 
@@ -15480,7 +15391,7 @@ assert foo(1, 2) == True</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0fc974ed">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=19167767">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15493,7 +15404,7 @@ assert foo(1, 2) == True</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=40222606">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=99226a4a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15501,7 +15412,7 @@ assert foo(1, 2) == True</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-12">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-11">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -15535,7 +15446,7 @@ assert foo(1, 2) == True</div>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"The statevector of the GHZ state looks like [1, 0, 0, ..., 0, 1]"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">statevector</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-12">from bloqade.pyqrack import PyQrackQubit
+<div class="clipboard-copy-txt" id="cell-11">from bloqade.pyqrack import PyQrackQubit
 
 # This kernel returns a list of Qubit objects. We can use these to analyze the
 # quantum state of the register.
@@ -15564,7 +15475,7 @@ print(statevector)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0b4f6d90">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c4ba13b4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15575,7 +15486,7 @@ print(statevector)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=56c785fa">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=565265e6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15583,7 +15494,7 @@ print(statevector)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-13">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-12">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -15601,7 +15512,7 @@ print(statevector)</div>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Results:"</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"State:"</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-13"># Define the emulator and task
+<div class="clipboard-copy-txt" id="cell-12"># Define the emulator and task
 emulator = StackMemorySimulator()
 task = emulator.task(coinflip)
 results = task.batch_run(shots=1000)
@@ -15614,7 +15525,7 @@ print("State:", state)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5370b7e6">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8cef460b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15627,7 +15538,7 @@ print("State:", state)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=65e25726">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=22acbc6d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15635,7 +15546,7 @@ print("State:", state)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-14">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-13">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -15686,7 +15597,7 @@ print("State:", state)</div>
     <span class="n">return_register</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-14">def trotter_layer(
+<div class="clipboard-copy-txt" id="cell-13">def trotter_layer(
     qubits: list[cirq.Qid], dt: float = 0.01, J: float = 1, h: float = 1
 ) -&gt; cirq.Circuit:
     """
@@ -15732,7 +15643,7 @@ bloqade_trotter_circuit = load_circuit(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=04c78b13">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9d5ec8a6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15743,7 +15654,7 @@ bloqade_trotter_circuit = load_circuit(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=7d423e9a">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a29242b9">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15751,7 +15662,7 @@ bloqade_trotter_circuit = load_circuit(
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-15">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-14">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -15781,7 +15692,7 @@ bloqade_trotter_circuit = load_circuit(
 
     <span class="k">return</span> <span class="n">trotter_for_loop</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-15">def factory_trotter(N: int, dt: float = 0.01, J: float = 1, h: float = 1) -&gt; Method:
+<div class="clipboard-copy-txt" id="cell-14">def factory_trotter(N: int, dt: float = 0.01, J: float = 1, h: float = 1) -&gt; Method:
     bloqade_trotter_layer = load_circuit(
         trotter_layer(qubits=cirq.LineQubit.range(N), dt=dt, J=J, h=h),
         kernel_name="trotter",
@@ -15806,7 +15717,7 @@ bloqade_trotter_circuit = load_circuit(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a0f7dd52">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9cdd4f05">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15817,7 +15728,7 @@ bloqade_trotter_circuit = load_circuit(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=845c834c">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=cb129b43">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15825,7 +15736,7 @@ bloqade_trotter_circuit = load_circuit(
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-16">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-15">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -15861,7 +15772,7 @@ bloqade_trotter_circuit = load_circuit(
             <span class="n">squin</span><span class="o">.</span><span class="n">rx</span><span class="p">(</span><span class="n">angle</span><span class="o">=</span><span class="n">dt</span> <span class="o">*</span> <span class="n">h</span><span class="p">,</span> <span class="n">qubit</span><span class="o">=</span><span class="n">qubits</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">qubits</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-16"># Define an operator that looks like the ZZ power gate
+<div class="clipboard-copy-txt" id="cell-15"># Define an operator that looks like the ZZ power gate
 @squin.kernel
 def op_zz(theta: float, qb1: bloqade.types.Qubit, qb2: bloqade.types.Qubit) -&gt; None:
     """
@@ -15892,7 +15803,7 @@ def bloqade_trotter(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=040096ef">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1987c17e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15903,7 +15814,7 @@ def bloqade_trotter(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=52a05161">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=99617add">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15911,7 +15822,7 @@ def bloqade_trotter(
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-17">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-16">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -15943,7 +15854,7 @@ def bloqade_trotter(
     <span class="o">**</span> <span class="mi">2</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-17">cirq_trotter = trotter_circuit(N=12, steps=10, dt=0.01, J=1, h=1)
+<div class="clipboard-copy-txt" id="cell-16">cirq_trotter = trotter_circuit(N=12, steps=10, dt=0.01, J=1, h=1)
 
 cirq_statevector = cirq.Simulator().simulate(cirq_trotter).state_vector()
 
@@ -15970,7 +15881,7 @@ print(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=43de9657">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c6cc7f71">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15981,7 +15892,7 @@ print(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e8aff0f4">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=0a5a6dd1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15989,7 +15900,7 @@ print(
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-18">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-17">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -16009,7 +15920,7 @@ print(
     <span class="o">**</span> <span class="mi">2</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-18">cirq_trotter_qubits = StackMemorySimulator(min_qubits=12).run(
+<div class="clipboard-copy-txt" id="cell-17">cirq_trotter_qubits = StackMemorySimulator(min_qubits=12).run(
     bloqade_trotter, args=(12, 10, 0.01, 1, 1)
 )
 cirq_bloqade_state = StackMemorySimulator.quantum_state(cirq_trotter_qubits)
@@ -16024,7 +15935,7 @@ print(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=71d8cdb5">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=95d4429e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16036,7 +15947,7 @@ print(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=5cd6fde3">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=764f543a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16044,7 +15955,7 @@ print(
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-19">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-18">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -16086,7 +15997,7 @@ print(
 <span class="c1"># Even though there is measurement and feedforward, the final state is still pure. Neat!</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-19">@squin.kernel
+<div class="clipboard-copy-txt" id="cell-18">@squin.kernel
 def t_teleport(target: squin.qubit.Qubit) -&gt; squin.qubit.Qubit:
     ancilla = squin.qubit.new(1)[0]
     squin.h(ancilla)
@@ -16123,7 +16034,7 @@ print(state)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a5b874dc">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=19af9176">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16137,7 +16048,7 @@ print(state)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2d366cd6">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=349ce584">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16145,7 +16056,7 @@ print(state)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-20">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-19">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -16180,7 +16091,7 @@ print(state)</div>
 
     <span class="k">return</span> <span class="n">main</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-20">def ghz_constant_depth(n_qubits: int):
+<div class="clipboard-copy-txt" id="cell-19">def ghz_constant_depth(n_qubits: int):
 
     @squin.kernel
     def main() -&gt; Register:
@@ -16210,7 +16121,7 @@ print(state)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f73fddfe">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=243a4262">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16218,7 +16129,7 @@ print(state)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-21">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-20">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -16236,7 +16147,7 @@ print(state)</div>
 <span class="c1"># Even though there is measurement and feedforward, the final state is still pure. Neat!</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">eigenvalues</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-21"># At this point, you know the drill. We can simulate this with multirun via PyQrack
+<div class="clipboard-copy-txt" id="cell-20"># At this point, you know the drill. We can simulate this with multirun via PyQrack
 emulator = StackMemorySimulator(min_qubits=7)
 task = emulator.task(ghz_constant_depth(3))
 
@@ -16249,7 +16160,7 @@ print(state.eigenvalues)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e1a05029">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=acd6fcff">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
