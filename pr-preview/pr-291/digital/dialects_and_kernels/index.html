@@ -14218,14 +14218,14 @@ Also, we recommend having a look at <a href="squin/">the Structural QUantum INst
 <p>While the documentation in this section provides some information on the background and a high-level overview, it is also often convenient to learn from examples.
 Have a look at the (growing) <a href="../examples/">examples collection</a>, where you can find different implementations of quantum programs using different dialects.</p>
 <h2 id="squin"><a href="squin/">squin</a></h2>
-<p>With this dialect, you can structure your program in terms of operators rather than gate applications, or define circuits.
+<p>This is the central dialect of bloqade-circuit, with which you can write your quantum programs.
+Rather than just defining circuits in terms of gates and qubits, this dialect also makes it possible to use control flow.
 Have a look at <a href="squin/">the dedicated documentation page</a> and the corresponding <a href="../../reference/bloqade-circuit/src/bloqade/squin/">API reference</a>.</p>
 <p><strong>Use cases</strong>:</p>
 <ul>
 <li>Writing a program that represents a circuit.</li>
 <li>If you require control flow (loops and if-statements, ...) and composability (function definitions, recursion, ...).</li>
 <li>Simulation including noise.</li>
-<li>Hamiltonian simulation (work in progress).</li>
 </ul>
 <h2 id="qasm2"><a href="qasm2/">qasm2</a></h2>
 <p>There are a number of dialects with which you can write kernels that represent programs in the Quantum Assembly Language (QASM2).

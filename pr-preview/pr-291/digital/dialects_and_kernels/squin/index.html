@@ -1036,15 +1036,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#operators-separating-quantum-gates-from-qubits" class="md-nav__link">
-    <span class="md-ellipsis">
-      Operators: Separating Quantum Gates from Qubits
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#standard-library-for-gate-applications" class="md-nav__link">
     <span class="md-ellipsis">
       Standard library for gate applications
@@ -1054,9 +1045,27 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#using-control-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using control flow
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#noise" class="md-nav__link">
     <span class="md-ellipsis">
       Noise
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parallelizing-gate-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parallelizing gate applications
     </span>
   </a>
   
@@ -14250,15 +14259,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#operators-separating-quantum-gates-from-qubits" class="md-nav__link">
-    <span class="md-ellipsis">
-      Operators: Separating Quantum Gates from Qubits
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#standard-library-for-gate-applications" class="md-nav__link">
     <span class="md-ellipsis">
       Standard library for gate applications
@@ -14268,9 +14268,27 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#using-control-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using control flow
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#noise" class="md-nav__link">
     <span class="md-ellipsis">
       Noise
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parallelizing-gate-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parallelizing gate applications
     </span>
   </a>
   
@@ -14318,63 +14336,26 @@
 
 
 <h1 id="structural-quantum-instructions-dialect">Structural Quantum Instructions dialect</h1>
-<p>This dialect is, in a sense, more expressive than the qasm2 dialects: it allows you to specify operators rather than just gate applications.
-That can be useful if you're trying to e.g. simulate a Hamiltonian time evolution.</p>
+<p>This dialect constitutes the central domain-specific language used in bloqade-circuit.
+It allows you define your program in terms of gates applied to qubits, adding powerful control flow, such as for loops.</p>
 <h2 id="squin-overview">Squin overview</h2>
 <p>The SQUIN DSL consists of three sub-groups of dialects:</p>
 <ul>
 <li><code>squin.qubit</code>, which can be used for manipulating qubits via gate applications and measurements.</li>
-<li><code>squin.op</code>, which is used to define gates as operators separately from qubits and perform algebraic operations on them.</li>
-<li><code>squin.noise</code>, which defines noise channels as operators.</li>
+<li><code>squin.gate</code>, which defines a set of gates that can be applied to qubits.</li>
+<li><code>squin.noise</code>, which defines noise channels applied to qubits.</li>
 </ul>
-<p>Furthermore, there are two standard library modules, which are mainly used for convenience:</p>
-<ul>
-<li><code>squin.gate</code>, which combines <code>squin.op</code> and <code>squin.qubit</code>, so you can write gates as you would when defining a quantum circuit.</li>
-<li><code>squin.channel</code>, which combines <code>squin.noise</code> operators and <code>squin.qubit</code> in a similar way.</li>
-</ul>
-<h2 id="operators-separating-quantum-gates-from-qubits">Operators: Separating Quantum Gates from Qubits</h2>
-<p>When you define a quantum circuit, you usually think about gates applied to a fixed number of qubits.
-What this actually means in terms of the underlying physics is that a unitary operator (describing the time evolution of a Hamiltonian corresponding to the gate you want to apply) is applied to the qubits of interest.</p>
-<p>In the SQUIN dialect, the notion of operators is introduced to reflect that lower level: you can define gates as operators, without applying them to a qubit right away.
-Furthermore, you can perform algebraic operations on these operators, which will result in yet another operator that you can apply to qubits.</p>
-<p>Since function calls are also supported in this DSL, you can define functions that build and return operators which you can later apply.</p>
-<p>Here is a (somewhat artificial) example, that illustrates the flexibility of SQUIN: we can define a gate that uses two control qubits and applies the operator <span class="arithmatex">\(X \otimes Y\)</span> to two targets.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
-
-<span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">ccxy</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Operator that uses two control qubits in order to apply X and Y to two distinct target qubits.&quot;&quot;&quot;</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">x</span><span class="p">()</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">y</span><span class="p">()</span>
-    <span class="n">xy</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">kron</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">control</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">n_controls</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-</code></pre></div>
-<p>You can then call it from another kernel by just invoking the function</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-    <span class="n">q</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">ccxy</span><span class="p">()</span>
-
-    <span class="n">h</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">h</span><span class="p">()</span>
-
-    <span class="c1"># broadcast applies an operator in parallel to the list of qubits, in this case the first two</span>
-    <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="p">[</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
-
-    <span class="c1"># the first two qubits are used as controls</span>
-    <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
-</code></pre></div>
 <h2 id="standard-library-for-gate-applications">Standard library for gate applications</h2>
-<p>While constructing operators is certainly powerful, most of the time you may want to simply apply standard quantum gates.
-Fortunately, these can be represented as operators and are provided in SQUIN through the <code>squin.gate</code> library.</p>
-<p>So you can also just write a squin program like you would a quantum circuit.
+<p>Gates are exported using a standard library directly under the <code>squin</code> namespace.
+This allows you to write programs in a concise way.
 Here's a short example:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
 
 <span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="n">q</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">squin</span><span class="o">.</span><span class="n">gate</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">squin</span><span class="o">.</span><span class="n">gate</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
 
 <span class="c1"># have a look at the IR</span>
@@ -14382,12 +14363,45 @@ Here's a short example:</p>
 </code></pre></div>
 <p>The resulting IR looks like this:</p>
 <p><img alt="main IR" src="../squin-ir-1.png" /></p>
+<p>As you can see, calls such as <code>squin.h(q[0])</code> are lowered as <code>func.invoke</code> statements, i.e. to function calls into the standard library of SQUIN.</p>
+<p>For a complete list of all available gates, please see the <a href="../../../reference/bloqade-circuit/src/bloqade/squin/stdlib/simple/gate/">API reference</a>.</p>
+<h2 id="using-control-flow">Using control flow</h2>
+<p>One of the central aspects of SQUIN is that you are also able to use standard control flow such as for loops.</p>
+<p>For example, we can generalize the two-qubit GHZ kernel function from above to arbitrary numbers of qubits:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
+
+<span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ghz</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="n">squin</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">squin</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+</code></pre></div>
+<p>Note, that the fact that gate applications are represent by <code>func.invoke</code> (as mentioned above), also shows this feature:
+in SQUIN it's possible to call (user-defined) kernel functions.</p>
+<p>For example, we could split the above program into two steps</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qubit</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">kirin.dialects</span><span class="w"> </span><span class="kn">import</span> <span class="n">ilist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">allocate_qubits_for_ghz</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ilist</span><span class="o">.</span><span class="n">IList</span><span class="p">[</span><span class="n">Qubit</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">q</span>
+
+<span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ghz_split</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">allocate_qubits_for_ghz</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">squin</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+</code></pre></div>
 <h2 id="noise">Noise</h2>
-<p>The squin dialect also includes noise, with each noise channel represented by an operator.
-Therefore, you can separate the application of a noise channel from the qubits and do algebra on them.
-These noise channel operators are available under the <code>squin.noise</code> module.
-For example, you can create a depolarization channel with a set probability inside a kernel with <code>squin.noise.depolarize(p=0.1)</code>.</p>
-<p>To make it easier to use if you are just writing a circuit, however, there is again a standard library for short-hand applications available through <code>squin.channel</code>.</p>
+<p>The squin dialect also includes noise, with fixed set of noise channels defined.
+Just like gates, they are exported under the <code>squin</code> namespace.</p>
 <p>For example, we can use this to add noise into the simple kernel from before, which entangles two qubits:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
 
@@ -14395,11 +14409,11 @@ For example, you can create a depolarization channel with a set probability insi
 <span class="k">def</span><span class="w"> </span><span class="nf">main_noisy</span><span class="p">():</span>
     <span class="n">q</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
-    <span class="n">squin</span><span class="o">.</span><span class="n">gate</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">squin</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">depolarize</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">qubit</span><span class="o">=</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">depolarize</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">qubit</span><span class="o">=</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-    <span class="n">squin</span><span class="o">.</span><span class="n">gate</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">squin</span><span class="o">.</span><span class="n">channel</span><span class="o">.</span><span class="n">depolarize2</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">depolarize2</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
 
@@ -14412,9 +14426,32 @@ For example, you can create a depolarization channel with a set probability insi
 <div class="highlight"><pre><span></span><code><span class="n">dpl</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">noise</span><span class="o">.</span><span class="n">depolarize</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">dpl</span><span class="p">,</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </code></pre></div>
+<p>A full list of available noise channels can be found in the <a href="../../../reference/bloqade-circuit/src/bloqade/squin/stdlib/simple/noise/">API reference</a>.</p>
+<h2 id="parallelizing-gate-applications">Parallelizing gate applications</h2>
+<p>There is also a standard library available for broadcasting gates, i.e. applying a gate to multiple qubits in parallel.
+For example, the following kernel functions apply the same operations to qubits:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
+
+<span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sequential</span><span class="p">():</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+
+<span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parallel</span><span class="p">():</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qubit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">broadcast</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+</code></pre></div>
+<p>Note, that noise can also be parallelized, e.g. by calling <code>squin.broadcast.depolarize(0.1, q)</code>.</p>
+<p>See the <a href="../../../reference/bloqade-circuit/src/bloqade/squin/stdlib/broadcast">API reference for broadcast</a> for all the available functionality.
+Note that it will be precisely the same functions as for the standard gate application, but applied to lists of qubits rather than single ones.</p>
 <h2 id="see-also">See also</h2>
 <ul>
-<li><a href="../../../reference/bloqade-circuit/src/bloqade/squin/">squin API reference</a></li>
+<li><a href="../../tutorials/circuits_with_bloqade/">Tutorial: Circuits with Bloqade</a></li>
+<li><a href="../../../reference/bloqade-circuit/src/bloqade/squin/">SQUIN API reference</a></li>
+<li><a href="../../examples/">Examples &amp; Tutorials</a></li>
 </ul>
 
 

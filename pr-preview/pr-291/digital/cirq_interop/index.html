@@ -14203,10 +14203,10 @@ Instead of reinventing the wheel, Bloqade offers convenient interoperability wit
 <li><a href="cirq_to_squin/">Obtaining a squin kernel function from a <code>cirq.Circuit</code></a></li>
 <li><a href="squin_to_cirq/">Emitting a <code>cirq.Circuit</code> from a squin kernel</a></li>
 </ul>
-<p>For the API reference, please see the <code>cirq</code> submodule in the <a href="../../reference/bloqade-circuit/src/bloqade/squin.md">squin API docs</a>.</p>
+<p>For the API reference, please see the <code>cirq_utils</code> submodule in the API reference, specifically <a href="../../reference/bloqade-circuit/src/bloqade/cirq_utils/lowering.md">here</a> and <a href="../../reference/bloqade-circuit/src/bloqade/cirq_utils/emit/base.md">here</a>.</p>
 <h2 id="tldr">TL;DR</h2>
 <p>Here's a short example:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">cirq_utils</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">cirq</span>
 
 <span class="n">q</span> <span class="o">=</span> <span class="n">cirq</span><span class="o">.</span><span class="n">LineQubit</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
@@ -14216,10 +14216,10 @@ Instead of reinventing the wheel, Bloqade offers convenient interoperability wit
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 
-<span class="n">main</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">cirq</span><span class="o">.</span><span class="n">load_circuit</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+<span class="n">main</span> <span class="o">=</span> <span class="n">cirq_utils</span><span class="o">.</span><span class="n">load_circuit</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
 <span class="n">main</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
 
-<span class="n">roundtrip_circuit</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">cirq</span><span class="o">.</span><span class="n">emit_circuit</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+<span class="n">roundtrip_circuit</span> <span class="o">=</span> <span class="n">cirq_utils</span><span class="o">.</span><span class="n">emit_circuit</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">roundtrip_circuit</span><span class="p">)</span>
 </code></pre></div>
 
