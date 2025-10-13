@@ -5,10 +5,10 @@ The output circuit will feature gates that most closely resemble the kernel you 
 
 ## Basic usage
 
-You can obtain a circuit using the `squin.cirq.emit_circuit` function.
+You can obtain a circuit using the `cirq_utils.emit_circuit` function.
 
 ```python
-from bloqade import squin
+from bloqade import squin, cirq_utils
 
 @squin.kernel
 def main():
@@ -19,7 +19,7 @@ def main():
     squin.qubit.apply(cx, q[0], q[1])
     squin.qubit.measure(q)
 
-circuit = squin.cirq.emit_circuit(main)
+circuit = cirq_utils.emit_circuit(main)
 print(circuit)
 ```
 
@@ -40,7 +40,7 @@ To allow modifications here, you can simply pass in a list of qubits (a sequence
 import cirq
 
 qubits = cirq.GridQubit.rect(rows=1, cols=2)
-circuit = squin.cirq.emit_circuit(main, qubits=qubits)
+circuit = cirq_utils.emit_circuit(main, qubits=qubits)
 print(circuit)
 ```
 

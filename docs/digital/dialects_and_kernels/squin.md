@@ -4,72 +4,21 @@ title: SQUIN
 
 # Structural Quantum Instructions dialect
 
-This dialect is, in a sense, more expressive than the qasm2 dialects: it allows you to specify operators rather than just gate applications.
-That can be useful if you're trying to e.g. simulate a Hamiltonian time evolution.
+This dialect constitutes the central domain-specific language used in bloqade-circuit.
+It allows you define your program in terms of gates applied to qubits, adding powerful control flow, such as for loops.
 
 ## Squin overview
 
 The SQUIN DSL consists of three sub-groups of dialects:
 
 * `squin.qubit`, which can be used for manipulating qubits via gate applications and measurements.
-* `squin.op`, which is used to define gates as operators separately from qubits and perform algebraic operations on them.
-* `squin.noise`, which defines noise channels as operators.
-
-Furthermore, there are two standard library modules, which are mainly used for convenience:
-
-* `squin.gate`, which combines `squin.op` and `squin.qubit`, so you can write gates as you would when defining a quantum circuit.
-* `squin.channel`, which combines `squin.noise` operators and `squin.qubit` in a similar way.
-
-
-## Operators: Separating Quantum Gates from Qubits
-
-When you define a quantum circuit, you usually think about gates applied to a fixed number of qubits.
-What this actually means in terms of the underlying physics is that a unitary operator (describing the time evolution of a Hamiltonian corresponding to the gate you want to apply) is applied to the qubits of interest.
-
-In the SQUIN dialect, the notion of operators is introduced to reflect that lower level: you can define gates as operators, without applying them to a qubit right away.
-Furthermore, you can perform algebraic operations on these operators, which will result in yet another operator that you can apply to qubits.
-
-Since function calls are also supported in this DSL, you can define functions that build and return operators which you can later apply.
-
-Here is a (somewhat artificial) example, that illustrates the flexibility of SQUIN: we can define a gate that uses two control qubits and applies the operator $X \otimes Y$ to two targets.
-
-
-```python
-from bloqade import squin
-
-@squin.kernel
-def ccxy():
-    """Operator that uses two control qubits in order to apply X and Y to two distinct target qubits."""
-    x = squin.op.x()
-    y = squin.op.y()
-    xy = squin.op.kron(x, y)
-    return squin.op.control(xy, n_controls=2)
-```
-
-You can then call it from another kernel by just invoking the function
-
-```python
-@squin.kernel
-def main():
-    q = squin.qubit.new(4)
-    op = ccxy()
-
-    h = squin.op.h()
-
-    # broadcast applies an operator in parallel to the list of qubits, in this case the first two
-    squin.qubit.broadcast(h, [q[0], q[1]])
-
-    # the first two qubits are used as controls
-    squin.qubit.apply(op, q[0], q[1], q[2], q[3])
-```
-
+* `squin.gate`, which defines a set of gates that can be applied to qubits.
+* `squin.noise`, which defines noise channels applied to qubits.
 
 ## Standard library for gate applications
 
-While constructing operators is certainly powerful, most of the time you may want to simply apply standard quantum gates.
-Fortunately, these can be represented as operators and are provided in SQUIN through the `squin.gate` library.
-
-So you can also just write a squin program like you would a quantum circuit.
+Gates are exported using a standard library directly under the `squin` namespace.
+This allows you to write programs in a concise way.
 Here's a short example:
 
 ```python
@@ -78,8 +27,8 @@ from bloqade import squin
 @squin.kernel
 def main():
     q = squin.qubit.new(2)
-    squin.gate.h(q[0])
-    squin.gate.cx(q[0], q[1])
+    squin.h(q[0])
+    squin.cx(q[0], q[1])
     return squin.qubit.measure(q)
 
 # have a look at the IR
@@ -90,14 +39,59 @@ The resulting IR looks like this:
 
 ![main IR](./squin-ir-1.png)
 
+As you can see, calls such as `squin.h(q[0])` are lowered as `func.invoke` statements, i.e. to function calls into the standard library of SQUIN.
+
+For a complete list of all available gates, please see the [API reference](../../../reference/bloqade-circuit/src/bloqade/squin/stdlib/simple/gate/).
+
+
+## Using control flow
+
+One of the central aspects of SQUIN is that you are also able to use standard control flow such as for loops.
+
+For example, we can generalize the two-qubit GHZ kernel function from above to arbitrary numbers of qubits:
+
+```python
+from bloqade import squin
+
+@squin.kernel
+def ghz(n: int):
+    q = squin.qubit.new(n)
+
+    squin.h(q[0])
+    for i in range(n - 1):
+        squin.cx(q[i], q[i + 1])
+
+```
+
+Note, that the fact that gate applications are represent by `func.invoke` (as mentioned above), also shows this feature:
+in SQUIN it's possible to call (user-defined) kernel functions.
+
+For example, we could split the above program into two steps
+
+```python
+from bloqade import squin
+from bloqade.types import Qubit
+
+from kirin.dialects import ilist
+from typing import Any
+
+@squin.kernel
+def allocate_qubits_for_ghz(n: int) -> ilist.IList[Qubit, Any]:
+    q = squin.qubit.new(n)
+    squin.h(q[0])
+    return q
+
+@squin.kernel
+def ghz_split(n: int):
+    q = allocate_qubits_for_ghz(n)
+    for i in range(n - 1):
+        squin.cx(q[i], q[i + 1])
+```
+
 ## Noise
 
-The squin dialect also includes noise, with each noise channel represented by an operator.
-Therefore, you can separate the application of a noise channel from the qubits and do algebra on them.
-These noise channel operators are available under the `squin.noise` module.
-For example, you can create a depolarization channel with a set probability inside a kernel with `squin.noise.depolarize(p=0.1)`.
-
-To make it easier to use if you are just writing a circuit, however, there is again a standard library for short-hand applications available through `squin.channel`.
+The squin dialect also includes noise, with fixed set of noise channels defined.
+Just like gates, they are exported under the `squin` namespace.
 
 For example, we can use this to add noise into the simple kernel from before, which entangles two qubits:
 
@@ -108,11 +102,11 @@ from bloqade import squin
 def main_noisy():
     q = squin.qubit.new(2)
 
-    squin.gate.h(q[0])
-    squin.channel.depolarize(p=0.1, qubit=q[0])
+    squin.h(q[0])
+    squin.depolarize(p=0.1, qubit=q[0])
 
-    squin.gate.cx(q[0], q[1])
-    squin.channel.depolarize2(0.05, q[0], q[1])
+    squin.cx(q[0], q[1])
+    squin.depolarize2(0.05, q[0], q[1])
 
     return squin.qubit.measure(q)
 
@@ -131,5 +125,37 @@ dpl = squin.noise.depolarize(p=0.1)
 squin.qubit.apply(dpl, q[0])
 ```
 
+A full list of available noise channels can be found in the [API reference](../../../reference/bloqade-circuit/src/bloqade/squin/stdlib/simple/noise/).
+
+
+## Parallelizing gate applications
+
+There is also a standard library available for broadcasting gates, i.e. applying a gate to multiple qubits in parallel.
+For example, the following kernel functions apply the same operations to qubits:
+
+```python
+from bloqade import squin
+
+@squin.kernel
+def sequential():
+    q = squin.qubit.new(2)
+    squin.h(q[0])
+    squin.h(q[1])
+
+
+@squin.kernel
+def parallel():
+    q = squin.qubit.new(2)
+    squin.broadcast.h(q)
+
+```
+
+Note, that noise can also be parallelized, e.g. by calling `squin.broadcast.depolarize(0.1, q)`.
+
+See the [API reference for broadcast](../../../reference/bloqade-circuit/src/bloqade/squin/stdlib/broadcast) for all the available functionality.
+Note that it will be precisely the same functions as for the standard gate application, but applied to lists of qubits rather than single ones.
+
 ## See also
-* [squin API reference](../../../reference/bloqade-circuit/src/bloqade/squin/)
+* [Tutorial: Circuits with Bloqade](../../tutorials/circuits_with_bloqade/)
+* [SQUIN API reference](../../../reference/bloqade-circuit/src/bloqade/squin/)
+* [Examples & Tutorials](../../examples/)

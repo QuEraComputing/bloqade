@@ -1,6 +1,6 @@
 # Converting cirq to squin
 
-If you want to obtain a squin kernel from a circuit, you can use the `load_circuit` method in the `squin.cirq` submodule.
+If you want to obtain a squin kernel from a circuit, you can use the `load_circuit` method in the `cirq_utils` submodule.
 What you're effectively doing is lowering a circuit to a squin IR.
 This IR can then be further lowered to eventually run on hardware.
 
@@ -9,7 +9,7 @@ This IR can then be further lowered to eventually run on hardware.
 Here are some basic usage examples to help you get started.
 
 ```python
-from bloqade import squin
+from bloqade import squin, cirq_utils
 import cirq
 
 qubits = cirq.LineQubit.range(2)
@@ -22,7 +22,7 @@ circuit = cirq.Circuit(
 # let's have a look
 print(circuit)
 
-main_loaded = squin.cirq.load_circuit(circuit, kernel_name="main_loaded")
+main_loaded = cirq_utils.load_circuit(circuit, kernel_name="main_loaded")
 ```
 
 The above is equivalent to writing the following kernel function yourself:
@@ -31,10 +31,8 @@ The above is equivalent to writing the following kernel function yourself:
 @squin.kernel
 def main():
     q = squin.qubit.new(2)
-    H = squin.op.h()
-    CX = squin.op.cx()
-    squin.qubit.apply(H, q[0])
-    squin.qubit.apply(CX, q)
+    squin.h(q[0])
+    squin.cx(q[0], q[1])
     squin.qubit.measure(q)
 ```
 
@@ -55,7 +53,7 @@ Lowering a noisy circuit to squin is also supported.
 All common channels in cirq will be lowered to an equivalent noise statement in squin.
 
 ```python
-from bloqade import squin
+from bloqade import cirq_utils
 import cirq
 
 qubits = cirq.LineQubit.range(2)
@@ -68,7 +66,7 @@ noisy_circuit = cirq.Circuit(
 # let's have a look
 print(noisy_circuit)
 
-noisy_kernel = squin.cirq.load_circuit(noisy_circuit)
+noisy_kernel = cirq_utils.load_circuit(noisy_circuit)
 noisy_kernel.print()
 ```
 
@@ -87,7 +85,7 @@ This means you can use a loaded circuit as part of another kernel function.
 Check it out:
 
 ```python
-from bloqade import squin
+from bloqade import squin, cirq_utils
 import cirq
 
 qubits = cirq.LineQubit.range(2)
@@ -96,7 +94,7 @@ circuit = cirq.Circuit(
     cirq.CX(qubits[0], qubits[1]),
 )
 
-sub_kernel = squin.cirq.load_circuit(circuit, register_as_argument=True, kernel_name="sub_kernel")
+sub_kernel = cirq_utils.load_circuit(circuit, register_as_argument=True, kernel_name="sub_kernel")
 
 
 @squin.kernel
@@ -122,7 +120,7 @@ Let's adapt the above to instantiate and return a pair of entangled qubits using
 
 ```python
 
-sub_kernel = squin.cirq.load_circuit(circuit, return_register=True, kernel_name="sub_kernel")
+sub_kernel = cirq_utils.load_circuit(circuit, return_register=True, kernel_name="sub_kernel")
 
 @squin.kernel
 def main():

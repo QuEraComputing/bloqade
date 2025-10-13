@@ -1,7 +1,19 @@
 # Tutorials on digital circuits
 
-In this section you will find a number of tutorials that show how you can use the digital bloqade subpackage, `bloqade-circuit`, in order to write quantum programs.
-The tutorials are split into sub-sections featuring the different [dialects](./dialects_and_kernels) and submodules.
+In this section you will find a number of tutorials and examples that show how you can use the digital bloqade subpackage, `bloqade-circuit`, in order to write quantum programs.
+The examples are split into sub-sections featuring the different [dialects](./dialects_and_kernels) and submodules.
+
+## General tutorials
+
+<div class="grid cards style=font-size:1px;" markdown>
+
+-   [Circuits with Bloqade](../tutorials/circuits_with_bloqade/)
+
+    ---
+
+    Learn how to use `bloqade-circuit` in order to write your quantum programs.
+
+</div>
 
 
 ## Squin
