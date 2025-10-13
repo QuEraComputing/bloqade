@@ -16,9 +16,9 @@ from bloqade import squin
 @squin.kernel
 def ghz(n: int):
     q = squin.qubit.new(n)
-    squin.gate.h(q[0])
+    squin.h(q[0])
     for i in range(1, n):
-        squin.gate.cx(q[i - 1], q[i])
+        squin.cx(q[i - 1], q[i])
 ```
 
 One of the features here is that the SQUIN DSL support control flow, such as for loops, which allows you to write your programs in a concise way.
