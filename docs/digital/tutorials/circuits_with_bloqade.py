@@ -57,28 +57,9 @@ hello_world.print()
 #
 # While you can interact with `squin.qubit` directly, the other two dialects are exposed via wrapper functions that are available directly under the `squin` namespace, or under `squin.broadcast` for parallelized versions of the gates and noise processes, respectively.
 #
-# Refer to the [API documentation](../../../reference/bloqade-circuit/src/bloqade/squin/stdlib/) for a full list of the available functionality.
+# Refer to the [API documentation](../../../reference/bloqade-circuit/src/bloqade/squin/stdlib/simple/gate) for a full list of the available functionality.
 # Note that you are also able to define your own custom gates by defining similar functions.
 
-# %% [markdown]
-# ### Defining custom gates with the `squin.gate` dialect
-#
-# Let's define a gate that goes beyond the basic operators by writing a function akin to the ones available in the standard library.
-# For example, consider a kernel that applies a controlled H gate to a pair of qubits:
-
-
-# %%
-@squin.kernel
-def controlled_h(control: bloqade.types.Qubit, target: bloqade.types.Qubit) -> None:
-    """
-    A controlled H gate, decomposed into Ry & CZ
-    ---o---
-       |
-    ---H---
-    """
-    squin.ry(np.pi / 4, target)
-    squin.cz(control, target)
-    squin.ry(-np.pi / 4, target)
 
 
 # %% [markdown]
