@@ -366,7 +366,7 @@ print(f"Parallelized circuit - Two Zone: {fidelity_parallel_two_zone:.4f}")
 improvement_one_zone = fidelity_parallel_one_zone - fidelity_original_one_zone
 improvement_two_zone = fidelity_parallel_two_zone - fidelity_original_two_zone
 
-print(f"\nFidelity improvement with parallelization:")
+print("\nFidelity improvement with parallelization:")
 print(f"One Zone: {improvement_one_zone:+.4f}")
 print(f"Two Zone: {improvement_two_zone:+.4f}")
 
@@ -377,7 +377,7 @@ depth_reduction_pct = (
     (depth_reduction / len(steane_original) * 100) if len(steane_original) > 0 else 0
 )
 
-print(f"\n=== Analysis Summary ===")
+print("\n=== Analysis Summary ===")
 print(
     f"Circuit depth reduction: {len(steane_original)} → {len(steane_parallel)} moments"
 )
@@ -474,7 +474,7 @@ def visualize_grid_interactions(circuit, L=4):
         circuit: cirq.Circuit with GridQubit gates
         L: Grid size (L x L)
     """
-    from matplotlib.patches import FancyBboxPatch, Arc
+    from matplotlib.patches import FancyBboxPatch
     import matplotlib.patches as mpatches
 
     fig, ax = plt.subplots(figsize=(12, 12))
