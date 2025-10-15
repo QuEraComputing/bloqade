@@ -749,34 +749,6 @@
          <lastmod>2025-10-15</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/native/</loc>
-         <lastmod>2025-10-15</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/native/dialects/</loc>
-         <lastmod>2025-10-15</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/native/dialects/gates/</loc>
-         <lastmod>2025-10-15</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/native/dialects/gates/stmts/</loc>
-         <lastmod>2025-10-15</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/native/stdlib/</loc>
-         <lastmod>2025-10-15</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/native/stdlib/broadcast/</loc>
-         <lastmod>2025-10-15</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/native/stdlib/simple/</loc>
-         <lastmod>2025-10-15</lastmod>
-    </url>
-    <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/pyqrack/</loc>
          <lastmod>2025-10-15</lastmod>
     </url>
@@ -786,10 +758,6 @@
     </url>
     <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/pyqrack/device/</loc>
-         <lastmod>2025-10-15</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/pyqrack/native/</loc>
          <lastmod>2025-10-15</lastmod>
     </url>
     <url>
@@ -1121,15 +1089,19 @@
          <lastmod>2025-10-15</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/rewrite/passes/aggressive_unroll/</loc>
-         <lastmod>2025-10-15</lastmod>
-    </url>
-    <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/rewrite/passes/canonicalize_ilist/</loc>
          <lastmod>2025-10-15</lastmod>
     </url>
     <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/rewrite/rules/</loc>
+         <lastmod>2025-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/rewrite/rules/flatten_ilist/</loc>
+         <lastmod>2025-10-15</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/rewrite/rules/inline_getitem_ilist/</loc>
          <lastmod>2025-10-15</lastmod>
     </url>
     <url>
