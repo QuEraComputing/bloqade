@@ -14272,21 +14272,21 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d19e79db">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c2bb5c60">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h1 id="parallelism-of-static-circuits">Parallelism of Static Circuits<a class="anchor-link" href="#parallelism-of-static-circuits">¶</a></h1><p>This tutorial describes Bloqade's tools for converting sequential quantum circuits into parallel ones and for evaluating how parallelization affects performance using realistic noise models.</p>
-<p>Parallelism lets gates that act on disjoint qubits execute at the same time, reducing circuit depth and overall runtime. On neutral-atom processors, many transversal operations (same gate type and parameters) can often be executed together in a single layer.</p>
+<p>Parallelism lets gates that act on disjoint qubits execute at the same time, reducing circuit depth and overall runtime. On neutral-atom quantum computers, many transversal operations (same gate type and parameters) can often be executed together in a single layer (moment).</p>
 <p>Reducing depth typically improves fidelity and increases the number of operations that can complete within the hardware's coherence time.</p>
 <p>Bloqade supports both automatic and manual parallelization. The examples below show both methods and compare fidelity using representative noise models.</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f55a9e49">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3d391197">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14305,7 +14305,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9835ef29">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=be364256">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14338,7 +14338,7 @@ import numpy as np</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3a1a28f6">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8adbfbc4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14433,7 +14433,7 @@ fidelities_log_two_zone = []</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=470652df">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9b1bec07">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14444,7 +14444,7 @@ fidelities_log_two_zone = []</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=22dbf740">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=25428452">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14581,7 +14581,7 @@ for n in qubits:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=db80bda7">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cdf98e36">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14592,7 +14592,7 @@ for n in qubits:
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3c71d127">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=69aacdff">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14767,7 +14767,7 @@ print(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8b661845">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=53a16e54">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14778,7 +14778,7 @@ print(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=069edefd">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=30838b49">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14786,15 +14786,15 @@ print(
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="automatic-toolkits-for-circuit-parallelization">Automatic toolkits for circuit parallelization<a class="anchor-link" href="#automatic-toolkits-for-circuit-parallelization">¶</a></h2><p>In the GHZ example the log-depth circuit was provided manually. Bloqade also includes automatic tools that compress a deep circuit into a more parallel form by casting the problem as an optimization (integer linear program).</p>
 <p>We first transpile the circuit into a standard gate set consisting of single-qubit gates and two-qubit CZ gates. CZ gates acting on disjoint qubits commute and therefore can be placed in the same moment.</p>
-<p>The optimization objective encourages gates that can execute in parallel to be assigned to nearby moments. Formally, we minimize an objective such as $um_{g}um_{o_p,o_qn g} w_g|athrm{moment}(o_p)-athrm{moment}(o_q)|$, where each group g collects operations that should be close and the weight $w_g$ controls their attraction. Operations may have multiple tags (groups) when they can be parallelized with different sets of gates.</p>
-<p>To preserve program semantics we only reorder operations that commute. Execution dependencies are represented as a directed acyclic graph (DAG); each vertex i receives an integer label $t_i$ (its epoch) and ordering constraints are expressed as inequalities on these labels. These constraints and objective terms are encoded in an integer linear program (ILP).</p>
+<p>The optimization objective encourages gates that can execute in parallel to be assigned to nearby moments. Formally, we minimize an objective such as $\sum_{g}\sum_{o_p,o_q \in g} w_g \left|t_p-t_q\right|$, where each group $g$ contains operations with a shared tag. Within each group, an attraction force of strength $w_g$ is introduced. Here $t_p$ and $t_q$ are integer labels (its epoch) of operators $o_p$ and $o_q$. Each operation (gate) can have multiple tags.</p>
+<p>To preserve circuit equivalence, we only reorder operations that commute. Execution dependencies are represented as a directed acyclic graph (DAG); each vertex $i$ receives an integer label $t_i$ (its epoch) and ordering constraints are expressed as inequalities on these labels. These constraints and objective terms are encoded in an integer linear program (ILP).</p>
 <p>Because the ILP formulation has totally unimodular constraint structure in our encoding, the relaxed linear program yields integer solutions, which makes the optimization efficient in practice. Absolute-value terms are reformulated into equivalent linear forms during construction.</p>
 <p>The helper <code>bloqade.cirq_utils.auto_similarity</code> tags operations and assigns weights to build the linear objective. Users can also add manual annotations (tags/weights) to guide the parallelizer when they need fine-grained control.</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9b7548d6">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9d9ecc16">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14805,7 +14805,7 @@ print(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=62a3c011">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b021fd26">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14816,7 +14816,7 @@ print(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b3599ab5">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3ba4f672">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14921,7 +14921,7 @@ print(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=03218fe3">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=0f24634d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14966,7 +14966,7 @@ print("Parallelized Steane circuit depth:", len(steane_parallel))</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=90c4685e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f1d5fba1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14977,7 +14977,7 @@ print("Parallelized Steane circuit depth:", len(steane_parallel))</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=17846861">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=96659717">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15144,18 +15144,18 @@ else:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=948d980e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c33bf143">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="example-3-linear-chained-circuit">Example 3: Linear chained circuit<a class="anchor-link" href="#example-3-linear-chained-circuit">¶</a></h2><p>Here is another example of a circuit of CZ gates in a linear chain. The orginal circuit has a linear growing number of moments as qubit number.</p>
+<h2 id="example-3-linear-chained-circuit">Example 3: Linear chained circuit<a class="anchor-link" href="#example-3-linear-chained-circuit">¶</a></h2><p>Here is another example of a circuit of CZ gates in a linear chain. The original circuit has a linearly growing number of moments with the number of qubits.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=641775a6">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e4493145">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15232,7 +15232,7 @@ print("Parallelized CZ chain circuit depth:", len(circuit3_parallel))</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e7a77825">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f6ff800b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15243,7 +15243,7 @@ print("Parallelized CZ chain circuit depth:", len(circuit3_parallel))</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=7c357ecf">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=254e8302">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15326,7 +15326,7 @@ print(circuit4)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=aefe05c6">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e04bd767">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15337,7 +15337,7 @@ print(circuit4)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c7d5ab6d">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9eff8105">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15818,18 +15818,18 @@ print(circuit4)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=27395a1f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=681f6fac">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>This function can visualize the circuit on 2D grid. All operations within the same moment will be ploted with the same color.</p>
+<p>This function can visualize the circuit on a 2D grid. All operations within the same moment will be plotted with the same color.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=27aaca13">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=34313ac7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15860,7 +15860,7 @@ visualize_grid_interactions(circuit4, L=4)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=160834f2">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f7fab666">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15871,7 +15871,7 @@ visualize_grid_interactions(circuit4, L=4)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=04ca796a">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=ae22b4e2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15908,7 +15908,7 @@ print("Parallelized 2D CZ circuit depth:", len(circuit4_parallel))</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2e308c8b">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=106efec3">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15919,18 +15919,18 @@ print("Parallelized 2D CZ circuit depth:", len(circuit4_parallel))</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5a23df80">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5b0dfc3f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Here is visualization of the parallel circuit on a 2D grid. Only four colors (moments) are used to color all interactions.</p>
+<p>Here is a visualization of the parallel circuit on a 2D grid. Only four colors (moments) are used to color all interactions.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2ea212f5">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=07e4021e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
