@@ -58,9 +58,7 @@
 import cirq
 import numpy as np
 import matplotlib.pyplot as plt
-from bloqade.cirq_utils import noise, transpile
-
-from bloqade import squin
+from bloqade.cirq_utils import noise, transpile, load_circuit
 
 
 def ghz_circuit(n: int) -> cirq.Circuit:
@@ -275,6 +273,6 @@ circuit = ghz_circuit(5)
 noisy_circuit = noise.transform_circuit(circuit, model=noise.GeminiOneZoneNoiseModel())
 
 # %%
-kernel = squin.cirq.load_circuit(circuit, kernel_name="kernel")
-noisy_kernel = squin.cirq.load_circuit(noisy_circuit, kernel_name="noisy_kernel")
+kernel = load_circuit(circuit, kernel_name="kernel")
+noisy_kernel = load_circuit(noisy_circuit, kernel_name="noisy_kernel")
 kernel.print()
