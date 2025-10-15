@@ -20,7 +20,7 @@
 #
 # This tutorial describes Bloqade's tools for converting sequential quantum circuits into parallel ones and for evaluating how parallelization affects performance using realistic noise models.
 #
-# Parallelism lets gates that act on disjoint qubits execute at the same time, reducing circuit depth and overall runtime. On neutral-atom processors, many transversal operations (same gate type and parameters) can often be executed together in a single layer.
+# Parallelism lets gates that act on disjoint qubits execute at the same time, reducing circuit depth and overall runtime. On neutral-atom quantum computers, many transversal operations (same gate type and parameters) can often be executed together in a single layer (moment).
 #
 # Reducing depth typically improves fidelity and increases the number of operations that can complete within the hardware's coherence time.
 #
@@ -240,9 +240,9 @@ print(
 #
 # We first transpile the circuit into a standard gate set consisting of single-qubit gates and two-qubit CZ gates. CZ gates acting on disjoint qubits commute and therefore can be placed in the same moment.
 #
-# The optimization objective encourages gates that can execute in parallel to be assigned to nearby moments. Formally, we minimize an objective such as $um_{g}um_{o_p,o_qn g} w_g|athrm{moment}(o_p)-athrm{moment}(o_q)|$, where each group g collects operations that should be close and the weight $w_g$ controls their attraction. Operations may have multiple tags (groups) when they can be parallelized with different sets of gates.
+# The optimization objective encourages gates that can execute in parallel to be assigned to nearby moments. Formally, we minimize an objective such as $\sum_{g}\sum_{o_p,o_q \in g} w_g \left|t_p-t_q\right|$, where each group $g$ contains operations with a shared tag. Within each group, an attraction force of strength $w_g$ is introduced. Here $t_p$ and $t_q$ are integer labels (its epoch) of operators $o_p$ and $o_q$. Each operation (gate) can have multiple tags.
 #
-# To preserve program semantics we only reorder operations that commute. Execution dependencies are represented as a directed acyclic graph (DAG); each vertex i receives an integer label $t_i$ (its epoch) and ordering constraints are expressed as inequalities on these labels. These constraints and objective terms are encoded in an integer linear program (ILP).
+# To preserve circuit equivalence, we only reorder operations that commute. Execution dependencies are represented as a directed acyclic graph (DAG); each vertex $i$ receives an integer label $t_i$ (its epoch) and ordering constraints are expressed as inequalities on these labels. These constraints and objective terms are encoded in an integer linear program (ILP).
 #
 # Because the ILP formulation has totally unimodular constraint structure in our encoding, the relaxed linear program yields integer solutions, which makes the optimization efficient in practice. Absolute-value terms are reformulated into equivalent linear forms during construction.
 #
@@ -393,7 +393,7 @@ else:
 # %% [markdown]
 # ## Example 3: Linear chained circuit
 #
-# Here is another example of a circuit of CZ gates in a linear chain. The orginal circuit has a linear growing number of moments as qubit number.
+# Here is another example of a circuit of CZ gates in a linear chain. The original circuit has a linearly growing number of moments with the number of qubits.
 
 
 # %%
@@ -696,7 +696,7 @@ def visualize_grid_interactions(circuit, L=4):
 
 
 # %% [markdown]
-# This function can visualize the circuit on 2D grid. All operations within the same moment will be ploted with the same color.
+# This function can visualize the circuit on a 2D grid. All operations within the same moment will be plotted with the same color.
 
 # %%
 # Visualize the circuits in 2D grid format
@@ -718,7 +718,7 @@ print("Parallelized 2D CZ circuit depth:", len(circuit4_parallel))
 # The `parallelism` compresses the circuit down to four moments. Note that this solution is degenerate: multiple equivalent moment assignments exist, so the specific packing depends on tie-breaking in the optimizer.
 
 # %% [markdown]
-# Here is visualization of the parallel circuit on a 2D grid. Only four colors (moments) are used to color all interactions.
+# Here is a visualization of the parallel circuit on a 2D grid. Only four colors (moments) are used to color all interactions.
 
 # %%
 print("\nParallelized circuit:")
