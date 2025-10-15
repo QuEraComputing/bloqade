@@ -474,7 +474,6 @@ def visualize_grid_interactions(circuit, L=4):
         circuit: cirq.Circuit with GridQubit gates
         L: Grid size (L x L)
     """
-    from matplotlib.patches import FancyBboxPatch
     import matplotlib.patches as mpatches
 
     fig, ax = plt.subplots(figsize=(12, 12))
@@ -530,7 +529,7 @@ def visualize_grid_interactions(circuit, L=4):
         return h_periodic or v_periodic
 
     # Draw interactions from each moment with different colors
-    from matplotlib.patches import FancyBboxPatch, ConnectionPatch
+    from matplotlib.patches import ConnectionPatch
 
     legend_elements = []
     for moment_idx, moment in enumerate(circuit):
