@@ -20,6 +20,7 @@ from bloqade.squin.types import MeasurementResult
 
 Register = IList[bloqade.types.Qubit, Any]
 
+
 # %%
 @squin.kernel
 def hello_world(theta: float) -> IList[MeasurementResult, Any]:
