@@ -36,7 +36,7 @@ from bloqade import squin
 
 @squin.kernel
 def ghz_linear(n: int):
-    q = squin.qubit.new(n)
+    q = squin.qalloc(n)
     squin.h(q[0])
     for i in range(1, n):
         squin.cx(q[i - 1], q[i])
@@ -109,7 +109,7 @@ print(sim.state_vector(ghz_linear, args=(2,)))
 # %%
 @squin.kernel
 def noisy_linear_ghz(n: int, p_single: float, p_paired: float):
-    q = squin.qubit.new(n)
+    q = squin.qalloc(n)
 
     squin.h(q[0])
     squin.depolarize(p_single, q[0])

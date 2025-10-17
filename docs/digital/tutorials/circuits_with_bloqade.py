@@ -27,7 +27,7 @@ def hello_world(theta: float) -> IList[MeasurementResult, Any]:
     """
     Prepare a Bell state and measure in a basis that might have a Bell violation
     """
-    qubits = squin.qubit.new(2)
+    qubits = squin.qalloc(2)
     squin.h(qubits[0])
     squin.cx(qubits[0], qubits[1])
     squin.rx(theta, qubits[0])
@@ -61,7 +61,6 @@ hello_world.print()
 # Note that you are also able to define your own custom gates by defining similar functions.
 
 
-
 # %% [markdown]
 # # Using Bloqade kernels
 # A key feature of kernels is the ability to do complex control flow similar to how one might program python. For example, one can use a for loop to apply the same gate to multiple qubits to prepare a GHZ state.
@@ -75,7 +74,7 @@ hello_world.print()
 def GHZ_method_factory(nqubits: int) -> Method:
     @squin.kernel
     def GHZ_state() -> Register:
-        qubits = squin.qubit.new(nqubits)
+        qubits = squin.qalloc(nqubits)
         squin.h(qubits[0])
         for i in range(nqubits):
             squin.cx(qubits[i], qubits[i + 1])
@@ -94,7 +93,7 @@ kernel.print()
 # %%
 @squin.kernel
 def GHZ_state_factory(nqubits: int) -> Register:
-    qubits = squin.qubit.new(nqubits)
+    qubits = squin.qalloc(nqubits)
     squin.h(qubits[0])
     for i in range(nqubits - 1):
         squin.cx(qubits[i], qubits[i + 1])
@@ -171,8 +170,8 @@ def t_teleport_noargs() -> None:
     """
     A simple T teleportation circuit that requires mid circuit control flow.
     """
-    ancilla = squin.qubit.new(1)[0]
-    target = squin.qubit.new(1)[0]
+    ancilla = squin.qalloc(1)[0]
+    target = squin.qalloc(1)[0]
     squin.t(ancilla)
     squin.cx(target, ancilla)
     if squin.qubit.measure(target):
@@ -190,7 +189,7 @@ except Exception as e:
 # Though measurement without feedforward is possible
 @squin.kernel
 def coinflip() -> MeasurementResult:
-    qubit = squin.qubit.new(1)[0]
+    qubit = squin.qalloc(1)[0]
     squin.h(qubit)
     return squin.qubit.measure(qubit)
 
@@ -269,7 +268,7 @@ print(statevector)
 
 # %%
 # Define the emulator and task
-emulator = StackMemorySimulator()
+emulator = StackMemorySimulator(min_qubits=1)
 task = emulator.task(coinflip)
 results = task.batch_run(shots=1000)
 state = task.batch_state(shots=1000)
@@ -344,7 +343,7 @@ def factory_trotter(N: int, dt: float = 0.01, J: float = 1, h: float = 1) -> Met
         """
         Main function that runs the Trotter circuit for a given number of steps
         """
-        qubits = squin.qubit.new(N)
+        qubits = squin.qalloc(N)
         for _ in range(steps):
             qubits = bloqade_trotter_layer(qubits)
         return qubits
@@ -373,7 +372,7 @@ def bloqade_trotter(
     """
     Main function that runs the Trotter circuit for a given number of steps
     """
-    qubits = squin.qubit.new(N)
+    qubits = squin.qalloc(N)
     for _ in range(steps):
         for i in range(0, len(qubits) - 1):
             op_zz(theta=dt * J, qb1=qubits[i], qb2=qubits[i + 1])
@@ -431,7 +430,7 @@ print(
 # %%
 @squin.kernel
 def t_teleport(target: squin.qubit.Qubit) -> squin.qubit.Qubit:
-    ancilla = squin.qubit.new(1)[0]
+    ancilla = squin.qalloc(1)[0]
     squin.h(ancilla)
     squin.t(ancilla)
     squin.cx(control=target, target=ancilla)
@@ -446,7 +445,7 @@ def t_teleport(target: squin.qubit.Qubit) -> squin.qubit.Qubit:
 @squin.kernel
 def t_teleport_wrapper() -> squin.qubit.Qubit:
 
-    target = squin.qubit.new(1)[0]
+    target = squin.qalloc(1)[0]
     squin.h(target)
     target = t_teleport(target)
     return target
@@ -477,8 +476,8 @@ def ghz_constant_depth(n_qubits: int):
 
     @squin.kernel
     def main() -> Register:
-        qreg = squin.qubit.new(n_qubits)
-        ancilla = squin.qubit.new(n_qubits - 1)
+        qreg = squin.qalloc(n_qubits)
+        ancilla = squin.qalloc(n_qubits - 1)
 
         for i in range(n_qubits):
             squin.h(qreg[i])

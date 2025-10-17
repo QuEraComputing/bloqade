@@ -30,7 +30,7 @@ The above is equivalent to writing the following kernel function yourself:
 ```python
 @squin.kernel
 def main():
-    q = squin.qubit.new(2)
+    q = squin.qalloc(2)
     squin.h(q[0])
     squin.cx(q[0], q[1])
     squin.qubit.measure(q)
@@ -99,7 +99,7 @@ sub_kernel = cirq_utils.load_circuit(circuit, register_as_argument=True, kernel_
 
 @squin.kernel
 def main():
-    q = squin.qubit.new(4)
+    q = squin.qalloc(4)
 
     # entangle qubits 1 and 2
     sub_kernel([q[0], q[1]])

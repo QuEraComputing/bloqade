@@ -15,7 +15,7 @@ from bloqade import squin
 
 @squin.kernel
 def ghz(n: int):
-    q = squin.qubit.new(n)
+    q = squin.qalloc(n)
     squin.h(q[0])
     for i in range(1, n):
         squin.cx(q[i - 1], q[i])

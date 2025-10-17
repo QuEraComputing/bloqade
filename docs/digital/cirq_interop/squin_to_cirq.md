@@ -12,7 +12,7 @@ from bloqade import squin, cirq_utils
 
 @squin.kernel
 def main():
-    q = squin.qubit.new(2)
+    q = squin.qalloc(2)
     h = squin.op.h()
     squin.qubit.apply(h, q[0])
     cx = squin.op.cx()
@@ -44,7 +44,7 @@ circuit = cirq_utils.emit_circuit(main, qubits=qubits)
 print(circuit)
 ```
 
-Note, that the qubits will be used in the resulting circuit in the order they appear in `squin.qubit.new` statements.
+Note, that the qubits will be used in the resulting circuit in the order they appear in `squin.qalloc` statements.
 
 !!! warning
 

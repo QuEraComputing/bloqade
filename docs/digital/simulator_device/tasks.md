@@ -14,7 +14,7 @@ from bloqade import squin
 
 @squin.kernel
 def main():
-    q = squin.qubit.new(2)
+    q = squin.qalloc(2)
 
     squin.gate.h(q[0])
     squin.gate.cx(q[0], q[1])

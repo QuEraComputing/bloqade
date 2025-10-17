@@ -64,7 +64,7 @@ def f_balanced(q: ilist.IList[Qubit, Any]):
 # %%
 @squin.kernel
 def deutsch_algorithm(f):
-    q = squin.qubit.new(n_qubits=n_bits + 1)
+    q = squin.qalloc(n_qubits=n_bits + 1)
     squin.x(q[-1])
 
     # broadcast for parallelism

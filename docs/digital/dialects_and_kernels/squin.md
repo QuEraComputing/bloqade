@@ -26,7 +26,7 @@ from bloqade import squin
 
 @squin.kernel
 def main():
-    q = squin.qubit.new(2)
+    q = squin.qalloc(2)
     squin.h(q[0])
     squin.cx(q[0], q[1])
     return squin.qubit.measure(q)
@@ -55,7 +55,7 @@ from bloqade import squin
 
 @squin.kernel
 def ghz(n: int):
-    q = squin.qubit.new(n)
+    q = squin.qalloc(n)
 
     squin.h(q[0])
     for i in range(n - 1):
@@ -77,7 +77,7 @@ from typing import Any
 
 @squin.kernel
 def allocate_qubits_for_ghz(n: int) -> ilist.IList[Qubit, Any]:
-    q = squin.qubit.new(n)
+    q = squin.qalloc(n)
     squin.h(q[0])
     return q
 
@@ -100,7 +100,7 @@ from bloqade import squin
 
 @squin.kernel
 def main_noisy():
-    q = squin.qubit.new(2)
+    q = squin.qalloc(2)
 
     squin.h(q[0])
     squin.depolarize(p=0.1, qubit=q[0])
@@ -138,14 +138,14 @@ from bloqade import squin
 
 @squin.kernel
 def sequential():
-    q = squin.qubit.new(2)
+    q = squin.qalloc(2)
     squin.h(q[0])
     squin.h(q[1])
 
 
 @squin.kernel
 def parallel():
-    q = squin.qubit.new(2)
+    q = squin.qalloc(2)
     squin.broadcast.h(q)
 
 ```
