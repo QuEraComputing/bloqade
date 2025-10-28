@@ -488,7 +488,7 @@ def ghz_constant_depth(n_qubits: int):
             squin.cx(qreg[i + 1], ancilla[i])
 
         parity: int = 0
-        bits = squin.qubit.measure(ancilla)
+        bits = squin.broadcast.measure(ancilla)
         for i in range(n_qubits - 1):
             parity = parity ^ bits[i]
             if parity == 1:

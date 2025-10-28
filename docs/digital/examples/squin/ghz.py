@@ -118,7 +118,7 @@ def noisy_linear_ghz(n: int, p_single: float, p_paired: float):
         squin.cx(q[i - 1], q[i])
         squin.depolarize2(p_paired, q[i - 1], q[i])
 
-    return squin.qubit.measure(q)
+    return squin.broadcast.measure(q)
 
 
 # %%

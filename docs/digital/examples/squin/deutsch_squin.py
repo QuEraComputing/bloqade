@@ -75,7 +75,7 @@ def deutsch_algorithm(f):
 
     squin.broadcast.h(q[:-1])
 
-    return squin.qubit.measure(q[:-1])
+    return squin.broadcast.measure(q[:-1])
 
 
 # %% [markdown]
