@@ -725,7 +725,31 @@
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/cirq_utils/lowering/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/cirq_utils/parallelize/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/cirq_utils/emit/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/cirq_utils/emit/base/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/cirq_utils/emit/gate/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/cirq_utils/emit/noise/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/cirq_utils/emit/qubit/</loc>
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
@@ -753,11 +777,11 @@
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/native/dialects/gates/</loc>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/native/dialects/gate/</loc>
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/native/dialects/gates/stmts/</loc>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/native/dialects/gate/stmts/</loc>
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
@@ -770,6 +794,14 @@
     </url>
     <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/native/stdlib/simple/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/native/upstream/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/native/upstream/squin2native/</loc>
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
@@ -833,19 +865,15 @@
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/pyqrack/squin/op/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/pyqrack/squin/qubit/</loc>
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/pyqrack/squin/runtime/</loc>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/pyqrack/squin/gate/</loc>
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/pyqrack/squin/wire/</loc>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/pyqrack/squin/gate/gate/</loc>
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
@@ -1109,6 +1137,34 @@
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/qubit/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/qubit/stmts/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/qubit/analysis/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/qubit/analysis/address_impl/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/qubit/stdlib/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/qubit/stdlib/broadcast/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/qubit/stdlib/simple/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/rewrite/</loc>
          <lastmod>2025-10-30</lastmod>
     </url>
@@ -1141,31 +1197,7 @@
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/lowering/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/parallel/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/qubit/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/types/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/wire/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/analysis/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/analysis/address_impl/</loc>
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
@@ -1173,27 +1205,11 @@
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/analysis/nsites/</loc>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/gate/</loc>
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/analysis/nsites/analysis/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/analysis/nsites/impls/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/analysis/nsites/lattice/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/cirq/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/cirq/lowering/</loc>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/gate/stmts/</loc>
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
@@ -1201,39 +1217,7 @@
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/noise/rewrite/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/noise/stmts/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/op/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/op/number/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/op/rewrite/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/op/stdlib/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/op/stmts/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/op/traits/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/op/types/</loc>
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
@@ -1242,14 +1226,6 @@
     </url>
     <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/rewrite/U3_to_clifford/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/rewrite/canonicalize/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/rewrite/desugar/</loc>
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
@@ -1265,11 +1241,27 @@
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/stdlib/channel/</loc>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/stdlib/broadcast/</loc>
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/stdlib/gate/</loc>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/stdlib/broadcast/gate/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/stdlib/broadcast/noise/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/stdlib/simple/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/stdlib/simple/gate/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/squin/stdlib/simple/noise/</loc>
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
@@ -1409,6 +1401,10 @@
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/stim/passes/flatten/</loc>
+         <lastmod>2025-10-30</lastmod>
+    </url>
+    <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/stim/passes/simplify_ifs/</loc>
          <lastmod>2025-10-30</lastmod>
     </url>
@@ -1442,14 +1438,6 @@
     </url>
     <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/stim/rewrite/util/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/stim/rewrite/wire_identity_elimination/</loc>
-         <lastmod>2025-10-30</lastmod>
-    </url>
-    <url>
-         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/stim/rewrite/wire_to_stim/</loc>
          <lastmod>2025-10-30</lastmod>
     </url>
     <url>
