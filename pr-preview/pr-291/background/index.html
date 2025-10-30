@@ -14488,13 +14488,13 @@
 
 <h1 id="background">Background</h1>
 <h2 id="neutral-atom-qubits">Neutral Atom Qubits</h2>
-<p>A key feature of a quantum computer is the ability to physically represent qubits. In neutral atom computers, the qubit is represented in the electronic state of the valence electron of Rubdidium 87. Arrays of individual atoms are held by laser tweezers, and quantum computations are executed by manipulating the electronic state of each atom using lasers and RF fields. Entanglement can be generated using the <a href="https://en.wikipedia.org/wiki/Rydberg_atom">Rydberg state</a>, which is a highly excited state that strongly interacts with adjacent atoms through a <span class="arithmatex">\(R^{-6}\)</span> power law Van der Waals force.</p>
+<p>A key feature of a quantum computer is the ability to physically represent qubits. In neutral atom computers, the qubit is represented in the electronic state of the valence electron of Rubidium 87. Arrays of individual atoms are held by laser tweezers, and quantum computations are executed by manipulating the electronic state of each atom using lasers and RF fields. Entanglement can be generated using the <a href="https://en.wikipedia.org/wiki/Rydberg_atom">Rydberg state</a>, which is a highly excited state that strongly interacts with adjacent atoms through a <span class="arithmatex">\(R^{-6}\)</span> power law Van der Waals force.</p>
 <h2 id="analog-mode-quantum-computing">Analog mode Quantum Computing</h2>
 <p>There are two modes of quantum computation that <a href="#neutral-atom-qubits">neutral atoms</a> are capable of: <a href="#analog-mode"><em>Analog</em></a> and <a href="#digital-mode"><em>Digital</em></a>. In analog mode, the qubit is represented as in a ground state and a Rydberg state of an atom. The atoms are placed in user-specified arbitrary positions in a 2d space, and quantum computations can be enacted by driving the atoms between the ground and Rydberg state. However, adjacent atoms in the Rydberg state are always interacting, so the computation is done through a time evolution of the atoms via the Schrodinger equation</p>
 <div class="arithmatex">\[
 i \hbar \dfrac{\partial}{\partial t} | \psi \rangle = \hat{\mathcal{H}}(t) | \psi \rangle,  \\
 \]</div>
-<p>Were <span class="arithmatex">\(H\)</span> is a time-dependent "Rydberg atom" Hamiltonian.</p>
+<p>where <span class="arithmatex">\(H\)</span> is a time-dependent "Rydberg atom" Hamiltonian.</p>
 <div class="arithmatex">\[
 \frac{\mathcal{H}(t)}{\hbar} = \sum_j \frac{\Omega_j(t)}{2} \left( e^{i \phi_j(t) } | g_j \rangle  \langle r_j | + e^{-i \phi_j(t) } | r_j \rangle  \langle g_j | \right) - \sum_j \Delta_j(t) \hat{n}_j + \sum_{j &lt; k} V_{jk} \hat{n}_j \hat{n}_k,
 \]</div>

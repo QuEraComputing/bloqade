@@ -14555,14 +14555,14 @@ rejected. Most of the following sections can be checked by the pre-commit hooks.
 <p>or for a specific test file with the <code>-s</code> flag to show the output of the program:</p>
 <div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>-s<span class="w"> </span>tests/test_program.py
 </code></pre></div>
-<p>lots of tests contains pretty printing of the IR themselves, so it's useful to see the output.</p>
+<p>lots of tests contain pretty printing of the IR themselves, so it's useful to see the output.</p>
 <h2 id="code-style">Code style</h2>
 <p>We use <code>black</code> for code formatting. Besides the linter requirements, we also require the following
 good-to-have practices:</p>
 <h3 id="naming">Naming</h3>
 <ul>
 <li>try not to use abbreviation as names, unless it's a common abbreviation like <code>idx</code> for <code>index</code></li>
-<li>try not create a lot of duplicated name prefix unless the extra information is necessary when accessing the class object.</li>
+<li>try not to create a lot of duplicated name prefix unless the extra information is necessary when accessing the class object.</li>
 <li>try to use <code>snake_case</code> for naming variables and functions, and <code>CamelCase</code> for classes.</li>
 </ul>
 <h3 id="comments">Comments</h3>
@@ -14571,7 +14571,7 @@ good-to-have practices:</p>
 <li>if you have to write comments, try to use <code>NOTE:</code>, <code>TODO:</code> <code>FIXME:</code> tags to make it easier to search for them.</li>
 </ul>
 <h2 id="documentation">Documentation</h2>
-<p>We use <code>just</code> for mangaging command line tools and scripts. It should be installed when you run <code>uv sync</code>. To build the documentation, simply run:</p>
+<p>We use <code>just</code> for managing command line tools and scripts. It should be installed when you run <code>uv sync</code>. To build the documentation, simply run:</p>
 <div class="highlight"><pre><span></span><code>just<span class="w"> </span>doc
 </code></pre></div>
 <p>This will launch a local server to preview the documentation. You can also run <code>just doc-build</code> to build the documentation without launching the server.</p>

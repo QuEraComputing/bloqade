@@ -14987,7 +14987,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6d0c8e18">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2c305f43">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14998,7 +14998,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f5da3149">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4e28ed18">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15011,14 +15011,14 @@ On the other hand, the two-zone model incorporates a storage zone and assumes th
 <p>Both models are informed by benchmark data on the device but are intentionally conservative.
 Specifically, they tend to overestimate noise due to the lack of knowledge about optimized move schedules, which leads to overestimating move-induced errors.</p>
 <p>At this stage, we recommend interpreting the two models as providing a range for expected noise levels on Gemini-class devices, rather than precise predictions. They are useful for gaining intuition about noise sensitivity and for benchmarking algorithmic robustness to errors, using hardware-informed but simplistic assumptions.</p>
-<p>Note, that there are actually two additional one-zone noise models, <code>GeminiOneZoneNoiseModelCorrelated</code> and <code>GeminiOneZoneNoiseModelConflictGraphMoves</code>.
+<p>Note that there are actually two additional one-zone noise models, <code>GeminiOneZoneNoiseModelCorrelated</code> and <code>GeminiOneZoneNoiseModelConflictGraphMoves</code>.
 As the names suggest, the former also takes into account correlated noise, whereas the latter takes into account more realistic move schedules.
 In the following example, we will not be considering these two, but they are interchangeable with the used noise models (up to the fact, that the conflict graph moves require you to specify qubits as <code>cirq.GridQubit</code>s).</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=317cc90f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=82629ce1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15032,7 +15032,7 @@ However, you can already rely on <a href="../../../cirq_interop">interoperabilit
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0c0da9e3">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=18b4b3b8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15044,7 +15044,7 @@ However, you can already rely on <a href="../../../cirq_interop">interoperabilit
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e26f53aa">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=dd380c5e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15103,7 +15103,7 @@ def ghz_circuit(n: int) -&gt; cirq.Circuit:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=96a19286">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=79935cfe">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15114,7 +15114,7 @@ def ghz_circuit(n: int) -&gt; cirq.Circuit:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=fc3160ee">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=728767e6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15125,7 +15125,7 @@ def ghz_circuit(n: int) -&gt; cirq.Circuit:
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8bbdc406">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=546eb463">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15154,7 +15154,7 @@ print(ghz_circuit_3)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=42b32d76">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=457a6242">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15167,7 +15167,7 @@ Now, we will convert the circuit above to a noisy one using bloqade's <code>cirq
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=74bb8161">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=36bb3335">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15198,7 +15198,7 @@ print(noisy_ghz_circuit_3)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3c7b9416">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=59e65df5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15216,7 +15216,7 @@ However, the circuit also looks very different in terms of its gates.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=25ec7952">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4543beb8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15245,7 +15245,7 @@ print(native_ghz_3)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6266cb8d">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a82ca9f9">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15257,7 +15257,7 @@ print(native_ghz_3)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b864c410">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f59a53c5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15286,7 +15286,7 @@ print(noisy_ghz_circuit_3)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4e38eeb8">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a3af9f14">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15300,7 +15300,7 @@ By fidelity, we simply mean the overlap of the final state with the perfect GHZ 
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=44ca8319">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e1c04fe4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15318,7 +15318,7 @@ By fidelity, we simply mean the overlap of the final state with the perfect GHZ 
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b8887f29">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=8ae601bd">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15387,7 +15387,7 @@ for n in qubits:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5f93ee59">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=dccb6576">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15398,7 +15398,7 @@ for n in qubits:
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=0fb8aa56">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e0071bde">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15433,7 +15433,7 @@ plt.legend()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=16e26c20">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f5762f42">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15448,7 +15448,7 @@ plt.legend()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e5451bca">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=19e05d52">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15458,13 +15458,13 @@ plt.legend()</div>
 <p>Interestingly, there is a cross-over point where the two-zone model starts to exhibit a better fidelity.
 This is because as the number of qubits grows, the error introduced on idle qubits inside the gate zone is larger in the one-zone model since all qubits are always inside the gate zone.
 Whereas, in the two-zone model, qubits are moved between the gate and storage zones.</p>
-<p>You could now think about how to optimize the circuits in order to reduce their sensitivity for noise.
+<p>You could now think about how to optimize the circuits in order to reduce their sensitivity to noise.
 For example, you can <a href="../../qasm2/ghz">reduce the circuit depth</a></p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a653f833">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2f26cf03">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15481,7 +15481,7 @@ These can all be set independently to adapt the noise model to your specific app
 <div class="admonition note">
 <p class="admonition-title">Atom loss</p>
 <p>
-    Please note, that atom loss is currently not supported, i.e. it's not considered in the noise models.
+    Please note that atom loss is currently not supported, i.e. it's not considered in the noise models.
     We plan to add that in the future.
 </p>
 </div>
@@ -15494,7 +15494,7 @@ We can query the default move errors from the <code>cirq</code> noise model:</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9503753a">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=784738af">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15529,7 +15529,7 @@ print(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=915f4920">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f202b09e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15540,7 +15540,7 @@ print(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=17c9f39d">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=02fa2b32">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15589,7 +15589,7 @@ for n in qubits:
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=fa26327b">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e7a4cf0d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15624,7 +15624,7 @@ plt.legend()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b26c2c5a">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1d03d92a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15639,7 +15639,7 @@ plt.legend()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a07cd656">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5524b81f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15650,7 +15650,7 @@ plt.legend()</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ee834594">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=18fe00ab">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15663,7 +15663,7 @@ For example, it would allow you to run the <code>pyqrack</code> simulator instea
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=34ab6822">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=09240509">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15692,7 +15692,7 @@ noisy_circuit = noise.transform_circuit(circuit, model=noise.GeminiOneZoneNoiseM
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=618ea4d3">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=d2788627">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>

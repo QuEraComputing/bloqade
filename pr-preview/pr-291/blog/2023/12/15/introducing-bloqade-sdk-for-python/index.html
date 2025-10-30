@@ -14638,7 +14638,7 @@
         <span class="p">],</span>
     <span class="p">)</span>
     <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">max_rabi</span><span class="o">=</span><span class="mf">15.8</span><span class="p">,</span> <span class="n">max_detuning</span><span class="o">=</span><span class="mf">16.33</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">batch_assign</span><span class="p">(</span><span class="n">lattice_spacing</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arrange</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">batch_assign</span><span class="p">(</span><span class="n">lattice_spacing</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
 <span class="p">)</span>
 
 <span class="c1"># Launch your program on your choice of Braket or in-house emulator...</span>
@@ -14661,7 +14661,7 @@
 <h3 id="but-what-about-julia">But what about Julia?</h3>
 <p><strong><em>Don't you guys already HAVE an SDK in Julia? Why do you need two SDKs?</em></strong></p>
 <p>That's right! However, there's a key motivating factor for the reason we created Bloqade Python that's distinct for Bloqade.jl's existence.</p>
-<p>Bloqade.jl is primarily geared as a <em>high-performance emulator</em>. It allows you to design complex neutral-atom algorithms that may not necessarily run on our hardware BUT are excellent if you're exploring novel physical phenonema/algorithms or as a tool for pedagogical purposes.</p>
+<p>Bloqade.jl is primarily geared as a <em>high-performance emulator</em>. It allows you to design complex neutral-atom algorithms that may not necessarily run on our hardware BUT are excellent if you're exploring novel physical phenomena/algorithms or as a tool for pedagogical purposes.</p>
 <p>Bloqade.jl does have the ability to submit to <a href="https://www.quera.com/aquila"><em>Aquila</em></a>, our flagship quantum computer, but for more complex tasks such as sweeping parameters (e.g. running the same program on hardware with slightly different parameters each time) or advanced post-processing, it becomes cumbersome quite quickly.</p>
 <p>There are no plans to drop support any time soon though. On the contrary, we plan on fully integrating Bloqade.jl into the Python package, which will enable you to program Neutral Atom quantum hardware without having to choose.</p>
 <p>We very much look forward to you trying out Bloqade!</p>
