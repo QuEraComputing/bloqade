@@ -16,7 +16,7 @@ You can install it with:
 pip install bloqade-circuit
 ```
 
-there are some extra you can choose to install:
+There are some extras you can choose to install:
 
 - `qasm2`: features that allow you to convert QASM files or program with our extended QASM2 eDSL in Python.
 - `vis`: features that allow you to use visualization.
@@ -29,7 +29,7 @@ For example, you can enable `qasm2` and `vis` by running:
 pip install bloqade-circuit[qasm2,vis]
 ```
 
-### [`bloqade-analog`](https://github.com/QuEraComputing/bloqade-circuit): the sub-package for analog quantum computing.
+### [`bloqade-analog`](https://github.com/QuEraComputing/bloqade-analog): the sub-package for analog quantum computing.
 
 You can install it with:
 
