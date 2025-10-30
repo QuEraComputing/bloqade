@@ -9107,6 +9107,8 @@
       
         
       
+        
+      
     
     
     
@@ -9150,6 +9152,29 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../emit/impls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Impls
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -14350,7 +14375,8 @@
 
             <details class="quote">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/stim/rewrite/qubit_to_stim.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">28</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
+<span class="normal">28</span>
 <span class="normal">29</span>
 <span class="normal">30</span>
 <span class="normal">31</span>
@@ -14402,7 +14428,14 @@
 <span class="normal">77</span>
 <span class="normal">78</span>
 <span class="normal">79</span>
-<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rewrite_Apply_and_Broadcast</span><span class="p">(</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rewrite_Apply_and_Broadcast</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">stmt</span><span class="p">:</span> <span class="n">qubit</span><span class="o">.</span><span class="n">Apply</span> <span class="o">|</span> <span class="n">qubit</span><span class="o">.</span><span class="n">Broadcast</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RewriteResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -14417,19 +14450,23 @@
 
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">applied_op</span><span class="p">,</span> <span class="n">op</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">Operator</span><span class="p">)</span>
 
+    <span class="c1"># Handle controlled gates with a separate procedure</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">applied_op</span><span class="p">,</span> <span class="n">op</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">Control</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">rewrite_Control</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span>
-
-    <span class="c1"># need to handle Control through separate means</span>
 
     <span class="c1"># check if its adjoint, assume its canonicalized so no nested adjoints.</span>
     <span class="n">is_conj</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">applied_op</span><span class="p">,</span> <span class="n">op</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">Adjoint</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">applied_op</span><span class="o">.</span><span class="n">is_unitary</span><span class="p">:</span>
+        <span class="c1"># By default the Adjoint has is_unitary = False, so we need to check</span>
+        <span class="c1"># the inner applied operator to make sure its not just unitary,</span>
+        <span class="c1"># but something that has an equivalent stim representation with *_DAG format.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">applied_op</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">owner</span><span class="p">,</span> <span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">SqrtX</span><span class="p">,</span> <span class="n">op</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">SqrtY</span><span class="p">,</span> <span class="n">op</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">S</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="n">is_conj</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">applied_op</span> <span class="o">=</span> <span class="n">applied_op</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">owner</span>
+        <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">()</span>
-
-        <span class="n">is_conj</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">applied_op</span> <span class="o">=</span> <span class="n">applied_op</span><span class="o">.</span><span class="n">op</span><span class="o">.</span><span class="n">owner</span>
 
     <span class="n">stim_1q_op</span> <span class="o">=</span> <span class="n">SQUIN_STIM_OP_MAPPING</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">applied_op</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">stim_1q_op</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -14448,7 +14485,11 @@
     <span class="k">if</span> <span class="n">qubit_idx_ssas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stim_1q_op</span><span class="p">,</span> <span class="n">gate</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">Gate</span><span class="p">):</span>
+    <span class="c1"># At this point, we know for certain stim_1q_op must be SQRT_X, SQRT_Y, or S</span>
+    <span class="c1"># and has the option to set the dagger attribute. If is_conj is false,</span>
+    <span class="c1"># the rewrite would have terminated early so we know anything else has to be</span>
+    <span class="c1"># a non 1Q gate operation.</span>
+    <span class="k">if</span> <span class="n">is_conj</span><span class="p">:</span>
         <span class="n">stim_1q_stmt</span> <span class="o">=</span> <span class="n">stim_1q_op</span><span class="p">(</span><span class="n">targets</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">qubit_idx_ssas</span><span class="p">),</span> <span class="n">dagger</span><span class="o">=</span><span class="n">is_conj</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">stim_1q_stmt</span> <span class="o">=</span> <span class="n">stim_1q_op</span><span class="p">(</span><span class="n">targets</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">qubit_idx_ssas</span><span class="p">))</span>
