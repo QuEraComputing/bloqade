@@ -2,7 +2,7 @@
 
 ## Neutral Atom Qubits
 
-A key feature of a quantum computer is the ability to physically represent qubits. In neutral atom computers, the qubit is represented in the electronic state of the valence electron of Rubdidium 87. Arrays of individual atoms are held by laser tweezers, and quantum computations are executed by manipulating the electronic state of each atom using lasers and RF fields. Entanglement can be generated using the [Rydberg state](https://en.wikipedia.org/wiki/Rydberg_atom), which is a highly excited state that strongly interacts with adjacent atoms through a $R^{-6}$ power law Van der Waals force.
+A key feature of a quantum computer is the ability to physically represent qubits. In neutral atom computers, the qubit is represented in the electronic state of the valence electron of Rubidium 87. Arrays of individual atoms are held by laser tweezers, and quantum computations are executed by manipulating the electronic state of each atom using lasers and RF fields. Entanglement can be generated using the [Rydberg state](https://en.wikipedia.org/wiki/Rydberg_atom), which is a highly excited state that strongly interacts with adjacent atoms through a $R^{-6}$ power law Van der Waals force.
 
 
 
@@ -14,7 +14,7 @@ $$
 i \hbar \dfrac{\partial}{\partial t} | \psi \rangle = \hat{\mathcal{H}}(t) | \psi \rangle,  \\
 $$
 
-Were $H$ is a time-dependent "Rydberg atom" Hamiltonian.
+where $H$ is a time-dependent "Rydberg atom" Hamiltonian.
 
 $$
 \frac{\mathcal{H}(t)}{\hbar} = \sum_j \frac{\Omega_j(t)}{2} \left( e^{i \phi_j(t) } | g_j \rangle  \langle r_j | + e^{-i \phi_j(t) } | r_j \rangle  \langle g_j | \right) - \sum_j \Delta_j(t) \hat{n}_j + \sum_{j < k} V_{jk} \hat{n}_j \hat{n}_k,
