@@ -14520,7 +14520,7 @@
 
 <h1 id="structural-quantum-instructions-dialect">Structural Quantum Instructions dialect</h1>
 <p>This dialect constitutes the central domain-specific language used in bloqade-circuit.
-It allows you define your program in terms of gates applied to qubits, adding powerful control flow, such as for loops.</p>
+It allows you define your program in terms of gates applied to qubits, adding powerful control flow, such as <code>for</code> loops.</p>
 <h2 id="squin-overview">Squin overview</h2>
 <p>The SQUIN DSL consists of three sub-groups of dialects:</p>
 <ul>
@@ -14550,7 +14550,7 @@ Here's a short example:</p>
 <p>For a complete list of all available gates, please see the <a href="../../../reference/bloqade-circuit/src/bloqade/squin/stdlib/simple/gate/">API reference</a>.</p>
 <h2 id="using-control-flow">Using control flow</h2>
 <p>One of the central aspects of SQUIN is that you are also able to use standard control flow such as for loops.</p>
-<p>For example, we can generalize the two-qubit GHZ kernel function from above to arbitrary numbers of qubits:</p>
+<p>For example, we can generalize the two-qubit GHZ kernel function from above to an arbitrary numbers of qubits:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
 
 <span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
@@ -14561,8 +14561,7 @@ Here's a short example:</p>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">squin</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
 </code></pre></div>
-<p>Note, that the fact that gate applications are represent by <code>func.invoke</code> (as mentioned above), also shows this feature:
-in SQUIN it's possible to call (user-defined) kernel functions.</p>
+<p>Note that the fact that gate applications are represented by <code>func.invoke</code> also shows that it's possible to call user-defined kernel functions in SQUIN!</p>
 <p>For example, we could split the above program into two steps</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qubit</span>
@@ -14583,7 +14582,7 @@ in SQUIN it's possible to call (user-defined) kernel functions.</p>
         <span class="n">squin</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
 </code></pre></div>
 <h2 id="noise">Noise</h2>
-<p>The squin dialect also includes noise, with fixed set of noise channels defined.
+<p>The squin dialect also includes noise, with a fixed set of noise channels defined.
 Just like gates, they are exported under the <code>squin</code> namespace.</p>
 <p>For example, we can use this to add noise into the simple kernel from before, which entangles two qubits:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade</span><span class="w"> </span><span class="kn">import</span> <span class="n">squin</span>
@@ -14627,7 +14626,7 @@ For example, the following kernel functions apply the same operations to qubits:
     <span class="n">q</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qalloc</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">squin</span><span class="o">.</span><span class="n">broadcast</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
 </code></pre></div>
-<p>Note, that noise can also be parallelized, e.g. by calling <code>squin.broadcast.depolarize(0.1, q)</code>.</p>
+<p>Note that noise can also be parallelized, e.g. by calling <code>squin.broadcast.depolarize(0.1, q)</code>.</p>
 <p>See the <a href="../../../reference/bloqade-circuit/src/bloqade/squin/stdlib/broadcast">API reference for broadcast</a> for all the available functionality.
 Note that it will be precisely the same functions as for the standard gate application, but applied to lists of qubits rather than single ones.</p>
 <h2 id="see-also">See also</h2>
