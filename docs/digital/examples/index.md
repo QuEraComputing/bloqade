@@ -11,7 +11,7 @@ The examples are split into sub-sections featuring the different [dialects](./di
 
     ---
 
-    Learn how to use `bloqade-circuit` in order to write your quantum programs.
+    Learn how to use `bloqade-circuit` to write your quantum programs.
 
 </div>
 

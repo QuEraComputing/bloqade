@@ -126,7 +126,7 @@ def ghz_prep(nqubits: int) -> cirq.Circuit:
 
 print(ghz_prep(4))
 # %% [markdown]
-# The cirq circuit can be converted to a bloqade kernel with a transpilation function `load_circuit`. The kernel can be considered as a transformation on the register of qubits it is applied to as arguments, with the return being the qubits that still persist.
+# The cirq circuit can be converted to a bloqade kernel with the transpilation function `load_circuit`. The kernel can be considered as a transformation on the register of qubits it is applied to as arguments, with the return being the qubits that still persist.
 
 # %%
 from bloqade.cirq_utils import emit_circuit, load_circuit

@@ -5,7 +5,7 @@ title: SQUIN
 # Structural Quantum Instructions dialect
 
 This dialect constitutes the central domain-specific language used in bloqade-circuit.
-It allows you define your program in terms of gates applied to qubits, adding powerful control flow, such as for loops.
+It allows you define your program in terms of gates applied to qubits, adding powerful control flow, such as `for` loops.
 
 ## Squin overview
 
@@ -48,7 +48,7 @@ For a complete list of all available gates, please see the [API reference](../..
 
 One of the central aspects of SQUIN is that you are also able to use standard control flow such as for loops.
 
-For example, we can generalize the two-qubit GHZ kernel function from above to arbitrary numbers of qubits:
+For example, we can generalize the two-qubit GHZ kernel function from above to an arbitrary numbers of qubits:
 
 ```python
 from bloqade import squin
@@ -63,8 +63,7 @@ def ghz(n: int):
 
 ```
 
-Note, that the fact that gate applications are represent by `func.invoke` (as mentioned above), also shows this feature:
-in SQUIN it's possible to call (user-defined) kernel functions.
+Note that the fact that gate applications are represented by `func.invoke` also shows that it's possible to call user-defined kernel functions in SQUIN!
 
 For example, we could split the above program into two steps
 
@@ -90,7 +89,7 @@ def ghz_split(n: int):
 
 ## Noise
 
-The squin dialect also includes noise, with fixed set of noise channels defined.
+The squin dialect also includes noise, with a fixed set of noise channels defined.
 Just like gates, they are exported under the `squin` namespace.
 
 For example, we can use this to add noise into the simple kernel from before, which entangles two qubits:
@@ -150,7 +149,7 @@ def parallel():
 
 ```
 
-Note, that noise can also be parallelized, e.g. by calling `squin.broadcast.depolarize(0.1, q)`.
+Note that noise can also be parallelized, e.g. by calling `squin.broadcast.depolarize(0.1, q)`.
 
 See the [API reference for broadcast](../../../reference/bloqade-circuit/src/bloqade/squin/stdlib/broadcast) for all the available functionality.
 Note that it will be precisely the same functions as for the standard gate application, but applied to lists of qubits rather than single ones.
