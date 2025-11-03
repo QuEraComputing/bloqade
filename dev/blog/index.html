@@ -14442,7 +14442,7 @@ main noise channels:</p>
 To this end, we included a tutorial that shows how to annotate a GHZ preparation circuit using the different
 heuristic noise models.
 We'll discuss some underlying concepts and highlight interesting parts of the tutorial in this section.
-If you want all the details, please find <a href="../digital/examples/interop/noisy_ghz/">the full example here</a>.</p>
+If you want all the details, please find <a href="https://bloqade.quera.com/latest/digital/examples/interop/noisy_ghz/">the full example here</a>.</p>
 <h4 id="flow-chart"><a class="toclink" href="2025/07/30/simulating-noisy-circuits-for-near-term-quantum-hardware/#flow-chart">Flow chart</a></h4>
 <p>The intended workflow for using the circuit-level noise models is described in the flow chart below. The first step for
 a user interested in testing a specific quantum algorithm is to write an explicit circuit
@@ -14466,7 +14466,7 @@ two-zone layout using  the <code>GeminiTwoZoneNoiseModel</code> in <code>bloqade
 <p>To capture the cost of moves to reach a given configuration, we need to take a closer look at the layer that precedes our current target layer. In b), we explicitly show the layer that was annotated with noise in the previous iteration, with its corresponding qubit spatial layout below it. The move cost to reach the target qubit configuration before qubit execution is shown in c), and noise annotation is carried out according to three sequential stages: 1) qubits that need to be removed from the gate zone undergo move error (orange crosses), and the rest get sitter error, 2) similarly, qubits that need to be added to the gate zone get move error and the rest get sitter noise, and 3) additional move error to "pair up" qubits is added before gate execution (notice that more than one layer might be needed to account for this cost).</p>
 <p>Finally, noise is annotated after gates, where it is assumed that entangling gates are executed in hardware before single qubit gates. In doing so, qubits that are not participant in the entangling gates receive unpaired cz error (green pentagons).</p>
 <h4 id="ghz-data"><a class="toclink" href="2025/07/30/simulating-noisy-circuits-for-near-term-quantum-hardware/#ghz-data">GHZ data</a></h4>
-<p>Now, let's look at some results of <a href="../../../../../digital/examples/interop/noisy_ghz/">the example</a> that compares the different
+<p>Now, let's look at some results of <a href="https://bloqade.quera.com/latest/digital/examples/interop/noisy_ghz/">the example</a> that compares the different
 noise processes.</p>
 <p>The different noise models lead to overall different infidelities of the circuit:</p>
 <p><img alt="GHZ circuit fidelity with different noise models" src="../digital/examples/interop/noisy_ghz_fidelity.svg" /></p>
@@ -14478,7 +14478,7 @@ The example uses a linear-depth GHZ algorithm, which is arguably not the best ch
 <p>Using our noise framework, you can explore and analyze different strategies to find the one best suited for your
 particular application.</p>
 <h3 id="learn-more"><a class="toclink" href="2025/07/30/simulating-noisy-circuits-for-near-term-quantum-hardware/#learn-more">Learn more</a></h3>
-<p>The future for Gemini is bright! Apart from demonstrating <a href="https://arxiv.org/abs/2412.15165">logical magic state distillation</a>, Gemini-class QPUs also form the foundation of QuEra's participation in the <a href="https://www.quera.com/press-releases/two-projects-powered-by-quera-computing-contributions-move-to-phase-three-of-wellcome-leaps-quantum-for-bio-challenge-focused-on-healthcare-and-biology-applications">Quantum for Bio</a> program. QuEra will serve as the hardware provider for 2 of 6 of the teams that have advanced to the final phase of the challenge. With an eye towards general availability of Gemini-class devices, there's no better time for quantum developers to begin crafting circuits that are well-suited for Gemini. The <a href="../../../digital/">documentation for Bloqade-circuit</a> as well as our <a href="../../../digital/examples/">tutorial guides</a> are a great place to start.</p>
+<p>The future for Gemini is bright! Apart from demonstrating <a href="https://arxiv.org/abs/2412.15165">logical magic state distillation</a>, Gemini-class QPUs also form the foundation of QuEra's participation in the <a href="https://www.quera.com/press-releases/two-projects-powered-by-quera-computing-contributions-move-to-phase-three-of-wellcome-leaps-quantum-for-bio-challenge-focused-on-healthcare-and-biology-applications">Quantum for Bio</a> program. QuEra will serve as the hardware provider for 2 of 6 of the teams that have advanced to the final phase of the challenge. With an eye towards general availability of Gemini-class devices, there's no better time for quantum developers to begin crafting circuits that are well-suited for Gemini. The <a href="https://bloqade.quera.com/latest/digital/">documentation for Bloqade-circuit</a> as well as our <a href="https://bloqade.quera.com/latest/digital/examples/">tutorial guides</a> are a great place to start.</p>
     
   </div>
 </article>
