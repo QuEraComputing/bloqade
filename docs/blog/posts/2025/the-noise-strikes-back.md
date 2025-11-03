@@ -86,7 +86,7 @@ It is often most convenient to study an example in order to learn how to use a s
 To this end, we included a tutorial that shows how to annotate a GHZ preparation circuit using the different
 heuristic noise models.
 We'll discuss some underlying concepts and highlight interesting parts of the tutorial in this section.
-If you want all the details, please find [the full example here](../../../digital/examples/noisy_ghz.py).
+If you want all the details, please find [the full example here](../../../digital/examples/interop/noisy_ghz.py).
 
 ### Flow chart
 
@@ -142,4 +142,4 @@ particular application.
 
 ## Learn more
 
-The future for Gemini is bright! Apart from demonstrating [logical magic state distillation](https://arxiv.org/abs/2412.15165), Gemini-class QPUs also form the foundation of QuEra's participation in the [Quantum for Bio](https://www.quera.com/press-releases/two-projects-powered-by-quera-computing-contributions-move-to-phase-three-of-wellcome-leaps-quantum-for-bio-challenge-focused-on-healthcare-and-biology-applications) program. QuEra will serve as the hardware provider for 2 of 6 of the teams that have advanced to the final phase of the challenge. With an eye towards general availability of Gemini-class devices, there's no better time for quantum developers to begin crafting circuits that are well-suited for Gemini. The [documentation for Bloqade-circuit](https://bloqade.quera.com/latest/digital/) as well as our [tutorial guides](https://bloqade.quera.com/latest/digital/tutorials_index/) are a great place to start.
+The future for Gemini is bright! Apart from demonstrating [logical magic state distillation](https://arxiv.org/abs/2412.15165), Gemini-class QPUs also form the foundation of QuEra's participation in the [Quantum for Bio](https://www.quera.com/press-releases/two-projects-powered-by-quera-computing-contributions-move-to-phase-three-of-wellcome-leaps-quantum-for-bio-challenge-focused-on-healthcare-and-biology-applications) program. QuEra will serve as the hardware provider for 2 of 6 of the teams that have advanced to the final phase of the challenge. With an eye towards general availability of Gemini-class devices, there's no better time for quantum developers to begin crafting circuits that are well-suited for Gemini. The [documentation for Bloqade-circuit](../../../digital/) as well as our [tutorial guides](../../../digital/examples/) are a great place to start.
