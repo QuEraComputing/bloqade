@@ -81,10 +81,10 @@ def z_phase_gate_recursive(target: qasm2.Qubit, theta: float) -> qasm2.Qubit:
     qasm2.cx(ancilla, target)
     creg = qasm2.creg(1)
     qasm2.measure(target, creg[0])
-    if creg[0] == 0:
-        return z_phase_gate_recursive(ancilla, 2 * theta)
-    if creg[0] == 1:
+    if creg[0]:
         qasm2.x(ancilla)
+    else:
+        ancilla = z_phase_gate_recursive(ancilla, 2 * theta)
     return ancilla
 
 
