@@ -30,69 +30,101 @@
 # %% [markdown]
 # ## Example 1: GHZ Circuit
 #
-# We start with a simple example: GHZ state preparation implemented in a linear (sequential) form and in a log-depth parallel form. We'll run noise simulations for both circuits and compare their fidelities as we scale the number of qubits.
+# ### What is parallelism ?
+# We take the GHZ state preparation circuit as an example:
 #
-# See our blog post [Simulating noisy circuits for near-term quantum hardware](https://bloqade.quera.com/latest/blog/2025/07/30/simulating-noisy-circuits-for-near-term-quantum-hardware/) for detailed information about the noise model used here. The analysis workflow is:
+# <div style="display: flex; justify-content: space-around; align-items: center;">
+#   <div style="text-align: center;">
+#     <img src="figures/ghz_linear_circuit.svg" alt="Linear GHZ circuit" height="300"/>
+#     <p><b>Linear GHZ circuit</b></p>
+#   </div>
+#   <div style="text-align: center;">
+#     <img src="figures/ghz_log_circuit.svg" alt="Log-depth GHZ circuit" height="300"/>
+#     <p><b>Log-depth GHZ circuit</b></p>
+#   </div>
+# </div>
 #
-# 1. Build a noiseless (ideal) circuit.
-# 2. Choose a noise model (we use both one-zone and two-zone Gemini models).
-# 3. Apply the noise model to the circuit to produce a noisy circuit.
-# 4. Simulate the noisy circuit to obtain the final density matrix.
-# 5. Simulate the ideal circuit and compare its state to the noisy density matrix to compute fidelity.
-#
-#
-
+# The GHZ state can be prepared using a sequence of Hadamard and CNOT gates. In a linear (sequential) implementation, the CNOT gates are applied one after another, resulting in a circuit depth that grows linearly with the number of qubits. In contrast, a log-depth (parallel) implementation arranges the CNOT gates so that multiple gates acting on disjoint qubits can execute simultaneously, reducing the overall depth to logarithmic in the number of qubits.
 # %%
-import bloqade.cirq_utils as utils
 import cirq
 import matplotlib.pyplot as plt
 import numpy as np
+from bloqade import squin, cirq_utils
+import bloqade.cirq_utils as utils
+from cirq.contrib.svg import SVGCircuit
 
 
 # %%
 def build_linear_ghz(n_qubits: int) -> cirq.Circuit:
+    """Build linear GHZ circuit using squin and convert to Cirq."""
+
+    @squin.kernel
+    def linear_ghz_kernel():
+        q = squin.qalloc(n_qubits)
+        squin.h(q[0])
+        for i in range(n_qubits - 1):
+            squin.cx(q[i], q[i + 1])
+
+    # Create LineQubits for compatibility with existing code
     qubits = cirq.LineQubit.range(n_qubits)
-    circuit = cirq.Circuit()
-    circuit.append(cirq.H(qubits[0]))
-    for i in range(n_qubits - 1):
-        circuit.append(cirq.CNOT(qubits[i], qubits[i + 1]))
+    circuit = cirq_utils.emit_circuit(linear_ghz_kernel, circuit_qubits=qubits)
     return circuit
 
 
 def build_log_ghz(n_qubits: int) -> cirq.Circuit:
+    """Build logarithmic-depth GHZ circuit using squin and convert to Cirq."""
+    import math
+
+    max_iterations = math.ceil(math.log2(n_qubits)) if n_qubits > 1 else 1
+
+    @squin.kernel
+    def log_ghz_kernel():
+        q = squin.qalloc(n_qubits)
+        squin.h(q[0])
+
+        for level in range(max_iterations):
+            width = 2**level
+            for i in range(n_qubits):
+                if i < width:
+                    target = i + width
+                    if target < n_qubits:
+                        squin.cx(q[i], q[target])
+
+    # Create LineQubits for compatibility with existing code
     qubits = cirq.LineQubit.range(n_qubits)
-    circuit = cirq.Circuit()
-    circuit.append(cirq.H(qubits[0]))
-    width = 1
-    while width < n_qubits:
-        for i in range(0, width, 1):
-            if i + width > n_qubits - 1:
-                break
-            circuit.append(cirq.CNOT(qubits[i], qubits[i + width]))
-        width *= 2
+    circuit = cirq_utils.emit_circuit(log_ghz_kernel, circuit_qubits=qubits)
     return circuit
 
 
-print(build_log_ghz(7))
+# %% [markdown]
+# ### The benefits of parallelism
+# We'll run noise simulations for both circuits and compare their fidelities as we scale the number of qubits.
+#
+# See our blog post [Simulating noisy circuits for near-term quantum hardware](https://bloqade.quera.com/latest/blog/2025/07/30/simulating-noisy-circuits-for-near-term-quantum-hardware/) for detailed information about the noise model used here. The analysis workflow is:
+#
+# 1. Build a noiseless (ideal) circuit.
+# 2. Choose a noise model (we use the Gemini noise model).
+# 3. Apply the noise model to the circuit to produce a noisy circuit.
+# 4. Simulate the noisy circuit to obtain the final density matrix.
+# 5. Simulate the ideal circuit and compare its state to the noisy density matrix to compute fidelity.
+#
 
-# Initialize noise models
-one_zone_model = utils.noise.GeminiOneZoneNoiseModel()
-two_zone_model = utils.noise.GeminiTwoZoneNoiseModel()
+# %%
+
+# Initialize noise model (using Gemini one-zone architecture)
+noise_model = utils.noise.GeminiOneZoneNoiseModel()
 simulator = cirq.DensityMatrixSimulator()
 
 # Initialize lists to store fidelities
-fidelities_linear_one_zone = []
-fidelities_linear_two_zone = []
-fidelities_log_one_zone = []
-fidelities_log_two_zone = []
-
+fidelities_linear = []
+fidelities_log = []
 
 # %% [markdown]
-# We run noise-model simulations for circuit sizes from 3 to 9 qubits and compute the fidelity (higher is better). The ideal noiseless circuit has fidelity 1 by construction.
+# We run noise-model simulations for circuit sizes from 3 to 9 qubits and compute the fidelity (the higher is better). The ideal noiseless circuit has fidelity 1 by construction.
 
 # %%
 qubits = range(3, 9)
-# Test both linear and log GHZ circuits with both noise models
+# Test both linear and log GHZ circuits with noise model
 for n in qubits:
     # Linear GHZ circuit
     linear_circuit = build_linear_ghz(n)
@@ -100,53 +132,31 @@ for n in qubits:
     # Log GHZ circuit
     log_circuit = build_log_ghz(n)
 
-    # Apply noise models
-    linear_one_zone_circuit = utils.noise.transform_circuit(
-        linear_circuit, model=one_zone_model
+    # Apply noise model
+    linear_noisy_circuit = utils.noise.transform_circuit(
+        linear_circuit, model=noise_model
     )
-    linear_two_zone_circuit = utils.noise.transform_circuit(
-        linear_circuit, model=two_zone_model
-    )
-    log_one_zone_circuit = utils.noise.transform_circuit(
-        log_circuit, model=one_zone_model
-    )
-    log_two_zone_circuit = utils.noise.transform_circuit(
-        log_circuit, model=two_zone_model
-    )
+    log_noisy_circuit = utils.noise.transform_circuit(log_circuit, model=noise_model)
 
     # Simulate noiseless circuits
     rho_linear = simulator.simulate(linear_circuit).final_density_matrix
     rho_log = simulator.simulate(log_circuit).final_density_matrix
 
     # Simulate noisy circuits
-    rho_linear_one_zone = simulator.simulate(
-        linear_one_zone_circuit
-    ).final_density_matrix
-    rho_linear_two_zone = simulator.simulate(
-        linear_two_zone_circuit
-    ).final_density_matrix
-    rho_log_one_zone = simulator.simulate(log_one_zone_circuit).final_density_matrix
-    rho_log_two_zone = simulator.simulate(log_two_zone_circuit).final_density_matrix
+    rho_linear_noisy = simulator.simulate(linear_noisy_circuit).final_density_matrix
+    rho_log_noisy = simulator.simulate(log_noisy_circuit).final_density_matrix
 
     # Calculate fidelities
-    fidelity_linear_one_zone = np.trace(rho_linear @ rho_linear_one_zone).real
-    fidelity_linear_two_zone = np.trace(rho_linear @ rho_linear_two_zone).real
-    fidelity_log_one_zone = np.trace(rho_log @ rho_log_one_zone).real
-    fidelity_log_two_zone = np.trace(rho_log @ rho_log_two_zone).real
+    fidelity_linear = np.trace(rho_linear @ rho_linear_noisy).real
+    fidelity_log = np.trace(rho_log @ rho_log_noisy).real
 
     # Store results
-    fidelities_linear_one_zone.append(fidelity_linear_one_zone)
-    fidelities_linear_two_zone.append(fidelity_linear_two_zone)
-    fidelities_log_one_zone.append(fidelity_log_one_zone)
-    fidelities_log_two_zone.append(fidelity_log_two_zone)
+    fidelities_linear.append(fidelity_linear)
+    fidelities_log.append(fidelity_log)
 
     print(f"n={n}:")
-    print(
-        f"  Linear GHZ - One Zone: {fidelity_linear_one_zone:.4f}, Two Zone: {fidelity_linear_two_zone:.4f}"
-    )
-    print(
-        f"  Log GHZ - One Zone: {fidelity_log_one_zone:.4f}, Two Zone: {fidelity_log_two_zone:.4f}"
-    )
+    print(f"  Linear GHZ: {fidelity_linear:.4f}")
+    print(f"  Log GHZ: {fidelity_log:.4f}")
 
 
 # %% [markdown]
@@ -154,37 +164,21 @@ for n in qubits:
 
 # %%
 # Create comparison plot
-plt.figure(figsize=(12, 8))
+plt.figure(figsize=(10, 6))
 
 plt.plot(
     qubits,
-    fidelities_linear_one_zone,
+    fidelities_linear,
     "ro-",
-    label="Linear GHZ - One Zone",
+    label="Linear GHZ",
     linewidth=2,
     markersize=8,
 )
 plt.plot(
     qubits,
-    fidelities_linear_two_zone,
-    "r^--",
-    label="Linear GHZ - Two Zone",
-    linewidth=2,
-    markersize=8,
-)
-plt.plot(
-    qubits,
-    fidelities_log_one_zone,
+    fidelities_log,
     "bo-",
-    label="Log GHZ - One Zone",
-    linewidth=2,
-    markersize=8,
-)
-plt.plot(
-    qubits,
-    fidelities_log_two_zone,
-    "b^--",
-    label="Log GHZ - Two Zone",
+    label="Log-depth GHZ",
     linewidth=2,
     markersize=8,
 )
@@ -192,13 +186,12 @@ plt.plot(
 plt.xlabel("Number of Qubits", fontsize=14)
 plt.ylabel("Fidelity", fontsize=14)
 plt.title(
-    "GHZ State Fidelity Comparison: Linear vs Log Depth with Different Noise Models",
+    "GHZ State Fidelity Comparison: Linear vs Log-Depth Circuits",
     fontsize=16,
 )
 plt.legend(fontsize=12)
 plt.grid(True, alpha=0.3)
 plt.xticks(qubits)
-# plt.ylim(0, 1.05)
 
 # Add annotations for better understanding
 plt.text(
@@ -217,21 +210,15 @@ plt.show()
 # Print summary statistics
 print("\n=== Summary Statistics ===")
 print(
-    f"Linear GHZ - One Zone: Mean = {np.mean(fidelities_linear_one_zone):.4f}, Std = {np.std(fidelities_linear_one_zone):.4f}"
+    f"Linear GHZ: Mean = {np.mean(fidelities_linear):.4f}, Std = {np.std(fidelities_linear):.4f}"
 )
 print(
-    f"Linear GHZ - Two Zone: Mean = {np.mean(fidelities_linear_two_zone):.4f}, Std = {np.std(fidelities_linear_two_zone):.4f}"
-)
-print(
-    f"Log GHZ - One Zone: Mean = {np.mean(fidelities_log_one_zone):.4f}, Std = {np.std(fidelities_log_two_zone):.4f}"
-)
-print(
-    f"Log GHZ - Two Zone: Mean = {np.mean(fidelities_log_two_zone):.4f}, Std = {np.std(fidelities_log_two_zone):.4f}"
+    f"Log-depth GHZ: Mean = {np.mean(fidelities_log):.4f}, Std = {np.std(fidelities_log):.4f}"
 )
 
 
 # %% [markdown]
-# The GHZ results show that parallelizing gates increases fidelity compared with the sequential implementation. The fidelity improvement is consistent across the one-zone and two-zone architectures and generally grows as we increase the number of qubits.
+# The GHZ results show that parallelizing gates increases fidelity compared with the sequential implementation. The log-depth circuit consistently outperforms the linear-depth circuit, with the advantage growing as we increase the number of qubits.
 
 # %% [markdown]
 # ## Automatic toolkits for circuit parallelization
@@ -246,7 +233,7 @@ print(
 #
 # Because the ILP formulation has totally unimodular constraint structure in our encoding, the relaxed linear program yields integer solutions, which makes the optimization efficient in practice. Absolute-value terms are reformulated into equivalent linear forms during construction.
 #
-# The helper `bloqade.cirq_utils.auto_similarity` tags operations and assigns weights to build the linear objective. Users can also add manual annotations (tags/weights) to guide the parallelizer when they need fine-grained control.
+# The helper `bloqade.utils.auto_similarity` tags operations and assigns weights to build the linear objective. Users can also add manual annotations (tags/weights) to guide the parallelizer when they need fine-grained control.
 #
 #
 
@@ -259,44 +246,41 @@ print(
 
 # %% [code]
 def build_steane_code_circuit():
-    """
-    Build the Steane code circuit for error correction.
-    """
-    # Create qubits for the 7-qubit Steane code
-    qubits = cirq.LineQubit.range(7)
-    circuit = cirq.Circuit()
+    """Build the Steane code circuit for error correction using squin and convert to Cirq."""
 
-    # Define the gate sequence as a list of operations
-    operations = [
+    @squin.kernel
+    def steane_kernel():
+        q = squin.qalloc(7)
+
         # H gate on qubits 1, 2, 3
-        cirq.H(qubits[1]),
-        cirq.H(qubits[2]),
-        cirq.H(qubits[3]),
+        squin.h(q[1])
+        squin.h(q[2])
+        squin.h(q[3])
+
         # Encode the logical qubit with CZ and H gates (equivalent to CNOT)
-        cirq.H(qubits[0]),
-        cirq.CZ(qubits[1], qubits[0]),
-        cirq.CZ(qubits[2], qubits[0]),
-        cirq.H(qubits[4]),
-        cirq.CZ(qubits[2], qubits[4]),
-        cirq.CZ(qubits[6], qubits[4]),
-        cirq.H(qubits[5]),
-        cirq.CZ(qubits[6], qubits[5]),
-        cirq.CZ(qubits[3], qubits[5]),
-        cirq.CZ(qubits[1], qubits[5]),
-        cirq.H(qubits[5]),
-        cirq.H(qubits[6]),
-        cirq.CZ(qubits[1], qubits[6]),
-        cirq.CZ(qubits[2], qubits[6]),
-        cirq.H(qubits[6]),
-        cirq.CZ(qubits[3], qubits[4]),
-        cirq.H(qubits[4]),
-        cirq.CZ(qubits[3], qubits[0]),
-        cirq.H(qubits[0]),
-    ]
+        squin.h(q[0])
+        squin.cz(q[1], q[0])
+        squin.cz(q[2], q[0])
+        squin.h(q[4])
+        squin.cz(q[2], q[4])
+        squin.cz(q[6], q[4])
+        squin.h(q[5])
+        squin.cz(q[6], q[5])
+        squin.cz(q[3], q[5])
+        squin.cz(q[1], q[5])
+        squin.h(q[5])
+        squin.h(q[6])
+        squin.cz(q[1], q[6])
+        squin.cz(q[2], q[6])
+        squin.h(q[6])
+        squin.cz(q[3], q[4])
+        squin.h(q[4])
+        squin.cz(q[3], q[0])
+        squin.h(q[0])
 
-    # Append all operations to the circuit
-    circuit.append(operations)
-
+    # Create LineQubits for compatibility with existing code
+    qubits = cirq.LineQubit.range(7)
+    circuit = cirq_utils.emit_circuit(steane_kernel, circuit_qubits=qubits)
     return circuit
 
 
@@ -304,31 +288,42 @@ def build_steane_code_circuit():
 # Build Steane circuits (reuse already defined noise models and simulator)
 steane_original = build_steane_code_circuit()
 steane_parallel = utils.parallelize(circuit=steane_original)
-steane_parallel = utils.no_similarity(steane_parallel)
+steane_parallel = utils.remove_tags(steane_parallel)
+
+# Display original circuit - renders nicely in Jupyter, shows text in terminal
 print("Original Steane Circuit:")
-print(steane_original)
+try:
+    get_ipython()  # Check if we're in IPython/Jupyter
+    # In Jupyter: display as SVG (prettier visualization)
+    from IPython.display import display
+
+    display(SVGCircuit(steane_original))
+except NameError:
+    # Not in Jupyter: print text representation
+    print(steane_original)
+
 print("\nParallelized Steane Circuit:")
-print(steane_parallel)
+try:
+    get_ipython()
+    from IPython.display import display
+
+    display(SVGCircuit(steane_parallel))
+except NameError:
+    print(steane_parallel)
 print("Original Steane circuit depth:", len(steane_original))
 print("Parallelized Steane circuit depth:", len(steane_parallel))
 
 
 # %% [markdown]
-# We perform noise analysis on both the original and parallelized Steane circuits using our one-zone and two-zone noise models.
+# We perform noise analysis on both the original and parallelized Steane circuits.
 
 # %%
-# Apply noise models to both circuits
-steane_original_one_zone = utils.noise.transform_circuit(
-    steane_original, model=one_zone_model
+# Apply noise model to both circuits
+steane_original_noisy = utils.noise.transform_circuit(
+    steane_original, model=noise_model
 )
-steane_original_two_zone = utils.noise.transform_circuit(
-    steane_original, model=two_zone_model
-)
-steane_parallel_one_zone = utils.noise.transform_circuit(
-    steane_parallel, model=one_zone_model
-)
-steane_parallel_two_zone = utils.noise.transform_circuit(
-    steane_parallel, model=two_zone_model
+steane_parallel_noisy = utils.noise.transform_circuit(
+    steane_parallel, model=noise_model
 )
 
 # Simulate ideal circuits
@@ -336,39 +331,22 @@ rho_original_ideal = simulator.simulate(steane_original).final_density_matrix
 rho_parallel_ideal = simulator.simulate(steane_parallel).final_density_matrix
 
 # Simulate noisy circuits
-rho_original_one_zone = simulator.simulate(
-    steane_original_one_zone
-).final_density_matrix
-rho_original_two_zone = simulator.simulate(
-    steane_original_two_zone
-).final_density_matrix
-rho_parallel_one_zone = simulator.simulate(
-    steane_parallel_one_zone
-).final_density_matrix
-rho_parallel_two_zone = simulator.simulate(
-    steane_parallel_two_zone
-).final_density_matrix
+rho_original_noisy = simulator.simulate(steane_original_noisy).final_density_matrix
+rho_parallel_noisy = simulator.simulate(steane_parallel_noisy).final_density_matrix
 
 # Calculate fidelities
-fidelity_original_one_zone = np.trace(rho_original_ideal @ rho_original_one_zone).real
-fidelity_original_two_zone = np.trace(rho_original_ideal @ rho_original_two_zone).real
-fidelity_parallel_one_zone = np.trace(rho_parallel_ideal @ rho_parallel_one_zone).real
-fidelity_parallel_two_zone = np.trace(rho_parallel_ideal @ rho_parallel_two_zone).real
+fidelity_original = np.trace(rho_original_ideal @ rho_original_noisy).real
+fidelity_parallel = np.trace(rho_parallel_ideal @ rho_parallel_noisy).real
 
 # Print results
 print("\n=== Steane Code Circuit Fidelity Comparison ===")
-print(f"Original circuit - One Zone: {fidelity_original_one_zone:.4f}")
-print(f"Original circuit - Two Zone: {fidelity_original_two_zone:.4f}")
-print(f"Parallelized circuit - One Zone: {fidelity_parallel_one_zone:.4f}")
-print(f"Parallelized circuit - Two Zone: {fidelity_parallel_two_zone:.4f}")
+print(f"Original circuit: {fidelity_original:.4f}")
+print(f"Parallelized circuit: {fidelity_parallel:.4f}")
 
-# Calculate improvements
-improvement_one_zone = fidelity_parallel_one_zone - fidelity_original_one_zone
-improvement_two_zone = fidelity_parallel_two_zone - fidelity_original_two_zone
+# Calculate improvement
+improvement = fidelity_parallel - fidelity_original
 
-print("\nFidelity improvement with parallelization:")
-print(f"One Zone: {improvement_one_zone:+.4f}")
-print(f"Two Zone: {improvement_two_zone:+.4f}")
+print(f"\nFidelity improvement with parallelization: {improvement:+.4f}")
 
 
 # Summary analysis
@@ -382,12 +360,10 @@ print(
     f"Circuit depth reduction: {len(steane_original)} → {len(steane_parallel)} moments"
 )
 print(f"Depth reduction: {depth_reduction} moments ({depth_reduction_pct:.1f}%)")
-if improvement_one_zone > 0 and improvement_two_zone > 0:
-    print("✓ Parallelization improves fidelity under both noise models")
-elif improvement_one_zone > 0 or improvement_two_zone > 0:
-    print("~ Parallelization shows mixed results across noise models")
+if improvement > 0:
+    print("✓ Parallelization improves fidelity")
 else:
-    print("✗ Parallelization does not improve fidelity under these noise models")
+    print("✗ Parallelization does not improve fidelity")
 
 
 # %% [markdown]
@@ -398,328 +374,195 @@ else:
 
 # %%
 def build_circuit3():
-    # Build a simple circuit with CZ gates in a linear chain
+    """Build a linear CZ chain circuit using squin and convert to Cirq."""
     n = 10
+
+    @squin.kernel
+    def cz_chain_kernel():
+        q = squin.qalloc(n)
+        for i in range(n - 1):
+            squin.cz(q[i], q[i + 1])
+
+    # Create LineQubits for compatibility with existing code
     qubits = cirq.LineQubit.range(n)
-    circuit = cirq.Circuit()
-    for i in range(n - 1):
-        circuit.append(cirq.CZ(qubits[i], qubits[(i + 1)]))
+    circuit = cirq_utils.emit_circuit(cz_chain_kernel, circuit_qubits=qubits)
     return circuit
 
 
 # Build the linear CZ circuit
 circuit3 = build_circuit3()
 
+# Display original circuit - renders nicely in Jupyter, shows text in terminal
 print("Original CZ chain circuit:")
-print(circuit3)
+try:
+    get_ipython()  # Check if we're in IPython/Jupyter
+    # In Jupyter: display as SVG (prettier visualization)
+    from IPython.display import display
+
+    display(SVGCircuit(circuit3))
+except NameError:
+    # Not in Jupyter: print text representation
+    print(circuit3)
 
 # Parallelize the circuit, `auto_similarity` is automatically applied inside `parallelize`
 circuit3_parallel = utils.parallelize(circuit=circuit3)
 
 # Remove any tags and print the parallelized circuit
-circuit3_parallel = utils.no_similarity(circuit3_parallel)
+circuit3_parallel = utils.remove_tags(circuit3_parallel)
 print("Parallelized CZ chain circuit:")
-print(circuit3_parallel)
+try:
+    get_ipython()
+    from IPython.display import display
+
+    display(SVGCircuit(circuit3_parallel))
+except NameError:
+    print(circuit3_parallel)
 
 print("Original CZ chain circuit depth:", len(circuit3))
 print("Parallelized CZ chain circuit depth:", len(circuit3_parallel))
 # %% [markdown]
-# ## Example 4: 2D CZ circuit
+# ## Example 4: 6D Hypercube Circuit
 #
-# We extend the linear chain example to a 4-by-4 lattice of qubits with periodic boundary conditions along both x and y directions. The circuit contains CZ operations acting only on neighboring qubits in a 2D grid.
+# This example demonstrates parallelization on a 6-dimensional hypercube with 64 qubits arranged in a 4×16 array, which can be implemented on our Gemini machine with (5x17) architecture.
+#
+# The 6D hypercube (2x2x2x2x2x2) is reshaped into two dimenison (4x16). Each qubit's index maps to (x, y) coordinates:
+# - Binary index: [y1][y0][x3][x2][x1][x0]
+# - x-coordinate (0-15): lower 4 bits
+# - y-coordinate (0-3): upper 2 bits
+#
+# Each of the 6 dimensions connects qubits that differ by exactly one bit, creating a highly connected quantum circuit with 192 CZ gates across 64 qubits.
 #
 
 
 # %%
-def build_circuit4():
-    L = 4
-    # Create GridQubits and reshape into 2D array for qubits[i,j] indexing
-    qubits = np.array(cirq.GridQubit.rect(L, L)).reshape(L, L)
+def build_hypercube():
+    """
+    Build a 6D hypercube circuit with 64 qubits arranged in a 4x16 array.
 
-    # Method 1: Use explicit Moments to fix gate positions
-    moments = []
+    The hypercube structure follows the mapping from Task4 analysis:
+    - Binary index: [y1][y0][x3][x2][x1][x0]
+    - x-coordinate (0-15): lower 4 bits [x3][x2][x1][x0]
+    - y-coordinate (0-3): upper 2 bits [y1][y0]
 
-    # Add horizontal nearest-neighbor interactions in separate moments
-    for row in range(L):
-        for col in range(L):
-            moments.append(
-                cirq.Moment([cirq.CZ(qubits[row, col], qubits[row, (col + 1) % L])])
-            )
+    Each of the 6 dimensions connects qubits that differ by exactly one bit:
+    - Dimension 0: flip bit 0 (x ± 1)
+    - Dimension 1: flip bit 1 (x ± 2)
+    - Dimension 2: flip bit 2 (x ± 4)
+    - Dimension 3: flip bit 3 (x ± 8)
+    - Dimension 4: flip bit 4 (y ± 1)
+    - Dimension 5: flip bit 5 (y ± 2)
+    """
+    # Create a 4x16 array of qubits (64 qubits total)
+    num_rows = 4  # y-coordinates: 0-3
+    num_cols = 16  # x-coordinates: 0-15
 
-    # Add vertical nearest-neighbor interactions in separate moments
-    for row in range(L):
-        for col in range(L):
-            moments.append(
-                cirq.Moment([cirq.CZ(qubits[row, col], qubits[(row + 1) % L, col])])
-            )
-    circuit = cirq.Circuit(moments)
+    # Create GridQubits for 4x16 array
+    qubits = np.array(cirq.GridQubit.rect(num_rows, num_cols)).reshape(
+        num_rows, num_cols
+    )
+
+    # Helper function to convert (x, y) to hypercube index
+    def coord_to_index(x, y):
+        return (y << 4) | x
+
+    # Helper function to convert hypercube index to (x, y)
+    def index_to_coord(idx):
+        x = idx & 0b001111  # Lower 4 bits
+        y = (idx >> 4) & 0b11  # Upper 2 bits
+        return x, y
+
+    # Build CZ gates for all 6 dimensions of the hypercube
+    # Each dimension connects qubits that differ by exactly one bit
+    gates = []
+
+    for dim in range(6):
+        # For each qubit, connect it to its neighbor along dimension `dim`
+        for idx in range(64):
+            # Get the neighbor by flipping bit `dim`
+            neighbor_idx = idx ^ (1 << dim)
+
+            # Only add each edge once (avoid duplicates)
+            if neighbor_idx > idx:
+                # Convert indices to coordinates
+                x1, y1 = index_to_coord(idx)
+                x2, y2 = index_to_coord(neighbor_idx)
+
+                # Verify coordinates are valid
+                if (
+                    0 <= x1 < num_cols
+                    and 0 <= y1 < num_rows
+                    and 0 <= x2 < num_cols
+                    and 0 <= y2 < num_rows
+                ):
+                    # Add CZ gate
+                    gates.append(cirq.CZ(qubits[y1, x1], qubits[y2, x2]))
+
+    # Shuffle the gates to make parallelization more challenging
+    # Without shuffling, gates are already grouped by dimension which makes
+    # parallelization trivial. Shuffling forces the optimizer to work harder.
+    import random
+
+    random.seed(0)  # Use seed=0 for optimal parallelization (depth 6)
+    random.shuffle(gates)
+
+    # Create circuit with all gates
+    # Gates are added sequentially; parallelization will be done later
+    circuit = cirq.Circuit(gates)
     return circuit
 
 
-circuit4 = build_circuit4()
+# %%
+# Build and analyze the hypercube circuit
+hypercube_circuit = build_hypercube()
+print("Original hypercube circuit:")
+print("Number of qubits: 64 (arranged in 4×16 array)")
+print(f"Number of gates: {len(list(hypercube_circuit.all_operations()))}")
+print(f"Circuit depth: {len(hypercube_circuit)} moments")
 
-print("Original 2D grid circuit:")
-print(circuit4)
+# Calculate number of edges per dimension
+# Each dimension should have 32 edges (64 qubits / 2)
+print("\nExpected edges per dimension: 32")
+print("Total edges across 6 dimensions: 192")
+
 # %% [markdown]
-# The helper `visualize_grid_interactions` renders qubit interactions on a 2D grid. It draws connections for two-qubit gates and colors each moment differently to show execution order.
+# The original hypercube circuit has 192 CZ gates (32 edges per dimension × 6 dimensions).
+# The gates are shuffled randomly to make parallelization more challenging - without shuffling,
+# gates would already be grouped by dimension, making the problem trivial. After shuffling,
+# Cirq's default sequential insertion creates a deeper circuit, providing a better benchmark
+# for the parallelization optimizer.
+#
+# Visualization is generated separately. The 4×16 grid layout shows:
+# - Straight lines for nearest-neighbor interactions (Euclidean distance = 1)
+# - Curved arcs for longer-range interactions (distance > 1) to avoid overlapping
+#
+# ![Original Hypercube Circuit](figures/hypercube_original.png)
+#
+# The links with same color belongs to the same moment are executed symmataniously within one layer.
 
+# %% [markdown]
+# Now we try to parallel the hypbercube circuit.
 
 # %%
-def visualize_grid_interactions(circuit, L=4):
-    """
-    Visualize qubit interactions on a grid with different colors for each moment.
-    Uses arcs for non-nearest-neighbor interactions to avoid overlapping.
+# Parallelize the hypercube circuit. There're some randomness in the optimizer which leads to different results in different runs.
+print("\nParallelizing hypercube circuit...")
+hypercube_parallel = utils.parallelize(circuit=hypercube_circuit)
+hypercube_parallel = utils.remove_tags(hypercube_parallel)
 
-    Args:
-        circuit: cirq.Circuit with GridQubit gates
-        L: Grid size (L x L)
-    """
-    import matplotlib.patches as mpatches
-
-    fig, ax = plt.subplots(figsize=(12, 12))
-
-    # Get a colormap for different moments with MAXIMUM contrast
-    num_moments = len(circuit)
-
-    # Define highly contrasting colors manually for maximum visibility
-    high_contrast_colors = [
-        "#FF0000",  # Bright Red
-        "#0000FF",  # Bright Blue
-        "#00FF00",  # Bright Green
-        "#FF00FF",  # Magenta
-        "#FFA500",  # Orange
-        "#00FFFF",  # Cyan
-        "#FFFF00",  # Yellow
-        "#FF1493",  # Deep Pink
-        "#8B00FF",  # Violet
-        "#00FF7F",  # Spring Green
-        "#FF4500",  # Orange Red
-        "#1E90FF",  # Dodger Blue
-        "#FF69B4",  # Hot Pink
-        "#32CD32",  # Lime Green
-        "#DC143C",  # Crimson
-        "#00CED1",  # Dark Turquoise
-        "#FFD700",  # Gold
-        "#9400D3",  # Dark Violet
-        "#FF8C00",  # Dark Orange
-        "#00FA9A",  # Medium Spring Green
-    ]
-
-    # Use high contrast colors or repeat if we have more moments
-    if num_moments <= len(high_contrast_colors):
-        colors = [high_contrast_colors[i] for i in range(num_moments)]
-    else:
-        colors = [
-            high_contrast_colors[i % len(high_contrast_colors)]
-            for i in range(num_moments)
-        ]
-
-    # Function to check if interaction is nearest neighbor
-    def is_nearest_neighbor(r1, c1, r2, c2, L):
-        # Nearest neighbor: both x and y differences are at most 1 (non-periodic)
-        # Exclude same qubit (r1==r2 and c1==c2)
-        return abs(r1 - r2) <= 1 and abs(c1 - c2) <= 1 and not (r1 == r2 and c1 == c2)
-
-    def is_periodic_boundary(r1, c1, r2, c2, L):
-        # Check if this is a periodic boundary connection
-        # Horizontal periodic: same row, column distance is L-1
-        h_periodic = (r1 == r2) and abs(c1 - c2) == L - 1
-        # Vertical periodic: same column, row distance is L-1
-        v_periodic = (c1 == c2) and abs(r1 - r2) == L - 1
-        return h_periodic or v_periodic
-
-    # Draw interactions from each moment with different colors
-    from matplotlib.patches import ConnectionPatch
-
-    legend_elements = []
-    for moment_idx, moment in enumerate(circuit):
-        for op in moment:
-            if len(op.qubits) == 2:
-                q1, q2 = op.qubits
-                r1, c1 = q1.row, q1.col
-                r2, c2 = q2.row, q2.col
-
-                if is_nearest_neighbor(r1, c1, r2, c2, L):
-                    # Draw straight line for nearest neighbors
-                    ax.plot(
-                        [c1, c2],
-                        [r1, r2],
-                        "-",
-                        color=colors[moment_idx],
-                        linewidth=4,
-                        alpha=0.9,
-                        zorder=1,
-                    )
-                elif is_periodic_boundary(r1, c1, r2, c2, L):
-                    # Draw curved connection for periodic boundary using ConnectionPatch
-                    # Use smaller radius values (larger effective radius) for gentler curves
-
-                    # For horizontal periodic boundary (same row)
-                    if r1 == r2:
-                        # Always curve in the same direction regardless of order
-                        # For consistency, always curve upward (toward row 0)
-                        # Ensure we draw from left to right (smaller c to larger c)
-                        if c1 < c2:
-                            # This is the normal case (e.g., (0,row) to (3,row))
-                            # Draw from right to left to make the arc go upward
-                            start, end = (c2, r2), (c1, r1)
-                            connectionstyle = "arc3,rad=-.15"
-                        else:
-                            # This is when c1 > c2 (e.g., (3,row) to (0,row))
-                            start, end = (c1, r1), (c2, r2)
-                            connectionstyle = "arc3,rad=-.15"
-
-                        con = ConnectionPatch(
-                            start,
-                            end,
-                            "data",
-                            "data",
-                            arrowstyle="-",
-                            shrinkA=0,
-                            shrinkB=0,
-                            mutation_scale=20,
-                            fc=colors[moment_idx],
-                            connectionstyle=connectionstyle,
-                            color=colors[moment_idx],
-                            linewidth=4,
-                            alpha=0.9,
-                            zorder=1,
-                        )
-                        ax.add_artist(con)
-
-                    # For vertical periodic boundary (same column)
-                    else:  # c1 == c2
-                        # Always curve in the same direction regardless of order
-                        # For consistency, always curve leftward (toward column 0)
-                        # Ensure we draw from top to bottom (smaller r to larger r)
-                        if r1 < r2:
-                            # This is the normal case (e.g., (col,0) to (col,3))
-                            # Draw from bottom to top to make the arc go leftward
-                            start, end = (c2, r2), (c1, r1)
-                            connectionstyle = "arc3,rad=-.15"
-                        else:
-                            # This is when r1 > r2 (e.g., (col,3) to (col,0))
-                            start, end = (c1, r1), (c2, r2)
-                            connectionstyle = "arc3,rad=-.15"
-
-                        con = ConnectionPatch(
-                            start,
-                            end,
-                            "data",
-                            "data",
-                            arrowstyle="-",
-                            shrinkA=0,
-                            shrinkB=0,
-                            mutation_scale=20,
-                            fc=colors[moment_idx],
-                            connectionstyle=connectionstyle,
-                            color=colors[moment_idx],
-                            linewidth=4,
-                            alpha=0.9,
-                            zorder=1,
-                        )
-                        ax.add_artist(con)
-                else:
-                    # Draw curved connection for other non-nearest neighbors
-                    con = ConnectionPatch(
-                        (c1, r1),
-                        (c2, r2),
-                        "data",
-                        "data",
-                        arrowstyle="-",
-                        shrinkA=0,
-                        shrinkB=0,
-                        mutation_scale=20,
-                        fc=colors[moment_idx],
-                        connectionstyle="arc3,rad=.3",
-                        color=colors[moment_idx],
-                        linewidth=4,
-                        alpha=0.9,
-                        zorder=1,
-                    )
-                    ax.add_artist(con)
-
-        # Add legend entry for this moment
-        legend_elements.append(
-            mpatches.Patch(color=colors[moment_idx], label=f"Moment {moment_idx}")
-        )
-
-    # Draw grid points (qubits) - extra large size for best visibility
-    for row in range(L):
-        for col in range(L):
-            ax.plot(
-                col, row, "ko", markersize=75, zorder=3
-            )  # Outer black circle (50% larger)
-            ax.plot(
-                col, row, "wo", markersize=68, zorder=4
-            )  # Inner white circle (50% larger)
-            ax.text(
-                col,
-                row,
-                f"{row},{col}",
-                ha="center",
-                va="center",
-                fontsize=20,
-                color="black",
-                weight="bold",
-                zorder=5,
-            )  # Proportionally larger font
-
-    # Set up the plot
-    ax.set_xlim(-0.7, L - 0.3)
-    ax.set_ylim(-0.7, L - 0.3)
-    ax.set_aspect("equal")
-    ax.grid(True, alpha=0.3, linestyle="--")
-    ax.set_xlabel("Column", fontsize=14, weight="bold")
-    ax.set_ylabel("Row", fontsize=14, weight="bold")
-    ax.set_title(
-        f"Qubit Interactions on {L}x{L} Grid by Moment\n"
-        f"({num_moments} moments, colored by execution order)",
-        fontsize=16,
-        weight="bold",
-    )
-    ax.invert_yaxis()  # Make (0,0) appear at top-left
-
-    # Add legend
-    ax.legend(
-        handles=legend_elements,
-        loc="upper left",
-        bbox_to_anchor=(1.02, 1),
-        fontsize=11,
-        framealpha=0.9,
-    )
-
-    plt.tight_layout()
-    plt.show()
-
-    print(f"Circuit depth (number of moments): {num_moments}")
-
+print(f"\nOriginal hypercube circuit depth: {len(hypercube_circuit)}")
+print(f"Parallelized hypercube circuit depth: {len(hypercube_parallel)}")
+depth_reduction = len(hypercube_circuit) - len(hypercube_parallel)
+depth_reduction_pct = depth_reduction / len(hypercube_circuit) * 100
+print(f"Depth reduction: {depth_reduction} moments ({depth_reduction_pct:.1f}%)")
 
 # %% [markdown]
-# This function can visualize the circuit on a 2D grid. All operations within the same moment will be plotted with the same color.
-
-# %%
-# Visualize the circuits in 2D grid format
-print("Original circuit:")
-visualize_grid_interactions(circuit4, L=4)
-
-# %% [markdown]
-# Now we parallelize the circuit and print basic statistics (circuit text and moment counts).
-
-# %%
-circuit4_parallel = utils.parallelize(circuit=circuit4)
-circuit4_parallel = utils.no_similarity(circuit4_parallel)
-print(circuit4_parallel)
-# Print circuit depths
-print("Original 2D CZ circuit depth:", len(circuit4))
-print("Parallelized 2D CZ circuit depth:", len(circuit4_parallel))
-
-# %% [markdown]
-# The `parallelism` compresses the circuit down to four moments. Note that this solution is degenerate: multiple equivalent moment assignments exist, so the specific packing depends on tie-breaking in the optimizer.
-
-# %% [markdown]
-# Here is a visualization of the parallel circuit on a 2D grid. Only four colors (moments) are used to color all interactions.
-
-# %%
-print("\nParallelized circuit:")
-visualize_grid_interactions(circuit4_parallel, L=4)
+# The parallelization significantly reduces the circuit depth by identifying gates that act on
+# disjoint qubits and can execute simultaneously. The hypercube's regular structure allows many
+# gates to be grouped into the same moment.
+#
+# Visualization of the parallelized circuit shows gates colored by their assigned moment:
+#
+# ![Parallelized Hypercube Circuit](figures/hypercube_parallel.png)
+#
+# The parallelized circuit demonstrates that quantum algorithms on hypercube connectivity can
+# benefit substantially from automatic parallelization, potentially improving fidelity by
+# reducing overall execution time and exposure to decoherence.
