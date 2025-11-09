@@ -27,7 +27,7 @@ or for a specific test file with the `-s` flag to show the output of the program
 pytest -s tests/test_program.py
 ```
 
-lots of tests contains pretty printing of the IR themselves, so it's useful to see the output.
+lots of tests contain pretty printing of the IR themselves, so it's useful to see the output.
 
 ## Code style
 
@@ -37,7 +37,7 @@ good-to-have practices:
 ### Naming
 
 - try not to use abbreviation as names, unless it's a common abbreviation like `idx` for `index`
-- try not create a lot of duplicated name prefix unless the extra information is necessary when accessing the class object.
+- try not to create a lot of duplicated name prefix unless the extra information is necessary when accessing the class object.
 - try to use `snake_case` for naming variables and functions, and `CamelCase` for classes.
 
 ### Comments
@@ -47,7 +47,7 @@ good-to-have practices:
 
 ## Documentation
 
-We use `just` for mangaging command line tools and scripts. It should be installed when you run `uv sync`. To build the documentation, simply run:
+We use `just` for managing command line tools and scripts. It should be installed when you run `uv sync`. To build the documentation, simply run:
 
 ```bash
 just doc

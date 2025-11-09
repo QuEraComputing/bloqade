@@ -38,4 +38,4 @@ The first step in Bloqade's journey was building out the analog mode SDK, design
 
 ## Learn more
 
-Bloqade is an open-source project and can be freely downloaded and modified; you can learn how to do so [here](../../../install.md). If you want to see how to write programs with of the new `bloqade` package, check out our examples [here](../../../digital/index.md). If you would like to learn more about QuEra Computing Inc., check out our [webpage](https://quera.com) as well as discover our many [academic publications and demonstrations](https://www.quera.com/news#publications).
+Bloqade is an open-source project and can be freely downloaded and modified; you can learn how to do so [here](../../../install.md). If you want to see how to write programs with the new `bloqade` package, check out our examples [here](../../../digital/index.md). If you would like to learn more about QuEra Computing Inc., check out our [webpage](https://quera.com) as well as discover our many [academic publications and demonstrations](https://www.quera.com/news#publications).

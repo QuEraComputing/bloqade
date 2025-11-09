@@ -15,7 +15,7 @@ Bloqade is a Python namespace package, we officially provide several sub-package
 
 !!! note
 
-    If you have already installed Bloqade via the instructions above, all the following subpckages are already installed with the exception of the `stim` eDSL which is currently experimental.
+    If you have already installed Bloqade via the instructions above, all the following subpackages are already installed with the exception of the `stim` eDSL which is currently experimental.
 
 ### `bloqade.qasm2`
 
@@ -67,7 +67,7 @@ You can install `uv` via the following:
     curl -LsSf https://astral.sh/uv/install.sh | sh
     ```
 
-=== 
+=== "Windows"
 
     ```cmd
     powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"

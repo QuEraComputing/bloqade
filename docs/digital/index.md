@@ -49,7 +49,7 @@ from bloqade import squin
 
 @squin.kernel
 def ghz(n: int):
-    q = squin.qubit.new(n)
+    q = squin.qalloc(n)
 
     squin.gate.h(q[0])
 

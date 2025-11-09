@@ -14,7 +14,7 @@ With recent experimental demonstrations of digital quantum circuits executed on 
 
 Operating in an analog mode of quantum computation QuEra's [Aquila](https://www.quera.com/aquila) quantum computer has opened exciting opportunities to leverage the flexibility of a neutral atom platform to explore the application forefront (such as [optimization problems](https://arxiv.org/abs/2407.02553), and [machine learning](https://pubs.acs.org/doi/10.1021/acs.jcim.5c00958)), as well as to address more scientifically oriented questions (preparation of [exotic phases of matter](https://www.nature.com/articles/s41586-025-09051-6)).
 
-In our journey towards building useful quantum computers, however, we find that operating in an analog mode limits the range of problems that we can address, as we only have control of a handful of parameters of the underlying device Hamiltonian. This is where a fully programmable digital quantum computer comes into the picture. The promise of this mode of operation is the ability to encode non-native problems to the neutral atom platform. For instance, one of the envisioned and most exciting applications of quantum computers is the accurate simulation (in terms of estimating ground state energy) of electrons in molecules and materials. The fermionic statistics of the target particles to simulate stand in contrast to the bosonic nature of the Rubidium atoms that constitute the building blocks of our platform. 
+In our journey towards building useful quantum computers, however, we find that operating in an analog mode limits the range of problems that we can address, as we only have control of a handful of parameters of the underlying device Hamiltonian. This is where a fully programmable digital quantum computer comes into the picture. The promise of this mode of operation is the ability to encode non-native problems to the neutral atom platform. For instance, one of the envisioned and most exciting applications of quantum computers is the accurate simulation (in terms of estimating ground state energy) of electrons in molecules and materials. The fermionic statistics of the target particles to simulate stand in contrast to the bosonic nature of the Rubidium atoms that constitute the building blocks of our platform.
 
 Furthermore, we need full control in the quantum device to encode interactions and tunneling parameters between the fermionic modes that discretize our target molecules and materials.
 In our quest to reach this level of maturity in quantum hardware, we introduce Gemini-class devices, that incorporate digital programmability features into our neutral atom quantum computing platform.
@@ -86,7 +86,7 @@ It is often most convenient to study an example in order to learn how to use a s
 To this end, we included a tutorial that shows how to annotate a GHZ preparation circuit using the different
 heuristic noise models.
 We'll discuss some underlying concepts and highlight interesting parts of the tutorial in this section.
-If you want all the details, please find [the full example here](../../../digital/examples/noisy_ghz.py).
+If you want all the details, please find [the full example here](https://bloqade.quera.com/latest/digital/examples/interop/noisy_ghz/).
 
 ### Flow chart
 
@@ -98,7 +98,7 @@ Also, at any point, one may choose to simulate the result of the circuit with th
 
 By passing the circuit through the transformers in `parallelize.py`, within the `bloqade-circuit.cirq_utils` repository,
 the circuit structure can be brought closer to optimal for the neutral atom platform. Then, by using the transformers
-in `noise.transform.py`, Pauli error channels are locally added to the circuit. The function `transform_circuit` acts as 
+in `noise.transform.py`, Pauli error channels are locally added to the circuit. The function `transform_circuit` acts as
 a wrapper for the different noise models, which correspond to different modes of hardware operation.
 
 Finally, we maintain interoperability between Squin (Bloqade's circuit-level intermediate representation) and
@@ -115,7 +115,7 @@ two-zone layout using  the `GeminiTwoZoneNoiseModel` in `bloqade-circuit.cirq_ut
 
 ![Noise annotation example. Two zone model](example_annotation.svg)
 
-In our annotation scheme, assume that we are iterating sequentially over the layers of a quantum circuit, and we encounter the layer depicted in a) on which we will add the noise channels. One important assumption in our two-zone model to keep in mind is that the qubits corresponding to the gates appearing in a given layer will be treated as being in the gate zone, and thus the rest of the qubits are assumed to be in the storage zone. 
+In our annotation scheme, assume that we are iterating sequentially over the layers of a quantum circuit, and we encounter the layer depicted in a) on which we will add the noise channels. One important assumption in our two-zone model to keep in mind is that the qubits corresponding to the gates appearing in a given layer will be treated as being in the gate zone, and thus the rest of the qubits are assumed to be in the storage zone.
 
 To capture the cost of moves to reach a given configuration, we need to take a closer look at the layer that precedes our current target layer. In b), we explicitly show the layer that was annotated with noise in the previous iteration, with its corresponding qubit spatial layout below it. The move cost to reach the target qubit configuration before qubit execution is shown in c), and noise annotation is carried out according to three sequential stages: 1) qubits that need to be removed from the gate zone undergo move error (orange crosses), and the rest get sitter error, 2) similarly, qubits that need to be added to the gate zone get move error and the rest get sitter noise, and 3) additional move error to "pair up" qubits is added before gate execution (notice that more than one layer might be needed to account for this cost).
 
@@ -123,7 +123,7 @@ Finally, noise is annotated after gates, where it is assumed that entangling gat
 
 ### GHZ data
 
-Now, let's look at some results of [the example](../../../digital/examples/noisy_ghz.py) that compares the different
+Now, let's look at some results of [the example](https://bloqade.quera.com/latest/digital/examples/interop/noisy_ghz/) that compares the different
 noise processes.
 
 The different noise models lead to overall different infidelities of the circuit:
@@ -142,4 +142,4 @@ particular application.
 
 ## Learn more
 
-The future for Gemini is bright! Apart from demonstrating [logical magic state distillation](https://arxiv.org/abs/2412.15165), Gemini-class QPUs also form the foundation of QuEra's participation in the [Quantum for Bio](https://www.quera.com/press-releases/two-projects-powered-by-quera-computing-contributions-move-to-phase-three-of-wellcome-leaps-quantum-for-bio-challenge-focused-on-healthcare-and-biology-applications) program. QuEra will serve as the hardware provider for 2 of 6 of the teams that have advanced to the final phase of the challenge. With an eye towards general availability of Gemini-class devices, there's no better time for quantum developers to begin crafting circuits that are well-suited for Gemini. The [documentation for Bloqade-circuit](https://bloqade.quera.com/latest/digital/) as well as our [tutorial guides](https://bloqade.quera.com/latest/digital/tutorials_index/) are a great place to start.
+The future for Gemini is bright! Apart from demonstrating [logical magic state distillation](https://arxiv.org/abs/2412.15165), Gemini-class QPUs also form the foundation of QuEra's participation in the [Quantum for Bio](https://www.quera.com/press-releases/two-projects-powered-by-quera-computing-contributions-move-to-phase-three-of-wellcome-leaps-quantum-for-bio-challenge-focused-on-healthcare-and-biology-applications) program. QuEra will serve as the hardware provider for 2 of 6 of the teams that have advanced to the final phase of the challenge. With an eye towards general availability of Gemini-class devices, there's no better time for quantum developers to begin crafting circuits that are well-suited for Gemini. The [documentation for Bloqade-circuit](https://bloqade.quera.com/latest/digital/) as well as our [tutorial guides](https://bloqade.quera.com/latest/digital/examples/) are a great place to start.

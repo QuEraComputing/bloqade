@@ -52,7 +52,8 @@ Have a look at the (growing) [examples collection](../examples/), where you can 
 
 ## [squin](./squin.md)
 
-With this dialect, you can structure your program in terms of operators rather than gate applications, or define circuits.
+This is the central dialect of bloqade-circuit, with which you can write your quantum programs.
+Rather than just defining circuits in terms of gates and qubits, this dialect also makes it possible to use control flow.
 Have a look at [the dedicated documentation page](./squin.md) and the corresponding [API reference](../../reference/bloqade-circuit/src/bloqade/squin/).
 
 **Use cases**:
@@ -60,7 +61,6 @@ Have a look at [the dedicated documentation page](./squin.md) and the correspond
 * Writing a program that represents a circuit.
 * If you require control flow (loops and if-statements, ...) and composability (function definitions, recursion, ...).
 * Simulation including noise.
-* Hamiltonian simulation (work in progress).
 
 
 ## [qasm2](./qasm2.md)

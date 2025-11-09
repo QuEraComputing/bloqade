@@ -78,7 +78,7 @@ adiabatic_program = (
         ],
     )
     .assign(max_rabi=15.8, max_detuning=16.33)
-    .batch_assign(lattice_spacing=np.arrange(4.0, 7.0, 0.5))
+    .batch_assign(lattice_spacing=np.arange(4.0, 7.0, 0.5))
 )
 
 # Launch your program on your choice of Braket or in-house emulator...
@@ -121,7 +121,7 @@ During the next year, we plan on continuing development of Bloqade's python inte
 
 That's right! However, there's a key motivating factor for the reason we created Bloqade Python that's distinct for Bloqade.jl's existence.
 
-Bloqade.jl is primarily geared as a *high-performance emulator*. It allows you to design complex neutral-atom algorithms that may not necessarily run on our hardware BUT are excellent if you're exploring novel physical phenonema/algorithms or as a tool for pedagogical purposes.
+Bloqade.jl is primarily geared as a *high-performance emulator*. It allows you to design complex neutral-atom algorithms that may not necessarily run on our hardware BUT are excellent if you're exploring novel physical phenomena/algorithms or as a tool for pedagogical purposes.
 
 Bloqade.jl does have the ability to submit to [*Aquila*](https://www.quera.com/aquila), our flagship quantum computer, but for more complex tasks such as sweeping parameters (e.g. running the same program on hardware with slightly different parameters each time) or advanced post-processing, it becomes cumbersome quite quickly.
 

@@ -33,7 +33,7 @@
 #
 # At this stage, we recommend interpreting the two models as providing a range for expected noise levels on Gemini-class devices, rather than precise predictions. They are useful for gaining intuition about noise sensitivity and for benchmarking algorithmic robustness to errors, using hardware-informed but simplistic assumptions.
 #
-# Note, that there are actually two additional one-zone noise models, `GeminiOneZoneNoiseModelCorrelated` and `GeminiOneZoneNoiseModelConflictGraphMoves`.
+# Note that there are actually two additional one-zone noise models, `GeminiOneZoneNoiseModelCorrelated` and `GeminiOneZoneNoiseModelConflictGraphMoves`.
 # As the names suggest, the former also takes into account correlated noise, whereas the latter takes into account more realistic move schedules.
 # In the following example, we will not be considering these two, but they are interchangeable with the used noise models (up to the fact, that the conflict graph moves require you to specify qubits as `cirq.GridQubit`s).
 
@@ -187,7 +187,7 @@ plt.legend()
 # This is because as the number of qubits grows, the error introduced on idle qubits inside the gate zone is larger in the one-zone model since all qubits are always inside the gate zone.
 # Whereas, in the two-zone model, qubits are moved between the gate and storage zones.
 #
-# You could now think about how to optimize the circuits in order to reduce their sensitivity for noise.
+# You could now think about how to optimize the circuits in order to reduce their sensitivity to noise.
 # For example, you can [reduce the circuit depth](../../qasm2/ghz)
 
 # %% [markdown]
@@ -205,7 +205,7 @@ plt.legend()
 # <div class="admonition note">
 # <p class="admonition-title">Atom loss</p>
 # <p>
-#     Please note, that atom loss is currently not supported, i.e. it's not considered in the noise models.
+#     Please note that atom loss is currently not supported, i.e. it's not considered in the noise models.
 #     We plan to add that in the future.
 # </p>
 # </div>
