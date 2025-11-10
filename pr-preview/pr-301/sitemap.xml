@@ -717,6 +717,18 @@
          <lastmod>2025-11-10</lastmod>
     </url>
     <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/annotate/</loc>
+         <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/annotate/stmts/</loc>
+         <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/annotate/types/</loc>
+         <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/cirq_utils/</loc>
          <lastmod>2025-11-10</lastmod>
     </url>
@@ -766,6 +778,30 @@
     </url>
     <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/cirq_utils/noise/transform/</loc>
+         <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/gemini/</loc>
+         <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/gemini/groups/</loc>
+         <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/gemini/analysis/</loc>
+         <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/gemini/analysis/logical_validation/</loc>
+         <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/gemini/analysis/logical_validation/analysis/</loc>
+         <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/gemini/analysis/logical_validation/impls/</loc>
          <lastmod>2025-11-10</lastmod>
     </url>
     <url>
@@ -1177,6 +1213,10 @@
          <lastmod>2025-11-10</lastmod>
     </url>
     <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/rewrite/passes/callgraph/</loc>
+         <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/rewrite/passes/canonicalize_ilist/</loc>
          <lastmod>2025-11-10</lastmod>
     </url>
@@ -1417,6 +1457,10 @@
          <lastmod>2025-11-10</lastmod>
     </url>
     <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/stim/rewrite/get_record_util/</loc>
+         <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/stim/rewrite/ifs_to_stim/</loc>
          <lastmod>2025-11-10</lastmod>
     </url>
@@ -1426,6 +1470,14 @@
     </url>
     <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/stim/rewrite/qubit_to_stim/</loc>
+         <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/stim/rewrite/set_detector_to_stim/</loc>
+         <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/stim/rewrite/set_observable_to_stim/</loc>
          <lastmod>2025-11-10</lastmod>
     </url>
     <url>
@@ -1446,6 +1498,26 @@
     </url>
     <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/stim/upstream/from_squin/</loc>
+         <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/validation/</loc>
+         <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/validation/kernel_validation/</loc>
+         <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/validation/analysis/</loc>
+         <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/validation/analysis/analysis/</loc>
+         <lastmod>2025-11-10</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/validation/analysis/lattice/</loc>
          <lastmod>2025-11-10</lastmod>
     </url>
     <url>
