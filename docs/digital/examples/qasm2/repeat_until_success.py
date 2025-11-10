@@ -58,7 +58,7 @@ def z_phase_gate_postselect(target: qasm2.Qubit, theta: float) -> qasm2.Qubit:
     qasm2.cx(ancilla, target)
     creg = qasm2.creg(1)
     qasm2.measure(target, creg[0])
-    if creg[0] == 1:
+    if creg[0]:
         qasm2.x(ancilla)
     return ancilla
 
@@ -104,7 +104,7 @@ def z_phase_gate_loop(target: qasm2.Qubit, theta: float, attempts: int):
     creg = qasm2.creg(1)  # Implicitly initialized to 0, thanks qasm...
     for ctr in range(attempts):
         ancilla = prep_resource_state(theta * (2**ctr))
-        if creg[0] == 0:
+        if not creg[0]:
             qasm2.cx(ancilla, target)
             qasm2.measure(target, creg[0])
             target = ancilla
