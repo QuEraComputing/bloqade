@@ -14809,7 +14809,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0b666eb5">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=774852d0">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14824,7 +14824,7 @@ especially Fig. 7.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=095a5fd7">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=34b6275a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14851,7 +14851,7 @@ especially Fig. 7.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a8abe6ec">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=df2e36fb">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14866,7 +14866,7 @@ an arbitrary Z rotation $|0\rangle + e^{i\theta}|1\rangle$.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=77683b35">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=66328324">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14905,7 +14905,7 @@ def prep_resource_state(theta: float):
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=55626e85">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cdf331a7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14927,7 +14927,7 @@ the angle, and repeat until we get the correct outcome.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0b055380">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=fbf454ed">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14941,7 +14941,7 @@ $2^{-n}$ chance of success after $n$ Z phase gates.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f6c6697a">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=70197c5d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14965,7 +14965,7 @@ $2^{-n}$ chance of success after $n$ Z phase gates.</p>
     <span class="n">qasm2</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">ancilla</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
     <span class="n">creg</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">creg</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">qasm2</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">creg</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="k">if</span> <span class="n">creg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">creg</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
         <span class="n">qasm2</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">ancilla</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ancilla</span>
 </pre></div>
@@ -14975,7 +14975,7 @@ def z_phase_gate_postselect(target: qasm2.Qubit, theta: float) -&gt; qasm2.Qubit
     qasm2.cx(ancilla, target)
     creg = qasm2.creg(1)
     qasm2.measure(target, creg[0])
-    if creg[0] == 1:
+    if creg[0]:
         qasm2.x(ancilla)
     return ancilla</div>
 </div>
@@ -14984,7 +14984,7 @@ def z_phase_gate_postselect(target: qasm2.Qubit, theta: float) -&gt; qasm2.Qubit
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=99a065c8">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b80b7fde">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14999,7 +14999,7 @@ total number of gates is not known until runtime.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=bce4ff7f">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=298ab253">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15052,7 +15052,7 @@ def z_phase_gate_recursive(target: qasm2.Qubit, theta: float) -&gt; qasm2.Qubit:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5b4be829">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1044e700">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15066,7 +15066,7 @@ may still fail with a small probability $2^{-attempts}$.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c6c86160">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=d74d980c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15092,7 +15092,7 @@ may still fail with a small probability $2^{-attempts}$.</p>
     <span class="n">creg</span> <span class="o">=</span> <span class="n">qasm2</span><span class="o">.</span><span class="n">creg</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Implicitly initialized to 0, thanks qasm...</span>
     <span class="k">for</span> <span class="n">ctr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">attempts</span><span class="p">):</span>
         <span class="n">ancilla</span> <span class="o">=</span> <span class="n">prep_resource_state</span><span class="p">(</span><span class="n">theta</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">ctr</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">creg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">creg</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
             <span class="n">qasm2</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">ancilla</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
             <span class="n">qasm2</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">creg</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">target</span> <span class="o">=</span> <span class="n">ancilla</span>
@@ -15106,7 +15106,7 @@ def z_phase_gate_loop(target: qasm2.Qubit, theta: float, attempts: int):
     creg = qasm2.creg(1)  # Implicitly initialized to 0, thanks qasm...
     for ctr in range(attempts):
         ancilla = prep_resource_state(theta * (2**ctr))
-        if creg[0] == 0:
+        if not creg[0]:
             qasm2.cx(ancilla, target)
             qasm2.measure(target, creg[0])
             target = ancilla
@@ -15117,7 +15117,7 @@ def z_phase_gate_loop(target: qasm2.Qubit, theta: float, attempts: int):
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7b110d02">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=120eef8e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15130,7 +15130,7 @@ subcircuits.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=cac413c3">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6cfb081f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15157,7 +15157,7 @@ subcircuits.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e47e17e6">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f9ef961c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15168,7 +15168,7 @@ subcircuits.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c56ee05b">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=89d8bc86">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15225,7 +15225,7 @@ def loop_main():
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b8dc00cb">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c2c2e5ab">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15238,7 +15238,7 @@ circuits using state vectors.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4c315d42">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=67536fae">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
