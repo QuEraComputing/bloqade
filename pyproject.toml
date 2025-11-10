@@ -103,3 +103,7 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.coverage.run]
 include = ["src/bloqade/*"]
+
+[tool.ruff.lint.per-file-ignores]
+"docs/digital/tutorials/*.py" = ["E402", "F401"]  # ignore import not at top and unused
+"docs/digital/examples/*.py" = ["E402"]  # ignore imports not at top
