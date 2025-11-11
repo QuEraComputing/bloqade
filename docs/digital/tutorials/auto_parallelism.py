@@ -437,7 +437,7 @@ print("Parallelized CZ chain circuit depth:", len(circuit3_parallel))
 # %%
 def build_hypercube():
     """
-    Build a 6D hypercube circuit with 64 qubits arranged in a 4x16 array.
+    Build a 6D hypercube circuit with 64 qubits arranged in a 4x16 array using squin and convert to Cirq.
 
     The hypercube structure follows the mapping from Task4 analysis:
     - Binary index: [y1][y0][x3][x2][x1][x0]
@@ -456,24 +456,14 @@ def build_hypercube():
     num_rows = 4  # y-coordinates: 0-3
     num_cols = 16  # x-coordinates: 0-15
 
-    # Create GridQubits for 4x16 array
-    qubits = np.array(cirq.GridQubit.rect(num_rows, num_cols)).reshape(
-        num_rows, num_cols
-    )
-
-    # Helper function to convert (x, y) to hypercube index
-    def coord_to_index(x, y):
-        return (y << 4) | x
-
     # Helper function to convert hypercube index to (x, y)
     def index_to_coord(idx):
         x = idx & 0b001111  # Lower 4 bits
         y = (idx >> 4) & 0b11  # Upper 2 bits
         return x, y
 
-    # Build CZ gates for all 6 dimensions of the hypercube
-    # Each dimension connects qubits that differ by exactly one bit
-    gates = []
+    # Build the list of gate pairs for all 6 dimensions
+    gate_pairs = []
 
     for dim in range(6):
         # For each qubit, connect it to its neighbor along dimension `dim`
@@ -494,20 +484,28 @@ def build_hypercube():
                     and 0 <= x2 < num_cols
                     and 0 <= y2 < num_rows
                 ):
-                    # Add CZ gate
-                    gates.append(cirq.CZ(qubits[y1, x1], qubits[y2, x2]))
+                    gate_pairs.append((y1, x1, y2, x2))
 
-    # Shuffle the gates to make parallelization more challenging
+    # Shuffle the gate pairs to make parallelization more challenging
     # Without shuffling, gates are already grouped by dimension which makes
     # parallelization trivial. Shuffling forces the optimizer to work harder.
     import random
 
     random.seed(0)  # Use seed=0 for optimal parallelization (depth 6)
-    random.shuffle(gates)
+    random.shuffle(gate_pairs)
 
-    # Create circuit with all gates
-    # Gates are added sequentially; parallelization will be done later
-    circuit = cirq.Circuit(gates)
+    @squin.kernel
+    def hypercube_kernel():
+        q = squin.qalloc(num_rows * num_cols)
+        for pair in gate_pairs:
+            # Convert 2D indices to 1D: index = y * num_cols + x
+            idx1 = pair[0] * num_cols + pair[1]
+            idx2 = pair[2] * num_cols + pair[3]
+            squin.cz(q[idx1], q[idx2])
+
+    # Create GridQubits for 4x16 array (returns a flat list of 64 qubits)
+    qubits = cirq.GridQubit.rect(num_rows, num_cols)
+    circuit = cirq_utils.emit_circuit(hypercube_kernel, circuit_qubits=qubits)
     return circuit
 
 
