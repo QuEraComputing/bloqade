@@ -21,6 +21,7 @@ from bloqade import squin
 Register = IList[Qubit, Any]
 
 
+
 # %%
 @squin.kernel
 def hello_world(theta: float) -> IList[MeasurementResult, Any]:
