@@ -95,6 +95,10 @@ def build_log_ghz(n_qubits: int) -> cirq.Circuit:
     circuit = cirq_utils.emit_circuit(log_ghz_kernel, circuit_qubits=qubits)
     return circuit
 
+linear_ghz = build_linear_ghz(8)
+SVGCircuit(linear_ghz)
+log_ghz = build_log_ghz(8)
+SVGCircuit(log_ghz)
 
 # %% [markdown]
 # ### The benefits of parallelism
@@ -564,3 +568,198 @@ print(f"Depth reduction: {depth_reduction} moments ({depth_reduction_pct:.1f}%)"
 # The parallelized circuit demonstrates that quantum algorithms on hypercube connectivity can
 # benefit substantially from automatic parallelization, potentially improving fidelity by
 # reducing overall execution time and exposure to decoherence.
+
+
+#%% [markdown]
+# ### QAOA / graph state preparation
+#
+# As a final example, lets consider a more real-world example of a circuit for a graph-based algorithm:
+# QAOA on MaxCut. The circuit is a variational ansatz that alternates between some entangling
+# phasor gates that encodes the objective, and a single qubit mixer layer. A common choice of combinatorial
+# problem is MaxCut, where the goal is to partition the nodes of a graph into two sets such that
+# the number of edges between the sets is maximized. In this case, there is a qubit for each vertex,
+# and the phasor consists of CZPhase gates for each edge in the graph. The ansatz is repeated p times,
+# and in the p-> infty limit recovers the exact state.
+#
+# These sorts of graph-based circuits are inherently parallel, and serve as a good example for this tutorial.
+# In particular, the CZPhase gates commute, and so an optimal parallelization can be found via an (approximate)
+# edge coloring of the graph, where each color corresponds to a moment of the circuit.
+# Additionally, a naive decomposition of CZPhase gates into CZ and single qubit rotations can lead to a lot of
+# redundant single and multi-qubit gates that can be eliminated to improve fidelity.
+
+
+#%%
+import networkx as nx
+
+
+def build_qaoa_circuit(graph: nx.Graph, gamma: list[float], beta:list[float]) -> cirq.Circuit:
+    """Build a QAOA circuit for MaxCut on the given graph"""
+    n = len(graph.nodes)
+    qbs = cirq.LineQubit.range(n)
+    circuit = cirq.Circuit()
+    assert len(gamma) == len(beta), "Length of gamma and beta must be equal"
+    for i in range(n):
+        circuit.append(cirq.H(qbs[i]))
+    for layer in range(len(gamma)):
+        for u, v in graph.edges:
+            circuit.append((cirq.Z.on(qbs[u])*cirq.Z.on(qbs[v]))**(gamma[layer]/np.pi))
+        for i in range(n):
+            circuit.append(cirq.rx(2 * beta[layer])(qbs[i]))
+    
+    # Convert to the native CZ gateset here.
+    circuit2 = cirq.optimize_for_target_gateset(circuit, gateset=cirq.CZTargetGateset())
+    return circuit2
+
+
+def build_qaoa_circuit_parallelized(graph: nx.Graph, gamma: list[float], beta:list[float]) -> cirq.Circuit:
+    """Build and parallelize a QAOA circuit for MaxCut on the given graph"""
+    n = len(graph.nodes)
+    qbs = cirq.LineQubit.range(n)
+    circuit = cirq.Circuit()
+    assert len(gamma) == len(beta), "Length of gamma and beta must be equal"
+    
+    # A smarter implementation would use the Misra–Gries algorithm,
+    # which gives a guaranteed Delta+1 coloring, consistent with
+    # Vizing's theorem for edge coloring.
+    # However, networkx does not have an implementation of this algorithm,
+    # so we use greedy coloring as an approximation. This does not guarantee
+    # optimal depth, but works reasonably well in practice.
+    linegraph = nx.line_graph(graph)
+    best = 1e99
+    for strategy in ["largest_first", "random_sequential", "smallest_last", "independent_set",
+                     "connected_sequential_bfs", "connected_sequential_dfs", "saturation_largest_first"]:
+        coloring:dict = nx.coloring.greedy_color(linegraph, strategy=strategy)
+        num_colors = len(set(coloring.values()))
+        if num_colors < best:
+            best = num_colors
+            best_coloring = coloring
+    coloring:dict = best_coloring
+    colors = [[edge for edge, color in coloring.items() if color == c] for c in set(coloring.values())]
+    
+    print(len(colors))
+    # We will explicitly decompose CZPhase into CZ and single-qubit
+    # rotations. This can be done with the following identity:
+    # --o---    ----o--------o----
+    #   |      =    |        |
+    # -Z(t)-    -H--Z--X(t)--Z--H-
+    
+    # To cancel repeated Hadamards, we can select which qubit
+    # of each gate pair to apply the Hadamards on. The minimum
+    # number of Hadamards is equal to the size of the minimum vertex cover
+    # of the graph. Finding the minimum vertex cover is NP-hard,
+    # but we can use a greedy MIS heuristic instead.
+    mis = nx.algorithms.approximation.maximum_independent_set(graph)
+    hadamard_qubits = set(graph.nodes) - set(mis)
+    
+    
+    # Now, build the circuit using the insight from coloring and cover.
+    moment = []
+    for i in range(n):
+        moment.append(cirq.H(qbs[i]))
+    circuit.append(cirq.Moment(moment))
+    for layer in range(len(gamma)):
+        for color_group in colors:
+            # Explicitly decompose CZPhase into CZ and single-qubit layers,
+            # and be explicit with moments to maximize parallelism.
+            # --
+            moment = []
+            for u,v in color_group:
+                if u in hadamard_qubits:
+                    moment.append(cirq.H(qbs[u]))
+                else:
+                    moment.append(cirq.H(qbs[v]))
+            circuit.append(cirq.Moment(moment))
+            # --
+            moment = []
+            for u, v in color_group:
+                moment.append(cirq.CZ(qbs[u], qbs[v]))
+            circuit.append(cirq.Moment(moment))
+            moment = []
+            for u,v in color_group:
+                if u in hadamard_qubits:
+                    moment.append(cirq.X(qbs[u])**(gamma[layer]/np.pi))
+                else:
+                    moment.append(cirq.X(qbs[v])**(gamma[layer]/np.pi))
+            circuit.append(cirq.Moment(moment))
+            # --
+            moment = []
+            for u, v in color_group:
+                moment.append(cirq.CZ(qbs[u], qbs[v]))
+            circuit.append(cirq.Moment(moment))
+            # --
+            moment = []
+            for u,v in color_group:
+                if u in hadamard_qubits:
+                    moment.append(cirq.H(qbs[u]))
+                else:
+                    moment.append(cirq.H(qbs[v]))
+            circuit.append(cirq.Moment(moment))
+        moment = []
+        for i in range(n):
+            moment.append(cirq.rx(2 * beta[layer])(qbs[i]))
+        circuit.append(cirq.Moment(moment))
+    
+    # This circuit will have some redundant doubly-repeated Hadamards that can be removed.
+    # Lets do that now by merging single qubit gates to phased XZ gates, which is the native
+    # single-qubit gate on neutral atoms.
+    circuit2 = cirq.merge_single_qubit_moments_to_phxz(circuit)
+    # Do any last optimizing...
+    circuit3 = cirq.optimize_for_target_gateset(circuit2, gateset=cirq.CZTargetGateset())
+
+    return circuit3
+
+#%% [markdown]
+# Now we can compare the depth of the naive version that is not hardware aware,
+# to the hand-tuned parallelized version.
+#
+# There is a third intermediate option between a fully naive and fully hand-tuned
+# circuit, by using autoparallelism. This uses an integer linear program solver
+# to minimize the average depth of the circuit by re-ordering commuting gates.
+# For more details, see [this page]().
+#%%
+graph = nx.random_regular_graph(d=3, n=40, seed=42)
+qaoa_naive = build_qaoa_circuit(graph, gamma=[np.pi/2], beta=[np.pi/4])
+qaoa_autoparallel = utils.parallelize(qaoa_naive)
+qaoa_parallel = build_qaoa_circuit_parallelized(graph, gamma=[np.pi/2], beta=[np.pi/4])
+print("Naive QAOA circuit depth:    ", len(qaoa_naive))
+print("Auto'd QAOA circuit depth:   ", len(qaoa_autoparallel))
+print("Parallel QAOA circuit depth: ", len(qaoa_parallel))
+#%% [markdown]
+# We can see that the hand-tuned parallel version has the lowest depth and thus
+# will have the best performance. The autoparallelized version is slightly better than the naive.
+# Lets check out what the circuits look like, and simulate them on smaller graphs to compare fidelities.
+#%%
+
+
+graph = nx.random_regular_graph(d=3, n=10, seed=42)
+qaoa_naive = build_qaoa_circuit(graph, gamma=[np.pi/2], beta=[np.pi/4])
+qaoa_parallel = build_qaoa_circuit_parallelized(graph, gamma=[np.pi/2], beta=[np.pi/4])
+qaoa_autoparallel = utils.parallelize(qaoa_naive)
+#%%
+SVGCircuit(qaoa_naive)
+#%%
+SVGCircuit(qaoa_parallel)
+# %%
+
+# Apply noise model
+qaoa_naive_noisy = utils.noise.transform_circuit(
+    qaoa_naive, model=noise_model
+)
+qaoa_parallel_noisy = utils.noise.transform_circuit(qaoa_parallel, model=noise_model)
+
+# Simulate noiseless circuits
+rho_naive = simulator.simulate(qaoa_naive).final_density_matrix
+rho_parallel = simulator.simulate(qaoa_parallel).final_density_matrix
+
+# Simulate noisy circuits
+rho_naive_noisy = simulator.simulate(qaoa_naive_noisy).final_density_matrix
+rho_parallel_noisy = simulator.simulate(qaoa_parallel_noisy).final_density_matrix
+
+# Calculate fidelities
+fidelity_naive = np.trace(rho_naive @ rho_naive_noisy).real
+fidelity_parallel = np.trace(rho_parallel @ rho_parallel_noisy).real
+print(f"Naive QAOA circuit fidelity: {fidelity_naive:.4f}"
+      )
+print(f"Parallel QAOA circuit fidelity: {fidelity_parallel:.4f}"
+      )
+# %%
