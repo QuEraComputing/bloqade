@@ -424,151 +424,6 @@ except NameError:
 
 print("Original CZ chain circuit depth:", len(circuit3))
 print("Parallelized CZ chain circuit depth:", len(circuit3_parallel))
-# %% [markdown]
-# ## Example 4: 6D Hypercube Circuit
-#
-# This example demonstrates parallelization on a 6-dimensional hypercube with 64 qubits arranged in a 4×16 array, which can be implemented on our Gemini machine with (5x17) architecture.
-#
-# The 6D hypercube (2x2x2x2x2x2) is reshaped into two dimenison (4x16). Each qubit's index maps to (x, y) coordinates:
-# - Binary index: [y1][y0][x3][x2][x1][x0]
-# - x-coordinate (0-15): lower 4 bits
-# - y-coordinate (0-3): upper 2 bits
-#
-# Each of the 6 dimensions connects qubits that differ by exactly one bit, creating a highly connected quantum circuit with 192 CZ gates across 64 qubits.
-#
-
-
-# %%
-def build_hypercube():
-    """
-    Build a 6D hypercube circuit with 64 qubits arranged in a 4x16 array using squin and convert to Cirq.
-
-    The hypercube structure follows the mapping from Task4 analysis:
-    - Binary index: [y1][y0][x3][x2][x1][x0]
-    - x-coordinate (0-15): lower 4 bits [x3][x2][x1][x0]
-    - y-coordinate (0-3): upper 2 bits [y1][y0]
-
-    Each of the 6 dimensions connects qubits that differ by exactly one bit:
-    - Dimension 0: flip bit 0 (x ± 1)
-    - Dimension 1: flip bit 1 (x ± 2)
-    - Dimension 2: flip bit 2 (x ± 4)
-    - Dimension 3: flip bit 3 (x ± 8)
-    - Dimension 4: flip bit 4 (y ± 1)
-    - Dimension 5: flip bit 5 (y ± 2)
-    """
-    # Create a 4x16 array of qubits (64 qubits total)
-    num_rows = 4  # y-coordinates: 0-3
-    num_cols = 16  # x-coordinates: 0-15
-
-    # Helper function to convert hypercube index to (x, y)
-    def index_to_coord(idx):
-        x = idx & 0b001111  # Lower 4 bits
-        y = (idx >> 4) & 0b11  # Upper 2 bits
-        return x, y
-
-    # Build the list of gate pairs for all 6 dimensions
-    gate_pairs = []
-
-    for dim in range(6):
-        # For each qubit, connect it to its neighbor along dimension `dim`
-        for idx in range(64):
-            # Get the neighbor by flipping bit `dim`
-            neighbor_idx = idx ^ (1 << dim)
-
-            # Only add each edge once (avoid duplicates)
-            if neighbor_idx > idx:
-                # Convert indices to coordinates
-                x1, y1 = index_to_coord(idx)
-                x2, y2 = index_to_coord(neighbor_idx)
-
-                # Verify coordinates are valid
-                if (
-                    0 <= x1 < num_cols
-                    and 0 <= y1 < num_rows
-                    and 0 <= x2 < num_cols
-                    and 0 <= y2 < num_rows
-                ):
-                    gate_pairs.append((y1, x1, y2, x2))
-
-    # Shuffle the gate pairs to make parallelization more challenging
-    # Without shuffling, gates are already grouped by dimension which makes
-    # parallelization trivial. Shuffling forces the optimizer to work harder.
-    import random
-
-    random.seed(0)  # Use seed=0 for optimal parallelization (depth 6)
-    random.shuffle(gate_pairs)
-
-    @squin.kernel
-    def hypercube_kernel():
-        q = squin.qalloc(num_rows * num_cols)
-        for pair in gate_pairs:
-            # Convert 2D indices to 1D: index = y * num_cols + x
-            idx1 = pair[0] * num_cols + pair[1]
-            idx2 = pair[2] * num_cols + pair[3]
-            squin.cz(q[idx1], q[idx2])
-
-    # Create GridQubits for 4x16 array (returns a flat list of 64 qubits)
-    qubits = cirq.GridQubit.rect(num_rows, num_cols)
-    circuit = cirq_utils.emit_circuit(hypercube_kernel, circuit_qubits=qubits)
-    return circuit
-
-
-# %%
-# Build and analyze the hypercube circuit
-hypercube_circuit = build_hypercube()
-print("Original hypercube circuit:")
-print("Number of qubits: 64 (arranged in 4×16 array)")
-print(f"Number of gates: {len(list(hypercube_circuit.all_operations()))}")
-print(f"Circuit depth: {len(hypercube_circuit)} moments")
-
-# Calculate number of edges per dimension
-# Each dimension should have 32 edges (64 qubits / 2)
-print("\nExpected edges per dimension: 32")
-print("Total edges across 6 dimensions: 192")
-
-# %% [markdown]
-# The original hypercube circuit has 192 CZ gates (32 edges per dimension × 6 dimensions).
-# The gates are shuffled randomly to make parallelization more challenging - without shuffling,
-# gates would already be grouped by dimension, making the problem trivial. After shuffling,
-# Cirq's default sequential insertion creates a deeper circuit, providing a better benchmark
-# for the parallelization optimizer.
-#
-# Visualization is generated separately. The 4×16 grid layout shows:
-# - Straight lines for nearest-neighbor interactions (Euclidean distance = 1)
-# - Curved arcs for longer-range interactions (distance > 1) to avoid overlapping
-#
-# ![Original Hypercube Circuit](figures/hypercube_original.png)
-#
-# The links with same color belongs to the same moment are executed symmataniously within one layer.
-
-# %% [markdown]
-# Now we try to parallel the hypbercube circuit.
-
-# %%
-# Parallelize the hypercube circuit. There're some randomness in the optimizer which leads to different results in different runs.
-print("\nParallelizing hypercube circuit...")
-hypercube_parallel = utils.parallelize(circuit=hypercube_circuit)
-hypercube_parallel = utils.remove_tags(hypercube_parallel)
-
-print(f"\nOriginal hypercube circuit depth: {len(hypercube_circuit)}")
-print(f"Parallelized hypercube circuit depth: {len(hypercube_parallel)}")
-depth_reduction = len(hypercube_circuit) - len(hypercube_parallel)
-depth_reduction_pct = depth_reduction / len(hypercube_circuit) * 100
-print(f"Depth reduction: {depth_reduction} moments ({depth_reduction_pct:.1f}%)")
-
-# %% [markdown]
-# The parallelization significantly reduces the circuit depth by identifying gates that act on
-# disjoint qubits and can execute simultaneously. The hypercube's regular structure allows many
-# gates to be grouped into the same moment.
-#
-# Visualization of the parallelized circuit shows gates colored by their assigned moment:
-#
-# ![Parallelized Hypercube Circuit](figures/hypercube_parallel.png)
-#
-# The parallelized circuit demonstrates that quantum algorithms on hypercube connectivity can
-# benefit substantially from automatic parallelization, potentially improving fidelity by
-# reducing overall execution time and exposure to decoherence.
-
 
 #%% [markdown]
 # ### QAOA / graph state preparation
@@ -593,31 +448,52 @@ import networkx as nx
 
 
 def build_qaoa_circuit(graph: nx.Graph, gamma: list[float], beta:list[float]) -> cirq.Circuit:
-    """Build a QAOA circuit for MaxCut on the given graph"""
+    """Build a QAOA circuit for MaxCut on the given graph using squin"""
     n = len(graph.nodes)
-    qbs = cirq.LineQubit.range(n)
-    circuit = cirq.Circuit()
     assert len(gamma) == len(beta), "Length of gamma and beta must be equal"
-    for i in range(n):
-        circuit.append(cirq.H(qbs[i]))
-    for layer in range(len(gamma)):
-        for u, v in graph.edges:
-            circuit.append((cirq.Z.on(qbs[u])*cirq.Z.on(qbs[v]))**(gamma[layer]/np.pi))
+
+    # Prepare edge list for squin kernel
+    edges = list(graph.edges)
+
+    @squin.kernel
+    def qaoa_kernel():
+        q = squin.qalloc(n)
+
+        # Initial Hadamard layer
         for i in range(n):
-            circuit.append(cirq.rx(2 * beta[layer])(qbs[i]))
-    
-    # Convert to the native CZ gateset here.
+            squin.h(q[i])
+
+        # QAOA layers
+        for layer in range(len(gamma)):
+            # Cost Hamiltonian: ZZ rotation for each edge
+            # Using decomposition: exp(-i*gamma/2*Z⊗Z) = H → CZ → Rx(gamma) → CZ → H
+            for edge in edges:
+                u = edge[0]
+                v = edge[1]
+                squin.h(q[v])
+                squin.cz(q[u], q[v])
+                squin.rx(gamma[layer], q[v])
+                squin.cz(q[u], q[v])
+                squin.h(q[v])
+
+            # Mixer Hamiltonian: Rx rotation on all qubits
+            for i in range(n):
+                squin.rx(2 * beta[layer], q[i])
+
+    # Create LineQubits and emit circuit
+    qubits = cirq.LineQubit.range(n)
+    circuit = cirq_utils.emit_circuit(qaoa_kernel, circuit_qubits=qubits)
+
+    # Convert to the native CZ gateset
     circuit2 = cirq.optimize_for_target_gateset(circuit, gateset=cirq.CZTargetGateset())
     return circuit2
 
 
 def build_qaoa_circuit_parallelized(graph: nx.Graph, gamma: list[float], beta:list[float]) -> cirq.Circuit:
-    """Build and parallelize a QAOA circuit for MaxCut on the given graph"""
+    """Build and parallelize a QAOA circuit for MaxCut on the given graph using squin"""
     n = len(graph.nodes)
-    qbs = cirq.LineQubit.range(n)
-    circuit = cirq.Circuit()
     assert len(gamma) == len(beta), "Length of gamma and beta must be equal"
-    
+
     # A smarter implementation would use the Misra–Gries algorithm,
     # which gives a guaranteed Delta+1 coloring, consistent with
     # Vizing's theorem for edge coloring.
@@ -635,70 +511,94 @@ def build_qaoa_circuit_parallelized(graph: nx.Graph, gamma: list[float], beta:li
             best_coloring = coloring
     coloring:dict = best_coloring
     colors = [[edge for edge, color in coloring.items() if color == c] for c in set(coloring.values())]
-    
+
     print(len(colors))
-    # We will explicitly decompose CZPhase into CZ and single-qubit
-    # rotations. This can be done with the following identity:
-    # --o---    ----o--------o----
-    #   |      =    |        |
-    # -Z(t)-    -H--Z--X(t)--Z--H-
-    
+    # For QAOA MaxCut, we need exp(i*gamma/2*Z⊗Z) per edge.
+    # We decompose this using CZ and single-qubit rotations:
+    #
+    # exp(-i*gamma/2*Z⊗Z)  =  -------o----------o-------
+    #                                 |          |
+    #                         -----H--o--Rx(g)--o--H----
+    #
+    # where Rx(gamma) = X^(gamma/pi) in Cirq notation.
+
     # To cancel repeated Hadamards, we can select which qubit
     # of each gate pair to apply the Hadamards on. The minimum
     # number of Hadamards is equal to the size of the minimum vertex cover
     # of the graph. Finding the minimum vertex cover is NP-hard,
     # but we can use a greedy MIS heuristic instead.
+    # The complement of the MIS is a minimum vertex cover.
     mis = nx.algorithms.approximation.maximum_independent_set(graph)
     hadamard_qubits = set(graph.nodes) - set(mis)
-    
-    
-    # Now, build the circuit using the insight from coloring and cover.
-    moment = []
-    for i in range(n):
-        moment.append(cirq.H(qbs[i]))
-    circuit.append(cirq.Moment(moment))
-    for layer in range(len(gamma)):
-        for color_group in colors:
-            # Explicitly decompose CZPhase into CZ and single-qubit layers,
-            # and be explicit with moments to maximize parallelism.
-            # --
-            moment = []
-            for u,v in color_group:
-                if u in hadamard_qubits:
-                    moment.append(cirq.H(qbs[u]))
-                else:
-                    moment.append(cirq.H(qbs[v]))
-            circuit.append(cirq.Moment(moment))
-            # --
-            moment = []
-            for u, v in color_group:
-                moment.append(cirq.CZ(qbs[u], qbs[v]))
-            circuit.append(cirq.Moment(moment))
-            moment = []
-            for u,v in color_group:
-                if u in hadamard_qubits:
-                    moment.append(cirq.X(qbs[u])**(gamma[layer]/np.pi))
-                else:
-                    moment.append(cirq.X(qbs[v])**(gamma[layer]/np.pi))
-            circuit.append(cirq.Moment(moment))
-            # --
-            moment = []
-            for u, v in color_group:
-                moment.append(cirq.CZ(qbs[u], qbs[v]))
-            circuit.append(cirq.Moment(moment))
-            # --
-            moment = []
-            for u,v in color_group:
-                if u in hadamard_qubits:
-                    moment.append(cirq.H(qbs[u]))
-                else:
-                    moment.append(cirq.H(qbs[v]))
-            circuit.append(cirq.Moment(moment))
-        moment = []
+
+    # Prepare data structures for squin kernel
+    # Flatten color groups and create parallel lists for indices
+    all_edges = []
+    h_qubits = []
+    for color_group in colors:
+        for edge in color_group:
+            all_edges.append(edge)
+            u, v = edge
+            if u in hadamard_qubits:
+                h_qubits.append(u)
+            else:
+                h_qubits.append(v)
+
+    # Build the circuit using squin
+    @squin.kernel
+    def qaoa_parallel_kernel():
+        q = squin.qalloc(n)
+
+        # Initial Hadamard layer
         for i in range(n):
-            moment.append(cirq.rx(2 * beta[layer])(qbs[i]))
-        circuit.append(cirq.Moment(moment))
-    
+            squin.h(q[i])
+
+        # QAOA layers
+        for layer in range(len(gamma)):
+            # Cost Hamiltonian: process edges in order
+            edge_start = 0
+            for color_group in colors:
+                group_size = len(color_group)
+
+                # First Hadamard layer
+                for i in range(group_size):
+                    h_qubit = h_qubits[edge_start + i]
+                    squin.h(q[h_qubit])
+
+                # First CZ layer
+                for i in range(group_size):
+                    edge = color_group[i]
+                    u = edge[0]
+                    v = edge[1]
+                    squin.cz(q[u], q[v])
+
+                # Rotation layer (Rx)
+                for i in range(group_size):
+                    h_qubit = h_qubits[edge_start + i]
+                    squin.rx(gamma[layer], q[h_qubit])
+
+                # Second CZ layer
+                for i in range(group_size):
+                    edge = color_group[i]
+                    u = edge[0]
+                    v = edge[1]
+                    squin.cz(q[u], q[v])
+
+                # Second Hadamard layer
+                for i in range(group_size):
+                    h_qubit = h_qubits[edge_start + i]
+                    squin.h(q[h_qubit])
+
+                edge_start = edge_start + group_size
+
+            # Mixer Hamiltonian: Rx rotation on all qubits
+            for i in range(n):
+                squin.rx(2 * beta[layer], q[i])
+
+    # Create LineQubits and emit circuit
+    qubits = cirq.LineQubit.range(n)
+    circuit = cirq_utils.emit_circuit(qaoa_parallel_kernel, circuit_qubits=qubits)
+
     # This circuit will have some redundant doubly-repeated Hadamards that can be removed.
     # Lets do that now by merging single qubit gates to phased XZ gates, which is the native
     # single-qubit gate on neutral atoms.
@@ -731,10 +631,122 @@ print("Parallel QAOA circuit depth: ", len(qaoa_parallel))
 #%%
 
 
+def visualize_graph_with_edge_coloring(graph: nx.Graph, colors: list, title: str, hadamard_qubits: set, pos: dict):
+    """Visualize graph with colored edges and arrows indicating control → target direction."""
+    from matplotlib.patches import FancyArrowPatch
+
+    plt.figure(figsize=(10, 10))
+
+    # Draw all nodes with same color
+    nx.draw_networkx_nodes(graph, pos, node_color='lightblue', node_size=700)
+    nx.draw_networkx_labels(graph, pos, font_size=14, font_weight='bold')
+
+    # Define color palette for edge groups
+    edge_colors = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan']
+
+    # Draw edges with colors and arrows
+    for color_idx, color_group in enumerate(colors):
+        edge_color = edge_colors[color_idx % len(edge_colors)]
+        for edge in color_group:
+            u, v = edge
+            x1, y1 = pos[u]
+            x2, y2 = pos[v]
+
+            # Draw line
+            plt.plot([x1, x2], [y1, y2], color=edge_color, linewidth=3, zorder=1)
+
+            # Add arrow in the middle pointing from u (control) to v (target with H)
+            mid_x = (x1 + x2) / 2
+            mid_y = (y1 + y2) / 2
+            dx = x2 - x1
+            dy = y2 - y1
+
+            plt.arrow(mid_x - dx*0.05, mid_y - dy*0.05,
+                     dx*0.1, dy*0.1,
+                     head_width=0.04, head_length=0.03,
+                     fc=edge_color, ec=edge_color,
+                     linewidth=2, zorder=2)
+
+    # Create legend
+    legend_elements = [plt.Line2D([0], [0], color=edge_colors[i % len(edge_colors)],
+                                 lw=4, label=f'{i}\'s Moment ({len(colors[i])} edges)')
+                      for i in range(len(colors))]
+    legend_elements.append(
+        FancyArrowPatch((0, 0), (0.1, 0), arrowstyle='->', mutation_scale=20,
+                       linewidth=2, color='black', label='Arrow: control → target')
+    )
+    plt.legend(handles=legend_elements, loc='upper left', fontsize=14, frameon=True, shadow=True)
+
+    plt.title(title, fontsize=16)
+    plt.axis('off')
+    plt.tight_layout()
+    plt.show()
+
+    return pos
+
+
+# Create test graph
 graph = nx.random_regular_graph(d=3, n=10, seed=42)
+
+# Build all three circuits
 qaoa_naive = build_qaoa_circuit(graph, gamma=[np.pi/2], beta=[np.pi/4])
 qaoa_parallel = build_qaoa_circuit_parallelized(graph, gamma=[np.pi/2], beta=[np.pi/4])
 qaoa_autoparallel = utils.parallelize(qaoa_naive)
+
+# Use consistent positions for all visualizations
+pos = nx.spring_layout(graph, seed=42)
+
+# Get edge coloring for hand-tuned parallelized circuit
+linegraph = nx.line_graph(graph)
+best = 1e99
+best_coloring = None
+for strategy in ["largest_first", "random_sequential", "smallest_last", "independent_set",
+                 "connected_sequential_bfs", "connected_sequential_dfs", "saturation_largest_first"]:
+    coloring = nx.coloring.greedy_color(linegraph, strategy=strategy)
+    num_colors = len(set(coloring.values()))
+    if num_colors < best:
+        best = num_colors
+        best_coloring = coloring
+colors_parallel = [[edge for edge, color in best_coloring.items() if color == c] for c in set(best_coloring.values())]
+
+# Extract edge coloring from auto-parallelized circuit
+colors_autoparallel = []
+for moment in qaoa_autoparallel:
+    cz_edges = []
+    for op in moment:
+        if isinstance(op.gate, cirq.CZPowGate) or isinstance(op.gate, type(cirq.CZ)):
+            qubits = op.qubits
+            u = qubits[0].x
+            v = qubits[1].x
+            if graph.has_edge(u, v) or graph.has_edge(v, u):
+                if graph.has_edge(u, v):
+                    cz_edges.append((u, v))
+                else:
+                    cz_edges.append((v, u))
+    if cz_edges:
+        colors_autoparallel.append(cz_edges)
+
+# Calculate Hadamard qubits (minimum vertex cover = complement of MIS)
+mis = nx.algorithms.approximation.maximum_independent_set(graph)
+hadamard_qubits = set(graph.nodes) - set(mis)
+
+# Visualize hand-tuned parallelized circuit
+print(f"Hand-tuned parallelized circuit: {len(colors_parallel)} color groups")
+visualize_graph_with_edge_coloring(
+    graph, colors_parallel,
+    f"Hand-Tuned Parallelized QAOA\n{len(colors_parallel)} color groups for parallel execution",
+    hadamard_qubits=hadamard_qubits,
+    pos=pos
+);
+
+# Visualize auto-parallelized circuit
+print(f"Auto-parallelized circuit: {len(colors_autoparallel)} color groups")
+visualize_graph_with_edge_coloring(
+    graph, colors_autoparallel,
+    f"Auto-Parallelized QAOA\n{len(colors_autoparallel)} color groups for parallel execution",
+    hadamard_qubits=hadamard_qubits,
+    pos=pos
+);
 #%%
 SVGCircuit(qaoa_naive)
 #%%
@@ -746,20 +758,26 @@ qaoa_naive_noisy = utils.noise.transform_circuit(
     qaoa_naive, model=noise_model
 )
 qaoa_parallel_noisy = utils.noise.transform_circuit(qaoa_parallel, model=noise_model)
+qaoa_autoparallel_noisy = utils.noise.transform_circuit(qaoa_autoparallel, model=noise_model)
 
 # Simulate noiseless circuits
 rho_naive = simulator.simulate(qaoa_naive).final_density_matrix
 rho_parallel = simulator.simulate(qaoa_parallel).final_density_matrix
+rho_autoparallel = simulator.simulate(qaoa_autoparallel).final_density_matrix
 
 # Simulate noisy circuits
 rho_naive_noisy = simulator.simulate(qaoa_naive_noisy).final_density_matrix
 rho_parallel_noisy = simulator.simulate(qaoa_parallel_noisy).final_density_matrix
+rho_autoparallel_noisy = simulator.simulate(qaoa_autoparallel_noisy).final_density_matrix
 
 # Calculate fidelities
 fidelity_naive = np.trace(rho_naive @ rho_naive_noisy).real
 fidelity_parallel = np.trace(rho_parallel @ rho_parallel_noisy).real
+fidelity_autoparallel = np.trace(rho_autoparallel @ rho_autoparallel_noisy).real
 print(f"Naive QAOA circuit fidelity: {fidelity_naive:.4f}"
       )
 print(f"Parallel QAOA circuit fidelity: {fidelity_parallel:.4f}"
+      )
+print(f"Auto-Parallel QAOA circuit fidelity: {fidelity_autoparallel:.4f}"
       )
 # %%
