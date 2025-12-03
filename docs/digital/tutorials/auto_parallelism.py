@@ -96,8 +96,12 @@ def build_log_ghz(n_qubits: int) -> cirq.Circuit:
     return circuit
 
 linear_ghz = build_linear_ghz(8)
-SVGCircuit(linear_ghz)
 log_ghz = build_log_ghz(8)
+
+# %%
+SVGCircuit(linear_ghz)
+
+# %%
 SVGCircuit(log_ghz)
 
 # %% [markdown]
@@ -227,30 +231,51 @@ print(
 # %% [markdown]
 # ## Automatic toolkits for circuit parallelization
 #
-# In the GHZ example the log-depth circuit was provided manually. Bloqade also includes automatic tools that compress a deep circuit into a more parallel form by casting the problem as an optimization (integer linear program).
+# Bloqade provides automatic tools to compress circuits into more parallel forms:
 #
-# We first transpile the circuit into a standard gate set consisting of single-qubit gates and two-qubit CZ gates. CZ gates acting on disjoint qubits commute and therefore can be placed in the same moment.
+# ```python
+# import bloqade.cirq_utils as utils
 #
-# The optimization objective encourages gates that can execute in parallel to be assigned to nearby moments. Formally, we minimize an objective such as $\sum_{g}\sum_{o_p,o_q \in g} w_g \left|t_p-t_q\right|$, where each group $g$ contains operations with a shared tag. Within each group, an attraction force of strength $w_g$ is introduced. Here $t_p$ and $t_q$ are integer labels (its epoch) of operators $o_p$ and $o_q$. Each operation (gate) can have multiple tags.
+# # Parallelize a circuit
+# parallel_circuit = utils.parallelize(circuit)
 #
-# To preserve circuit equivalence, we only reorder operations that commute. Execution dependencies are represented as a directed acyclic graph (DAG); each vertex $i$ receives an integer label $t_i$ (its epoch) and ordering constraints are expressed as inequalities on these labels. These constraints and objective terms are encoded in an integer linear program (ILP).
+# # Remove internal tags (for cleaner visualization)
+# parallel_circuit = utils.remove_tags(parallel_circuit)
+# ```
 #
-# Because the ILP formulation has totally unimodular constraint structure in our encoding, the relaxed linear program yields integer solutions, which makes the optimization efficient in practice. Absolute-value terms are reformulated into equivalent linear forms during construction.
-#
-# The helper `bloqade.utils.auto_similarity` tags operations and assigns weights to build the linear objective. Users can also add manual annotations (tags/weights) to guide the parallelizer when they need fine-grained control.
-#
+# The algorithm builds a DAG of gate dependencies (only commuting gates can be reordered), then solves an integer linear program (ILP) to assign gates to moments while minimizing circuit depth. Similar gates are attracted to the same moment via weighted objectives.
 #
 
 # %% [markdown]
 # ## Example 2: [7,1,3] Steane code circuit
 
 # %% [markdown]
-# We construct a sequential circuit for the [7,1,3] Steane code and then apply Bloqade's parallelization utilities (which use `auto_similarity`) to compress it.
+# We construct several versions of the [7,1,3] Steane code encoder circuit:
+#
+# | Version | Description | Parallelization |
+# |---------|-------------|-----------------|
+# | seq | Sequential circuit using CZ gates (native to neutral atoms) | Manual |
+# | seq-auto | Auto-parallelized sequential circuit | Auto |
+# | 11-CNOT | Textbook encoder using 11 CNOT gates | Manual |
+# | 11-CNOT-auto | Auto-parallelized 11-CNOT circuit | Auto |
+# | 9-CZ | Optimized encoder using only 9 CZ gates with √Y gates | Manual |
+# | 9-CZ-auto | Auto-parallelized 9-CZ circuit | Auto |
+#
+# <div style="display: flex; justify-content: space-around; align-items: center;">
+#   <div style="text-align: center;">
+#     <img src="figures/steane_11cnot.svg" alt="11 CNOT Steane code" height="300"/>
+#     <p><b>11-CNOT: Textbook encoder</b></p>
+#   </div>
+#   <div style="text-align: center;">
+#     <img src="figures/steane_9cz.svg" alt="9 CZ Steane code" height="300"/>
+#     <p><b>9-CZ: Optimized encoder</b></p>
+#   </div>
+# </div>
 
 
-# %% [code]
+# %%
 def build_steane_code_circuit():
-    """Build the Steane code circuit for error correction using squin and convert to Cirq."""
+    """Build the Steane code circuit (version a) using CZ gates - native to neutral atoms."""
 
     @squin.kernel
     def steane_kernel():
@@ -288,86 +313,220 @@ def build_steane_code_circuit():
     return circuit
 
 
+def build_steane_11cnot():
+    """Build the Steane code encoder (version b) with 11 CNOT gates - textbook version.
+
+    This is the standard Steane code encoder circuit where:
+    - Qubit 6 is the data qubit |ψ⟩ to be encoded
+    - Qubits 0-5 are ancillas initialized to |0⟩
+    - H gates prepare superposition on control qubits
+    - 11 CNOT gates create the encoded state
+    """
+
+    @squin.kernel
+    def steane_11cnot_kernel():
+        q = squin.qalloc(7)
+
+        # H gates on qubits 1, 2, 3 (ancilla preparation)
+        squin.h(q[1])
+        squin.h(q[2])
+        squin.h(q[3])
+
+        # 11 CNOT gates following textbook Steane code structure
+        # First layer of CNOTs
+        squin.cx(q[6], q[5])
+        squin.cx(q[1], q[0])
+        squin.cx(q[2], q[4])
+        squin.cx(q[2], q[0])
+        squin.cx(q[3], q[5])
+        squin.cx(q[1], q[5])
+        squin.cx(q[6], q[4])
+        squin.cx(q[2], q[6])
+        squin.cx(q[3], q[4])
+        squin.cx(q[3], q[0])
+        squin.cx(q[1], q[6])
+
+    qubits = cirq.LineQubit.range(7)
+    circuit = cirq_utils.emit_circuit(steane_11cnot_kernel, circuit_qubits=qubits)
+    return circuit
+
+
+def build_steane_9cnot():
+    """Build the optimized Steane code encoder (version c) with only 9 CNOT gates.
+
+    This optimized version uses √Y and √Y† gates instead of some Hadamards,
+    reducing the CNOT count from 11 to 9 while maintaining circuit equivalence.
+
+    The optimization exploits the structure of the Steane code to eliminate
+    redundant entangling operations.
+    """
+
+    @squin.kernel
+    def steane_9cnot_kernel():
+        q = squin.qalloc(7)
+
+        # Initial √Y† layer on ancilla qubits (replaces H gates)
+        # √Y† = Ry(-π/2)
+        squin.ry(-np.pi / 2, q[0])
+        squin.ry(-np.pi / 2, q[1])
+        squin.ry(-np.pi / 2, q[2])
+        squin.ry(-np.pi / 2, q[3])
+        squin.ry(-np.pi / 2, q[4])
+        squin.ry(-np.pi / 2, q[5])
+
+        # First CZ layer (parallel)
+        squin.cz(q[1], q[2])
+        squin.cz(q[3], q[4])
+        squin.cz(q[5], q[6])
+
+        # √Y layer
+        squin.ry(np.pi / 2, q[6])
+
+        # Second CZ layer (parallel)
+        squin.cz(q[0], q[3])
+        squin.cz(q[2], q[5])
+        squin.cz(q[4], q[6])
+
+        # √Y layer from 2 to 6
+        squin.ry(np.pi / 2, q[2])
+        squin.ry(np.pi / 2, q[3])
+        squin.ry(np.pi / 2, q[4])
+        squin.ry(np.pi / 2, q[5])
+        squin.ry(np.pi / 2, q[6])
+
+        # Third CZ layer (parallel)
+        squin.cz(q[0], q[1])
+        squin.cz(q[2], q[3])
+        squin.cz(q[4], q[5])
+
+        # Final √Y layer
+        squin.ry(np.pi / 2, q[1])
+        squin.ry(np.pi / 2, q[2])
+        squin.ry(np.pi / 2, q[4])
+
+    qubits = cirq.LineQubit.range(7)
+    circuit = cirq_utils.emit_circuit(steane_9cnot_kernel, circuit_qubits=qubits)
+    return circuit
+
+
 # %%
-# Build Steane circuits (reuse already defined noise models and simulator)
-steane_original = build_steane_code_circuit()
-steane_parallel = utils.parallelize(circuit=steane_original)
-steane_parallel = utils.remove_tags(steane_parallel)
+# Build all Steane circuit versions (reuse already defined noise models and simulator)
+steane_seq = build_steane_code_circuit()  # Sequential CZ-based
+steane_seq_auto = utils.parallelize(circuit=steane_seq)  # Auto-parallelized
+steane_seq_auto = utils.remove_tags(steane_seq_auto)
 
-# Display original circuit - renders nicely in Jupyter, shows text in terminal
-print("Original Steane Circuit:")
-try:
-    get_ipython()  # Check if we're in IPython/Jupyter
-    # In Jupyter: display as SVG (prettier visualization)
-    from IPython.display import display
+steane_11cnot = build_steane_11cnot()  # 11 CNOT textbook
+steane_11cnot_auto = utils.parallelize(circuit=steane_11cnot)  # Auto-parallelized
+steane_11cnot_auto = utils.remove_tags(steane_11cnot_auto)
 
-    display(SVGCircuit(steane_original))
-except NameError:
-    # Not in Jupyter: print text representation
-    print(steane_original)
+steane_9cz = build_steane_9cnot()  # 9 CZ optimized
+steane_9cz_auto = utils.parallelize(circuit=steane_9cz)  # Auto-parallelized
+steane_9cz_auto = utils.remove_tags(steane_9cz_auto)
 
-print("\nParallelized Steane Circuit:")
-try:
-    get_ipython()
-    from IPython.display import display
+# %% [markdown]
+# ### seq: Sequential CZ-based Steane Circuit
 
-    display(SVGCircuit(steane_parallel))
-except NameError:
-    print(steane_parallel)
-print("Original Steane circuit depth:", len(steane_original))
-print("Parallelized Steane circuit depth:", len(steane_parallel))
+# %%
+SVGCircuit(steane_seq)
+
+# %% [markdown]
+# ### seq-auto: Auto-Parallelized Sequential Circuit
+
+# %%
+SVGCircuit(steane_seq_auto)
+
+# %% [markdown]
+# ### 11-CNOT: Textbook Steane Encoder
+
+# %%
+SVGCircuit(steane_11cnot)
+
+# %% [markdown]
+# ### 11-CNOT-auto: Auto-Parallelized 11-CNOT Circuit
+
+# %%
+SVGCircuit(steane_11cnot_auto)
+
+# %% [markdown]
+# ### 9-CZ: Optimized Steane Encoder
+
+# %%
+SVGCircuit(steane_9cz)
+
+# %% [markdown]
+# ### 9-CZ-auto: Auto-Parallelized 9-CZ Circuit
+
+# %%
+SVGCircuit(steane_9cz_auto)
+
+# %% [markdown]
+# ### Circuit Depths
+
+# %%
+print(f"seq:          {len(steane_seq)} moments")
+print(f"seq-auto:     {len(steane_seq_auto)} moments")
+print(f"11-CNOT:      {len(steane_11cnot)} moments")
+print(f"11-CNOT-auto: {len(steane_11cnot_auto)} moments")
+print(f"9-CZ:         {len(steane_9cz)} moments")
+print(f"9-CZ-auto:    {len(steane_9cz_auto)} moments")
 
 
 # %% [markdown]
-# We perform noise analysis on both the original and parallelized Steane circuits.
+# ### Noise Analysis
 
 # %%
-# Apply noise model to both circuits
-steane_original_noisy = utils.noise.transform_circuit(
-    steane_original, model=noise_model
-)
-steane_parallel_noisy = utils.noise.transform_circuit(
-    steane_parallel, model=noise_model
-)
+# Compute fidelities for all circuit versions
+steane_circuits = {
+    "seq": steane_seq,
+    "seq-auto": steane_seq_auto,
+    "11-CNOT": steane_11cnot,
+    "11-CNOT-auto": steane_11cnot_auto,
+    "9-CZ": steane_9cz,
+    "9-CZ-auto": steane_9cz_auto,
+}
 
-# Simulate ideal circuits
-rho_original_ideal = simulator.simulate(steane_original).final_density_matrix
-rho_parallel_ideal = simulator.simulate(steane_parallel).final_density_matrix
+steane_fidelities = {}
+for name, circuit in steane_circuits.items():
+    noisy = utils.noise.transform_circuit(circuit, model=noise_model)
+    rho_ideal = simulator.simulate(circuit).final_density_matrix
+    rho_noisy = simulator.simulate(noisy).final_density_matrix
+    steane_fidelities[name] = np.trace(rho_ideal @ rho_noisy).real
 
-# Simulate noisy circuits
-rho_original_noisy = simulator.simulate(steane_original_noisy).final_density_matrix
-rho_parallel_noisy = simulator.simulate(steane_parallel_noisy).final_density_matrix
+# Print summary
+print(f"{'Version':<15} {'Depth':<10} {'Fidelity':<10}")
+print("-" * 35)
+for name, circuit in steane_circuits.items():
+    print(f"{name:<15} {len(circuit):<10} {steane_fidelities[name]:.4f}")
 
-# Calculate fidelities
-fidelity_original = np.trace(rho_original_ideal @ rho_original_noisy).real
-fidelity_parallel = np.trace(rho_parallel_ideal @ rho_parallel_noisy).real
+best_version = max(steane_fidelities, key=steane_fidelities.get)
+print(f"\nBest: {best_version} ({steane_fidelities[best_version]:.4f})")
 
-# Print results
-print("\n=== Steane Code Circuit Fidelity Comparison ===")
-print(f"Original circuit: {fidelity_original:.4f}")
-print(f"Parallelized circuit: {fidelity_parallel:.4f}")
+# %% [markdown]
+# Fidelity comparison plot for all Steane code versions:
 
-# Calculate improvement
-improvement = fidelity_parallel - fidelity_original
+# %%
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
-print(f"\nFidelity improvement with parallelization: {improvement:+.4f}")
+labels = ["seq", "seq\nauto", "11-CNOT", "11-CNOT\nauto", "9-CZ", "9-CZ\nauto"]
+fidelity_vals = list(steane_fidelities.values())
+depth_vals = [len(c) for c in steane_circuits.values()]
+colors = ["#c0392b", "#e74c3c", "#d68910", "#f4d03f", "#1e8449", "#58d68d"]
 
-
-# Summary analysis
-depth_reduction = len(steane_original) - len(steane_parallel)
-depth_reduction_pct = (
-    (depth_reduction / len(steane_original) * 100) if len(steane_original) > 0 else 0
-)
-
-print("\n=== Analysis Summary ===")
-print(
-    f"Circuit depth reduction: {len(steane_original)} → {len(steane_parallel)} moments"
-)
-print(f"Depth reduction: {depth_reduction} moments ({depth_reduction_pct:.1f}%)")
-if improvement > 0:
-    print("✓ Parallelization improves fidelity")
-else:
-    print("✗ Parallelization does not improve fidelity")
+for ax, vals, ylabel, title in [
+    (ax1, fidelity_vals, "Fidelity", "Steane Code: Fidelity"),
+    (ax2, depth_vals, "Circuit Depth", "Steane Code: Depth"),
+]:
+    bars = ax.bar(labels, vals, color=colors, edgecolor="black")
+    ax.set_ylabel(ylabel, fontsize=12)
+    ax.set_title(title, fontsize=14)
+    ax.grid(axis="y", alpha=0.3)
+    for bar, v in zip(bars, vals):
+        fmt = f"{v:.3f}" if isinstance(v, float) else str(v)
+        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.01,
+                fmt, ha="center", fontsize=9, fontweight="bold")
+ax1.set_ylim(0, 1)
+plt.tight_layout()
+plt.show()
 
 
 # %% [markdown]
@@ -395,55 +554,38 @@ def build_circuit3():
 
 # Build the linear CZ circuit
 circuit3 = build_circuit3()
-
-# Display original circuit - renders nicely in Jupyter, shows text in terminal
-print("Original CZ chain circuit:")
-try:
-    get_ipython()  # Check if we're in IPython/Jupyter
-    # In Jupyter: display as SVG (prettier visualization)
-    from IPython.display import display
-
-    display(SVGCircuit(circuit3))
-except NameError:
-    # Not in Jupyter: print text representation
-    print(circuit3)
-
-# Parallelize the circuit, `auto_similarity` is automatically applied inside `parallelize`
 circuit3_parallel = utils.parallelize(circuit=circuit3)
-
-# Remove any tags and print the parallelized circuit
 circuit3_parallel = utils.remove_tags(circuit3_parallel)
-print("Parallelized CZ chain circuit:")
-try:
-    get_ipython()
-    from IPython.display import display
 
-    display(SVGCircuit(circuit3_parallel))
-except NameError:
-    print(circuit3_parallel)
+print(f"Original CZ chain circuit depth:     {len(circuit3)}")
+print(f"Parallelized CZ chain circuit depth: {len(circuit3_parallel)}")
 
-print("Original CZ chain circuit depth:", len(circuit3))
-print("Parallelized CZ chain circuit depth:", len(circuit3_parallel))
+# %% [markdown]
+# ### Original CZ chain circuit
 
-#%% [markdown]
-# ### QAOA / graph state preparation
+# %%
+SVGCircuit(circuit3)
+
+# %% [markdown]
+# ### Parallelized CZ chain circuit
+
+# %%
+SVGCircuit(circuit3_parallel)
+
+# %% [markdown]
+# ## Example 4: QAOA / graph state preparation
 #
-# As a final example, lets consider a more real-world example of a circuit for a graph-based algorithm:
-# QAOA on MaxCut. The circuit is a variational ansatz that alternates between some entangling
-# phasor gates that encodes the objective, and a single qubit mixer layer. A common choice of combinatorial
-# problem is MaxCut, where the goal is to partition the nodes of a graph into two sets such that
-# the number of edges between the sets is maximized. In this case, there is a qubit for each vertex,
-# and the phasor consists of CZPhase gates for each edge in the graph. The ansatz is repeated p times,
-# and in the p-> infty limit recovers the exact state.
+# As a final example, let's consider a circuit for a graph-based algorithm:
+# QAOA on MaxCut. The circuit is a variational ansatz that alternates between entangling
+# phasor gates (encoding the objective) and a single-qubit mixer layer.
 #
-# These sorts of graph-based circuits are inherently parallel, and serve as a good example for this tutorial.
-# In particular, the CZPhase gates commute, and so an optimal parallelization can be found via an (approximate)
-# edge coloring of the graph, where each color corresponds to a moment of the circuit.
-# Additionally, a naive decomposition of CZPhase gates into CZ and single qubit rotations can lead to a lot of
-# redundant single and multi-qubit gates that can be eliminated to improve fidelity.
+# For MaxCut, there is a qubit for each vertex, and the phasor consists of CZPhase gates
+# for each edge. The ansatz is repeated $p$ times, and in the $p \to \infty$ limit recovers the exact state.
+#
+# These graph-based circuits are inherently parallel: CZPhase gates commute, so optimal parallelization
+# can be found via edge coloring of the graph, where each color corresponds to a circuit moment.
 
-
-#%%
+# %%
 import networkx as nx
 
 
@@ -495,7 +637,7 @@ def build_qaoa_circuit_parallelized(graph: nx.Graph, gamma: list[float], beta:li
     assert len(gamma) == len(beta), "Length of gamma and beta must be equal"
 
     # A smarter implementation would use the Misra–Gries algorithm,
-    # which gives a guaranteed Delta+1 coloring, consistent with
+    # which gives a guaranteed Δ+1 coloring, consistent with
     # Vizing's theorem for edge coloring.
     # However, networkx does not have an implementation of this algorithm,
     # so we use greedy coloring as an approximation. This does not guarantee
@@ -512,7 +654,6 @@ def build_qaoa_circuit_parallelized(graph: nx.Graph, gamma: list[float], beta:li
     coloring:dict = best_coloring
     colors = [[edge for edge, color in coloring.items() if color == c] for c in set(coloring.values())]
 
-    print(len(colors))
     # For QAOA MaxCut, we need exp(i*gamma/2*Z⊗Z) per edge.
     # We decompose this using CZ and single-qubit rotations:
     #
@@ -608,176 +749,147 @@ def build_qaoa_circuit_parallelized(graph: nx.Graph, gamma: list[float], beta:li
 
     return circuit3
 
-#%% [markdown]
-# Now we can compare the depth of the naive version that is not hardware aware,
-# to the hand-tuned parallelized version.
-#
-# There is a third intermediate option between a fully naive and fully hand-tuned
-# circuit, by using autoparallelism. This uses an integer linear program solver
-# to minimize the average depth of the circuit by re-ordering commuting gates.
-# For more details, see [this page]().
-#%%
-graph = nx.random_regular_graph(d=3, n=40, seed=42)
+# %% [markdown]
+# We compare three approaches:
+# - **Naive**: Sequential circuit without optimization
+# - **Auto-parallel**: Using `utils.parallelize()` for automatic optimization
+# - **Hand-tuned**: Manual parallelization via edge coloring
+
+# %%
+# Build circuits on a small graph for visualization and fidelity comparison
+graph = nx.random_regular_graph(d=3, n=10, seed=42)
+
 qaoa_naive = build_qaoa_circuit(graph, gamma=[np.pi/2], beta=[np.pi/4])
-qaoa_autoparallel = utils.parallelize(qaoa_naive)
 qaoa_parallel = build_qaoa_circuit_parallelized(graph, gamma=[np.pi/2], beta=[np.pi/4])
-print("Naive QAOA circuit depth:    ", len(qaoa_naive))
-print("Auto'd QAOA circuit depth:   ", len(qaoa_autoparallel))
-print("Parallel QAOA circuit depth: ", len(qaoa_parallel))
-#%% [markdown]
-# We can see that the hand-tuned parallel version has the lowest depth and thus
-# will have the best performance. The autoparallelized version is slightly better than the naive.
-# Lets check out what the circuits look like, and simulate them on smaller graphs to compare fidelities.
-#%%
+qaoa_autoparallel = utils.parallelize(qaoa_naive)
 
+print(f"Naive circuit depth:       {len(qaoa_naive)}")
+print(f"Auto-parallel depth:       {len(qaoa_autoparallel)}")
+print(f"Hand-tuned parallel depth: {len(qaoa_parallel)}")
 
-def visualize_graph_with_edge_coloring(graph: nx.Graph, colors: list, title: str, hadamard_qubits: set, pos: dict):
-    """Visualize graph with colored edges and arrows indicating control → target direction."""
-    from matplotlib.patches import FancyArrowPatch
+# %% [markdown]
+# ### Circuit Visualization
 
-    plt.figure(figsize=(10, 10))
+# %%
+SVGCircuit(qaoa_naive)
 
-    # Draw all nodes with same color
-    nx.draw_networkx_nodes(graph, pos, node_color='lightblue', node_size=700)
-    nx.draw_networkx_labels(graph, pos, font_size=14, font_weight='bold')
+# %%
+SVGCircuit(qaoa_parallel)
 
-    # Define color palette for edge groups
-    edge_colors = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan']
+# %% [markdown]
+# ### Edge Coloring Visualization
+#
+# The parallelization can be visualized as an edge coloring of the graph,
+# where edges of the same color can be executed in the same moment.
 
-    # Draw edges with colors and arrows
+# %%
+def visualize_graph_with_edge_coloring(graph: nx.Graph, colors: list, title: str, pos: dict, hadamard_qubits: set):
+    """Visualize graph with colored edges and arrows indicating control -> target direction.
+
+    Arrow points from control to target, where target is the qubit receiving the Hadamard gate.
+    Following the convention in build_qaoa_circuit_parallelized:
+    - If u in hadamard_qubits: target=u, control=v
+    - Else: target=v, control=u
+    """
+    plt.figure(figsize=(8, 8))
+    nx.draw_networkx_nodes(graph, pos, node_color='lightblue', node_size=500)
+    nx.draw_networkx_labels(graph, pos, font_size=12, font_weight='bold')
+
+    edge_colors = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'gray']
     for color_idx, color_group in enumerate(colors):
         edge_color = edge_colors[color_idx % len(edge_colors)]
         for edge in color_group:
             u, v = edge
-            x1, y1 = pos[u]
-            x2, y2 = pos[v]
+            # Match the convention in build_qaoa_circuit_parallelized
+            if u in hadamard_qubits:
+                ctrl, tgt = v, u  # u gets H, so u is target
+            else:
+                ctrl, tgt = u, v  # v gets H, so v is target
+            x1, y1 = pos[ctrl]
+            x2, y2 = pos[tgt]
 
-            # Draw line
-            plt.plot([x1, x2], [y1, y2], color=edge_color, linewidth=3, zorder=1)
+            # Draw edge line
+            plt.plot([x1, x2], [y1, y2], color=edge_color, linewidth=2.5)
 
-            # Add arrow in the middle pointing from u (control) to v (target with H)
-            mid_x = (x1 + x2) / 2
-            mid_y = (y1 + y2) / 2
-            dx = x2 - x1
-            dy = y2 - y1
+            # Draw arrow at midpoint pointing from control to target
+            mid_x, mid_y = (x1 + x2) / 2, (y1 + y2) / 2
+            dx, dy = x2 - x1, y2 - y1
+            plt.arrow(mid_x - dx*0.08, mid_y - dy*0.08, dx*0.16, dy*0.16,
+                     head_width=0.04, head_length=0.02,
+                     fc=edge_color, ec=edge_color, linewidth=1.5)
 
-            plt.arrow(mid_x - dx*0.05, mid_y - dy*0.05,
-                     dx*0.1, dy*0.1,
-                     head_width=0.04, head_length=0.03,
-                     fc=edge_color, ec=edge_color,
-                     linewidth=2, zorder=2)
-
-    # Create legend
     legend_elements = [plt.Line2D([0], [0], color=edge_colors[i % len(edge_colors)],
-                                 lw=4, label=f'{i}\'s Moment ({len(colors[i])} edges)')
+                                 lw=4, label=f'Moment {i} ({len(colors[i])} edges)')
                       for i in range(len(colors))]
-    legend_elements.append(
-        FancyArrowPatch((0, 0), (0.1, 0), arrowstyle='->', mutation_scale=20,
-                       linewidth=2, color='black', label='Arrow: control → target')
-    )
-    plt.legend(handles=legend_elements, loc='upper left', fontsize=14, frameon=True, shadow=True)
-
-    plt.title(title, fontsize=16)
+    # Add arrow explanation to legend
+    legend_elements.append(plt.Line2D([0], [0], color='black', lw=0,
+                                      marker='>', markersize=10,
+                                      label='Arrow: ctrl → tgt (H gate)'))
+    plt.legend(handles=legend_elements, loc='upper left', fontsize=10)
+    plt.title(title, fontsize=14)
     plt.axis('off')
     plt.tight_layout()
     plt.show()
 
-    return pos
-
-
-# Create test graph
-graph = nx.random_regular_graph(d=3, n=10, seed=42)
-
-# Build all three circuits
-qaoa_naive = build_qaoa_circuit(graph, gamma=[np.pi/2], beta=[np.pi/4])
-qaoa_parallel = build_qaoa_circuit_parallelized(graph, gamma=[np.pi/2], beta=[np.pi/4])
-qaoa_autoparallel = utils.parallelize(qaoa_naive)
-
-# Use consistent positions for all visualizations
+# %%
+# Get edge coloring for hand-tuned circuit
 pos = nx.spring_layout(graph, seed=42)
-
-# Get edge coloring for hand-tuned parallelized circuit
 linegraph = nx.line_graph(graph)
-best = 1e99
-best_coloring = None
-for strategy in ["largest_first", "random_sequential", "smallest_last", "independent_set",
-                 "connected_sequential_bfs", "connected_sequential_dfs", "saturation_largest_first"]:
-    coloring = nx.coloring.greedy_color(linegraph, strategy=strategy)
-    num_colors = len(set(coloring.values()))
-    if num_colors < best:
-        best = num_colors
-        best_coloring = coloring
-colors_parallel = [[edge for edge, color in best_coloring.items() if color == c] for c in set(best_coloring.values())]
+best_coloring = min(
+    [nx.coloring.greedy_color(linegraph, strategy=s) for s in
+     ["largest_first", "smallest_last", "saturation_largest_first"]],
+    key=lambda c: len(set(c.values()))
+)
+colors_parallel = [[e for e, c in best_coloring.items() if c == i]
+                   for i in set(best_coloring.values())]
 
-# Extract edge coloring from auto-parallelized circuit
-colors_autoparallel = []
-for moment in qaoa_autoparallel:
-    cz_edges = []
-    for op in moment:
-        if isinstance(op.gate, cirq.CZPowGate) or isinstance(op.gate, type(cirq.CZ)):
-            qubits = op.qubits
-            u = qubits[0].x
-            v = qubits[1].x
-            if graph.has_edge(u, v) or graph.has_edge(v, u):
-                if graph.has_edge(u, v):
-                    cz_edges.append((u, v))
-                else:
-                    cz_edges.append((v, u))
-    if cz_edges:
-        colors_autoparallel.append(cz_edges)
-
-# Calculate Hadamard qubits (minimum vertex cover = complement of MIS)
+# Calculate Hadamard qubits (target qubits = complement of MIS)
 mis = nx.algorithms.approximation.maximum_independent_set(graph)
 hadamard_qubits = set(graph.nodes) - set(mis)
 
-# Visualize hand-tuned parallelized circuit
-print(f"Hand-tuned parallelized circuit: {len(colors_parallel)} color groups")
 visualize_graph_with_edge_coloring(
     graph, colors_parallel,
-    f"Hand-Tuned Parallelized QAOA\n{len(colors_parallel)} color groups for parallel execution",
-    hadamard_qubits=hadamard_qubits,
-    pos=pos
-);
-
-# Visualize auto-parallelized circuit
-print(f"Auto-parallelized circuit: {len(colors_autoparallel)} color groups")
-visualize_graph_with_edge_coloring(
-    graph, colors_autoparallel,
-    f"Auto-Parallelized QAOA\n{len(colors_autoparallel)} color groups for parallel execution",
-    hadamard_qubits=hadamard_qubits,
-    pos=pos
-);
-#%%
-SVGCircuit(qaoa_naive)
-#%%
-SVGCircuit(qaoa_parallel)
-# %%
-
-# Apply noise model
-qaoa_naive_noisy = utils.noise.transform_circuit(
-    qaoa_naive, model=noise_model
+    f"Hand-Tuned Parallelization: {len(colors_parallel)} moments",
+    pos=pos,
+    hadamard_qubits=hadamard_qubits
 )
-qaoa_parallel_noisy = utils.noise.transform_circuit(qaoa_parallel, model=noise_model)
-qaoa_autoparallel_noisy = utils.noise.transform_circuit(qaoa_autoparallel, model=noise_model)
 
-# Simulate noiseless circuits
-rho_naive = simulator.simulate(qaoa_naive).final_density_matrix
-rho_parallel = simulator.simulate(qaoa_parallel).final_density_matrix
-rho_autoparallel = simulator.simulate(qaoa_autoparallel).final_density_matrix
+# %% [markdown]
+# ### Fidelity Comparison
 
-# Simulate noisy circuits
-rho_naive_noisy = simulator.simulate(qaoa_naive_noisy).final_density_matrix
-rho_parallel_noisy = simulator.simulate(qaoa_parallel_noisy).final_density_matrix
-rho_autoparallel_noisy = simulator.simulate(qaoa_autoparallel_noisy).final_density_matrix
-
-# Calculate fidelities
-fidelity_naive = np.trace(rho_naive @ rho_naive_noisy).real
-fidelity_parallel = np.trace(rho_parallel @ rho_parallel_noisy).real
-fidelity_autoparallel = np.trace(rho_autoparallel @ rho_autoparallel_noisy).real
-print(f"Naive QAOA circuit fidelity: {fidelity_naive:.4f}"
-      )
-print(f"Parallel QAOA circuit fidelity: {fidelity_parallel:.4f}"
-      )
-print(f"Auto-Parallel QAOA circuit fidelity: {fidelity_autoparallel:.4f}"
-      )
 # %%
+qaoa_circuits = {"Naive": qaoa_naive, "Auto-parallel": qaoa_autoparallel, "Hand-tuned": qaoa_parallel}
+qaoa_fidelities = {}
+for name, circuit in qaoa_circuits.items():
+    noisy = utils.noise.transform_circuit(circuit, model=noise_model)
+    rho_ideal = simulator.simulate(circuit).final_density_matrix
+    rho_noisy = simulator.simulate(noisy).final_density_matrix
+    qaoa_fidelities[name] = np.trace(rho_ideal @ rho_noisy).real
+
+# %%
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
+labels = list(qaoa_circuits.keys())
+fidelity_vals = list(qaoa_fidelities.values())
+depth_vals = [len(c) for c in qaoa_circuits.values()]
+colors = ["#c0392b", "#d68910", "#1e8449"]
+
+for ax, vals, ylabel, title in [
+    (ax1, fidelity_vals, "Fidelity", "QAOA: Fidelity"),
+    (ax2, depth_vals, "Circuit Depth", "QAOA: Depth"),
+]:
+    bars = ax.bar(labels, vals, color=colors, edgecolor="black")
+    ax.set_ylabel(ylabel, fontsize=12)
+    ax.set_title(title, fontsize=14)
+    ax.grid(axis="y", alpha=0.3)
+    for bar, v in zip(bars, vals):
+        fmt = f"{v:.3f}" if isinstance(v, float) else str(v)
+        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.01,
+                fmt, ha="center", fontsize=10, fontweight="bold")
+ax1.set_ylim(0, 1)
+plt.tight_layout()
+plt.show()
+# %% [markdown]
+# From the results, we can see that the manually parallelized circuit achieves the best fidelity,
+# followed closely by the auto-parallelized version. Both parallelized circuits outperform
+# the naive sequential implementation, demonstrating the effectiveness of parallelization and gate
+# optimization techniques in improving circuit performance under realistic noise models.
