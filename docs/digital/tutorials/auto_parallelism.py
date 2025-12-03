@@ -95,6 +95,7 @@ def build_log_ghz(n_qubits: int) -> cirq.Circuit:
     circuit = cirq_utils.emit_circuit(log_ghz_kernel, circuit_qubits=qubits)
     return circuit
 
+
 linear_ghz = build_linear_ghz(8)
 log_ghz = build_log_ghz(8)
 
@@ -522,8 +523,14 @@ for ax, vals, ylabel, title in [
     ax.grid(axis="y", alpha=0.3)
     for bar, v in zip(bars, vals):
         fmt = f"{v:.3f}" if isinstance(v, float) else str(v)
-        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.01,
-                fmt, ha="center", fontsize=9, fontweight="bold")
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height() + 0.01,
+            fmt,
+            ha="center",
+            fontsize=9,
+            fontweight="bold",
+        )
 ax1.set_ylim(0, 1)
 plt.tight_layout()
 plt.show()
@@ -589,7 +596,9 @@ SVGCircuit(circuit3_parallel)
 import networkx as nx
 
 
-def build_qaoa_circuit(graph: nx.Graph, gamma: list[float], beta:list[float]) -> cirq.Circuit:
+def build_qaoa_circuit(
+    graph: nx.Graph, gamma: list[float], beta: list[float]
+) -> cirq.Circuit:
     """Build a QAOA circuit for MaxCut on the given graph using squin"""
     n = len(graph.nodes)
     assert len(gamma) == len(beta), "Length of gamma and beta must be equal"
@@ -631,7 +640,9 @@ def build_qaoa_circuit(graph: nx.Graph, gamma: list[float], beta:list[float]) ->
     return circuit2
 
 
-def build_qaoa_circuit_parallelized(graph: nx.Graph, gamma: list[float], beta:list[float]) -> cirq.Circuit:
+def build_qaoa_circuit_parallelized(
+    graph: nx.Graph, gamma: list[float], beta: list[float]
+) -> cirq.Circuit:
     """Build and parallelize a QAOA circuit for MaxCut on the given graph using squin"""
     n = len(graph.nodes)
     assert len(gamma) == len(beta), "Length of gamma and beta must be equal"
@@ -644,15 +655,25 @@ def build_qaoa_circuit_parallelized(graph: nx.Graph, gamma: list[float], beta:li
     # optimal depth, but works reasonably well in practice.
     linegraph = nx.line_graph(graph)
     best = 1e99
-    for strategy in ["largest_first", "random_sequential", "smallest_last", "independent_set",
-                     "connected_sequential_bfs", "connected_sequential_dfs", "saturation_largest_first"]:
-        coloring:dict = nx.coloring.greedy_color(linegraph, strategy=strategy)
+    for strategy in [
+        "largest_first",
+        "random_sequential",
+        "smallest_last",
+        "independent_set",
+        "connected_sequential_bfs",
+        "connected_sequential_dfs",
+        "saturation_largest_first",
+    ]:
+        coloring: dict = nx.coloring.greedy_color(linegraph, strategy=strategy)
         num_colors = len(set(coloring.values()))
         if num_colors < best:
             best = num_colors
             best_coloring = coloring
-    coloring:dict = best_coloring
-    colors = [[edge for edge, color in coloring.items() if color == c] for c in set(coloring.values())]
+    coloring: dict = best_coloring
+    colors = [
+        [edge for edge, color in coloring.items() if color == c]
+        for c in set(coloring.values())
+    ]
 
     # For QAOA MaxCut, we need exp(i*gamma/2*Z⊗Z) per edge.
     # We decompose this using CZ and single-qubit rotations:
@@ -745,9 +766,12 @@ def build_qaoa_circuit_parallelized(graph: nx.Graph, gamma: list[float], beta:li
     # single-qubit gate on neutral atoms.
     circuit2 = cirq.merge_single_qubit_moments_to_phxz(circuit)
     # Do any last optimizing...
-    circuit3 = cirq.optimize_for_target_gateset(circuit2, gateset=cirq.CZTargetGateset())
+    circuit3 = cirq.optimize_for_target_gateset(
+        circuit2, gateset=cirq.CZTargetGateset()
+    )
 
     return circuit3
+
 
 # %% [markdown]
 # We compare three approaches:
@@ -759,8 +783,10 @@ def build_qaoa_circuit_parallelized(graph: nx.Graph, gamma: list[float], beta:li
 # Build circuits on a small graph for visualization and fidelity comparison
 graph = nx.random_regular_graph(d=3, n=10, seed=42)
 
-qaoa_naive = build_qaoa_circuit(graph, gamma=[np.pi/2], beta=[np.pi/4])
-qaoa_parallel = build_qaoa_circuit_parallelized(graph, gamma=[np.pi/2], beta=[np.pi/4])
+qaoa_naive = build_qaoa_circuit(graph, gamma=[np.pi / 2], beta=[np.pi / 4])
+qaoa_parallel = build_qaoa_circuit_parallelized(
+    graph, gamma=[np.pi / 2], beta=[np.pi / 4]
+)
 qaoa_autoparallel = utils.parallelize(qaoa_naive)
 
 print(f"Naive circuit depth:       {len(qaoa_naive)}")
@@ -782,8 +808,11 @@ SVGCircuit(qaoa_parallel)
 # The parallelization can be visualized as an edge coloring of the graph,
 # where edges of the same color can be executed in the same moment.
 
+
 # %%
-def visualize_graph_with_edge_coloring(graph: nx.Graph, colors: list, title: str, pos: dict, hadamard_qubits: set):
+def visualize_graph_with_edge_coloring(
+    graph: nx.Graph, colors: list, title: str, pos: dict, hadamard_qubits: set
+):
     """Visualize graph with colored edges and arrows indicating control -> target direction.
 
     Arrow points from control to target, where target is the qubit receiving the Hadamard gate.
@@ -792,10 +821,10 @@ def visualize_graph_with_edge_coloring(graph: nx.Graph, colors: list, title: str
     - Else: target=v, control=u
     """
     plt.figure(figsize=(8, 8))
-    nx.draw_networkx_nodes(graph, pos, node_color='lightblue', node_size=500)
-    nx.draw_networkx_labels(graph, pos, font_size=12, font_weight='bold')
+    nx.draw_networkx_nodes(graph, pos, node_color="lightblue", node_size=500)
+    nx.draw_networkx_labels(graph, pos, font_size=12, font_weight="bold")
 
-    edge_colors = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'gray']
+    edge_colors = ["red", "blue", "green", "orange", "purple", "brown", "pink", "gray"]
     for color_idx, color_group in enumerate(colors):
         edge_color = edge_colors[color_idx % len(edge_colors)]
         for edge in color_group:
@@ -814,51 +843,83 @@ def visualize_graph_with_edge_coloring(graph: nx.Graph, colors: list, title: str
             # Draw arrow at midpoint pointing from control to target
             mid_x, mid_y = (x1 + x2) / 2, (y1 + y2) / 2
             dx, dy = x2 - x1, y2 - y1
-            plt.arrow(mid_x - dx*0.08, mid_y - dy*0.08, dx*0.16, dy*0.16,
-                     head_width=0.04, head_length=0.02,
-                     fc=edge_color, ec=edge_color, linewidth=1.5)
+            plt.arrow(
+                mid_x - dx * 0.08,
+                mid_y - dy * 0.08,
+                dx * 0.16,
+                dy * 0.16,
+                head_width=0.04,
+                head_length=0.02,
+                fc=edge_color,
+                ec=edge_color,
+                linewidth=1.5,
+            )
 
-    legend_elements = [plt.Line2D([0], [0], color=edge_colors[i % len(edge_colors)],
-                                 lw=4, label=f'Moment {i} ({len(colors[i])} edges)')
-                      for i in range(len(colors))]
+    legend_elements = [
+        plt.Line2D(
+            [0],
+            [0],
+            color=edge_colors[i % len(edge_colors)],
+            lw=4,
+            label=f"Moment {i} ({len(colors[i])} edges)",
+        )
+        for i in range(len(colors))
+    ]
     # Add arrow explanation to legend
-    legend_elements.append(plt.Line2D([0], [0], color='black', lw=0,
-                                      marker='>', markersize=10,
-                                      label='Arrow: ctrl → tgt (H gate)'))
-    plt.legend(handles=legend_elements, loc='upper left', fontsize=10)
+    legend_elements.append(
+        plt.Line2D(
+            [0],
+            [0],
+            color="black",
+            lw=0,
+            marker=">",
+            markersize=10,
+            label="Arrow: ctrl → tgt (H gate)",
+        )
+    )
+    plt.legend(handles=legend_elements, loc="upper left", fontsize=10)
     plt.title(title, fontsize=14)
-    plt.axis('off')
+    plt.axis("off")
     plt.tight_layout()
     plt.show()
+
 
 # %%
 # Get edge coloring for hand-tuned circuit
 pos = nx.spring_layout(graph, seed=42)
 linegraph = nx.line_graph(graph)
 best_coloring = min(
-    [nx.coloring.greedy_color(linegraph, strategy=s) for s in
-     ["largest_first", "smallest_last", "saturation_largest_first"]],
-    key=lambda c: len(set(c.values()))
+    [
+        nx.coloring.greedy_color(linegraph, strategy=s)
+        for s in ["largest_first", "smallest_last", "saturation_largest_first"]
+    ],
+    key=lambda c: len(set(c.values())),
 )
-colors_parallel = [[e for e, c in best_coloring.items() if c == i]
-                   for i in set(best_coloring.values())]
+colors_parallel = [
+    [e for e, c in best_coloring.items() if c == i] for i in set(best_coloring.values())
+]
 
 # Calculate Hadamard qubits (target qubits = complement of MIS)
 mis = nx.algorithms.approximation.maximum_independent_set(graph)
 hadamard_qubits = set(graph.nodes) - set(mis)
 
 visualize_graph_with_edge_coloring(
-    graph, colors_parallel,
+    graph,
+    colors_parallel,
     f"Hand-Tuned Parallelization: {len(colors_parallel)} moments",
     pos=pos,
-    hadamard_qubits=hadamard_qubits
+    hadamard_qubits=hadamard_qubits,
 )
 
 # %% [markdown]
 # ### Fidelity Comparison
 
 # %%
-qaoa_circuits = {"Naive": qaoa_naive, "Auto-parallel": qaoa_autoparallel, "Hand-tuned": qaoa_parallel}
+qaoa_circuits = {
+    "Naive": qaoa_naive,
+    "Auto-parallel": qaoa_autoparallel,
+    "Hand-tuned": qaoa_parallel,
+}
 qaoa_fidelities = {}
 for name, circuit in qaoa_circuits.items():
     noisy = utils.noise.transform_circuit(circuit, model=noise_model)
@@ -883,8 +944,14 @@ for ax, vals, ylabel, title in [
     ax.grid(axis="y", alpha=0.3)
     for bar, v in zip(bars, vals):
         fmt = f"{v:.3f}" if isinstance(v, float) else str(v)
-        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.01,
-                fmt, ha="center", fontsize=10, fontweight="bold")
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height() + 0.01,
+            fmt,
+            ha="center",
+            fontsize=10,
+            fontweight="bold",
+        )
 ax1.set_ylim(0, 1)
 plt.tight_layout()
 plt.show()
