@@ -262,16 +262,6 @@ print(
 # | 9-CZ | Optimized encoder using only 9 CZ gates with √Y gates | Manual |
 # | 9-CZ-auto | Auto-parallelized 9-CZ circuit | Auto |
 #
-# <div style="display: flex; justify-content: space-around; align-items: center;">
-#   <div style="text-align: center;">
-#     <img src="figures/steane_11cnot.svg" alt="11 CNOT Steane code" height="300"/>
-#     <p><b>11-CNOT: Textbook encoder</b></p>
-#   </div>
-#   <div style="text-align: center;">
-#     <img src="figures/steane_9cz.svg" alt="9 CZ Steane code" height="300"/>
-#     <p><b>9-CZ: Optimized encoder</b></p>
-#   </div>
-# </div>
 
 
 # %%
