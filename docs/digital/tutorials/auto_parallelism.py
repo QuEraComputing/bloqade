@@ -31,20 +31,11 @@
 # ## Example 1: GHZ Circuit
 #
 # ### What is parallelism ?
-# We take the GHZ state preparation circuit as an example:
+# We take the GHZ state preparation as an example. It prepares the state
 #
-# <div style="display: flex; justify-content: space-around; align-items: center;">
-#   <div style="text-align: center;">
-#     <img src="figures/ghz_linear_circuit.svg" alt="Linear GHZ circuit" height="300"/>
-#     <p><b>Linear GHZ circuit</b></p>
-#   </div>
-#   <div style="text-align: center;">
-#     <img src="figures/ghz_log_circuit.svg" alt="Log-depth GHZ circuit" height="300"/>
-#     <p><b>Log-depth GHZ circuit</b></p>
-#   </div>
-# </div>
+# $\sqrt{2}|\psi\rangle = |000\cdots000\rangle + |111\cdots111\rangle$
 #
-# The GHZ state can be prepared using a sequence of Hadamard and CNOT gates. In a linear (sequential) implementation, the CNOT gates are applied one after another, resulting in a circuit depth that grows linearly with the number of qubits. In contrast, a log-depth (parallel) implementation arranges the CNOT gates so that multiple gates acting on disjoint qubits can execute simultaneously, reducing the overall depth to logarithmic in the number of qubits.
+# The GHZ state can be prepared using a sequence of Hadamard and CNOT gates. In a linear (sequential) implementation, the CNOT gates are applied one after another, resulting in a circuit depth that grows linearly with the number of qubits. In contrast, a log-depth (parallel) implementation arranges the CNOT gates so that multiple gates acting on disjoint qubits can execute simultaneously, reducing the overall depth to logarithmic in the number of qubits. This comes at the cost of requiring arbitrary connectivity, which is not native to all archetectures. However, it is perfect for reconfigurable neutral atom systems, which have a native "all to all" connectivity through mid-circuit atom shuttling.
 # %%
 import cirq
 import matplotlib.pyplot as plt
@@ -53,10 +44,18 @@ from bloqade import squin, cirq_utils
 import bloqade.cirq_utils as utils
 from cirq.contrib.svg import SVGCircuit
 
+import warnings
+warnings.filterwarnings("ignore")
 
 # %%
 def build_linear_ghz(n_qubits: int) -> cirq.Circuit:
-    """Build linear GHZ circuit using squin and convert to Cirq."""
+    """
+    Build a linear GHZ circuit using squin and convert to Cirq.
+    Inputs:
+    n_qubits: Number of qubits in the GHZ state.
+    Returns:
+    cirq.Circuit: The constructed linear GHZ circuit.
+    """
 
     @squin.kernel
     def linear_ghz_kernel():
@@ -72,10 +71,15 @@ def build_linear_ghz(n_qubits: int) -> cirq.Circuit:
 
 
 def build_log_ghz(n_qubits: int) -> cirq.Circuit:
-    """Build logarithmic-depth GHZ circuit using squin and convert to Cirq."""
-    import math
+    """
+    Build logarithmic-depth GHZ circuit using squin and convert to Cirq.
+    Inputs:
+    n_qubits: Number of qubits in the GHZ state.
+    Returns:
+    cirq.Circuit: The constructed log-depth GHZ circuit.
+    """
 
-    max_iterations = math.ceil(math.log2(n_qubits)) if n_qubits > 1 else 1
+    max_iterations = int(np.ceil(np.log2(n_qubits))) if n_qubits > 1 else 1
 
     @squin.kernel
     def log_ghz_kernel():
@@ -96,8 +100,8 @@ def build_log_ghz(n_qubits: int) -> cirq.Circuit:
     return circuit
 
 
-linear_ghz = build_linear_ghz(8)
-log_ghz = build_log_ghz(8)
+linear_ghz = build_linear_ghz(12)
+log_ghz = build_log_ghz(12)
 
 # %%
 SVGCircuit(linear_ghz)
@@ -124,17 +128,17 @@ SVGCircuit(log_ghz)
 noise_model = utils.noise.GeminiOneZoneNoiseModel()
 simulator = cirq.DensityMatrixSimulator()
 
-# Initialize lists to store fidelities
-fidelities_linear = []
-fidelities_log = []
 
 # %% [markdown]
 # We run noise-model simulations for circuit sizes from 3 to 9 qubits and compute the fidelity (the higher is better). The ideal noiseless circuit has fidelity 1 by construction.
 
 # %%
-qubits = range(3, 9)
+# Scan a range of qubit numbers and compute fidelities
+fidelities_linear = []
+fidelities_log = []
+num_qubits = list(range(2, 11))
 # Test both linear and log GHZ circuits with noise model
-for n in qubits:
+for n in num_qubits:
     # Linear GHZ circuit
     linear_circuit = build_linear_ghz(n)
 
@@ -163,11 +167,6 @@ for n in qubits:
     fidelities_linear.append(fidelity_linear)
     fidelities_log.append(fidelity_log)
 
-    print(f"n={n}:")
-    print(f"  Linear GHZ: {fidelity_linear:.4f}")
-    print(f"  Log GHZ: {fidelity_log:.4f}")
-
-
 # %% [markdown]
 # Fidelity comparison plot:
 
@@ -176,7 +175,7 @@ for n in qubits:
 plt.figure(figsize=(10, 6))
 
 plt.plot(
-    qubits,
+    num_qubits,
     fidelities_linear,
     "ro-",
     label="Linear GHZ",
@@ -184,7 +183,7 @@ plt.plot(
     markersize=8,
 )
 plt.plot(
-    qubits,
+    num_qubits,
     fidelities_log,
     "bo-",
     label="Log-depth GHZ",
@@ -200,11 +199,11 @@ plt.title(
 )
 plt.legend(fontsize=12)
 plt.grid(True, alpha=0.3)
-plt.xticks(qubits)
-
+plt.xticks(num_qubits)
+plt.axis([1.5,10.5,0.6,1.0])
 # Add annotations for better understanding
 plt.text(
-    0.02,
+    0.15,
     0.98,
     "Higher fidelity = Better performance",
     transform=plt.gca().transAxes,
@@ -227,7 +226,7 @@ print(
 
 
 # %% [markdown]
-# The GHZ results show that parallelizing gates increases fidelity compared with the sequential implementation. The log-depth circuit consistently outperforms the linear-depth circuit, with the advantage growing as we increase the number of qubits.
+# The GHZ results show that parallelizing gates increases fidelity compared with the sequential implementation. The log-depth circuit consistently outperforms the linear-depth circuit, with the advantage growing as we increase the number of qubits. Observe that there is a jump in the fidelity at every power of two, corresponding to the addition of a new level in the log-depth circuit.
 
 # %% [markdown]
 # ## Automatic toolkits for circuit parallelization
@@ -249,9 +248,9 @@ print(
 
 # %% [markdown]
 # ## Example 2: [7,1,3] Steane code circuit
+# Lets explore manual and automatic parallelism optimization on the Steane code, which is a prototypical quantum error correcting code that encodes one logical qubit into seven physical qubits, and can correct a single qubit error.
 
-# %% [markdown]
-# We construct several versions of the [7,1,3] Steane code encoder circuit:
+# We construct several versions of the [7,1,3] Steane code encoder circuit, based on three different initial circuits. The `seq` circuit is designed to be the "worst" possible version of the Steane code, with as much sequential operation as possible. The `11-CNOT` circuit is the textbook version of the Steane code, which uses 11 CNOT gates to perform the encoding. The `9-CZ` circuit is an optimized version that reduces the number of entangling gates to 9 CZ gates by using √Y and √Y† gates instead of Hadamards.
 #
 # | Version | Description | Parallelization |
 # |---------|-------------|-----------------|
@@ -266,7 +265,7 @@ print(
 
 # %%
 def build_steane_code_circuit():
-    """Build the Steane code circuit (version a) using CZ gates - native to neutral atoms."""
+    """Build the Steane code circuit (version a) using CZ gates - native to neutral atoms, but designed to be as sequential as possible."""
 
     @squin.kernel
     def steane_kernel():
@@ -304,7 +303,7 @@ def build_steane_code_circuit():
     return circuit
 
 
-def build_steane_11cnot():
+def build_steane_11cnot()-> cirq.Circuit:
     """Build the Steane code encoder (version b) with 11 CNOT gates - textbook version.
 
     This is the standard Steane code encoder circuit where:
@@ -342,7 +341,7 @@ def build_steane_11cnot():
     return circuit
 
 
-def build_steane_9cnot():
+def build_steane_9cnot()-> cirq.Circuit:
     """Build the optimized Steane code encoder (version c) with only 9 CNOT gates.
 
     This optimized version uses √Y and √Y† gates instead of some Hadamards,
@@ -452,6 +451,7 @@ SVGCircuit(steane_9cz_auto)
 
 # %% [markdown]
 # ### Circuit Depths
+# A lower depth is heuristically better than higher depth due to spectator errors on idle qubits.
 
 # %%
 print(f"seq:          {len(steane_seq)} moments")
@@ -525,49 +525,8 @@ ax1.set_ylim(0, 1)
 plt.tight_layout()
 plt.show()
 
-
 # %% [markdown]
-# ## Example 3: Linear chained circuit
-#
-# Here is another example of a circuit of CZ gates in a linear chain. The original circuit has a linearly growing number of moments with the number of qubits.
-
-
-# %%
-def build_circuit3():
-    """Build a linear CZ chain circuit using squin and convert to Cirq."""
-    n = 10
-
-    @squin.kernel
-    def cz_chain_kernel():
-        q = squin.qalloc(n)
-        for i in range(n - 1):
-            squin.cz(q[i], q[i + 1])
-
-    # Create LineQubits for compatibility with existing code
-    qubits = cirq.LineQubit.range(n)
-    circuit = cirq_utils.emit_circuit(cz_chain_kernel, circuit_qubits=qubits)
-    return circuit
-
-
-# Build the linear CZ circuit
-circuit3 = build_circuit3()
-circuit3_parallel = utils.parallelize(circuit=circuit3)
-circuit3_parallel = utils.remove_tags(circuit3_parallel)
-
-print(f"Original CZ chain circuit depth:     {len(circuit3)}")
-print(f"Parallelized CZ chain circuit depth: {len(circuit3_parallel)}")
-
-# %% [markdown]
-# ### Original CZ chain circuit
-
-# %%
-SVGCircuit(circuit3)
-
-# %% [markdown]
-# ### Parallelized CZ chain circuit
-
-# %%
-SVGCircuit(circuit3_parallel)
+# As expected, the manual and optimized circuits do better than their naively optimized counterparts. The "worst case" sequential circuit has the lowest fidelity, while the auto-optimized 9 CZ circuit has the highest fidelity. However, this also comes with a point of warning: the noise model is not a perfect representation of real hardware. In practice, the hand optimized 9-CZ circuit was implemented as part of QuEra's [magic state distillation paper](https://arxiv.org/abs/2412.15165), which suggests that the noise model is not aligned with hardware. The next steps after manual and automatic optimization should be implementation and tuning on real hardware.
 
 # %% [markdown]
 # ## Example 4: QAOA / graph state preparation
@@ -581,6 +540,10 @@ SVGCircuit(circuit3_parallel)
 #
 # These graph-based circuits are inherently parallel: CZPhase gates commute, so optimal parallelization
 # can be found via edge coloring of the graph, where each color corresponds to a circuit moment.
+# This lets us pull some tricks in manually optimizing the circuit depth in a way that automatic parallelism and transpilation cannot easily do. Lets construct three different versions of the QAOA circuit:
+# - **Naive**: Sequential circuit without optimization
+# - **Auto-parallel**: Using `utils.parallelize()` for automatic optimization
+# - **Hand-tuned**: Manual parallelization via edge coloring
 
 # %%
 import networkx as nx
@@ -763,11 +726,6 @@ def build_qaoa_circuit_parallelized(
     return circuit3
 
 
-# %% [markdown]
-# We compare three approaches:
-# - **Naive**: Sequential circuit without optimization
-# - **Auto-parallel**: Using `utils.parallelize()` for automatic optimization
-# - **Hand-tuned**: Manual parallelization via edge coloring
 
 # %%
 # Build circuits on a small graph for visualization and fidelity comparison
@@ -784,6 +742,8 @@ print(f"Auto-parallel depth:       {len(qaoa_autoparallel)}")
 print(f"Hand-tuned parallel depth: {len(qaoa_parallel)}")
 
 # %% [markdown]
+# The depth of the hand-tuned circuit is much lower, and in fact ends up being constant in the degree of the graph consistent with Vizing's theorem.
+
 # ### Circuit Visualization
 
 # %%
@@ -810,7 +770,9 @@ def visualize_graph_with_edge_coloring(
     - If u in hadamard_qubits: target=u, control=v
     - Else: target=v, control=u
     """
-    plt.figure(figsize=(8, 8))
+    fig,ax = plt.subplots(figsize=(8, 8))
+    ax.set_aspect("equal")
+    
     nx.draw_networkx_nodes(graph, pos, node_color="lightblue", node_size=500)
     nx.draw_networkx_labels(graph, pos, font_size=12, font_weight="bold")
 
@@ -828,7 +790,7 @@ def visualize_graph_with_edge_coloring(
             x2, y2 = pos[tgt]
 
             # Draw edge line
-            plt.plot([x1, x2], [y1, y2], color=edge_color, linewidth=2.5)
+            plt.plot([x1, x2], [y1, y2], color=edge_color, linewidth=2.5,zorder=-1)
 
             # Draw arrow at midpoint pointing from control to target
             mid_x, mid_y = (x1 + x2) / 2, (y1 + y2) / 2
@@ -876,7 +838,7 @@ def visualize_graph_with_edge_coloring(
 
 # %%
 # Get edge coloring for hand-tuned circuit
-pos = nx.spring_layout(graph, seed=42)
+pos = nx.kamada_kawai_layout(graph)
 linegraph = nx.line_graph(graph)
 best_coloring = min(
     [
