@@ -231,7 +231,7 @@ def foo(x: int, y: int) -> bool:
     return x < y
 
 
-assert foo(1, 2) == True
+assert foo(1, 2)
 # %% [markdown]
 # ## Extracting quantum states
 #

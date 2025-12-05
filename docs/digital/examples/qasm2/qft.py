@@ -23,13 +23,11 @@ pi = math.pi
 
 @qasm2.extended
 def qft(qreg: qasm2.QReg, n: int, k: int):
-    if k == n:
-        return qreg
-
-    qasm2.h(qreg[k])
-    for i in range(k + 1, n):
-        qasm2.cu1(qreg[i], qreg[k], 2 * math.pi / 2**i)
-    qft(qreg, n, k + 1)  # recursion
+    if k != n:
+        qasm2.h(qreg[k])
+        for i in range(k + 1, n):
+            qasm2.cu1(qreg[i], qreg[k], 2 * math.pi / 2**i)
+        qft(qreg, n, k + 1)  # recursion
     return qreg
 
 
