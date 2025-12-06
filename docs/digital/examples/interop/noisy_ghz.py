@@ -54,11 +54,15 @@
 # As a first step, we will define a function that builds a GHZ circuit in cirq that has a depth linear in the number of qubits.
 #
 
+import warnings
+
 # %%
 import cirq
 import numpy as np
 import matplotlib.pyplot as plt
 from bloqade.cirq_utils import noise, transpile, load_circuit
+
+warnings.filterwarnings("ignore")
 
 
 def ghz_circuit(n: int) -> cirq.Circuit:
@@ -173,12 +177,6 @@ plt.xlabel("Number of qubits")
 plt.ylabel("Fidelity")
 plt.legend()
 
-# %% [markdown]
-# <div align="center">
-# <picture>
-#    <img src="../noisy_ghz_fidelity.svg" >
-# </picture>
-# </div>
 
 # %% [markdown]
 # We can see that in both cases the fidelity goes down when increasing the number of qubits.
@@ -250,12 +248,6 @@ plt.xlabel("Number of qubits")
 plt.ylabel("Fidelity")
 plt.legend()
 
-# %% [markdown]
-# <div align="center">
-# <picture>
-#    <img src="../noisy_ghz_modified.svg" >
-# </picture>
-# </div>
 
 # %% [markdown]
 # As you can see, the fidelities no longer cross over since the increased movement noise now eliminates the advantage of the two-zone model for the considered numbers of qubits.
@@ -275,4 +267,4 @@ noisy_circuit = noise.transform_circuit(circuit, model=noise.GeminiOneZoneNoiseM
 # %%
 kernel = load_circuit(circuit, kernel_name="kernel")
 noisy_kernel = load_circuit(noisy_circuit, kernel_name="noisy_kernel")
-kernel.print()
+# kernel.print()

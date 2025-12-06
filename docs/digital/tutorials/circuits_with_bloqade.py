@@ -37,7 +37,7 @@ def hello_world(theta: float) -> IList[MeasurementResult, Any]:
 
 # [kernel].print() prints the raw SSA, which is the intermediate representation of the kernel
 # as used internally by Kirin.
-hello_world.print()
+# hello_world.print()
 # %% [markdown]
 # ### Anatomy of a Bloqade kernel
 #
@@ -85,7 +85,7 @@ def GHZ_method_factory(nqubits: int) -> Method:
 
 
 kernel = GHZ_method_factory(8)
-kernel.print()
+# kernel.print()
 # %% [markdown]
 # Alternatively, kernels could be parameterized; for example, we could write the same GHZ state preparation, except it prepares a variable number of qubits that is not declared until the kernel is run. In order to run in some `main` function, the qubits need to be declared elsewhere, either in the task declaration or within a larger kernel that calls this method as a subroutine.
 
@@ -100,7 +100,7 @@ def GHZ_state_factory(nqubits: int) -> Register:
     return qubits
 
 
-GHZ_state_factory.print()
+# GHZ_state_factory.print()
 # %% [markdown]
 # ## Building circuits in Cirq
 # Instead of writing your circuit directly in bloqade, you may build circuits using Cirq and then lower them to and from bloqade kernels. This has the advantage of being able to leverage the excellent and in-depth resources of transpilation and circuit optimization without having to reinvent the wheel. However, for certain programs, such as those requiring more complex mid-circuit feed-forward, it is still required to write bloqade kernels as there is no adequate representation in other SDKs. Cirq is our initial choice of SDK, and other transformations are coming soon-- though in principle interoperability with many SDK is possible through an intermediate Cirq representation.
@@ -159,7 +159,7 @@ print(circuit)
 kernel = load_circuit(
     circuit, kernel_name="teleport", register_as_argument=True, return_register=True
 )
-kernel.print()
+# kernel.print()
 # %% [markdown]
 # Due to the difficulty of representing mid-circuit control flow in cirq, attempting to lower these kernels back to cirq will result in an error.
 
