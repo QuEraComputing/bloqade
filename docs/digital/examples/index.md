@@ -13,6 +13,13 @@ The examples are split into sub-sections featuring the different [dialects](./di
 
     Learn how to use `bloqade-circuit` to write your quantum programs.
 
+
+-   [Automatic Parallelism](../tutorials/auto_parallelism/)
+
+    ---
+
+    Explore the benefits of parallelizing your circuits.
+
 </div>
 
 
