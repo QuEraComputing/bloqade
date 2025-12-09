@@ -54,9 +54,10 @@
 # As a first step, we will define a function that builds a GHZ circuit in cirq that has a depth linear in the number of qubits.
 #
 
-import warnings
 
 # %%
+import warnings
+
 import cirq
 import numpy as np
 import matplotlib.pyplot as plt
