@@ -42,7 +42,7 @@ def ghz_linear(n: int):
         squin.cx(q[i - 1], q[i])
 
 
-ghz_linear.print()
+# ghz_linear.print()
 
 # %% [markdown]
 # As you can see, writing basic circuits in squin is rather straightforward.
@@ -122,7 +122,7 @@ def noisy_linear_ghz(n: int, p_single: float, p_paired: float):
 
 
 # %%
-noisy_linear_ghz.print()
+# noisy_linear_ghz.print()
 
 # %% [markdown]
 # <div class="admonition note">
