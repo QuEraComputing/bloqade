@@ -29,6 +29,7 @@ nav:
     - digital/examples/index.md
     - Tutorials:
       - Circuits with Bloqade: "digital/tutorials/circuits_with_bloqade.py"
+      - Automatic parallelism: "digital/tutorials/auto_parallelism.py"
     - QASM2 examples:
       - Quantum Fourier Transform: "digital/examples/qasm2/qft.py"
       - GHZ state preparation: "digital/examples/qasm2/ghz.py"
