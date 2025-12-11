@@ -1488,6 +1488,8 @@
       
         
       
+        
+      
     
     
     
@@ -1551,6 +1553,34 @@
     
   
     Circuits with Bloqade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/auto_parallelism/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parallelism of Static Circuits
   
 
     
@@ -18032,7 +18062,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=26aabd16">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4759b393">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18044,7 +18074,7 @@ We will do so with a simple linear algorithm and show how to manually insert noi
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0d33fa80">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=21975721">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18056,7 +18086,7 @@ We will do so with a simple linear algorithm and show how to manually insert noi
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=25c14d51">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f022063c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18067,7 +18097,7 @@ We will do so with a simple linear algorithm and show how to manually insert noi
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=cbf0ad9a">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f14bbaaa">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18120,7 +18150,7 @@ def ghz_linear(n: int):
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7023a9fa">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7673d505">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18131,7 +18161,7 @@ def ghz_linear(n: int):
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c43f67c7">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b14b2435">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18148,7 +18178,7 @@ def ghz_linear(n: int):
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=67a2cb42">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=41795d5e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18192,7 +18222,7 @@ print(result)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=99098d46">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d14d9b2d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18210,7 +18240,7 @@ For example, you can obtain the state vector from the simulator:</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=925a90a9">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=e752102f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18242,7 +18272,7 @@ For example, you can obtain the state vector from the simulator:</p>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[(-0.3430160582065582-0.6183364391326904j), (-0+0j), (-0+0j), (-0.3430160582065582-0.6183364391326904j)]
+<pre>[(-0.010771244764328003+0.7070246934890747j), 0j, -0j, (-0.010771244764328003+0.7070246934890747j)]
 </pre>
 </div>
 </div>
@@ -18250,7 +18280,7 @@ For example, you can obtain the state vector from the simulator:</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=49a728eb">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4f6cbf65">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18265,7 +18295,7 @@ That is precisely what we will do in the following.</p>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0efbd227">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=06f185dc">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18285,7 +18315,7 @@ Similarly, a two-qubit depolarization error applies one of the 15 operators $IX,
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6edfa847">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2a1eb520">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18334,7 +18364,7 @@ def noisy_linear_ghz(n: int, p_single: float, p_paired: float):
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3101b3b4">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a25f62a4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18361,7 +18391,7 @@ def noisy_linear_ghz(n: int, p_single: float, p_paired: float):
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=720dd8bd">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=498b285d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18380,7 +18410,7 @@ def noisy_linear_ghz(n: int, p_single: float, p_paired: float):
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=aa0e9fbb">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=40d4e18f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18392,7 +18422,7 @@ The only difference is that we now need to provide additional arguments for the 
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=753230b4">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=380df540">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18434,7 +18464,7 @@ print(result)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=618d8b0f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1346c297">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18447,7 +18477,7 @@ We can also obtain the bit string:</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=1cc088c2">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=6572c810">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18489,7 +18519,7 @@ print(result_bitstring)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=341b94a1">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a6e729a5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18507,7 +18537,7 @@ However, now that we've added noise, this is not always the case.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=c1f00faf">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=0f68aa4c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18567,7 +18597,7 @@ print(fidelity)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>0.964
+<pre>0.962
 </pre>
 </div>
 </div>
@@ -18575,7 +18605,7 @@ print(fidelity)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6b6659ea">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c914785d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>

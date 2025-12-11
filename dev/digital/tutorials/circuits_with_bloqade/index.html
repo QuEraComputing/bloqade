@@ -16,7 +16,7 @@
         <link rel="prev" href="../../examples/">
       
       
-        <link rel="next" href="../../examples/qasm2/qft.py">
+        <link rel="next" href="../auto_parallelism/">
       
       
         
@@ -1490,6 +1490,8 @@
       
         
       
+        
+      
     
     
     
@@ -1630,6 +1632,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../auto_parallelism/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parallelism of Static Circuits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -18032,7 +18062,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=407ca0b2">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=93472641">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18044,7 +18074,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c56276f5">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=be7f3c17">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18095,7 +18125,7 @@ Register = IList[Qubit, Any]</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=dc4d41ca">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=7f9daab7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18152,7 +18182,7 @@ def hello_world(theta: float) -&gt; IList[MeasurementResult, Any]:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=dd614083">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5043ec6e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18163,7 +18193,7 @@ def hello_world(theta: float) -&gt; IList[MeasurementResult, Any]:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ec4cbace">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b1d0bbce">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18185,7 +18215,7 @@ Note that you are also able to define your own custom gates by defining similar 
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0f0f7fb4">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6f2dc230">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18197,7 +18227,7 @@ Note that you are also able to define your own custom gates by defining similar 
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=0f09a946">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=71a1fd8a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18258,7 +18288,7 @@ kernel = GHZ_method_factory(8)
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e0b5900f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b7d5b02b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18269,7 +18299,7 @@ kernel = GHZ_method_factory(8)
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c83f0ab1">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=2039b84c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18314,7 +18344,7 @@ def GHZ_state_factory(nqubits: int) -&gt; Register:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=13fab1a5">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1864c8c8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18326,7 +18356,7 @@ def GHZ_state_factory(nqubits: int) -&gt; Register:
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=02970c0f">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=1ca60a68">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18404,7 +18434,7 @@ print(ghz_prep(4))</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e448a8e8">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=54f6aa19">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18415,7 +18445,7 @@ print(ghz_prep(4))</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=5a4b938b">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ca26eca3">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18489,7 +18519,7 @@ print(circuit2)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4b75c864">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=88323245">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18500,7 +18530,7 @@ print(circuit2)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=6b4b563e">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=8bf1144f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18566,7 +18596,7 @@ m: ═══════════@═══^═══^═══
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=194f6a8c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6786825a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18577,7 +18607,7 @@ m: ═══════════@═══^═══^═══
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=573a7801">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=6cd81482">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18671,13 +18701,7 @@ print(circuit)</div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>0: ───T───X───────
           │
-1: ───────@───M───</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>
+1: ───────@───M───
 ERROR: Oops this should have errored.
 </pre>
 </div>
@@ -18693,7 +18717,7 @@ ERROR: Oops this should have errored.
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5e973c86">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=72c4f1ca">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18711,7 +18735,7 @@ ERROR: Oops this should have errored.
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=c0ed7b17">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=988f0c04">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18763,7 +18787,7 @@ print(results)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>IList([PyQrackQubit(addr=0, sim_reg=&lt;pyqrack.qrack_simulator.QrackSimulator object at 0x7f58c0f15c10&gt;, state=&lt;QubitState.Active: 1&gt;), PyQrackQubit(addr=1, sim_reg=&lt;pyqrack.qrack_simulator.QrackSimulator object at 0x7f58c0f15c10&gt;, state=&lt;QubitState.Active: 1&gt;), PyQrackQubit(addr=2, sim_reg=&lt;pyqrack.qrack_simulator.QrackSimulator object at 0x7f58c0f15c10&gt;, state=&lt;QubitState.Active: 1&gt;), PyQrackQubit(addr=3, sim_reg=&lt;pyqrack.qrack_simulator.QrackSimulator object at 0x7f58c0f15c10&gt;, state=&lt;QubitState.Active: 1&gt;)])
+<pre>IList([PyQrackQubit(addr=0, sim_reg=&lt;pyqrack.qrack_simulator.QrackSimulator object at 0x7f015e693920&gt;, state=&lt;QubitState.Active: 1&gt;), PyQrackQubit(addr=1, sim_reg=&lt;pyqrack.qrack_simulator.QrackSimulator object at 0x7f015e693920&gt;, state=&lt;QubitState.Active: 1&gt;), PyQrackQubit(addr=2, sim_reg=&lt;pyqrack.qrack_simulator.QrackSimulator object at 0x7f015e693920&gt;, state=&lt;QubitState.Active: 1&gt;), PyQrackQubit(addr=3, sim_reg=&lt;pyqrack.qrack_simulator.QrackSimulator object at 0x7f015e693920&gt;, state=&lt;QubitState.Active: 1&gt;)])
 </pre>
 </div>
 </div>
@@ -18771,7 +18795,7 @@ print(results)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7a984512">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e6171c4c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18783,7 +18807,7 @@ print(results)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=aac11acc">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=af6b94b9">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18818,7 +18842,7 @@ assert foo(1, 2)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=dfb2e661">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=981cf34a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18831,7 +18855,7 @@ assert foo(1, 2)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=45a8f945">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=b0196e6e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18907,14 +18931,14 @@ print(statevector)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>A pure state has only a single eigenvalue [1] of the RDM: [1.00000011]
+<pre>A pure state has only a single eigenvalue [1] of the RDM: [0.99999983]
 The statevector of the GHZ state looks like [1, 0, 0, ..., 0, 1]
-[-0.70645322+0.03039479j  0.        +0.j          0.        +0.j
-  0.        +0.j          0.        +0.j          0.        +0.j
-  0.        +0.j          0.        +0.j          0.        +0.j
-  0.        +0.j          0.        +0.j          0.        +0.j
-  0.        +0.j          0.        +0.j          0.        +0.j
- -0.70645322+0.03039479j]
+[-0.6952014+0.1292092j  0.       +0.j         0.       +0.j
+  0.       +0.j         0.       +0.j         0.       +0.j
+  0.       +0.j         0.       +0.j         0.       +0.j
+  0.       +0.j         0.       +0.j         0.       +0.j
+  0.       +0.j         0.       +0.j         0.       +0.j
+ -0.6952014+0.1292092j]
 </pre>
 </div>
 </div>
@@ -18922,7 +18946,7 @@ The statevector of the GHZ state looks like [1, 0, 0, ..., 0, 1]
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=015678f4">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=92d2339c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18933,7 +18957,7 @@ The statevector of the GHZ state looks like [1, 0, 0, ..., 0, 1]
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=92273936">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=21aa6ede">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18977,8 +19001,8 @@ print("State:", state)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Results: {&lt;Measurement.Zero: 0&gt;: 0.51, &lt;Measurement.One: 1&gt;: 0.49}
-State: QuantumState(eigenvalues=array([0.512, 0.488]), eigenvectors=array([[1.+0.j, 0.+0.j],
+<pre>Results: {&lt;Measurement.One: 1&gt;: 0.489, &lt;Measurement.Zero: 0&gt;: 0.511}
+State: QuantumState(eigenvalues=array([0.507, 0.493]), eigenvectors=array([[1.+0.j, 0.+0.j],
        [0.+0.j, 1.+0.j]]))
 </pre>
 </div>
@@ -18987,7 +19011,7 @@ State: QuantumState(eigenvalues=array([0.512, 0.488]), eigenvectors=array([[1.+0
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6f8efe25">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a457a8f2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -19000,7 +19024,7 @@ State: QuantumState(eigenvalues=array([0.512, 0.488]), eigenvectors=array([[1.+0
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=104cf8d8">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=6e3ddf9e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -19132,7 +19156,7 @@ bloqade_trotter_circuit = load_circuit(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6a9b9f37">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a4b5a29b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -19143,7 +19167,7 @@ bloqade_trotter_circuit = load_circuit(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=d7031847">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a0affb5c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -19206,7 +19230,7 @@ bloqade_trotter_circuit = load_circuit(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6d34a396">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a4136ada">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -19217,7 +19241,7 @@ bloqade_trotter_circuit = load_circuit(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=32321114">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=aa152e4a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -19292,7 +19316,7 @@ def bloqade_trotter(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b1025bfa">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cecc2d03">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -19303,7 +19327,7 @@ def bloqade_trotter(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d7ae903a">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=069d92b4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -19375,7 +19399,7 @@ print(
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Overlap: 1.0000001953161923
+<pre>Overlap: 1.0000001953161906
 </pre>
 </div>
 </div>
@@ -19383,7 +19407,7 @@ print(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=26574b5f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2e21f292">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -19394,7 +19418,7 @@ print(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=5f570d8e">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=6a695c94">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -19442,7 +19466,7 @@ print(
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Overlap: 1.000000195316187
+<pre>Overlap: 1.0000001953161888
 </pre>
 </div>
 </div>
@@ -19450,7 +19474,7 @@ print(
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cdc39dad">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=060cc523">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -19462,7 +19486,7 @@ print(
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=0a659f2e">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9d59125e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -19554,7 +19578,7 @@ print(state)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>QuantumState(eigenvalues=array([1.]), eigenvectors=array([[-0.70710678-8.41668625e-32j],
+<pre>QuantumState(eigenvalues=array([1.]), eigenvectors=array([[-0.70710678-1.17005645e-31j],
        [-0.5       -5.00000001e-01j]]))
 </pre>
 </div>
@@ -19563,7 +19587,7 @@ print(state)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=08a2d1a1">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=78b1142e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -19577,7 +19601,7 @@ print(state)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=86aa9da7">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e9121e7d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -19650,7 +19674,7 @@ print(state)</div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=632730b7">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=08192780">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -19694,7 +19718,7 @@ print(state.eigenvalues)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[1.00000007]
+<pre>[1.00000006]
 </pre>
 </div>
 </div>
@@ -19702,7 +19726,7 @@ print(state.eigenvalues)</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e5356a79">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=121b99b2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -19768,13 +19792,13 @@ print(state.eigenvalues)</div>
         
         
           
-          <a href="../../examples/qasm2/qft.py" class="md-footer__link md-footer__link--next" aria-label="Next: Quantum Fourier Transform">
+          <a href="../auto_parallelism/" class="md-footer__link md-footer__link--next" aria-label="Next: Parallelism of Static Circuits">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Quantum Fourier Transform
+                Parallelism of Static Circuits
               </div>
             </div>
             <div class="md-footer__button md-icon">
