@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://bloqade.quera.com/digital/examples/squin/deutsch_squin/">
       
       
-        <link rel="prev" href="../../qasm2/qaoa/">
+        <link rel="prev" href="../../qasm2/qaoa.py">
       
       
         <link rel="next" href="../ghz/">
@@ -1505,7 +1505,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../qasm2/qft/" class="md-nav__link">
+      <a href="../../qasm2/qft.py" class="md-nav__link">
         
   
   
@@ -1528,12 +1528,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../../qasm2/ghz/" class="md-nav__link">
+      <a href="../../qasm2/ghz.py" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    GHZ State Preparation with Parallelism
+    GHZ state preparation
     
   </span>
   
@@ -1551,12 +1551,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../../qasm2/pauli_exponentiation/" class="md-nav__link">
+      <a href="../../qasm2/pauli_exponentiation.py" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Pauli Exponentiation for Quantum Simulation
+    Pauli Exponential
     
   </span>
   
@@ -1574,12 +1574,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../../qasm2/repeat_until_success/" class="md-nav__link">
+      <a href="../../qasm2/repeat_until_success.py" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Repeat Until Success with STAR Gadget
+    Repeat Until Success
     
   </span>
   
@@ -1597,7 +1597,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../qasm2/qaoa/" class="md-nav__link">
+      <a href="../../qasm2/qaoa.py" class="md-nav__link">
         
   
   
@@ -15542,7 +15542,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=17f02103">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=eb5c50fe">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15553,7 +15553,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3b82c733">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cca387f4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15564,12 +15564,12 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=0572f3b8">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=0d4cc28e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-1">
@@ -15609,7 +15609,7 @@ n_bits = 2</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5c7ae19b">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e3387a77">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15626,7 +15626,7 @@ Given a bit string of length $n$, $x \in \{0, 1\}^\otimes n$, we have a function
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=41a91429">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9a2855aa">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15639,12 +15639,12 @@ We'll be writing our oracle functions as squin kernels, which we can then later 
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c6f59df3">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=934911e8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-2">
@@ -15672,7 +15672,7 @@ def f_constant(q: ilist.IList[Qubit, Any]):
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a2d4d88c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=947ed20b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15684,12 +15684,12 @@ This means that the result will be $1$ in exactly half the cases.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c5423434">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a426290a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-3">
@@ -15715,7 +15715,7 @@ def f_balanced(q: ilist.IList[Qubit, Any]):
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ece656c7">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e4621144">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15727,12 +15727,12 @@ In the end, we can infer which function was provided by looking at the resulting
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3a01ec01">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=49f83367">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-4">
@@ -15780,7 +15780,7 @@ def deutsch_algorithm(f):
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8fb1f8a8">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9ed1fe24">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15792,13 +15792,13 @@ To do so, we use the <code>PyQrack</code> simulation backend in bloqade.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=d3d5e72c">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=036b58c9">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
@@ -15868,6 +15868,21 @@ else:
 </div>
 </div>
 </div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Oh magic Deutsch-Jozsa algorithm, tell us if our function is constant or balanced:
+*drumroll*
+It's balanced!
+</pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div> <!-- jp-Notebook -->
@@ -15908,7 +15923,7 @@ else:
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../qasm2/qaoa/" class="md-footer__link md-footer__link--prev" aria-label="Previous: QAOA">
+          <a href="../../qasm2/qaoa.py" class="md-footer__link md-footer__link--prev" aria-label="Previous: QAOA">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
