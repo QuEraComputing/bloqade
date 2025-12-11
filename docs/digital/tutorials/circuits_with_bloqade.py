@@ -31,7 +31,7 @@ def hello_world(theta: float) -> IList[MeasurementResult, Any]:
     squin.h(qubits[0])
     squin.cx(qubits[0], qubits[1])
     squin.rx(theta, qubits[0])
-    bits = squin.qubit.measure(qubits)
+    bits = squin.broadcast.measure(qubits)
     return bits
 
 
@@ -174,7 +174,7 @@ def t_teleport_noargs() -> None:
     target = squin.qalloc(1)[0]
     squin.t(ancilla)
     squin.cx(target, ancilla)
-    if squin.qubit.measure(target):
+    if squin.measure(target):
         squin.s(ancilla)
         squin.x(ancilla)
 
@@ -191,7 +191,7 @@ except Exception as e:
 def coinflip() -> MeasurementResult:
     qubit = squin.qalloc(1)[0]
     squin.h(qubit)
-    return squin.qubit.measure(qubit)
+    return squin.measure(qubit)
 
 
 circuit = emit_circuit(coinflip, ignore_returns=True)
@@ -434,7 +434,7 @@ def t_teleport(target: squin.qubit.Qubit) -> squin.qubit.Qubit:
     squin.h(ancilla)
     squin.t(ancilla)
     squin.cx(control=target, target=ancilla)
-    bit = squin.qubit.measure(target)
+    bit = squin.measure(target)
     if bit:
         squin.s(ancilla)
     return ancilla  # The state of the target qubit is also teleported to the ancilla

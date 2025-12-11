@@ -17,7 +17,7 @@ def main():
     squin.qubit.apply(h, q[0])
     cx = squin.op.cx()
     squin.qubit.apply(cx, q[0], q[1])
-    squin.qubit.measure(q)
+    squin.broadcast.measure(q)
 
 circuit = cirq_utils.emit_circuit(main)
 print(circuit)

@@ -56,7 +56,7 @@ def ghz(n: int):
     for i in range(1, n):
         squin.gate.cx(q[i - 1], q[i])
 
-    return squin.qubit.measure(q)
+    return squin.broadcast.measure(q)
 ```
 
 Here are [some more examples](./examples/index.md).
