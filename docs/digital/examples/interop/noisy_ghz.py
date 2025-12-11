@@ -61,6 +61,7 @@ import warnings
 import cirq
 import numpy as np
 import matplotlib.pyplot as plt
+from cirq.contrib.svg import SVGCircuit
 from bloqade.cirq_utils import noise, transpile, load_circuit
 
 warnings.filterwarnings("ignore")
@@ -87,7 +88,7 @@ def ghz_circuit(n: int) -> cirq.Circuit:
 
 # %%
 ghz_circuit_3 = ghz_circuit(3)
-print(ghz_circuit_3)
+SVGCircuit(ghz_circuit_3)
 
 # %% [markdown]
 # So far so good.
@@ -98,7 +99,7 @@ print(ghz_circuit_3)
 # %%
 noise_model = noise.GeminiOneZoneNoiseModel()
 noisy_ghz_circuit_3 = noise.transform_circuit(ghz_circuit_3, model=noise_model)
-print(noisy_ghz_circuit_3)
+SVGCircuit(noisy_ghz_circuit_3)
 
 # %% [markdown]
 # As you can see, we have successfully added noise.
@@ -113,7 +114,7 @@ print(noisy_ghz_circuit_3)
 
 # %%
 native_ghz_3 = transpile(ghz_circuit_3)
-print(native_ghz_3)
+SVGCircuit(native_ghz_3)
 
 # %% [markdown]
 # Note that `transpile` basically just wraps cirq's own `cirq.optimize_for_target_gateset(circuit, gateset=cirq.CZTargetGateset())`, with some additional benefits (such as filtering out empty moments).
@@ -122,7 +123,7 @@ print(native_ghz_3)
 
 # %%
 noisy_ghz_circuit_3 = native_ghz_3.with_noise(noise_model)
-print(noisy_ghz_circuit_3)
+SVGCircuit(noisy_ghz_circuit_3)
 
 # %% [markdown]
 # ### Studying the fidelity
