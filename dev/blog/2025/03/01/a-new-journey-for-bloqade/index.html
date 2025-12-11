@@ -1637,7 +1637,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../../digital/examples/qasm2/qft/" class="md-nav__link">
+      <a href="../../../../../digital/examples/qasm2/qft.py" class="md-nav__link">
         
   
   
@@ -1665,14 +1665,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../../digital/examples/qasm2/ghz/" class="md-nav__link">
+      <a href="../../../../../digital/examples/qasm2/ghz.py" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    GHZ State Preparation with Parallelism
+    GHZ state preparation
   
 
     
@@ -1693,14 +1693,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../../digital/examples/qasm2/pauli_exponentiation/" class="md-nav__link">
+      <a href="../../../../../digital/examples/qasm2/pauli_exponentiation.py" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Pauli Exponentiation for Quantum Simulation
+    Pauli Exponential
   
 
     
@@ -1721,14 +1721,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../../digital/examples/qasm2/repeat_until_success/" class="md-nav__link">
+      <a href="../../../../../digital/examples/qasm2/repeat_until_success.py" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Repeat Until Success with STAR Gadget
+    Repeat Until Success
   
 
     
@@ -1749,7 +1749,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../../digital/examples/qasm2/qaoa/" class="md-nav__link">
+      <a href="../../../../../digital/examples/qasm2/qaoa.py" class="md-nav__link">
         
   
   
@@ -17699,7 +17699,7 @@ Why have we built this new module? There are plenty of incredible quantum progra
 <p>At its core, Bloqade strives to be the neutral atom SDK for getting the most out of today's and tomorrows' quantum hardware. It is clear that the circuit-level abstraction is not enough to program real quantum hardware; indeed, tomorrows' quantum demonstrations and applications must program at the hardware level and develop special tooling to compile higher-level abstractions to efficient implementations. We call this process <strong>"co-design"</strong>: designing algorithms specialized to near-term hardware, with an eye on nontrivial demonstrations and scalable solutions. Ultimately, this co-design approach requires hardware-specific DSLs which explicitly represent the native executions on neutral atom hardware: in other words, Bloqade.</p>
 <h2 id="hybrid-computing-beyond-circuits">Hybrid computing beyond circuits</h2>
 <p>Many quantum algorithms are hybrid, requiring both classical and quantum resources to work together in tandem. This could be anything from syndrome extraction and measurement-based computing to variational parameter updates in VQE methods and orbital fragmentation methods in molecular simulation. Through the use of the Kirin compiler infrastructure, Bloqade embraces this philosophy of heterogeneous compute. Kirin programs are written as (compositions of) <a href="https://en.wikipedia.org/wiki/Compute_kernel">kernels</a> -- subroutines that are intended to run on particular hardware (such as QPUs), or orchestrated to run on heterogeneous compute (such as a real-time classical runtime plus a QPU). These subroutines -- plus the built-in hybrid representations-- enable many key primitives, such as error correction.</p>
-<p>Additionally, the ability to compose functions together and to use typical classical programming structures like <code>if</code> and recursions enables many simplifications in writing complex circuits. In fact, recursions and the ability to dynamically allocate new memory (which is not known until runtime) enables many powerful subroutines and is natively enabled with Bloqade's kernel-based representation; for example, see <a href="../../../../../digital/examples/qasm2/repeat_until_success/">this implementation</a> of a repeat-until-success program.</p>
+<p>Additionally, the ability to compose functions together and to use typical classical programming structures like <code>if</code> and recursions enables many simplifications in writing complex circuits. In fact, recursions and the ability to dynamically allocate new memory (which is not known until runtime) enables many powerful subroutines and is natively enabled with Bloqade's kernel-based representation; for example, see <a href="../../../../../digital/examples/qasm2/repeat_until_success.py">this implementation</a> of a repeat-until-success program.</p>
 <h2 id="analog-digital-logical-towards-real-quantum-utility">Analog, digital, logical: towards real quantum utility</h2>
 <p>The first step in Bloqade's journey was building out the analog mode SDK, designed to interface with QuEra’s cloud-accessible analog-mode neutral-atom quantum computer Aquila, as well as enable analysis and scientific discovery in analog quantum computing. But the journey should not stop there: real quantum utility is error corrected and requires robust algorithmic exploration and design of quantum primitives, in-depth analysis of near-term hardware performance and benchmarking, and building pipelines and hybrid architectures that are intended not just for today’s demonstrations but also for tomorrow’s utility-scale hardware. By introducing the next generation of Bloqade, we hope to enable this exploration by adding in support for near-term digital and intermediate-term logical representations of hybrid quantum computations.</p>
 <h2 id="learn-more">Learn more</h2>
