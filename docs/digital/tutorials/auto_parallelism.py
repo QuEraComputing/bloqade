@@ -27,6 +27,8 @@
 # Bloqade supports both automatic and manual parallelization. The examples below show both methods and compare fidelity using representative noise models.
 #
 
+import warnings
+
 # %% [markdown]
 # ## Example 1: GHZ Circuit
 #
@@ -38,14 +40,15 @@
 # The GHZ state can be prepared using a sequence of Hadamard and CNOT gates. In a linear (sequential) implementation, the CNOT gates are applied one after another, resulting in a circuit depth that grows linearly with the number of qubits. In contrast, a log-depth (parallel) implementation arranges the CNOT gates so that multiple gates acting on disjoint qubits can execute simultaneously, reducing the overall depth to logarithmic in the number of qubits. This comes at the cost of requiring arbitrary connectivity, which is not native to all architectures. However, it is perfect for reconfigurable neutral atom systems, which have a native "all to all" connectivity through mid-circuit atom shuttling.
 # %%
 import cirq
-import matplotlib.pyplot as plt
 import numpy as np
-from bloqade import squin, cirq_utils
+import matplotlib.pyplot as plt
 import bloqade.cirq_utils as utils
 from cirq.contrib.svg import SVGCircuit
 
-import warnings
+from bloqade import squin, cirq_utils
+
 warnings.filterwarnings("ignore")
+
 
 # %%
 def build_linear_ghz(n_qubits: int) -> cirq.Circuit:
@@ -200,7 +203,7 @@ plt.title(
 plt.legend(fontsize=12)
 plt.grid(True, alpha=0.3)
 plt.xticks(num_qubits)
-plt.axis([1.5,10.5,0.6,1.0])
+plt.axis([1.5, 10.5, 0.6, 1.0])
 # Add annotations for better understanding
 plt.text(
     0.15,
@@ -303,7 +306,7 @@ def build_steane_code_circuit():
     return circuit
 
 
-def build_steane_11cnot()-> cirq.Circuit:
+def build_steane_11cnot() -> cirq.Circuit:
     """Build the Steane code encoder (version b) with 11 CNOT gates - textbook version.
 
     This is the standard Steane code encoder circuit where:
@@ -341,7 +344,7 @@ def build_steane_11cnot()-> cirq.Circuit:
     return circuit
 
 
-def build_steane_9cnot()-> cirq.Circuit:
+def build_steane_9cnot() -> cirq.Circuit:
     """Build the optimized Steane code encoder (version c) with only 9 CNOT gates.
 
     This optimized version uses √Y and √Y† gates instead of some Hadamards,
@@ -726,7 +729,6 @@ def build_qaoa_circuit_parallelized(
     return circuit3
 
 
-
 # %%
 # Build circuits on a small graph for visualization and fidelity comparison
 graph = nx.random_regular_graph(d=3, n=10, seed=42)
@@ -770,9 +772,9 @@ def visualize_graph_with_edge_coloring(
     - If u in hadamard_qubits: target=u, control=v
     - Else: target=v, control=u
     """
-    fig,ax = plt.subplots(figsize=(8, 8))
+    fig, ax = plt.subplots(figsize=(8, 8))
     ax.set_aspect("equal")
-    
+
     nx.draw_networkx_nodes(graph, pos, node_color="lightblue", node_size=500)
     nx.draw_networkx_labels(graph, pos, font_size=12, font_weight="bold")
 
@@ -790,7 +792,7 @@ def visualize_graph_with_edge_coloring(
             x2, y2 = pos[tgt]
 
             # Draw edge line
-            plt.plot([x1, x2], [y1, y2], color=edge_color, linewidth=2.5,zorder=-1)
+            plt.plot([x1, x2], [y1, y2], color=edge_color, linewidth=2.5, zorder=-1)
 
             # Draw arrow at midpoint pointing from control to target
             mid_x, mid_y = (x1 + x2) / 2, (y1 + y2) / 2
