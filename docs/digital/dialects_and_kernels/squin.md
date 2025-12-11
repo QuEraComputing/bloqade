@@ -29,7 +29,7 @@ def main():
     q = squin.qalloc(2)
     squin.h(q[0])
     squin.cx(q[0], q[1])
-    return squin.qubit.measure(q)
+    return squin.broadcast.measure(q)
 
 # have a look at the IR
 main.print()
@@ -107,7 +107,7 @@ def main_noisy():
     squin.cx(q[0], q[1])
     squin.depolarize2(0.05, q[0], q[1])
 
-    return squin.qubit.measure(q)
+    return squin.broadcast.measure(q)
 
 # have a look at the IR
 main_noisy.print()

@@ -33,7 +33,7 @@ def main():
     q = squin.qalloc(2)
     squin.h(q[0])
     squin.cx(q[0], q[1])
-    squin.qubit.measure(q)
+    squin.broadcast.measure(q)
 ```
 
 You can further inspect the lowered kernel as usual, e.g. by printing the IR.
