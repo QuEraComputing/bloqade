@@ -54,11 +54,17 @@
 # As a first step, we will define a function that builds a GHZ circuit in cirq that has a depth linear in the number of qubits.
 #
 
+
 # %%
+import warnings
+
 import cirq
 import numpy as np
 import matplotlib.pyplot as plt
+from cirq.contrib.svg import SVGCircuit
 from bloqade.cirq_utils import noise, transpile, load_circuit
+
+warnings.filterwarnings("ignore")
 
 
 def ghz_circuit(n: int) -> cirq.Circuit:
@@ -82,7 +88,7 @@ def ghz_circuit(n: int) -> cirq.Circuit:
 
 # %%
 ghz_circuit_3 = ghz_circuit(3)
-print(ghz_circuit_3)
+SVGCircuit(ghz_circuit_3)
 
 # %% [markdown]
 # So far so good.
@@ -93,7 +99,7 @@ print(ghz_circuit_3)
 # %%
 noise_model = noise.GeminiOneZoneNoiseModel()
 noisy_ghz_circuit_3 = noise.transform_circuit(ghz_circuit_3, model=noise_model)
-print(noisy_ghz_circuit_3)
+SVGCircuit(noisy_ghz_circuit_3)
 
 # %% [markdown]
 # As you can see, we have successfully added noise.
@@ -108,7 +114,7 @@ print(noisy_ghz_circuit_3)
 
 # %%
 native_ghz_3 = transpile(ghz_circuit_3)
-print(native_ghz_3)
+SVGCircuit(native_ghz_3)
 
 # %% [markdown]
 # Note that `transpile` basically just wraps cirq's own `cirq.optimize_for_target_gateset(circuit, gateset=cirq.CZTargetGateset())`, with some additional benefits (such as filtering out empty moments).
@@ -117,7 +123,7 @@ print(native_ghz_3)
 
 # %%
 noisy_ghz_circuit_3 = native_ghz_3.with_noise(noise_model)
-print(noisy_ghz_circuit_3)
+SVGCircuit(noisy_ghz_circuit_3)
 
 # %% [markdown]
 # ### Studying the fidelity
@@ -173,12 +179,6 @@ plt.xlabel("Number of qubits")
 plt.ylabel("Fidelity")
 plt.legend()
 
-# %% [markdown]
-# <div align="center">
-# <picture>
-#    <img src="../noisy_ghz_fidelity.svg" >
-# </picture>
-# </div>
 
 # %% [markdown]
 # We can see that in both cases the fidelity goes down when increasing the number of qubits.
@@ -250,12 +250,6 @@ plt.xlabel("Number of qubits")
 plt.ylabel("Fidelity")
 plt.legend()
 
-# %% [markdown]
-# <div align="center">
-# <picture>
-#    <img src="../noisy_ghz_modified.svg" >
-# </picture>
-# </div>
 
 # %% [markdown]
 # As you can see, the fidelities no longer cross over since the increased movement noise now eliminates the advantage of the two-zone model for the considered numbers of qubits.
@@ -275,4 +269,4 @@ noisy_circuit = noise.transform_circuit(circuit, model=noise.GeminiOneZoneNoiseM
 # %%
 kernel = load_circuit(circuit, kernel_name="kernel")
 noisy_kernel = load_circuit(noisy_circuit, kernel_name="noisy_kernel")
-kernel.print()
+# kernel.print()
