@@ -43,7 +43,7 @@ jobs:
         run: uv add submodules/bloqade-circuit submodules/bloqade-analog
 
       - name: Set up build cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: cache
         with:
           key: mkdocs-material-nightly-dev-${{ github.headref }}

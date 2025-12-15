@@ -30,7 +30,7 @@ jobs:
         uses: ./.github/pull_bloqade_submodules
 
       - name: Set up build cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: cache
         with:
           key: mkdocs-material-${{ github.ref }}
