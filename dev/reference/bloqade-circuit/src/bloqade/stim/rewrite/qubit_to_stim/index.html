@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../../../../../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../../../../../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../../../../../../../assets/stylesheets/main.484c7ddc.min.css">
       
         
         <link rel="stylesheet" href="../../../../../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -11253,6 +11253,8 @@
       
         
       
+        
+      
     
     
     
@@ -11406,6 +11408,34 @@
     
   
     Control 2q
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dialects/gate/stmts/non_clifford/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Non clifford
   
 
     
@@ -12279,10 +12309,32 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#bloqade.stim.rewrite.qubit_to_stim.SquinQubitToStim.rewrite_RotationGate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;rewrite_RotationGate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#bloqade.stim.rewrite.qubit_to_stim.SquinQubitToStim.rewrite_SingleQubitGate" class="md-nav__link">
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;rewrite_SingleQubitGate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloqade.stim.rewrite.qubit_to_stim.SquinQubitToStim.rewrite_U3Gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;rewrite_U3Gate
       
     </span>
   </a>
@@ -17947,10 +17999,32 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#bloqade.stim.rewrite.qubit_to_stim.SquinQubitToStim.rewrite_RotationGate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;rewrite_RotationGate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#bloqade.stim.rewrite.qubit_to_stim.SquinQubitToStim.rewrite_SingleQubitGate" class="md-nav__link">
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;rewrite_SingleQubitGate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloqade.stim.rewrite.qubit_to_stim.SquinQubitToStim.rewrite_U3Gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;rewrite_U3Gate
       
     </span>
   </a>
@@ -18106,8 +18180,7 @@ Address Analysis should have been run along with Wrap Analysis before this rewri
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/stim/rewrite/qubit_to_stim.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 94</span>
-<span class="normal"> 95</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 95</span>
 <span class="normal"> 96</span>
 <span class="normal"> 97</span>
 <span class="normal"> 98</span>
@@ -18144,7 +18217,8 @@ Address Analysis should have been run along with Wrap Analysis before this rewri
 <span class="normal">129</span>
 <span class="normal">130</span>
 <span class="normal">131</span>
-<span class="normal">132</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rewrite_ControlledGate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stmt</span><span class="p">:</span> <span class="n">gate</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">ControlledGate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RewriteResult</span><span class="p">:</span>
+<span class="normal">132</span>
+<span class="normal">133</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rewrite_ControlledGate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stmt</span><span class="p">:</span> <span class="n">gate</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">ControlledGate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RewriteResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Rewrite controlled gate nodes to their stim equivalent statements.</span>
 <span class="sd">    Address Analysis should have been run along with Wrap Analysis before this rewrite is applied.</span>
@@ -18192,6 +18266,96 @@ Address Analysis should have been run along with Wrap Analysis before this rewri
 <div class="doc doc-object doc-function">
 
 
+<h3 id="bloqade.stim.rewrite.qubit_to_stim.SquinQubitToStim.rewrite_RotationGate" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">rewrite_RotationGate</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">rewrite_RotationGate</span><span class="p">(</span><span class="n">stmt</span><span class="p">:</span> <span class="n">RotationGate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RewriteResult</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Rewrite rotation gate nodes (Rx, Ry, Rz) to stim rotation gate statements. Emits as I[R_X/R_Y/R_Z(theta=...)] in Stim annotation format.
+Address Analysis should have been run along with Wrap Analysis before this rewrite is applied.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/stim/rewrite/qubit_to_stim.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rewrite_RotationGate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stmt</span><span class="p">:</span> <span class="n">gate</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">RotationGate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RewriteResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Rewrite rotation gate nodes (Rx, Ry, Rz) to stim rotation gate statements. Emits as I[R_X/R_Y/R_Z(theta=...)] in Stim annotation format.</span>
+<span class="sd">    Address Analysis should have been run along with Wrap Analysis before this rewrite is applied.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">qubit_addr_attr</span> <span class="o">=</span> <span class="n">stmt</span><span class="o">.</span><span class="n">qubits</span><span class="o">.</span><span class="n">hints</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;address&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">qubit_addr_attr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">qubit_addr_attr</span><span class="p">,</span> <span class="n">AddressAttribute</span><span class="p">)</span>
+
+    <span class="n">qubit_idx_ssas</span> <span class="o">=</span> <span class="n">insert_qubit_idx_from_address</span><span class="p">(</span>
+        <span class="n">address</span><span class="o">=</span><span class="n">qubit_addr_attr</span><span class="p">,</span> <span class="n">stmt_to_insert_before</span><span class="o">=</span><span class="n">stmt</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">qubit_idx_ssas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">()</span>
+
+    <span class="n">rotation_gate_map</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">gate</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">Rx</span><span class="p">:</span> <span class="n">stim_gate</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">Rx</span><span class="p">,</span>
+        <span class="n">gate</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">Ry</span><span class="p">:</span> <span class="n">stim_gate</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">Ry</span><span class="p">,</span>
+        <span class="n">gate</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">Rz</span><span class="p">:</span> <span class="n">stim_gate</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">Rz</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">stim_stmt_cls</span> <span class="o">=</span> <span class="n">rotation_gate_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">stmt</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">stim_stmt_cls</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">()</span>
+
+    <span class="n">stim_stmt</span> <span class="o">=</span> <span class="n">stim_stmt_cls</span><span class="p">(</span><span class="n">targets</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">qubit_idx_ssas</span><span class="p">),</span> <span class="n">angle</span><span class="o">=</span><span class="n">stmt</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span>
+    <span class="n">stmt</span><span class="o">.</span><span class="n">replace_by</span><span class="p">(</span><span class="n">stim_stmt</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">(</span><span class="n">has_done_something</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="bloqade.stim.rewrite.qubit_to_stim.SquinQubitToStim.rewrite_SingleQubitGate" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">rewrite_SingleQubitGate</span>
 
@@ -18210,8 +18374,7 @@ Address Analysis should have been run along with Wrap Analysis before this rewri
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/stim/rewrite/qubit_to_stim.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">55</span>
-<span class="normal">56</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
 <span class="normal">57</span>
 <span class="normal">58</span>
 <span class="normal">59</span>
@@ -18247,7 +18410,8 @@ Address Analysis should have been run along with Wrap Analysis before this rewri
 <span class="normal">89</span>
 <span class="normal">90</span>
 <span class="normal">91</span>
-<span class="normal">92</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rewrite_SingleQubitGate</span><span class="p">(</span>
+<span class="normal">92</span>
+<span class="normal">93</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rewrite_SingleQubitGate</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">stmt</span><span class="p">:</span> <span class="n">gate</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">SingleQubitGate</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RewriteResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -18282,6 +18446,86 @@ Address Analysis should have been run along with Wrap Analysis before this rewri
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">stim_stmt</span> <span class="o">=</span> <span class="n">stim_stmt_cls</span><span class="p">(</span><span class="n">targets</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">qubit_idx_ssas</span><span class="p">))</span>
+    <span class="n">stmt</span><span class="o">.</span><span class="n">replace_by</span><span class="p">(</span><span class="n">stim_stmt</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">(</span><span class="n">has_done_something</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="bloqade.stim.rewrite.qubit_to_stim.SquinQubitToStim.rewrite_U3Gate" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">rewrite_U3Gate</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">rewrite_U3Gate</span><span class="p">(</span><span class="n">stmt</span><span class="p">:</span> <span class="n">U3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RewriteResult</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Rewrite U3 gate nodes to stim U3 gate statements. Emits as I[U3(theta=..., phi=..., lambda=...)] in Stim annotation format.
+Address Analysis should have been run along with Wrap Analysis before this rewrite is applied.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>.venv/lib/python3.12/site-packages/bloqade/stim/rewrite/qubit_to_stim.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rewrite_U3Gate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stmt</span><span class="p">:</span> <span class="n">gate</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">U3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RewriteResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Rewrite U3 gate nodes to stim U3 gate statements. Emits as I[U3(theta=..., phi=..., lambda=...)] in Stim annotation format.</span>
+<span class="sd">    Address Analysis should have been run along with Wrap Analysis before this rewrite is applied.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">qubit_addr_attr</span> <span class="o">=</span> <span class="n">stmt</span><span class="o">.</span><span class="n">qubits</span><span class="o">.</span><span class="n">hints</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;address&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">qubit_addr_attr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">qubit_addr_attr</span><span class="p">,</span> <span class="n">AddressAttribute</span><span class="p">)</span>
+
+    <span class="n">qubit_idx_ssas</span> <span class="o">=</span> <span class="n">insert_qubit_idx_from_address</span><span class="p">(</span>
+        <span class="n">address</span><span class="o">=</span><span class="n">qubit_addr_attr</span><span class="p">,</span> <span class="n">stmt_to_insert_before</span><span class="o">=</span><span class="n">stmt</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">qubit_idx_ssas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">()</span>
+
+    <span class="n">stim_stmt</span> <span class="o">=</span> <span class="n">stim_gate</span><span class="o">.</span><span class="n">stmts</span><span class="o">.</span><span class="n">U3</span><span class="p">(</span>
+        <span class="n">targets</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">qubit_idx_ssas</span><span class="p">),</span>
+        <span class="n">theta</span><span class="o">=</span><span class="n">stmt</span><span class="o">.</span><span class="n">theta</span><span class="p">,</span>
+        <span class="n">phi</span><span class="o">=</span><span class="n">stmt</span><span class="o">.</span><span class="n">phi</span><span class="p">,</span>
+        <span class="n">lam</span><span class="o">=</span><span class="n">stmt</span><span class="o">.</span><span class="n">lam</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">stmt</span><span class="o">.</span><span class="n">replace_by</span><span class="p">(</span><span class="n">stim_stmt</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">RewriteResult</span><span class="p">(</span><span class="n">has_done_something</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -18433,10 +18677,10 @@ Address Analysis should have been run along with Wrap Analysis before this rewri
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../../../../..", "features": ["announce.dismiss", "content.action.view", "content.action.edit", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow"], "search": "../../../../../../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../../../../..", "features": ["announce.dismiss", "content.action.view", "content.action.edit", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "navigation.footer", "search.highlight", "search.suggest", "toc.follow"], "search": "../../../../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../../../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../../../../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
         <script src="../../../../../../../javascripts/katex.js"></script>
       
