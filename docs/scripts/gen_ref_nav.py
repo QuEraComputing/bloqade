@@ -22,6 +22,7 @@ else:
 
 
 skip_keywords = [
+    ".venv",  ## skip virtual environment
     "julia",  ## [KHW] skip for now since we didn't have julia codegen rdy
     "builder/base",  ## hiding from user
     "builder/terminate",  ## hiding from user
