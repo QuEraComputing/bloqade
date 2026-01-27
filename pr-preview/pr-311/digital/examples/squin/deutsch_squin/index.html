@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://bloqade.quera.com/digital/examples/squin/deutsch_squin/">
       
       
-        <link rel="prev" href="../../qasm2/qaoa.py">
+        <link rel="prev" href="../../qasm2/qaoa/">
       
       
         <link rel="next" href="../ghz/">
@@ -1507,7 +1507,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../qasm2/qft.py" class="md-nav__link">
+      <a href="../../qasm2/qft/" class="md-nav__link">
         
   
   
@@ -1530,12 +1530,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../../qasm2/ghz.py" class="md-nav__link">
+      <a href="../../qasm2/ghz/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    GHZ state preparation
+    GHZ State Preparation with Parallelism
     
   </span>
   
@@ -1553,12 +1553,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../../qasm2/pauli_exponentiation.py" class="md-nav__link">
+      <a href="../../qasm2/pauli_exponentiation/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Pauli Exponential
+    Pauli Exponentiation for Quantum Simulation
     
   </span>
   
@@ -1576,12 +1576,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../../qasm2/repeat_until_success.py" class="md-nav__link">
+      <a href="../../qasm2/repeat_until_success/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Repeat Until Success
+    Repeat Until Success with STAR Gadget
     
   </span>
   
@@ -1599,7 +1599,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../qasm2/qaoa.py" class="md-nav__link">
+      <a href="../../qasm2/qaoa/" class="md-nav__link">
         
   
   
@@ -15929,7 +15929,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f9b9b831">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=affd4209">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15940,7 +15940,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=510d6534">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7aa23344">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15951,7 +15951,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=55b8a328">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3ccd3978">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -15996,7 +15996,7 @@ n_bits = 2</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a234390b">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=47b55993">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16013,7 +16013,7 @@ Given a bit string of length $n$, $x \in \{0, 1\}^\otimes n$, we have a function
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2e9b5f4b">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=baecb048">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16026,7 +16026,7 @@ We'll be writing our oracle functions as squin kernels, which we can then later 
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=53a30fea">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=620ce4a5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16059,7 +16059,7 @@ def f_constant(q: ilist.IList[Qubit, Any]):
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=486118af">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6df80554">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16071,7 +16071,7 @@ This means that the result will be $1$ in exactly half the cases.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a99921e7">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b5e032e5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16102,7 +16102,7 @@ def f_balanced(q: ilist.IList[Qubit, Any]):
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=17a6bd26">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8774c947">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16114,7 +16114,7 @@ In the end, we can infer which function was provided by looking at the resulting
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=38d7cbe9">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=f8024c09">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16167,7 +16167,7 @@ def deutsch_algorithm(f):
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=328a3b56">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1848bfd3">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16180,7 +16180,7 @@ To do so, we use the <code>PyQrack</code> simulation backend in bloqade.</p>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=1745565b">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=f03f6309">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -16264,7 +16264,7 @@ else:
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Oh magic Deutsch-Jozsa algorithm, tell us if our function is constant or balanced:
 *drumroll*
-It's constant!
+It's balanced!
 </pre>
 </div>
 </div>
@@ -16310,7 +16310,7 @@ It's constant!
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../qasm2/qaoa.py" class="md-footer__link md-footer__link--prev" aria-label="Previous: QAOA">
+          <a href="../../qasm2/qaoa/" class="md-footer__link md-footer__link--prev" aria-label="Previous: QAOA">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>

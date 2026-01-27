@@ -169,6 +169,26 @@
          <lastmod>2026-01-27</lastmod>
     </url>
     <url>
+         <loc>https://bloqade.quera.com/digital/examples/qasm2/ghz/</loc>
+         <lastmod>2026-01-27</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/digital/examples/qasm2/pauli_exponentiation/</loc>
+         <lastmod>2026-01-27</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/digital/examples/qasm2/qaoa/</loc>
+         <lastmod>2026-01-27</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/digital/examples/qasm2/qft/</loc>
+         <lastmod>2026-01-27</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/digital/examples/qasm2/repeat_until_success/</loc>
+         <lastmod>2026-01-27</lastmod>
+    </url>
+    <url>
          <loc>https://bloqade.quera.com/digital/examples/squin/deutsch_squin/</loc>
          <lastmod>2026-01-27</lastmod>
     </url>
@@ -1578,6 +1598,10 @@
     </url>
     <url>
          <loc>https://bloqade.quera.com/reference/bloqade-circuit/src/bloqade/visual/animation/runtime/utils/</loc>
+         <lastmod>2026-01-27</lastmod>
+    </url>
+    <url>
+         <loc>https://bloqade.quera.com/scripts/gen_ref_nav/</loc>
          <lastmod>2026-01-27</lastmod>
     </url>
     <url>
