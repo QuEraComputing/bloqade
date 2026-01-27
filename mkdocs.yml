@@ -137,8 +137,7 @@ plugins:
   - mkdocs-jupyter:
       execute: true
       allow_errors: false
-      ignore: ["scripts/*", "digital/examples/qasm2/*"]
-      execute_ignore: ["digital/examples/tsim/magic_state_distillation.ipynb"]
+      execute_ignore: ["scripts/*", "digital/examples/qasm2/*", "digital/examples/tsim/magic_state_distillation.ipynb"]
   - mike
 
 extra_javascript:
