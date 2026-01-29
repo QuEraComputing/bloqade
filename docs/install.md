@@ -86,7 +86,7 @@ uv sync --all-groups
 
 Our code review requires that you pass the tests and linting checks. We recommend
 you install `pre-commit` to run the checks before you commit your changes.  `pre-commit`
-is already specified as a development dependency for bloqade and once installed, 
+is already specified as a development dependency for bloqade and once installed,
 you can setup `pre-commit` using the following command:
 
 ```bash

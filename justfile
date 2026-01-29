@@ -20,4 +20,3 @@ doc FLAGS="":
 
 doc-build FLAGS="":
     mkdocs build {{FLAGS}}
-
