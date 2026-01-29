@@ -29,3 +29,8 @@
 .md-typeset .grid.cards {
   font-size: small;
 } */
+
+/* Hide Jupyter notebook input/output prompts (In[ ] and Out[ ]) */
+.jp-InputPrompt, .jp-OutputPrompt {
+    display: none !important;
+}
