@@ -15,15 +15,16 @@
 # %% [markdown]
 # # Logical magic state distillation
 
+from typing import Literal
+
 # %%
 import stim
 import numpy as np
-from typing import Literal
 import matplotlib.pyplot as plt
+from bloqade.tsim import Circuit
+from bloqade.squin import kernel
 
 from bloqade import squin
-from bloqade.squin import kernel
-from bloqade.tsim import Circuit
 
 # %% [markdown]
 # In this tutorial, we will perform quantum circuit simulations with squin kernels. We will simulate the magic state distillation circuit used in [Rodriguez et al. (2025)](https://www.nature.com/articles/s41586-025-09367-3), showcasing that `bloqade-circuit` supports simulation of large non-Clifford circuits. For this, we will use Quera's TSIM package as a simulation backend.
@@ -53,6 +54,7 @@ Circuit(main).diagram(height=120)
 # %% [markdown]
 # By undoing the state preparation after the noisy channel, we build a kernel that measures the fidelity of the magic state:
 
+
 # %%
 @kernel
 def main():
@@ -64,6 +66,7 @@ def main():
     squin.t(qubit=q[0])
     squin.rx(angle=-theta, qubit=q[0])
     squin.measure(q[0])
+
 
 c = Circuit(main)
 c.diagram(height=120)
@@ -85,6 +88,7 @@ print(f"Infidelity: {np.count_nonzero(samples) / len(samples)}")
 # ### Magic state distillation: The ideal case
 #
 # Given multiple noisy magic states of low fidelity, we can distill a single high-fidelity magic state using a distillation circuit:
+
 
 # %%
 def make_logical_distillation_kernel(angle: float, p: float):
@@ -121,13 +125,14 @@ c = Circuit(distillation_kernel)
 c.diagram(height=240)
 
 # %% [markdown]
-# In this distillation circuit, qubits `[q1,q2,q3,q4]` are the distillation syndrome. 
+# In this distillation circuit, qubits `[q1,q2,q3,q4]` are the distillation syndrome.
 # If we measure them in the state `[1,0,1,1]`, we know that distillation was successful and the first qubit `q0` is in a magic state with higher fidelity.
 #
 # To measure the fidelity, we undo the magic state preparation on the first qubit before measurement.
 
 # %%
 samples = c.compile_sampler(seed=0).sample(shots=50_000, batch_size=10_000)
+
 
 def post_select(samples: np.ndarray):
     distilled_output = samples[:, 0]
@@ -166,15 +171,24 @@ for angle in angles:
 # %%
 fig, ax1 = plt.subplots()
 
-(line1,) = ax1.semilogy(angles - theta, 1 - np.array(fidelities), "*-", c="g", lw=0.5, label="Infidelity")
+(line1,) = ax1.semilogy(
+    angles - theta, 1 - np.array(fidelities), "*-", c="g", lw=0.5, label="Infidelity"
+)
 ax1.axvline(0, linestyle="--", lw=0.5)
 ax1.set_xlabel(r"$(\theta - \theta^*)/\pi$")
 ax1.set_ylabel("Infidelity")
 
 ax2 = ax1.twinx()
-(line2,) = ax2.plot(angles - theta, post_selection_rate, ".-", c="orange", lw=0.5, label="Post-selection rate")
+(line2,) = ax2.plot(
+    angles - theta,
+    post_selection_rate,
+    ".-",
+    c="orange",
+    lw=0.5,
+    label="Post-selection rate",
+)
 ax2.set_ylabel("Post-selection rate")
-ax2.legend(handles=[line1, line2], loc="lower right");
+ax2.legend(handles=[line1, line2], loc="lower right")
 
 # %% [markdown]
 # We see that the output fidelity and post-selection rate are peaked at the distillation angle $\theta^*$. This is expected, as the distillation circuit is designed to distill only one particular state.
@@ -192,6 +206,7 @@ ax2.legend(handles=[line1, line2], loc="lower right");
 
 # %%
 noise = p / 5
+
 
 @kernel
 def noisy_distillation():
@@ -231,6 +246,7 @@ def noisy_distillation():
 c = Circuit(noisy_distillation)
 samples = c.compile_sampler(seed=0).sample(shots=40_000, batch_size=40_000)
 
+
 def post_select(samples: np.ndarray):
     distilled_output = samples[:, 0]
     distillation_syndromes = samples[:, 1:]
@@ -239,8 +255,12 @@ def post_select(samples: np.ndarray):
 
 
 post_selected_samples = post_select(samples)
-print(f"Infidelity: {np.count_nonzero(post_selected_samples) / len(post_selected_samples):.5f}")
-print(f"Percentage of post-selected samples: {len(post_selected_samples) / len(samples) * 100:.2f}%")
+print(
+    f"Infidelity: {np.count_nonzero(post_selected_samples) / len(post_selected_samples):.5f}"
+)
+print(
+    f"Percentage of post-selected samples: {len(post_selected_samples) / len(samples) * 100:.2f}%"
+)
 
 
 # %% [markdown]
@@ -254,20 +274,67 @@ print(f"Percentage of post-selected samples: {len(post_selected_samples) / len(s
 #
 # The following kernel takes a physical qubit with an arbitrary state at qubit `q[7]` and returns a logical qubit in the same (but now logical) state as `q[7]`:
 
+
 # %%
 @kernel
 def encode(q):
-    squin.broadcast.reset([q[0], q[1], q[2], q[3], q[4], q[5], q[6], q[8], q[9], q[10], q[11], q[12], q[13], q[14], q[15], q[16]])
-    squin.broadcast.sqrt_y([q[0], q[1], q[2], q[3], q[4], q[5], q[6], q[8], q[9], q[10], q[11], q[12], q[13], q[14], q[15], q[16]])
+    squin.broadcast.reset(
+        [
+            q[0],
+            q[1],
+            q[2],
+            q[3],
+            q[4],
+            q[5],
+            q[6],
+            q[8],
+            q[9],
+            q[10],
+            q[11],
+            q[12],
+            q[13],
+            q[14],
+            q[15],
+            q[16],
+        ]
+    )
+    squin.broadcast.sqrt_y(
+        [
+            q[0],
+            q[1],
+            q[2],
+            q[3],
+            q[4],
+            q[5],
+            q[6],
+            q[8],
+            q[9],
+            q[10],
+            q[11],
+            q[12],
+            q[13],
+            q[14],
+            q[15],
+            q[16],
+        ]
+    )
     squin.broadcast.cz([q[1], q[7], q[12], q[13]], [q[3], q[10], q[14], q[16]])
     squin.broadcast.sqrt_y_adj([q[7], q[16]])
     squin.broadcast.cz([q[4], q[8], q[11], q[15]], [q[7], q[10], q[14], q[16]])
     squin.broadcast.sqrt_y_adj([q[4], q[10], q[14], q[16]])
-    squin.broadcast.cz([q[2], q[6], q[7], q[10], q[14]], [q[4], q[8], q[9], q[13], q[16]])
+    squin.broadcast.cz(
+        [q[2], q[6], q[7], q[10], q[14]], [q[4], q[8], q[9], q[13], q[16]]
+    )
     squin.broadcast.sqrt_y([q[3], q[6], q[9], q[10], q[12], q[13]])
-    squin.broadcast.cz([q[0], q[3], q[5], q[10], q[11]], [q[2], q[6], q[8], q[12], q[13]])
-    squin.broadcast.sqrt_y([q[1], q[2], q[3], q[4], q[6], q[7], q[8], q[9], q[11], q[12], q[14]])
-    squin.broadcast.cz([q[0], q[2], q[4], q[6], q[8], q[12]], [q[1], q[3], q[5], q[7], q[9], q[15]])
+    squin.broadcast.cz(
+        [q[0], q[3], q[5], q[10], q[11]], [q[2], q[6], q[8], q[12], q[13]]
+    )
+    squin.broadcast.sqrt_y(
+        [q[1], q[2], q[3], q[4], q[6], q[7], q[8], q[9], q[11], q[12], q[14]]
+    )
+    squin.broadcast.cz(
+        [q[0], q[2], q[4], q[6], q[8], q[12]], [q[1], q[3], q[5], q[7], q[9], q[15]]
+    )
     squin.broadcast.sqrt_y_adj([q[0], q[2], q[5], q[6], q[8], q[10], q[12]])
     squin.broadcast.x([q[14], q[7], q[5], q[2], q[1], q[4]])
     squin.broadcast.z([q[11], q[6], q[4], q[2]])
@@ -278,6 +345,8 @@ def encode(q):
 def main():
     q = squin.qalloc(17)
     encode(q)
+
+
 c = Circuit(main)
 c.diagram(height=400)
 
@@ -304,6 +373,7 @@ stim.Circuit(str(c)).flow_generators()
 # - **Perform post-selection** We will perform two stages of post-selection: (a) post-select on the perfect stabilizers, and (b) post-select on the [1,0,1,1] distillation syndrome of logical bits.
 # - **Quantum state tomography** We will perform quantum state tomography on the output logical qubit to estimate its magic state fidelity.
 
+
 # %%
 @kernel
 def measure_and_annotate(q, idx):
@@ -315,7 +385,9 @@ def measure_and_annotate(q, idx):
     squin.set_detector([m[11], m[13], m[14], m[16]], coordinates=[4])
     squin.set_detector([m[10], m[11], m[12], m[14]], coordinates=[5])
     squin.set_detector([m[12], m[14], m[15], m[16]], coordinates=[6])
-    squin.set_detector([m[2], m[3], m[5], m[6], m[8], m[10], m[11], m[13]], coordinates=[7])
+    squin.set_detector(
+        [m[2], m[3], m[5], m[6], m[8], m[10], m[11], m[13]], coordinates=[7]
+    )
     squin.set_observable([m[1], m[3], m[10], m[12], m[15]], idx=idx)
 
 
@@ -335,9 +407,9 @@ def make_encoded_distillation_kernel(
 
         # Initialize: prepare noisy magic states on all logical qubits (transversally)
         for i in range(5):
-            squin.rx(theta, q[7 + i*17])
-            squin.t_adj(q[7 + i*17])
-            squin.depolarize(p_prep, q[7 + i*17])
+            squin.rx(theta, q[7 + i * 17])
+            squin.t_adj(q[7 + i * 17])
+            squin.depolarize(p_prep, q[7 + i * 17])
             encode(qs[i])
 
         # Distillation circuit with transversal gates and noise
@@ -388,6 +460,7 @@ encoded_circuit.diagram(height=500)
 # - First, post-select all shots on perfect stabilizers (i.e. only keep shots where all detectors are measured as 0)
 # - Then, post-select on the [1,0,1,1] distillation syndrome.
 
+
 # %%
 def sample_and_post_select(encoded_kernel, shots: int = 10_000):
     c = Circuit(encoded_kernel)
@@ -437,7 +510,10 @@ rho = (id + vx * x + vy * y + vz * z) / 2
 
 # %%
 rx = np.array(
-    [[np.cos(theta / 2), -1j * np.sin(theta / 2)], [-1j * np.sin(theta / 2), np.cos(theta / 2)]]
+    [
+        [np.cos(theta / 2), -1j * np.sin(theta / 2)],
+        [-1j * np.sin(theta / 2), np.cos(theta / 2)],
+    ]
 )
 t_dag = np.array([[1, 0], [0, np.exp(-1j * np.pi / 4)]])
 psi_expected = t_dag @ rx @ np.array([1, 0])
