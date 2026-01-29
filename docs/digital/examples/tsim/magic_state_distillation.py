@@ -16,6 +16,7 @@
 # # Logical magic state distillation
 
 # %%
+# fmt: off
 import stim
 import numpy as np
 from typing import Literal
@@ -121,7 +122,7 @@ c = Circuit(distillation_kernel)
 c.diagram(height=240)
 
 # %% [markdown]
-# In this distillation circuit, qubits `[q1,q2,q3,q4]` are the distillation syndrome. 
+# In this distillation circuit, qubits `[q1,q2,q3,q4]` are the distillation syndrome.
 # If we measure them in the state `[1,0,1,1]`, we know that distillation was successful and the first qubit `q0` is in a magic state with higher fidelity.
 #
 # To measure the fidelity, we undo the magic state preparation on the first qubit before measurement.
@@ -174,7 +175,7 @@ ax1.set_ylabel("Infidelity")
 ax2 = ax1.twinx()
 (line2,) = ax2.plot(angles - theta, post_selection_rate, ".-", c="orange", lw=0.5, label="Post-selection rate")
 ax2.set_ylabel("Post-selection rate")
-ax2.legend(handles=[line1, line2], loc="lower right");
+ax2.legend(handles=[line1, line2], loc="lower right")
 
 # %% [markdown]
 # We see that the output fidelity and post-selection rate are peaked at the distillation angle $\theta^*$. This is expected, as the distillation circuit is designed to distill only one particular state.
