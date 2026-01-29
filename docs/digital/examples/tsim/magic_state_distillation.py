@@ -146,7 +146,7 @@ print(
 )
 
 # %% [markdown]
-# After distillation, the fidelity has increased to 99.7%. This is much better than the original 97% of the individual input magic states. A downside is that the distillation process is only successful 13.7% of the time. This means, we have to repeat the distillation process multiple times until we get a good output state.
+# After distillation, the fidelity has increased to 99.7%. This is much better than the original 97% of the individual input magic states. A downside is that the distillation process is only successful 14% of the time. This means, we have to repeat the distillation process multiple times until we get a good output state.
 #
 # We can study other properties of the distillation circuit. For example, we analyze the dependence of the fidelity on the rotation angle of the RX gate:
 
