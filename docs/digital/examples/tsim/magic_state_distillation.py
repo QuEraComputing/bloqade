@@ -214,7 +214,7 @@ def noisy_distillation():
 
     # initial state - prepare noisy magic states on all 5 qubits
     squin.broadcast.reset(q)
-    squin.broadcast.rx(angle, q)
+    squin.broadcast.rx(theta, q)
     squin.broadcast.t_adj(q)
     squin.broadcast.depolarize(p, q)
 
@@ -237,14 +237,14 @@ def noisy_distillation():
 
     # undo magic state preparation on first qubit to measure infidelity
     squin.t(qubit=q[0])
-    squin.rx(angle=-angle, qubit=q[0])
+    squin.rx(angle=-theta, qubit=q[0])
 
     squin.broadcast.measure(q)
 
 
 # %%
 c = Circuit(noisy_distillation)
-samples = c.compile_sampler(seed=0).sample(shots=40_000, batch_size=40_000)
+samples = c.compile_sampler(seed=0).sample(shots=40_000, batch_size=10_000)
 
 
 def post_select(samples: np.ndarray):
@@ -264,7 +264,7 @@ print(
 
 
 # %% [markdown]
-# We see that the addition of noise has reduced the output fidelity to ~92%. This is worse than the input state!
+# We see that the addition of noise has reduced the output fidelity to ~96%. This is worse than the input state!
 
 # %% [markdown]
 # # Encoding the distillation circuit
