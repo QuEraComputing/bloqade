@@ -40,7 +40,7 @@ nav:
       - Deutsch-Jozsa Algorithm: digital/examples/squin/deutsch_squin.py
       - GHZ state preparation with noise: digital/examples/squin/ghz.py
     - TSIM examples:
-      - Magic state distillation: digital/examples/tsim/magic_state_distillation.ipynb
+      - Magic state distillation: digital/examples/tsim/magic_state_distillation.py
     - Integration with other SDKs:
       - Noisy GHZ states with cirq: "digital/examples/interop/noisy_ghz.py"
   - Bloqade Analog:
@@ -137,7 +137,7 @@ plugins:
   - mkdocs-jupyter:
       execute: true
       allow_errors: false
-      execute_ignore: ["scripts/*", "digital/examples/qasm2/*", "digital/examples/tsim/magic_state_distillation.ipynb"]
+      execute_ignore: ["scripts/*", "digital/examples/qasm2/*"]
   - mike
 
 extra_javascript:
