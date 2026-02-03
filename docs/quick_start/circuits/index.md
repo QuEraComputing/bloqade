@@ -46,8 +46,7 @@ While it is possible to write your own compiler passes and optimizations - for t
 ## Pick your backend: simulation and hardware
 
 Once you have your program written and optimized to a point at which you are satisfied, it is time to think about execution.
-Bloqade Digital is a hardware-first SDK, which means that simulation tries to mirror execution on hardware as closely as possible.
-Choosing the hardware you want to run on is therefore mostly interchangeable with simulator backends.
+
 
 ### Simulation with PyQrack
 
@@ -65,6 +64,50 @@ There are also some things available in the simulator which cannot be obtained w
 ```python
 sim.state_vector(ghz, args=(4,))
 ```
+
+### Simulation with STIM and TSIM
+
+
+For QEC workflows, it may be required to sample millions or billions of shots from the same kernel.
+For this, bloqade-circuit provides tight integration with the [STIM](https://github.com/quantumlib/Stim) and [TSIM](https://github.com/QuEraComputing/tsim) libraries.
+
+STIM is a sampling simulator for Clifford circuits. TSIM is a sampling simulator for universal quantum circuits
+that contain few non-Clifford gates. Both simulators support Pauli noise channels. TSIM optionally provides GPU acceleration. For more information, please refer to the [TSIM documentation](https://queracomputing.github.io/tsim/latest/).
+
+To use these simulators, first instantiate a `Circuit` object from your kernel. Then compile the circuit into a sampler. This step enables efficient sampling of millions or billions of shots:
+```python
+from bloqade.tsim import Circuit
+
+@squin.kernel
+def main():
+    q = squin.qalloc(2)
+    squin.h(q[0])
+    squin.t(q[0])
+    squin.broadcast.depolarize(0.01, q)
+    squin.cx(q[0], q[1])
+    bits = squin.broadcast.measure(q)
+    squin.set_detector(bits, coordinates=[0, 1])
+    squin.set_observable([bits[0]], idx=0)
+
+
+circuit = Circuit(main)
+sampler = circuit.compile_sampler()
+sampler.sample(shots=1_000_000, batch_size=100_000)  # On GPU, large batch size improves performance
+```
+
+TSIM and STIM provide two types of samplers that are created via the `compile_sampler` and `compile_detector_sampler` methods, respectively. The regular sampler ignores any `set_detector` and `set_observable` statements and returns measurement bits for each `measure` instruction in the order
+of measurement. The detector sampler samples detector and observable bits.
+
+```python
+from bloqade.stim import Circuit
+
+circuit = Circuit(main)
+sampler = circuit.compile_detector_sampler()
+detector_bits, observable_bits = sampler.sample(shots=1_000_000, separate_observables=True)
+
+```
+A detailed tutorial of how to use TSIM for QEC workflows is available [here](https://bloqade.quera.com/latest/digital/examples/tsim/magic_state_distillation/).
+
 
 ### Hardware execution
 
