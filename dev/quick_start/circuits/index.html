@@ -15798,6 +15798,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#simulation-with-stim-and-tsim" class="md-nav__link">
+    <span class="md-ellipsis">
+      Simulation with STIM and TSIM
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#hardware-execution" class="md-nav__link">
     <span class="md-ellipsis">
       Hardware execution
@@ -15887,9 +15896,7 @@ While quite a lot of them are used internally, they are not in a user-friendly s
 Please skip this step for the time being.</p>
 </div>
 <h2 id="pick-your-backend-simulation-and-hardware">Pick your backend: simulation and hardware</h2>
-<p>Once you have your program written and optimized to a point at which you are satisfied, it is time to think about execution.
-Bloqade Digital is a hardware-first SDK, which means that simulation tries to mirror execution on hardware as closely as possible.
-Choosing the hardware you want to run on is therefore mostly interchangeable with simulator backends.</p>
+<p>Once you have your program written and optimized to a point at which you are satisfied, it is time to think about execution.</p>
 <h3 id="simulation-with-pyqrack">Simulation with PyQrack</h3>
 <p>In order to simulate your quantum program, bloqade-circuit integrates with the <a href="https://pyqrack.readthedocs.io/en/latest/">Qrack</a> simulator via its Python bindings.
 Let's run a simulation of the above GHZ program:</p>
@@ -15900,6 +15907,39 @@ Let's run a simulation of the above GHZ program:</p>
 <p>There are also some things available in the simulator which cannot be obtained when running on hardware, such as the actual state vector of the system:</p>
 <div class="highlight"><pre><span></span><code><span class="n">sim</span><span class="o">.</span><span class="n">state_vector</span><span class="p">(</span><span class="n">ghz</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,))</span>
 </code></pre></div>
+<h3 id="simulation-with-stim-and-tsim">Simulation with STIM and TSIM</h3>
+<p>For QEC workflows, it may be required to sample millions or billions of shots from the same kernel.
+For this, bloqade-circuit provides tight integration with the <a href="https://github.com/quantumlib/Stim">STIM</a> and <a href="https://github.com/QuEraComputing/tsim">TSIM</a> libraries.</p>
+<p>STIM is a sampling simulator for Clifford circuits. TSIM is a sampling simulator for universal quantum circuits
+that contain few non-Clifford gates. Both simulators support Pauli noise channels. TSIM optionally provides GPU acceleration. For more information, please refer to the <a href="https://queracomputing.github.io/tsim/latest/">TSIM documentation</a>.</p>
+<p>To use these simulators, first instantiate a <code>Circuit</code> object from your kernel. Then compile the circuit into a sampler. This step enables efficient sampling of millions or billions of shots:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.tsim</span><span class="w"> </span><span class="kn">import</span> <span class="n">Circuit</span>
+
+<span class="nd">@squin</span><span class="o">.</span><span class="n">kernel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">qalloc</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">t</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">broadcast</span><span class="o">.</span><span class="n">depolarize</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">bits</span> <span class="o">=</span> <span class="n">squin</span><span class="o">.</span><span class="n">broadcast</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">set_detector</span><span class="p">(</span><span class="n">bits</span><span class="p">,</span> <span class="n">coordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">squin</span><span class="o">.</span><span class="n">set_observable</span><span class="p">([</span><span class="n">bits</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">idx</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">Circuit</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">circuit</span><span class="o">.</span><span class="n">compile_sampler</span><span class="p">()</span>
+<span class="n">sampler</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">shots</span><span class="o">=</span><span class="mi">1_000_000</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">100_000</span><span class="p">)</span>  <span class="c1"># On GPU, large batch size improves performance</span>
+</code></pre></div></p>
+<p>TSIM and STIM provide two types of samplers that are created via the <code>compile_sampler</code> and <code>compile_detector_sampler</code> methods, respectively. The regular sampler ignores any <code>set_detector</code> and <code>set_observable</code> statements and returns measurement bits for each <code>measure</code> instruction in the order
+of measurement. The detector sampler samples detector and observable bits.</p>
+<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">bloqade.stim</span><span class="w"> </span><span class="kn">import</span> <span class="n">Circuit</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">Circuit</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">circuit</span><span class="o">.</span><span class="n">compile_detector_sampler</span><span class="p">()</span>
+<span class="n">detector_bits</span><span class="p">,</span> <span class="n">observable_bits</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">shots</span><span class="o">=</span><span class="mi">1_000_000</span><span class="p">,</span> <span class="n">separate_observables</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+A detailed tutorial of how to use TSIM for QEC workflows is available <a href="https://bloqade.quera.com/latest/digital/examples/tsim/magic_state_distillation/">here</a>.</p>
 <h3 id="hardware-execution">Hardware execution</h3>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
