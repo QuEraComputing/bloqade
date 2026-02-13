@@ -135,7 +135,7 @@ plugins:
   - blog:
       post_excerpt_max_authors: 5
   - mkdocs-jupyter:
-      execute: true
+      execute: !ENV ["EXECUTE_NOTEBOOKS", true]
       allow_errors: false
       execute_ignore: ["scripts/*", "digital/examples/qasm2/*"]
   - mike
