@@ -307,7 +307,7 @@ stim.Circuit(str(c)).flow_generators()
 
 # %%
 @kernel
-def measure_and_annotate(q, idx):
+def measure_and_annotate(q):
     m = squin.broadcast.measure(q)
     squin.set_detector([m[0], m[1], m[2], m[3]], coordinates=[0])
     squin.set_detector([m[0], m[2], m[4], m[5]], coordinates=[1])
@@ -317,7 +317,7 @@ def measure_and_annotate(q, idx):
     squin.set_detector([m[10], m[11], m[12], m[14]], coordinates=[5])
     squin.set_detector([m[12], m[14], m[15], m[16]], coordinates=[6])
     squin.set_detector([m[2], m[3], m[5], m[6], m[8], m[10], m[11], m[13]], coordinates=[7])
-    squin.set_observable([m[1], m[3], m[10], m[12], m[15]], idx=idx)
+    squin.set_observable([m[1], m[3], m[10], m[12], m[15]])
 
 
 # %%
@@ -372,7 +372,7 @@ def make_encoded_distillation_kernel(
 
         # Readout: measurements and detector and observable annotations
         for i in range(5):
-            measure_and_annotate(qs[i], i)
+            measure_and_annotate(qs[i])
 
     return encoded_distillation
 
