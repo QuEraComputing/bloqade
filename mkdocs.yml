@@ -60,6 +60,7 @@ nav:
     - 'reference/index.md'
     - Bloqade Digital: 'reference/bloqade-circuit/src/bloqade/'
     - Bloqade Analog: 'reference/bloqade-analog/src/bloqade/analog/'
+    - Bloqade Lanes: 'reference/bloqade-lanes/python/bloqade/lanes/'
   - Blog:
     - blog/index.md
   - QuEra Computing: 'https://quera.com'
