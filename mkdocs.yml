@@ -59,6 +59,7 @@ nav:
   - API Reference:
     - 'reference/index.md'
     - Bloqade Digital: 'reference/bloqade-circuit/src/bloqade/'
+    - Bloqade Lanes: 'reference/bloqade-lanes/python/bloqade/'
     - Bloqade Analog: 'reference/bloqade-analog/src/bloqade/analog/'
   - Blog:
     - blog/index.md

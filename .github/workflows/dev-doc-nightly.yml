@@ -32,6 +32,13 @@ jobs:
           repository: QuEraComputing/bloqade-circuit
           path: 'submodules/bloqade-circuit'
 
+      - name: clone the latest bloqade-lanes
+        id: clone_bloqade_lanes
+        uses: actions/checkout@v6
+        with:
+          repository: QuEraComputing/bloqade-lanes
+          path: 'submodules/bloqade-lanes'
+
       - name: clone the latest bloqade-analog
         id: clone_bloqade_analog
         uses: actions/checkout@v6
@@ -40,7 +47,7 @@ jobs:
           path: 'submodules/bloqade-analog'
 
       - name: add local repos as dependencies
-        run: uv add submodules/bloqade-circuit submodules/bloqade-analog
+        run: uv add submodules/bloqade-circuit submodules/bloqade-lanes submodules/bloqade-analog
 
       - name: Set up build cache
         uses: actions/cache@v5

@@ -32,3 +32,18 @@ runs:
           repository: QuEraComputing/bloqade-analog
           path: 'submodules/bloqade-analog'
           ref: ${{ steps.bloqade_analog_extract_version.outputs.version }}
+
+      - name: extract bloqade-lanes version
+        id: bloqade_lanes_extract_version
+        shell: bash
+        run: |
+          VERSION=$(uv pip show bloqade-lanes | awk '/^Version: / {print "v"$2}')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: clone the latest bloqade-lanes release
+        id: clone_bloqade_lanes
+        uses: actions/checkout@v5
+        with:
+          repository: QuEraComputing/bloqade-lanes
+          path: 'submodules/bloqade-lanes'
+          ref: ${{ steps.bloqade_lanes_extract_version.outputs.version }}
