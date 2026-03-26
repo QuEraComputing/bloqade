@@ -48,7 +48,8 @@ skip_keywords = [
     "scripts/",
     "examples/",
     "crates/",
-    "lanes/analysis/",  # TODO: don't skip this
+    "lanes/bytecode/arch",  # TODO: don't skip this
+    "lanes/analysis/",
     "lanes/arch/gemini/",
 ]
 
