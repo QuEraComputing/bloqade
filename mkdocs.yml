@@ -41,6 +41,8 @@ nav:
       - GHZ state preparation with noise: digital/examples/squin/ghz.py
     - TSIM examples:
       - Magic state distillation: digital/examples/tsim/magic_state_distillation.py
+    - Gemini Logical dialect examples:
+      - Demonstration of Simulator Device: digital/examples/gemini_logical/simulator_device_demo.py
     - Integration with other SDKs:
       - Noisy GHZ states with cirq: "digital/examples/interop/noisy_ghz.py"
   - Bloqade Analog:
