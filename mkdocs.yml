@@ -60,6 +60,8 @@ nav:
     - 'reference/index.md'
     - Bloqade Digital: 'reference/bloqade-circuit/src/bloqade/'
     - Bloqade Analog: 'reference/bloqade-analog/src/bloqade/analog/'
+    # TODO: Add lanes to API ref.
+    # Phil: maybe manually merge all the refs of lanes with digital docs?
   - Blog:
     - blog/index.md
   - QuEra Computing: 'https://quera.com'

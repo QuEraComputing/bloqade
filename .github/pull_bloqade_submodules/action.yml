@@ -32,3 +32,5 @@ runs:
           repository: QuEraComputing/bloqade-analog
           path: 'submodules/bloqade-analog'
           ref: ${{ steps.bloqade_analog_extract_version.outputs.version }}
+# TODO: clone the latest lanes version -- corr david
+# ASK: other github workflows?

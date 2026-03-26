@@ -16,6 +16,7 @@ else:
     ├── bloqade
     ├── bloqade-analog
     └── bloqade-circuit
+    # TODO: add lanes?
     """
     BLOQADE_CIRCUIT_SRC_PATH = "../bloqade-circuit/"
     BLOQADE_ANALOG_SRC_PATH = "../bloqade-analog/"
@@ -41,6 +42,7 @@ skip_keywords = [
     "docs/",
     "debug/",
     "squin/cirq/emit/",  # NOTE: this fails when included because there is an __init__.py missing, but the files have no docs anyway and it will be moved so safe to ignore
+    # ASK: david NOT to skip the analysis keyword (only a temp fix); add __init__.py to arch/gemini and lanes/analysis
 ]
 
 
@@ -101,3 +103,5 @@ with mkdocs_gen_files.open("reference/SUMMARY_BLOQADE_CIRCUIT.md", "w") as nav_f
 bloqade_analog_nav = make_nav("bloqade-analog", BLOQADE_ANALOG_SRC_PATH)
 with mkdocs_gen_files.open("reference/SUMMARY_BLOQADE_ANALOG.md", "w") as nav_file:
     nav_file.writelines(bloqade_analog_nav.build_literate_nav())
+
+# TODO: call make_nav function for lanes; provide src path
