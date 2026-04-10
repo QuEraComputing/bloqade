@@ -13,8 +13,9 @@
 # ---
 
 # %% [markdown]
-# ## Simulator demo for Gemini logical
-# Gemini logical is a specific set of dialects and compilers in bloqade. This demo is hosted in the `bloqade-lanes` repo, which is where the move synthesis compiler lives.
+# # Simulator Demo for Gemini Logical
+# Gemini Logical is a set of dialects and compilation tools in Bloqade for logical-kernel workflows on Gemini-style architectures.
+# In this tutorial, we build a simple logical kernel, inspect the generated physical and noisy circuits, and analyze detector and observable outputs using the `GeminiLogicalSimulator`.
 
 # %%
 # Builtins
