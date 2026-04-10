@@ -101,3 +101,18 @@ You can also write your quantum programs using the QASM2 dialect directly in blo
     Here's how to implement a Z phase gate with the repeat-until-success protocol.
 
 </div>
+
+
+## Gemini Logical Dialect
+
+Gemini Logical examples focus on logical-kernel workflows built on top of `bloqade-lanes`, including physical compilation, noisy simulation, and detector/observable analysis.
+
+<div class="grid cards style=font-size:1px;" markdown>
+
+-   [Simulator Device Demonstration](../examples/gemini_logical/simulator_device_demo/)
+
+    ---
+
+    Compile and simulate a Gemini Logical kernel, inspect the generated circuits, and analyze detectors, observables, correction, and post-selection.
+
+</div>

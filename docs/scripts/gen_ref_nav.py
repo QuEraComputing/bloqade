@@ -8,6 +8,7 @@ import mkdocs_gen_files
 if os.getenv("GITHUB_ACTIONS") == "true":
     BLOQADE_CIRCUIT_SRC_PATH = "submodules/bloqade-circuit/"
     BLOQADE_ANALOG_SRC_PATH = "submodules/bloqade-analog/"
+    BLOQADE_LANES_SRC_PATH = "submodules/bloqade-lanes/"
 else:
     """
     NOTE: we assume the following project structure when building locally:
@@ -15,9 +16,11 @@ else:
     ../
     ├── bloqade
     ├── bloqade-analog
+    ├── bloqade-lanes
     └── bloqade-circuit
     """
     BLOQADE_CIRCUIT_SRC_PATH = "../bloqade-circuit/"
+    BLOQADE_LANES_SRC_PATH = "../bloqade-lanes/"
     BLOQADE_ANALOG_SRC_PATH = "../bloqade-analog/"
 
 
@@ -41,6 +44,10 @@ skip_keywords = [
     "docs/",
     "debug/",
     "squin/cirq/emit/",  # NOTE: this fails when included because there is an __init__.py missing, but the files have no docs anyway and it will be moved so safe to ignore
+    "demo/",
+    "scripts/",
+    "examples/",
+    "crates/",
 ]
 
 
@@ -101,3 +108,7 @@ with mkdocs_gen_files.open("reference/SUMMARY_BLOQADE_CIRCUIT.md", "w") as nav_f
 bloqade_analog_nav = make_nav("bloqade-analog", BLOQADE_ANALOG_SRC_PATH)
 with mkdocs_gen_files.open("reference/SUMMARY_BLOQADE_ANALOG.md", "w") as nav_file:
     nav_file.writelines(bloqade_analog_nav.build_literate_nav())
+
+bloqade_lanes_nav = make_nav("bloqade-lanes", BLOQADE_LANES_SRC_PATH)
+with mkdocs_gen_files.open("reference/SUMMARY_BLOQADE_LANES.md", "w") as nav_file:
+    nav_file.writelines(bloqade_lanes_nav.build_literate_nav())
