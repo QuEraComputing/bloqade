@@ -25,18 +25,14 @@ uv add bloqade
 
 The documentation is available at [https://bloqade.quera.com/latest/](https://bloqade.quera.com/latest/). We are at an early stage of completing the documentation with more details and examples, so comments and contributions are most welcome!
 
-## Roadmap
+## Contributing
 
-We use github issues to track the roadmap. There are more feature requests and proposals in the issues. Here are some of the most wanted features we wish to implement by 2025 summer (July):
+We welcome contributions! Please check the [contribution guidelines](https://bloqade.quera.com/latest/contrib/) for a detailed guide.
 
-- [x] QASM2 dialect (dialect, parser, pyqrack backend, ast, codegen)
-- [x] QASM2 extensions (e.g. parallel gates, noise, etc.)
-- [x] STIM dialect (dialect, codegen)
-- [ ] structural gate dialect (language proposal, dialect, passes)
-- [ ] atom-move dialect (language proposal, dialect, passes)
-- [ ] atom move animation backend
+> [!NOTE]
+>
+> We welcome contributions that use AI assistance. However, **we ask that first-time contributors do not submit AI-generated PRs**.
 
-Proposal for the roadmap and feature requests are welcome!
 
 ## License
 
