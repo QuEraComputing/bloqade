@@ -467,7 +467,7 @@ version = "0.34.0.dev0"
 source = { editable = "." }
 dependencies = [
     { name = "bloqade-analog" },
-    { name = "bloqade-circuit", extra = ["cirq", "qasm2", "qbraid", "stim", "tsim", "vis"] },
+    { name = "bloqade-circuit", extra = ["cirq", "qasm2", "qbraid", "stim", "vis"] },
     { name = "bloqade-lanes" },
 ]
 
@@ -508,7 +508,7 @@ examples = [
 [package.metadata]
 requires-dist = [
     { name = "bloqade-analog", specifier = "~=0.16.3" },
-    { name = "bloqade-circuit", extras = ["cirq", "qasm2", "qbraid", "vis", "stim", "tsim"], specifier = "~=0.14.1" },
+    { name = "bloqade-circuit", extras = ["cirq", "qasm2", "qbraid", "vis", "stim"], specifier = "~=0.14.1" },
     { name = "bloqade-lanes", specifier = "~=0.10.6" },
 ]
 
@@ -604,9 +604,6 @@ qbraid = [
 ]
 stim = [
     { name = "stim" },
-]
-tsim = [
-    { name = "bloqade-tsim" },
 ]
 vis = [
     { name = "ffmpeg" },
