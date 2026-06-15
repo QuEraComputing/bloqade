@@ -469,6 +469,7 @@ dependencies = [
     { name = "bloqade-analog" },
     { name = "bloqade-circuit", extra = ["cirq", "qasm2", "qbraid", "stim", "vis"] },
     { name = "bloqade-lanes" },
+    { name = "bloqade-tsim" },
 ]
 
 [package.dev-dependencies]
@@ -510,6 +511,7 @@ requires-dist = [
     { name = "bloqade-analog", specifier = "~=0.16.3" },
     { name = "bloqade-circuit", extras = ["cirq", "qasm2", "qbraid", "vis", "stim"], specifier = "~=0.14.1" },
     { name = "bloqade-lanes", specifier = "~=0.10.6" },
+    { name = "bloqade-tsim", specifier = "~=0.1.4" },
 ]
 
 [package.metadata.requires-dev]
