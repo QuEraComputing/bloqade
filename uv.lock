@@ -300,8 +300,8 @@ version = "0.34.0.dev0"
 source = { editable = "." }
 dependencies = [
     { name = "bloqade-analog" },
-    { name = "bloqade-circuit", extra = ["cirq", "qasm2", "qbraid", "stim", "vis"] },
-    { name = "bloqade-lanes", extra = ["sim"] },
+    { name = "bloqade-circuit", extra = ["cirq", "qasm2", "qbraid", "stim", "tsim", "vis"] },
+    { name = "bloqade-lanes" },
 ]
 
 [package.dev-dependencies]
@@ -341,8 +341,8 @@ examples = [
 [package.metadata]
 requires-dist = [
     { name = "bloqade-analog", specifier = "~=0.16.3" },
-    { name = "bloqade-circuit", extras = ["cirq", "qasm2", "qbraid", "vis", "stim"], specifier = "~=0.14.0" },
-    { name = "bloqade-lanes", extras = ["sim"], specifier = "~=0.10.6" },
+    { name = "bloqade-circuit", extras = ["cirq", "qasm2", "qbraid", "vis", "stim", "tsim"], specifier = "~=0.14.1" },
+    { name = "bloqade-lanes", specifier = "~=0.10.6" },
 ]
 
 [package.metadata.requires-dev]
@@ -499,12 +499,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/4f/91/4b015c1261e36ece66168b10bc270d8c739c15b098d072a4fd1ff6c94dd2/bloqade_lanes-0.10.6-cp310-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:32a1ff3585140d80ee35170998408819e301f04b22c249c2b7d6dee01098c392", size = 8776561, upload-time = "2026-06-15T14:48:50.178Z" },
     { url = "https://files.pythonhosted.org/packages/69/8c/f6fdb50db878c6e154c03a28c2af9cf118c94196320b36d10c93b06c2827/bloqade_lanes-0.10.6-cp310-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:366407987f31a527cadef6901b1dccbbeb54a1f7646581c426ac49fe3bc23aa8", size = 8905482, upload-time = "2026-06-15T14:48:52.701Z" },
     { url = "https://files.pythonhosted.org/packages/6c/fb/bf477555550ff900c5689fc19fd9e9a8f566cb256d0a3bc85f7b5a7e539f/bloqade_lanes-0.10.6-cp310-abi3-win_amd64.whl", hash = "sha256:bd7307d440ee900a8a9448511214411d67d25cc119369841ae6e918f03f9089f", size = 6219468, upload-time = "2026-06-15T14:48:54.739Z" },
-]
-
-[package.optional-dependencies]
-sim = [
-    { name = "bloqade-circuit", extra = ["cirq", "tsim"] },
-    { name = "bloqade-tsim" },
 ]
 
 [[package]]
