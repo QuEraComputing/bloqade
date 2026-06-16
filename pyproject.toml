@@ -20,9 +20,11 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 dependencies = [
-    "bloqade-circuit[cirq,qasm2,qbraid,vis,stim]~=0.14.0",
+    "bloqade-circuit[cirq,qasm2,qbraid,vis,stim]~=0.14.1",
     "bloqade-analog~=0.16.3",
-    "bloqade-lanes~=0.7.1",
+    "bloqade-lanes~=0.10.6",
+    "bloqade-tsim~=0.1.4",
+
 ]
 
 [build-system]
@@ -62,6 +64,7 @@ doc = [
     "mkdocstrings[python]>=0.27.0",
     "mkdocs-jupyter>=0.25.1",
     "pygments<2.20",
+    "ipywidgets>=8.1.0",  # trasnient dep, don't remove                                                          
 ]
 examples = [
     "networkx>=3.4.2",
