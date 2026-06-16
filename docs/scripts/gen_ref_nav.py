@@ -48,7 +48,7 @@ skip_keywords = [
     "scripts/",
     "examples/",
     "crates/",
-    "benchmark",
+    "benchmarks/",
 ]
 
 
