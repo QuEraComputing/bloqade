@@ -22,7 +22,7 @@ jobs:
         with:
           # Install a specific version of uv.
           version: "0.5.1"
-          enable-cache: false
+          enable-cache: true
           cache-dependency-glob: "uv.lock"
 
       - name: Install Documentation dependencies
