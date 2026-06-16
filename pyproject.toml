@@ -1,6 +1,6 @@
 [project]
 name = "bloqade"
-version = "0.34.0-dev"
+version = "0.34.0"
 description = "The software development toolkit for neutral atom arrays."
 readme = "README.md"
 authors = [
@@ -64,7 +64,7 @@ doc = [
     "mkdocstrings[python]>=0.27.0",
     "mkdocs-jupyter>=0.25.1",
     "pygments<2.20",
-    "ipywidgets>=8.1.0",  # trasnient dep, don't remove                                                          
+    "ipywidgets>=8.1.0",  # trasnient dep, don't remove
 ]
 examples = [
     "networkx>=3.4.2",
