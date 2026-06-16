@@ -22,11 +22,11 @@ jobs:
         with:
           # Install a specific version of uv.
           version: "0.5.1"
-          enable-cache: true
+          enable-cache: false
           cache-dependency-glob: "uv.lock"
 
       - name: Install Documentation dependencies
-        run: uv sync --group doc
+        run: uv sync --all-extras --group doc
 
       - name: Pull bloqade submodules
         uses: ./.github/pull_bloqade_submodules
