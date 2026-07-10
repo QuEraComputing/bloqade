@@ -1,0 +1,49 @@
+# Keeps the gh-pages branch from re-accumulating build history.
+#
+# Every docs deploy (mike / pr-preview) adds a full commit to gh-pages, so its
+# history grows without bound even though only the tip is ever served. This job
+# periodically collapses gh-pages to a single orphan commit. The content is a
+# generated artifact and every version is rebuildable from its release tag, so
+# discarding the history is always safe.
+name: Compact gh-pages history
+
+on:
+  schedule:
+    # 03:00 UTC on the 1st of each month (a quiet time, to avoid racing deploys)
+    - cron: "0 3 1 * *"
+  workflow_dispatch: {}
+
+# Share a lock with the workflows that write to gh-pages so a squash never
+# races a mike/pr-preview push.
+concurrency:
+  group: gh-pages-write
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  squash:
+    name: Squash gh-pages to a single commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: gh-pages
+          fetch-depth: 0
+
+      - name: Collapse history into one orphan commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          before=$(git rev-list --count HEAD)
+          if [ "$before" -le 1 ]; then
+            echo "gh-pages already has $before commit(s); nothing to squash."
+            exit 0
+          fi
+          git checkout --orphan _squash
+          git add -A
+          git commit -q -m "docs: compact gh-pages (squash $before commits)"
+          git branch -M _squash gh-pages
+          git push --force origin gh-pages
+          echo "Squashed gh-pages from $before commits to 1."

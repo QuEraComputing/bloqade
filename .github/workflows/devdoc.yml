@@ -4,9 +4,12 @@ on:
     branches:
       - main
 
+# Serialize with every other workflow that writes to gh-pages (release deploy,
+# history squash) so concurrent pushes can't clobber the branch. Queued dev
+# deploys run in order rather than cancelling an in-flight gh-pages push.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  group: gh-pages-write
+  cancel-in-progress: false
 
 jobs:
   documentation:
