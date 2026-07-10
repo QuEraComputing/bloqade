@@ -4,9 +4,13 @@ on:
     tags:
       - "v*"
 
+# Serialize with every other workflow that writes to gh-pages (dev deploy,
+# release deploy, history squash) so concurrent pushes can't clobber the branch.
+# cancel-in-progress must stay false here: cancelling a mike push mid-flight
+# could leave gh-pages in a broken state.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  group: gh-pages-write
+  cancel-in-progress: false
 
 jobs:
   documentation:
@@ -55,3 +59,18 @@ jobs:
         run: |
           git fetch origin gh-pages --depth=1
           uv run mike deploy --update-alias --push ${TAG_VERSION} latest
+      # Keep the live site small: retain only `dev` plus the newest N release
+      # versions. Older versions stay rebuildable from their release tags and
+      # are captured in the `docs-archive-*` release asset.
+      - name: Prune old versions from the live site
+        env:
+          KEEP_RELEASES: "3"
+        run: |
+          git fetch origin gh-pages --depth=1
+          to_delete=$(uv run mike list -j | python3 .github/scripts/select_old_doc_versions.py)
+          if [ -n "$to_delete" ]; then
+            echo "Deleting old versions: $to_delete"
+            uv run mike delete --push $to_delete
+          else
+            echo "Nothing to prune."
+          fi
