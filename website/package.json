@@ -1,0 +1,25 @@
+{
+  "name": "bloqade-website",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Bloqade documentation website (Astro + Starlight). Phase A foundation.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "4.3.14",
+    "@astrojs/starlight": "0.37.0",
+    "@fontsource/lato": "^5.2.7",
+    "astro": "^5.18.2",
+    "astro-auto-import": "0.5.1",
+    "katex": "^0.17.0",
+    "mermaid": "^11.16.0",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0"
+  }
+}

@@ -1,0 +1,45 @@
+---
+/**
+ * Raises — exceptions a callable may raise.
+ *
+ * CONTRACT (props are FROZEN):
+ *   items: Array<{ type: string; description?: string }>
+ *
+ * Rendered as a Type / Description table, styled consistently with Params.
+ * Types are monospace and left as plain text (linkified later); descriptions
+ * may contain inline HTML.
+ */
+import './api.css';
+
+interface RaiseItem {
+  type: string;
+  description?: string;
+}
+interface Props {
+  items: RaiseItem[];
+}
+const { items } = Astro.props;
+---
+<div class="api-raises">
+  <p class="api-raises__title">Raises</p>
+  <div class="api-table-wrap" tabindex="0" role="group" aria-label="Raises">
+    <table class="api-table api-raises__table">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          items.map((item) => (
+            <tr>
+              <td class="api-table__type"><code>{item.type}</code></td>
+              <td class="api-table__desc" set:html={item.description ?? ''} />
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

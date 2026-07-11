@@ -1,0 +1,45 @@
+---
+/**
+ * ApiFn — a generated function / method / property entry.
+ *
+ * CONTRACT (props are FROZEN):
+ *   name: string       — symbol name
+ *   fqName: string     — fully-qualified id (also the heading anchor id)
+ *   kind?: 'function' | 'method' | 'property'  (default 'function')
+ *   sourceUrl?: string — link to source
+ *
+ * Renders a heading (kind badge + monospace name + hover permalink + optional
+ * source link) followed by the slotted body (signature, params, docstring).
+ */
+import Source from './Source.astro';
+import './api.css';
+
+interface Props {
+  name: string;
+  fqName: string;
+  kind?: 'function' | 'method' | 'property';
+  sourceUrl?: string;
+}
+const { name, fqName, kind = 'function', sourceUrl } = Astro.props;
+---
+<section class="api-fn" data-fq-name={fqName} data-kind={kind}>
+  <h3 class="api-fn__heading" id={fqName}>
+    <span class={`api-badge api-badge--${kind}`}>{kind}</span>
+    <code class="api-fn__name">{name}</code>
+    <a
+      class="api-permalink"
+      href={'#' + fqName}
+      aria-label={`Permalink to ${name}`}
+    >¶</a>
+    {
+      sourceUrl && (
+        <span class="api-fn__source">
+          <Source href={sourceUrl} label="source" />
+        </span>
+      )
+    }
+  </h3>
+  <div class="api-fn__body">
+    <slot />
+  </div>
+</section>

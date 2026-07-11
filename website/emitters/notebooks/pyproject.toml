@@ -1,0 +1,35 @@
+[project]
+name = "bloqade-docs-emit-notebooks"
+version = "0.1.0"
+description = "Execute jupytext percent-format tutorials and emit Starlight-compatible MDX with outputs."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "jupytext>=1.16,<2",
+    "nbclient>=0.10,<0.11",
+    "nbformat>=5.10,<6",
+    # ipykernel provides the in-process interpreter the executed notebooks run
+    # in. Combined with the `bloqade` dep below, this venv's own interpreter is
+    # a complete kernel: `uv run` here can both parse AND execute a tutorial.
+    "ipykernel>=6.29,<7",
+    # The tutorials `import bloqade`, so the execution kernel must have it. We
+    # depend on the repo's own metapackage (path source below) so this stays in
+    # lockstep with the versions the site ships. Execution can be disabled
+    # (EXECUTE_NOTEBOOKS unset) in which case bloqade is never imported.
+    "bloqade",
+]
+
+[project.scripts]
+bloqade-docs-emit-notebooks = "bloqade_docs_emit_notebooks.__main__:main"
+
+[tool.uv.sources]
+# Repo root, three levels up from this file
+# (website/emitters/notebooks -> website/emitters -> website -> <repo root>).
+bloqade = { path = "../../..", editable = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/bloqade_docs_emit_notebooks"]

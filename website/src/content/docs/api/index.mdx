@@ -1,0 +1,24 @@
+---
+title: API Reference
+description: The versioned Bloqade API reference — Python and Rust, per release.
+---
+
+The Bloqade API reference is **versioned** along a single distribution axis: the
+`bloqade` meta-package version. Everything else on this site (guides, blog,
+tutorials) is evergreen; only this reference is pinned per release.
+
+- **Latest release** — [Python API](/api/latest/python) ·
+  [Rust API](/api/latest/rust)
+- **Development** (tracks `main`) — [Python API](/api/dev/python) ·
+  [Rust API](/api/dev/rust)
+- **[Compatibility matrix](/api/compatibility/)** — which `bloqade-*`
+  sub-package versions each `bloqade` release pins.
+
+Use the **version switcher** at the top of the sidebar (shown on any API page)
+to move between releases while staying on the same symbol.
+
+## How versions work
+
+`latest` is an alias for the newest release; `dev` is built from `main`. Older
+releases stay available and are rebuilt from their git tags. Pick a specific
+version from the switcher, or link directly to `/api/<version>/python/…`.

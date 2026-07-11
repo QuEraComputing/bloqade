@@ -1,0 +1,119 @@
+name: Website Preview (Astro)
+
+# Per-PR preview of the WIP Astro/Starlight docs site (Phase D2). This is
+# ADDITIVE to the live MkDocs pipeline and NEVER touches the gh-pages root:
+#   * it deploys under the umbrella dir `astro-preview/` (per PR:
+#     `astro-preview/pr-<N>/`), which is DISTINCT from the MkDocs preview in
+#     `doc.yml` (default umbrella `pr-preview/`), so the two never collide;
+#   * production cutover to `main`/root is a later phase.
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+
+# Serialize with EVERY other gh-pages writer (devdoc.yml dev deploy,
+# pub_doc.yml release deploy, squash-gh-pages.yml, website-deploy.yml) on one
+# shared group so concurrent pushes can't clobber the branch. Must stay
+# cancel-in-progress:false — cancelling a push mid-flight can corrupt gh-pages.
+concurrency:
+  group: gh-pages-write
+  cancel-in-progress: false
+
+permissions:
+  contents: write # push the preview to the gh-pages branch
+  pull-requests: write # leave/update the sticky preview comment
+
+jobs:
+  preview:
+    name: Build + deploy Astro PR preview
+    runs-on: ubuntu-latest
+    env:
+      # The preview is served at https://bloqade.quera.com/astro-preview/pr-<N>/
+      # (gh-pages CNAME). Astro's `base` MUST match this subpath exactly or every
+      # asset URL and internal link 404s.
+      SITE_BASE: /astro-preview/pr-${{ github.event.pull_request.number }}/
+      SITE_URL: https://bloqade.quera.com
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      # ---- build (skipped when the PR is merely being closed; the deploy step
+      #      below still runs to TEAR DOWN the preview) ----
+      - name: Install uv
+        if: github.event.action != 'closed'
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.5.1"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Install bloqade (pins the API source tags for resolve_sources.py)
+        if: github.event.action != 'closed'
+        run: uv sync
+
+      - name: Set up pnpm
+        if: github.event.action != 'closed'
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - name: Set up Node
+        if: github.event.action != 'closed'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: website/pnpm-lock.yaml
+
+      - name: Install website JS deps
+        if: github.event.action != 'closed'
+        run: pnpm --dir website install --frozen-lockfile
+
+      - name: Install pinned Rust nightly (rustdoc JSON format_version 57)
+        if: github.event.action != 'closed'
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: nightly-2026-04-17
+
+      - name: Cache cargo registry + Astro content
+        if: github.event.action != 'closed'
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            website/.astro
+          key: website-cargo-astro-${{ runner.os }}-${{ hashFiles('website/pnpm-lock.yaml', 'website/docs.sources.toml') }}
+          restore-keys: |
+            website-cargo-astro-${{ runner.os }}-
+
+      # Generates src/content/docs/api/dev/** (python + rust) + inventories +
+      # versions.json. `uv run` here uses the repo env synced above so
+      # resolve_sources.py can `uv pip show bloqade-*` to pin each source tag.
+      # EXECUTE_NOTEBOOKS is intentionally UNSET (tutorials render statically);
+      # notebook execution is reserved for a nightly workflow.
+      - name: Generate dev API content
+        if: github.event.action != 'closed'
+        run: >
+          uv run python website/scripts/build_versions.py
+          --versions dev
+          --clone-dir website/sources
+          --rust-toolchain nightly-2026-04-17
+
+      # Auto-runs build_inventory.mjs (config:setup), Pagefind, and the xref
+      # integration that emits dist/objects.inv. XREF_STRICT=0 -> warn (don't
+      # fail the preview) on unresolved cross-references.
+      - name: Build Astro site
+        if: github.event.action != 'closed'
+        env:
+          XREF_STRICT: "0"
+        run: pnpm --dir website build
+
+      # ---- deploy / teardown. Runs on `closed` too: pr-preview-action's
+      #      `auto` mode removes `astro-preview/pr-<N>/` when the PR closes. ----
+      - name: Deploy PR preview to gh-pages:/astro-preview/pr-<N>/
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: website/dist
+          umbrella-dir: astro-preview
+          pages-base-url: https://bloqade.quera.com

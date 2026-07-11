@@ -1,0 +1,130 @@
+---
+/*
+  Starlight Head override that also injects the client-side Mermaid renderer.
+
+  WHY A COMPONENT (not the astro.config `head` option): Starlight `head` entries
+  render as literal script tags that Vite does NOT bundle, so they cannot
+  `import` the local `mermaid` npm package. An Astro script block inside a
+  component IS bundled, which lets us ship the pinned local mermaid (no CDN) and
+  code-split it so it is only fetched on pages that contain a diagram.
+
+  We render the default Starlight Head unchanged (it reads its data from
+  Astro.locals.starlightRoute, so no props need forwarding) and append the init
+  script. Registered via `components.Head` in astro.config.mjs.
+
+  NOTE: keep the literal string s-c-r-i-p-t (with angle brackets) out of this
+  comment — Astro's compiler extracts anything that looks like a script tag,
+  even inside comments.
+*/
+import Default from '@astrojs/starlight/components/Head.astro';
+---
+
+<Default />
+
+<script>
+  // NOTE: plain JS (no TS annotations). Astro/Rollup would happily compile TS
+  // here, but Vite's dev-mode optimizeDeps scanner (esbuild) misparses inline
+  // TS in .astro <script> tags, so we keep this JavaScript-only.
+  //
+  // Expressive Code (Starlight's code renderer) turns a ```mermaid fence into
+  // <pre data-language="mermaid"> where each source line is wrapped in its own
+  // <div class="ec-line">, and the newlines are dropped from textContent. We
+  // therefore rebuild the source by joining the per-line text with "\n". Plain
+  // <code class="language-mermaid"> and author-authored <pre class="mermaid">
+  // are supported as fallbacks. Mermaid is imported dynamically so it is only
+  // downloaded on pages that contain at least one diagram.
+
+  const SELECTOR =
+    'pre[data-language="mermaid"], pre.mermaid, pre > code.language-mermaid';
+
+  function initConfig() {
+    return {
+      startOnLoad: false,
+      theme:
+        document.documentElement.dataset.theme === 'light' ? 'default' : 'dark',
+      securityLevel: 'loose',
+      fontFamily: "'Lato', sans-serif",
+    };
+  }
+
+  function sourceFrom(el) {
+    if (el.matches('pre[data-language="mermaid"]')) {
+      const lines = el.querySelectorAll('.ec-line');
+      if (lines.length) {
+        return Array.from(lines, (l) => l.textContent || '').join('\n');
+      }
+    }
+    return el.textContent || '';
+  }
+
+  function collect() {
+    const out = [];
+    document.querySelectorAll(SELECTOR).forEach((el) => {
+      let replace = el.closest('.expressive-code');
+      if (!replace) replace = el.tagName === 'CODE' ? el.closest('pre') : el;
+      if (!replace) replace = el;
+      out.push({ code: sourceFrom(el).trim(), replace: replace });
+    });
+    return out;
+  }
+
+  let mermaidPromise;
+  function loadMermaid() {
+    if (!mermaidPromise) {
+      mermaidPromise = import('mermaid').then((m) => m.default);
+    }
+    return mermaidPromise;
+  }
+
+  async function renderAll() {
+    const blocks = collect();
+    if (!blocks.length) return;
+    const mermaid = await loadMermaid();
+    mermaid.initialize(initConfig());
+    for (let i = 0; i < blocks.length; i++) {
+      const code = blocks[i].code;
+      const replace = blocks[i].replace;
+      if (!code) continue;
+      try {
+        const result = await mermaid.render('mermaid-' + Date.now() + '-' + i, code);
+        const container = document.createElement('div');
+        container.className = 'mermaid-diagram';
+        container.dataset.mermaidSource = code;
+        container.innerHTML = result.svg;
+        replace.replaceWith(container);
+      } catch (err) {
+        console.error('[mermaid] failed to render diagram', err);
+        if (replace instanceof HTMLElement) replace.style.display = 'block';
+      }
+    }
+  }
+
+  async function rerender() {
+    const rendered = document.querySelectorAll(
+      '.mermaid-diagram[data-mermaid-source]',
+    );
+    if (!rendered.length) return;
+    const mermaid = await loadMermaid();
+    mermaid.initialize(initConfig());
+    let i = 0;
+    for (const el of rendered) {
+      const code = el.dataset.mermaidSource;
+      if (!code) continue;
+      try {
+        const result = await mermaid.render('mermaid-rr-' + Date.now() + '-' + i++, code);
+        el.innerHTML = result.svg;
+      } catch (err) {
+        console.error('[mermaid] failed to re-render diagram', err);
+      }
+    }
+  }
+
+  // Re-render diagrams when the light/dark theme changes.
+  new MutationObserver((mutations) => {
+    if (mutations.some((m) => m.attributeName === 'data-theme')) rerender();
+  }).observe(document.documentElement, { attributes: true });
+
+  renderAll();
+  // Re-run if Astro view transitions are ever enabled site-wide.
+  document.addEventListener('astro:page-load', renderAll);
+</script>

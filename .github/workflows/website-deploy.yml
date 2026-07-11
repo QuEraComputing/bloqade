@@ -1,0 +1,99 @@
+name: Website Deploy (Astro -> /next/)
+
+# Publishes the WIP Astro/Starlight docs site to the gh-pages SUBPATH `/next/`
+# on every push to the `astro-docs` development branch. This is ADDITIVE to the
+# live MkDocs site: `mike` (devdoc.yml/pub_doc.yml) owns the branch ROOT plus
+# `dev/`, `latest/`, `v*/`; this workflow only ever writes under `/next/`.
+#
+# NOTE: deliberately wired to `astro-docs`, NOT `main`. Production cutover to
+# the root is Phase F (see website-release.yml).
+on:
+  push:
+    branches: [astro-docs]
+
+# Share the single gh-pages writer group (see website-preview.yml) so this
+# deploy serializes with every mike deploy / PR preview / history squash.
+concurrency:
+  group: gh-pages-write
+  cancel-in-progress: false
+
+permissions:
+  contents: write # publish.sh pushes to the gh-pages branch
+
+jobs:
+  deploy:
+    name: Build + publish /next/
+    runs-on: ubuntu-latest
+    env:
+      # Publish subpath. `base` MUST equal the publish subpath (see publish.sh).
+      SITE_BASE: /next/
+      SITE_URL: https://bloqade.quera.com
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.5.1"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Install bloqade (pins the API source tags for resolve_sources.py)
+        run: uv sync
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: website/pnpm-lock.yaml
+
+      - name: Install website JS deps
+        run: pnpm --dir website install --frozen-lockfile
+
+      - name: Install pinned Rust nightly (rustdoc JSON format_version 57)
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: nightly-2026-04-17
+
+      - name: Cache cargo registry + Astro content
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            website/.astro
+          key: website-cargo-astro-${{ runner.os }}-${{ hashFiles('website/pnpm-lock.yaml', 'website/docs.sources.toml') }}
+          restore-keys: |
+            website-cargo-astro-${{ runner.os }}-
+
+      # EXECUTE_NOTEBOOKS intentionally UNSET: tutorials render statically here.
+      - name: Generate dev API content
+        run: >
+          uv run python website/scripts/build_versions.py
+          --versions dev
+          --clone-dir website/sources
+          --rust-toolchain nightly-2026-04-17
+
+      - name: Build Astro site
+        env:
+          XREF_STRICT: "0" # warn (don't fail the WIP deploy) on unresolved xrefs
+        run: pnpm --dir website build
+
+      - name: Configure Git user
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      # publish.sh replaces ONLY gh-pages:/next/ and preserves every sibling
+      # (the MkDocs root + dev/latest/v*/pr-preview/). SITE_BASE above ('/next/')
+      # matches the 'next' subpath passed here.
+      - name: Publish to gh-pages:/next/
+        run: bash website/scripts/publish.sh website/dist next

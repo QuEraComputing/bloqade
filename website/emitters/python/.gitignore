@@ -1,0 +1,9 @@
+# uv virtual environment
+.venv/
+
+# scratch output (default --out); real runs point --out elsewhere
+_out/
+
+# python caches
+__pycache__/
+*.pyc

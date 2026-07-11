@@ -1,0 +1,37 @@
+---
+/**
+ * ApiModule — wraps a generated module page.
+ *
+ * CONTRACT (props are FROZEN):
+ *   name: string     — short display name (e.g. "kernel")
+ *   fqName: string   — fully-qualified module id (e.g. "bloqade.squin.kernel")
+ *   summary?: string — one-line module summary
+ *
+ * Renders a module heading (with hover permalink), the fully-qualified name,
+ * an optional summary, then the slotted members. The heading id is the fqName
+ * so <ApiXref to="..."> anchors resolve.
+ */
+import './api.css';
+
+interface Props {
+  name: string;
+  fqName: string;
+  summary?: string;
+}
+const { name, fqName, summary } = Astro.props;
+---
+<section class="api-module" data-fq-name={fqName}>
+  <h2 class="api-module__heading" id={fqName}>
+    <code>{name}</code>
+    <a
+      class="api-permalink"
+      href={'#' + fqName}
+      aria-label={`Permalink to ${name}`}
+    >¶</a>
+  </h2>
+  <p class="api-module__fqname"><code>{fqName}</code></p>
+  {summary && <p class="api-module__summary">{summary}</p>}
+  <div class="api-module__body">
+    <slot />
+  </div>
+</section>

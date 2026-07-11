@@ -1,0 +1,110 @@
+name: Website Release (Astro) [NOT PRODUCTION]
+
+# ============================================================================
+# SKELETON for the future tag-based release build of the Astro/Starlight docs
+# site (Phase F cutover). It is intentionally:
+#   * MANUAL-ONLY  — `workflow_dispatch`, so a `v*` tag push does NOT trigger it
+#                    (the live MkDocs release deploy, pub_doc.yml, still owns
+#                    tag pushes and the gh-pages root);
+#   * NON-DEPLOYING — the publish step is HARD-DISABLED (`if: false`) so it can
+#                    NEVER write to the gh-pages root before cutover.
+# Running it today only proves the release CONTENT build (`--versions <X.Y>
+# --keep 3`) works end to end; nothing is published.
+#
+# PHASE F TODO (cutover):
+#   1. Add the real trigger:  on: { push: { tags: ['v*'] } }.
+#   2. Set SITE_BASE=/ (root) + the production SITE_URL.
+#   3. Replace the disabled publish step with the real root deploy (retiring or
+#      redirecting the MkDocs `mike` root), and remove `[NOT PRODUCTION]`.
+# ============================================================================
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release doc version to build, e.g. 0.35 (maps to api/<X.Y>)."
+        required: true
+        type: string
+
+concurrency:
+  group: gh-pages-write
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build release docs (dry run — no deploy until cutover)
+    runs-on: ubuntu-latest
+    env:
+      # Phase F TODO: at cutover this becomes SITE_BASE=/ so the release site
+      # replaces the MkDocs root. Until then we build under /next/ for parity
+      # with the WIP deploy and DO NOT publish.
+      SITE_BASE: /next/
+      SITE_URL: https://bloqade.quera.com
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.5.1"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Install bloqade (pins the API source tags for resolve_sources.py)
+        run: uv sync
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: website/pnpm-lock.yaml
+
+      - name: Install website JS deps
+        run: pnpm --dir website install --frozen-lockfile
+
+      - name: Install pinned Rust nightly (rustdoc JSON format_version 57)
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: nightly-2026-04-17
+
+      - name: Cache cargo registry + Astro content
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            website/.astro
+          key: website-cargo-astro-${{ runner.os }}-${{ hashFiles('website/pnpm-lock.yaml', 'website/docs.sources.toml') }}
+          restore-keys: |
+            website-cargo-astro-${{ runner.os }}-
+
+      # Release build: emit api/<X.Y>/** and PRUNE to the newest 3 releases
+      # (`dev` is always kept). Mirrors pub_doc.yml's KEEP_RELEASES=3 policy.
+      - name: Generate release API content (--keep 3)
+        run: >
+          uv run python website/scripts/build_versions.py
+          --versions ${{ inputs.version }}
+          --clone-dir website/sources
+          --keep 3
+          --rust-toolchain nightly-2026-04-17
+
+      - name: Build Astro site
+        run: pnpm --dir website build
+
+      # PHASE F CUTOVER: enable this (real `if:`), rebuild with SITE_BASE=/, and
+      # publish to the branch ROOT. publish.sh deliberately REFUSES an empty
+      # subpath today, so root deploys are an explicit cutover decision, not a
+      # flag flip. Disabled so this workflow can never touch the live root.
+      - name: Publish release to gh-pages root (DISABLED until cutover)
+        if: false
+        run: echo "Phase F cutover not yet enabled — no deploy."

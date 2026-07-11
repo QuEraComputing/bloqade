@@ -1,0 +1,48 @@
+---
+/**
+ * Blog listing. Posts live in the `blog` content collection
+ * (src/content/blog/*.mdx) defined in src/content.config.ts.
+ */
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+const fmt = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<SiteLayout
+  title="Blog — Bloqade"
+  description="News and deep dives from the Bloqade team at QuEra Computing."
+  section="blog"
+>
+  <div class="page-head">
+    <h1>Blog</h1>
+    <p>News, releases and deep dives from the Bloqade team.</p>
+  </div>
+
+  <ul class="post-list">
+    {
+      posts.map((post) => (
+        <li class="post-list__item">
+          <a class="post-list__link" href={`/blog/${post.id}/`}>
+            <time class="post-list__date" datetime={post.data.date.toISOString()}>
+              {fmt.format(post.data.date)}
+            </time>
+            <h2 class="post-list__title">{post.data.title}</h2>
+            {post.data.excerpt && <p class="post-list__excerpt">{post.data.excerpt}</p>}
+            {post.data.authors && post.data.authors.length > 0 && (
+              <p class="post-list__authors">{post.data.authors.join(', ')}</p>
+            )}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</SiteLayout>
