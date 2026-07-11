@@ -184,8 +184,8 @@
 
 /* <details> variant: a foldable panel with a chevron summary. */
 details.api-signature {
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 0.5rem;
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: 10px;
   overflow: hidden;
   background: var(--sl-color-gray-6);
 }
@@ -220,7 +220,7 @@ details.api-signature[open] .api-signature__chevron {
   transform: rotate(90deg);
 }
 details.api-signature[open] .api-signature__summary {
-  border-bottom: 1px solid var(--sl-color-gray-5);
+  border-bottom: 1px solid var(--sl-color-hairline);
 }
 
 /*
@@ -237,14 +237,14 @@ details.api-signature[open] .api-signature__summary {
 .api-signature__code .astro-code {
   margin: 0;
   padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
+  border-radius: 10px;
   font-size: var(--sl-text-sm);
   line-height: 1.6;
   tab-size: 4;
 }
 /* Standalone (non-<details>) signatures draw their own border. */
 .api-signature:not(details) .api-signature__code .astro-code {
-  border: 1px solid var(--sl-color-gray-5);
+  border: 1px solid var(--sl-color-hairline);
 }
 /* Inside a <details> the wrapper already draws the border + radius. */
 details.api-signature .api-signature__code .astro-code {
@@ -325,7 +325,7 @@ details.api-signature .api-signature__code .astro-code {
 .api-table thead th {
   text-align: left;
   padding: 0.5rem 0.75rem;
-  border-bottom: 2px solid var(--sl-color-gray-5);
+  border-bottom: 2px solid var(--sl-color-hairline);
   font-weight: 600;
   color: var(--sl-color-white);
   white-space: nowrap;
