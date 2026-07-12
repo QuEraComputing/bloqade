@@ -98,7 +98,7 @@ dir = "website"
 run = "pnpm preview"
 
 [tasks."docs:check"]
-description = "Gate: strict-xref build + internal link / fragment-anchor reachability crawl. Green = every internal link reachable AND every <ApiXref> resolved. (Does NOT change the default `docs:build`, which stays warn-only.)"
+description = "Gate: strict-xref build + internal link / fragment-anchor reachability crawl + docstring-xref production guard. Green = every internal link reachable, every <ApiXref> resolved, AND docstring-derived xrefs are still being emitted by both emitters. (Does NOT change the default `docs:build`, which stays warn-only.)"
 dir = "website"
 # Regenerate tutorials (cache-first) first so the strict crawl sees every
 # tutorial page + its image assets and no internal link 404s.
@@ -110,6 +110,11 @@ run = [
   # Crawl the built HTML: fails (exit 1) on any unreachable internal link or
   # fragment anchor, including resolved-but-dangling API xref targets.
   "node scripts/check_links.mjs dist",
+  # Guard the PRODUCTION of docstring-derived xrefs (check_links only proves the
+  # ones present resolve; this proves any exist). Reuses the SAME built dist/:
+  # fails (exit 1) if either emitter stops emitting docstring <ApiXref>
+  # (per-language floors) or any docstring anchor is unresolved.
+  "node scripts/check_xrefs.mjs dist",
 ]
 
 [tasks."docs:test"]

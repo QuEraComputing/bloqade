@@ -161,6 +161,9 @@ jobs:
       #   * XREF_STRICT=1   -> the xref integration FAILS on any unresolved <ApiXref>
       #   * check_links.mjs -> FAILS on any unreachable internal link / fragment
       #     anchor (SITE_BASE from the job env keeps base-prefixing consistent).
+      #   * check_xrefs.mjs -> FAILS if either emitter stops PRODUCING docstring
+      #     <ApiXref> (per-language floors) or any docstring anchor is
+      #     unresolved. Reuses the SAME dist-check build (no redundant build).
       # Mirrors `mise run docs:check`. Skipped on PR-close (teardown-only).
       - name: Check internal links + API xrefs
         if: github.event.action != 'closed'
@@ -169,6 +172,7 @@ jobs:
         run: |
           pnpm --dir website exec astro build --outDir dist-check
           node website/scripts/check_links.mjs website/dist-check
+          node website/scripts/check_xrefs.mjs website/dist-check
 
       # ---- docs:test — build-warning gate + per-page RUNTIME error crawl.
       # SEPARATE from the link/xref gate above (does NOT replace it). Mirrors

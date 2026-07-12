@@ -9,6 +9,10 @@
  *                      pass frontmatter.apiVersion later). Backward compatible:
  *                      when omitted, resolution falls back to the
  *                      version-agnostic map.
+ *   origin?: string  — provenance of the reference (e.g. "docstring"), rendered
+ *                      as data-xref-origin ONLY when provided. Purely
+ *                      informational (analytics / debugging); does not affect
+ *                      resolution or the resolved/unresolved classes.
  *
  * Phase C1 resolves the reference at COMPONENT render time (dev + build) via
  * the shared build-time helper `src/lib/xref.ts`, which imports the merged
@@ -31,10 +35,16 @@ interface Props {
   to: string;
   label?: string;
   version?: string;
+  origin?: string;
 }
-const { to, label, version } = Astro.props;
+const { to, label, version, origin } = Astro.props;
 const resolved = resolveXref(to, version);
 const href = resolved ?? '#' + to;
 const stateClass = resolved ? 'api-xref--resolved' : 'api-xref--unresolved';
 ---
-<a class={`api-xref ${stateClass}`} data-xref-to={to} href={href}>{label ?? to}</a>
+<a
+  class={`api-xref ${stateClass}`}
+  data-xref-to={to}
+  data-xref-origin={origin || undefined}
+  href={href}
+>{label ?? to}</a>

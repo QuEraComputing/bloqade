@@ -51,4 +51,30 @@ describe('ApiXref', () => {
     const html = await render(ApiXref, { props: { to: 'bloqade.task.BatchFuture.result' } });
     expect(html).toMatch(/>bloqade\.task\.BatchFuture\.result<\/a>/);
   });
+
+  it('renders data-xref-origin only when the origin prop is provided', async () => {
+    const html = await render(ApiXref, {
+      props: { to: 'bloqade.task.BatchFuture.result', label: 'result', origin: 'docstring' },
+    });
+    expect(html).toContain('data-xref-origin="docstring"');
+    // origin is purely informational: resolution + classes are unchanged.
+    expect(html).toContain('class="api-xref api-xref--resolved"');
+    expect(html).toContain('data-xref-to="bloqade.task.BatchFuture.result"');
+  });
+
+  it('omits data-xref-origin when the origin prop is absent (backward compatible)', async () => {
+    const html = await render(ApiXref, { props: { to: 'bloqade.gone.Missing' } });
+    expect(html).not.toContain('data-xref-origin');
+    // Unchanged unresolved behavior.
+    expect(html).toContain('class="api-xref api-xref--unresolved"');
+    expect(html).toContain('href="#bloqade.gone.Missing"');
+  });
+
+  it('origin is orthogonal to resolution: also renders on an unresolved ref', async () => {
+    const html = await render(ApiXref, {
+      props: { to: 'bloqade.gone.Missing', origin: 'docstring' },
+    });
+    expect(html).toContain('data-xref-origin="docstring"');
+    expect(html).toContain('class="api-xref api-xref--unresolved"');
+  });
 });

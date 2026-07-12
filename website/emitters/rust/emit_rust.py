@@ -54,12 +54,15 @@ RUST ITEM -> COMPONENT MAPPING (stays within the frozen vocabulary)
   enum variants ................. <Params title="Variants">
   trait assoc types/consts ...... <Params title="Associated items">
   signatures .................... <Signature lang="rust" code={`...`} />
-  doc comments (///, //!) ....... escaped MDX prose (see MDX-SAFETY)
+  doc comments (///, //!) ....... escaped MDX prose (see MDX-SAFETY); rustdoc
+                                    intra-doc links -> <ApiXref> when in-crate
+                                    (see INTRA-DOC LINKS)
   implemented (non-blanket,
     non-auto) traits ............ ApiClass `bases={[...]}`
   cross references .............. <ApiXref to="fqName" version="<V>" />
-                                    (submodule links; version keeps resolution
-                                     inside the referring page's own version)
+                                    (submodule links + resolved intra-doc links;
+                                     version keeps resolution inside the
+                                     referring page's own version)
   source file/line .............. <Source href=.../> + sourceUrl frontmatter
 
 KIND-BADGE NOTE: the frozen <ApiClass> always renders the literal word
@@ -103,9 +106,34 @@ Different sinks need different escaping:
   * PROSE (doc comments rendered as MDX body text): backslash-escape every
     MDX/JSX-significant punctuation char — ``\ { } < > `` and the backtick —
     so a comment can never open a JS expression (`{`), a JSX tag (`<`), or an
-    unterminated code span. Doc comments are therefore rendered as literal
-    plain text (markdown / intra-doc links are intentionally NOT interpreted;
-    build safety beats rich rendering — richer rendering can come later).
+    unterminated code span. Doc-comment body prose is therefore rendered as
+    literal plain text (ordinary markdown is NOT interpreted; build safety
+    beats rich rendering). The ONE exception is rustdoc-resolved intra-doc
+    links, which are turned into <ApiXref> when they point at an item this
+    crate documents — see INTRA-DOC LINKS. Everything a link does not consume
+    is still escaped byte-for-byte identically to ``esc_prose``.
+
+===========================================================================
+INTRA-DOC LINKS (rustdoc `links` map -> <ApiXref origin="docstring">)
+===========================================================================
+rustdoc gives EACH item a ``links`` map: ``{ "<destination text>": <Id> }`` of
+the intra-doc links it ALREADY RESOLVED in that item's docs (unresolved links
+are dropped by rustdoc with a warning, so they never appear here). We detect
+the markdown intra-doc syntaxes in body prose — ``[`Item`]`` / ``[Item]``
+(shortcut), ``[text](path)`` (inline), ``[text][path]`` (reference) — extract
+the destination text, and look it up in that item's ``links`` map to get the
+target ``Id``.
+
+Resolution is SAFE-BY-CONSTRUCTION for XREF_STRICT: an <ApiXref> is emitted
+ONLY when the target ``Id`` maps to a fqName THIS crate documents. We build an
+``id -> fqName`` map (``self.id_to_fq``) in a pre-pass that mirrors emission
+exactly (its keys are precisely the inventory's fqNames), so any ``to`` we emit
+is guaranteed to resolve. Links whose target is external (std / other crates)
+or otherwise not documented are present in ``links`` but absent from
+``id_to_fq`` — those degrade to plain (escaped) link text, never an <ApiXref>.
+Emitted xrefs carry ``origin="docstring"`` and the referring page's version.
+Text that is not a rustdoc-resolved intra-doc link (ordinary ``[...]`` prose,
+inline code, fenced code) is left untouched and escaped exactly as before.
   * <Signature code={`...`}> template literal: escape ``\``, backtick and
     ``${`` so the JS template literal parses verbatim.
   * <Params>/<Returns>/<Raises> descriptions (rendered via `set:html`):
@@ -141,6 +169,7 @@ import argparse
 import glob
 import html
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -211,6 +240,25 @@ def yaml_str(s: str | None) -> str:
         s = ""
     s = s.replace("\\", "\\\\").replace('"', '\\"').replace("\n", " ").replace("\r", " ")
     return '"' + s + '"'
+
+
+# --------------------------------------------------------------------------- #
+# Intra-doc link detection (see INTRA-DOC LINKS docstring above).
+# Prose is scanned left-to-right; at each position we try, in order, a fenced
+# code block, a markdown link (only at `[`), then an inline code span (only at
+# a backtick). Whatever none of these consume is escaped char-by-char, so the
+# non-link output is byte-identical to ``esc_prose``. Code spans/fences are
+# consumed WHOLE so a `[...]` inside example code is never mistaken for a link.
+# --------------------------------------------------------------------------- #
+_FENCE_RE = re.compile(r"(?:```|~~~)[^\n]*\n.*?(?:```|~~~)", re.DOTALL)
+_CODESPAN_RE = re.compile(r"(`+)(?:.+?)\1", re.DOTALL)
+# Link forms, tried longest-match-first at a `[`:
+#   inline    [text](dest)     display=text  dest=dest
+#   reference [text][dest]     display=text  dest=dest  (dest="" -> collapsed)
+#   shortcut  [dest]           display=dest  dest=dest   (e.g. [`Item`])
+_LINK_INLINE_RE = re.compile(r"\[([^\[\]]*)\]\(([^)]*)\)")
+_LINK_REF_RE = re.compile(r"\[([^\[\]]*)\]\[([^\[\]]*)\]")
+_LINK_SHORTCUT_RE = re.compile(r"\[([^\[\]]+)\]")
 
 
 def first_paragraph(docs: str | None) -> str:
@@ -469,6 +517,10 @@ class RustEmitter:
         self.version = version or self._version_from_mount(self.mount)
         self.crate = self.index[self.root_id]["name"]
         self.inventory: list[dict] = []
+        # Maps a documented item's rustdoc `Id` (as a str) -> its fqName. Built
+        # by add_inventory during the pre-pass in emit(); used to resolve
+        # intra-doc links to ONLY items this crate documents (see render_prose).
+        self.id_to_fq: dict[str, str] = {}
 
     @staticmethod
     def _version_from_mount(mount: str) -> str | None:
@@ -545,10 +597,125 @@ class RustEmitter:
         rel = rel.rstrip("/")
         return "/%s/%s/" % (self.mount, rel) if rel else "/%s/" % self.mount
 
-    def add_inventory(self, fq: str, kind: str, page_url: str, anchor_fq: str):
+    def add_inventory(
+        self, fq: str, kind: str, page_url: str, anchor_fq: str, item_id=None
+    ):
         self.inventory.append(
             {"fqName": fq, "kind": kind, "url": "%s#%s" % (page_url, anchor_fq)}
         )
+        # Record the item's rustdoc Id -> fqName so intra-doc links can resolve
+        # to it. Every fqName here is, by construction, a documented one (it is
+        # in the inventory), so any <ApiXref to=...> built from this map is
+        # guaranteed to resolve under XREF_STRICT.
+        if item_id is not None:
+            self.id_to_fq[str(item_id)] = fq
+
+    # -- intra-doc link rendering -----------------------------------------
+    def _xref_docstring(self, fq: str, display: str) -> str:
+        """A docstring-origin <ApiXref> for an in-crate intra-doc link."""
+        label = display.strip("`").strip()
+        ver = ' version="%s"' % esc_attr(self.version) if self.version else ""
+        return '<ApiXref to="%s" origin="docstring" label="%s"%s />' % (
+            esc_attr(fq), esc_attr(label), ver,
+        )
+
+    @staticmethod
+    def _normalize_links(links: dict | None) -> dict:
+        """A links map keyed by BOTH the raw destination and its backtick-
+        stripped form, so ``[Item]`` and ``[`Item`]`` resolve regardless of how
+        rustdoc stored the key (keys carry backticks iff the source did)."""
+        norm: dict[str, object] = {}
+        for k, tid in (links or {}).items():
+            norm.setdefault(k, tid)
+            ks = k.strip("`")
+            if ks:
+                norm.setdefault(ks, tid)
+        return norm
+
+    def _resolve_link_dest(self, dest: str, lookup: dict) -> str | None:
+        """A (normalized) destination text -> documented fqName, or None.
+
+        ``lookup`` is a normalized links map (see _normalize_links). We try the
+        destination exactly and with surrounding backticks stripped. The target
+        is emitted only if its Id is a DOCUMENTED item (in id_to_fq); external /
+        std / undocumented targets return None -> plain text.
+        """
+        tid = lookup.get(dest)
+        if tid is None:
+            tid = lookup.get(dest.strip("`"))
+        if tid is None:
+            return None
+        return self.id_to_fq.get(str(tid))
+
+    def _try_render_link(self, text: str, i: int, lookup: dict, out: list) -> int:
+        """Try to render a markdown link starting at ``text[i] == '['``.
+
+        Returns the number of characters consumed (0 if nothing matched, so the
+        caller treats ``[`` as an ordinary char). A rustdoc-resolved in-crate
+        link becomes an <ApiXref>; an external/unresolved link keeps only its
+        display text (escaped); a ``[...]`` that is NOT in the links map is left
+        verbatim (escaped) exactly like plain prose.
+        """
+        for rx, kind in (
+            (_LINK_INLINE_RE, "inline"),
+            (_LINK_REF_RE, "reference"),
+            (_LINK_SHORTCUT_RE, "shortcut"),
+        ):
+            m = rx.match(text, i)
+            if not m:
+                continue
+            if kind == "inline":
+                display, dest = m.group(1), m.group(2)
+            elif kind == "reference":
+                display = m.group(1)
+                dest = m.group(2) or m.group(1)  # collapsed [text][] -> text
+            else:  # shortcut
+                display = dest = m.group(1)
+            if dest in lookup or dest.strip("`") in lookup:
+                # A rustdoc-resolved intra-doc link.
+                fq = self._resolve_link_dest(dest, lookup)
+                if fq:
+                    out.append(self._xref_docstring(fq, display))
+                else:
+                    # External / undocumented: keep the display text only.
+                    out.append(esc_prose(display.strip("`")))
+            else:
+                # Not a rustdoc-resolved link (ordinary bracketed prose): leave
+                # it verbatim, escaped exactly as esc_prose would.
+                out.append(esc_prose(m.group(0)))
+            return m.end() - i
+        return 0
+
+    def render_prose(self, text: str | None, links: dict | None = None) -> str:
+        """Escape doc-comment body prose, turning in-crate intra-doc links into
+        <ApiXref>. With no resolvable links this is byte-identical to
+        ``esc_prose`` (ordinary markdown/links stay literal)."""
+        if not text:
+            return ""
+        lookup = self._normalize_links(links)
+        out: list[str] = []
+        i, n = 0, len(text)
+        while i < n:
+            fence = _FENCE_RE.match(text, i)
+            if fence:  # whole fenced code block, escaped verbatim (no links)
+                out.append(esc_prose(fence.group(0)))
+                i = fence.end()
+                continue
+            ch = text[i]
+            if ch == "[":
+                consumed = self._try_render_link(text, i, lookup, out)
+                if consumed:
+                    i += consumed
+                    continue
+            elif ch == "`":
+                span = _CODESPAN_RE.match(text, i)
+                if span:  # inline code span, escaped verbatim (no links)
+                    out.append(esc_prose(span.group(0)))
+                    i = span.end()
+                    continue
+            out.append(esc_prose(ch))
+            i += 1
+        return "".join(out)
 
     # -- impl analysis (methods + implemented traits) ----------------------
     def analyze_impls(self, impl_ids: list) -> tuple[list[dict], list[str]]:
@@ -588,7 +755,10 @@ class RustEmitter:
         name = item.get("name") or fq.split("::")[-1]
         sig = render_fn_sig(item, name)
         src = self.source_url(item)
-        self.add_inventory(fq, "method" if kind == "method" else "function", page_url, fq)
+        self.add_inventory(
+            fq, "method" if kind == "method" else "function", page_url, fq,
+            item_id=item.get("id"),
+        )
         lines = [
             '<ApiFn name="%s" fqName="%s" kind="%s"%s>' % (
                 esc_attr(name), esc_attr(fq), kind,
@@ -607,7 +777,7 @@ class RustEmitter:
             lines += ['<Returns type="%s" />' % esc_attr(render_type(ret)), ""]
         docs = item.get("docs")
         if docs:
-            lines += [esc_prose(docs), ""]
+            lines += [self.render_prose(docs, item.get("links")), ""]
         if src:
             lines += ['<Source href="%s" />' % esc_attr(src), ""]
         lines.append("</ApiFn>")
@@ -658,7 +828,7 @@ class RustEmitter:
         else:
             return ""  # unsupported type-like kind
 
-        self.add_inventory(fq, kind, page_url, fq)
+        self.add_inventory(fq, kind, page_url, fq, item_id=item.get("id"))
         summary = ("Rust %s." % kind.replace("_", " ")) + (
             " " + first_paragraph(docs) if first_paragraph(docs) else ""
         )
@@ -679,7 +849,7 @@ class RustEmitter:
             ]
         body = rest_paragraphs(docs)
         if body:
-            lines += [esc_prose(body), ""]
+            lines += [self.render_prose(body, item.get("links")), ""]
         if src:
             lines += ['<Source href="%s" />' % esc_attr(src), ""]
         # Methods (inherent impl or trait-required) as nested ApiFn entries.
@@ -709,7 +879,10 @@ class RustEmitter:
             fname = f.get("name") or "_"
             ftype = render_type(f["inner"]["struct_field"])
             desc = first_paragraph(f.get("docs"))
-            self.add_inventory("%s::%s" % (parent_fq, fname), "field", page_url, parent_fq)
+            self.add_inventory(
+                "%s::%s" % (parent_fq, fname), "field", page_url, parent_fq,
+                item_id=f.get("id"),
+            )
             rows.append(
                 "    { name: '%s', type: '%s', description: '%s' }," % (
                     esc_desc_js(fname), esc_desc_js(ftype), esc_desc_js(desc),
@@ -734,7 +907,10 @@ class RustEmitter:
                 elif "struct" in vk:
                     payload = "{ ... }"
             desc = first_paragraph(v.get("docs"))
-            self.add_inventory("%s::%s" % (parent_fq, vname), "variant", page_url, parent_fq)
+            self.add_inventory(
+                "%s::%s" % (parent_fq, vname), "variant", page_url, parent_fq,
+                item_id=v.get("id"),
+            )
             rows.append(
                 "    { name: '%s', type: '%s', description: '%s' }," % (
                     esc_desc_js(vname), esc_desc_js(payload), esc_desc_js(desc),
@@ -761,7 +937,10 @@ class RustEmitter:
                 continue
             name = it.get("name") or "_"
             desc = "%s. %s" % (label, first_paragraph(it.get("docs"))) if it.get("docs") else label
-            self.add_inventory("%s::%s" % (parent_fq, name), k, page_url, parent_fq)
+            self.add_inventory(
+                "%s::%s" % (parent_fq, name), k, page_url, parent_fq,
+                item_id=it.get("id"),
+            )
             rows.append(
                 "    { name: '%s', type: '%s', description: '%s' }," % (
                     esc_desc_js(name), esc_desc_js(ty), esc_desc_js(desc),
@@ -774,7 +953,7 @@ class RustEmitter:
         item = self.get(module_id)
         module_fq = self.fq_from_paths(module_id) or item["name"]
         page_url = self.page_url(module_fq)
-        self.add_inventory(module_fq, "module", page_url, module_fq)
+        self.add_inventory(module_fq, "module", page_url, module_fq, item_id=module_id)
 
         child_ids = item["inner"]["module"].get("items", [])
         buckets: dict[str, list[tuple[str, dict]]] = {
@@ -832,7 +1011,7 @@ class RustEmitter:
         ]
         rest = rest_paragraphs(docs)
         if rest:
-            body += [esc_prose(rest), ""]
+            body += [self.render_prose(rest, item.get("links")), ""]
         if submodules:
             body += ["**Modules**", ""]
             # Pass the referring page's version so the xref resolves within the
@@ -862,7 +1041,7 @@ class RustEmitter:
 
     def _render_constant(self, item: dict, fq: str, page_url: str) -> str:
         name = item.get("name") or fq.split("::")[-1]
-        self.add_inventory(fq, "constant", page_url, fq)
+        self.add_inventory(fq, "constant", page_url, fq, item_id=item.get("id"))
         sig = render_constant_sig(item, name)
         docs = item.get("docs")
         lines = [
@@ -872,12 +1051,22 @@ class RustEmitter:
             "",
         ]
         if docs:
-            lines += [esc_prose(docs), ""]
+            lines += [self.render_prose(docs, item.get("links")), ""]
         lines.append("</ApiFn>")
         return "\n".join(lines)
 
     # -- top level ---------------------------------------------------------
     def emit(self, out_dir: Path) -> dict:
+        # Pre-pass: render every page once (output discarded) purely for its
+        # add_inventory side effects, which populate `id_to_fq`. This makes the
+        # FULL set of documented item Ids known before any doc comment is
+        # written, so intra-doc links resolve to items in modules that emit
+        # later than the referring page. Reset the inventory afterwards so the
+        # real pass below rebuilds it exactly once.
+        for mid in self.modules():
+            self.render_module_page(mid)
+        self.inventory = []
+
         pages = 0
         for mid in self.modules():
             rel, content = self.render_module_page(mid)

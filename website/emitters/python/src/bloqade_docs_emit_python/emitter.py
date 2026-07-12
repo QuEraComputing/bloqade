@@ -12,7 +12,7 @@ from typing import Any, Iterator
 
 from griffe import GriffeLoader, Kind, Parser
 
-from . import escape, render
+from . import escape, render, xref
 
 logger = logging.getLogger("bloqade_docs_emit_python")
 
@@ -75,6 +75,15 @@ class Emitter:
         self.repo_root = Path(config.repo_root).resolve()
         self.inventory: list[dict] = []
         self.stats = Stats()
+        # Docstring cross-references are detected during rendering but can only
+        # be turned into <ApiXref> vs. text once the FULL inventory is known, so
+        # pages are buffered with placeholder tokens and finalized in run().
+        self.xref = xref.XrefCollector()
+        self._pages: list[tuple[Path, str]] = []
+
+    def _linker(self, obj: Any) -> xref.Linker:
+        """A prose linkifier bound to ``obj``'s griffe scope."""
+        return xref.Linker(obj, self.xref)
 
     # ------------------------------------------------------------------ #
     # URL / path helpers
@@ -185,6 +194,16 @@ class Emitter:
                 self.emit_module(module, out_dir)
             except Exception as exc:  # pragma: no cover - defensive
                 logger.error("failed to emit %s: %s", module.path, exc)
+        # The inventory is now complete: finalize docstring cross-references.
+        # A reference becomes <ApiXref> only when its resolved target is a
+        # symbol we documented; everything else degrades to inline code/text, so
+        # no unresolved <ApiXref> can ever reach the build (XREF_STRICT stays
+        # green).
+        documented = {entry["fqName"] for entry in self.inventory}
+        for page, content in self._pages:
+            content = self.xref.resolve(content, documented)
+            page.parent.mkdir(parents=True, exist_ok=True)
+            page.write_text(content, encoding="utf-8")
         self._write_inventory(out_dir)
         return self.stats
 
@@ -202,7 +221,8 @@ class Emitter:
 
     def emit_module(self, module: Any, out_dir: Path) -> None:
         module_fq = module.path
-        doc = render.analyze_docstring(module)
+        linker = self._linker(module)
+        doc = render.analyze_docstring(module, linker)
         lines: list[str] = []
         lines.extend(self._frontmatter(module, doc))
         lines.append(
@@ -221,7 +241,7 @@ class Emitter:
             {"fqName": module_fq, "kind": "module", "url": self.symbol_url(module_fq, module_fq)}
         )
 
-        lines.extend(render.prose_block(doc.body))
+        lines.extend(render.prose_block(doc.body, linker))
 
         attr_members: list[Any] = []
         for member in module.members.values():
@@ -252,8 +272,7 @@ class Emitter:
         lines.append("")
 
         page = out_dir / self.page_path(module)
-        page.parent.mkdir(parents=True, exist_ok=True)
-        page.write_text("\n".join(lines), encoding="utf-8")
+        self._pages.append((page, "\n".join(lines)))
         self.stats.modules_emitted += 1
 
     def _frontmatter(self, module: Any, doc: render.ParsedDoc) -> list[str]:
@@ -275,7 +294,8 @@ class Emitter:
 
     def emit_class(self, cls: Any, module_fq: str) -> list[str]:
         fq = cls.path
-        doc = render.analyze_docstring(cls)
+        linker = self._linker(cls)
+        doc = render.analyze_docstring(cls, linker)
         source_url = self.source_url(cls)
         self._record(fq, "class", module_fq)
 
@@ -299,7 +319,7 @@ class Emitter:
         lines.append("")
 
         lines.extend(render.signature_block(render.class_signature(cls)))
-        lines.extend(render.prose_block(doc.body))
+        lines.extend(render.prose_block(doc.body, linker))
 
         # Constructor parameters (merge __init__ signature + class/__init__ docs).
         init = cls.members.get("__init__")
@@ -347,7 +367,8 @@ class Emitter:
 
     def emit_callable(self, func: Any, module_fq: str, kind: str) -> list[str]:
         fq = func.path
-        doc = render.analyze_docstring(func)
+        linker = self._linker(func)
+        doc = render.analyze_docstring(func, linker)
         source_url = self.source_url(func)
         self._record(fq, kind, module_fq)
 
@@ -370,7 +391,7 @@ class Emitter:
 
         if doc.summary or doc.body:
             combined = (doc.summary + ("\n\n" + doc.body if doc.body else "")).strip()
-            lines.extend(render.prose_block(combined))
+            lines.extend(render.prose_block(combined, linker))
 
         rows = render._params_from_signature(func, doc, drop_self=is_method)
         lines.extend(render.params_table(rows))
@@ -404,7 +425,8 @@ class Emitter:
 
     def emit_property(self, prop: Any, module_fq: str) -> list[str]:
         fq = prop.path
-        doc = render.analyze_docstring(prop)
+        linker = self._linker(prop)
+        doc = render.analyze_docstring(prop, linker)
         source_url = self.source_url(prop)
         self._record(fq, "property", module_fq)
 
@@ -423,7 +445,7 @@ class Emitter:
 
         if doc.summary or doc.body:
             combined = (doc.summary + ("\n\n" + doc.body if doc.body else "")).strip()
-            lines.extend(render.prose_block(combined))
+            lines.extend(render.prose_block(combined, linker))
 
         lines.extend(render.returns_block(doc, prop))
 

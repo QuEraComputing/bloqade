@@ -99,6 +99,61 @@ against the Bloqade corpus. griffe's own parser warnings (missing annotations,
 params not in signature, etc.) are silenced unless `-v` is passed; they never
 affect output.
 
+**Style selection.** The docstring style is chosen **per emitter run** via the
+`--docstring-style` flag and applied to griffe's parser for the whole package;
+there is no per-object metadata or auto-detection. This only affects how griffe
+splits a docstring into *sections* (params/returns/see-also/...). Cross-reference
+detection (below) runs on the resulting **prose text**, so inline Sphinx roles
+and Markdown autorefs are recognized regardless of the selected style; only the
+NumPy `See Also` **section** depends on the parser (it is surfaced by griffe as
+a `see-also` admonition when parsed as `numpy`).
+
+## Docstring cross-references
+
+Cross-references in docstring prose are resolved and, when they point at a
+symbol this emitter documents, rewritten to the site's `<ApiXref>` component
+(`<ApiXref to="<fqName>" origin="docstring" label="<display>" />`). See
+`xref.py`.
+
+**Syntaxes handled** (all detected on prose, so they work under any
+`--docstring-style`):
+
+* **reStructuredText / Sphinx object roles** — ``:class:`` , ``:func:`` ,
+  ``:meth:`` , ``:obj:`` , ``:attr:`` , ``:exc:`` , ``:mod:`` , ``:data:`` ,
+  ``:const:`` (plus ``:py:*:`` prefixed and ``:function:`` / ``:method:``
+  aliases), including the ``~Target`` short-display form and the explicit-title
+  ``Text <target>`` form. Roles inside ``.. seealso::`` blocks are picked up as
+  ordinary inline roles.
+* **Google style** — sections are Google-formatted, but prose cross-refs use
+  either Sphinx roles (Napoleon) or Markdown autorefs; both are handled.
+* **NumPy / SciPy style** — RST roles in prose *plus* the NumPy `See Also`
+  section (comma-separated, optionally role-prefixed object names, each with an
+  optional `: description`).
+* **Markdown / mkdocstrings autorefs** — `[label][target]`, `[target][]`,
+  ``[`target`][]`` (backtick target), the bare ``[`Target`]`` form, and the
+  mkdocstrings **backtick autoref** (a bare `` `pkg.mod.Name` `` code span that
+  is a *dotted* qualified identifier). Plain `[text](url)` links are left to the
+  escape pipeline (external kept; broken intra-doc relative links degraded).
+
+**Resolution** uses griffe's own `Object.resolve` on the leading name segment
+(which walks the object's members, its module namespace, and griffe-tracked
+imports/aliases) and re-attaches the dotted tail; the raw target is kept as a
+fallback so absolute references still resolve.
+
+**Safe-emit rule (keeps `XREF_STRICT` green).** A reference becomes an
+`<ApiXref>` **only** when its resolved fully-qualified name is present in the
+inventory this emitter builds (checked after the full inventory is known — pages
+are buffered with placeholder tokens and finalized in `run()`). Everything else
+— external packages (`kirin`, `numpy`, ...), undocumented/private names, and
+anything unresolvable — degrades to inline **code/text**, so it can never become
+an unresolved `<ApiXref>` anchor. Detection never runs inside code spans or
+fenced blocks, and output flows through the same MDX-escape pipeline.
+
+**Deliberately skipped:** cross-refs inside `<Params>`/`<Returns>`/`<Raises>`
+description cells (rendered as single-line `set:html` text, which cannot host a
+component) and bare *single-word* code spans (too ambiguous to linkify safely;
+use a dotted name or an explicit `[`Target`]` autoref).
+
 ## MDX-safety strategy
 
 Docstrings can contain `{ } < >`, backticks, and JSX-hostile text. A docstring
@@ -185,8 +240,9 @@ mapping and the `skip private _* modules/members` behavior are ported too.
   as single-line, HTML-escaped plain text (they flow through the components'
   `set:html`), so embedded markdown/reST in a description is shown literally
   rather than formatted. Body prose keeps full markdown.
-* **Cross-reference linking**: docstring cross-refs are not yet rewritten to
-  `<ApiXref>` — that is Phase C's job (this emitter only produces the inventory
-  that phase consumes).
+* **Cross-reference linking**: docstring cross-refs ARE now rewritten to
+  `<ApiXref origin="docstring">` when they resolve to a documented symbol (see
+  "Docstring cross-references" above); external / undocumented / unresolvable
+  refs degrade to inline code/text rather than becoming unresolved anchors.
 * **Type aliases / TypeVars**: surfaced as module/class "Attributes" rows
   (name + value), not as dedicated typedef entries.

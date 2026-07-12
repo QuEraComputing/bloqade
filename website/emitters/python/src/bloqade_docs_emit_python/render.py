@@ -19,6 +19,7 @@ from griffe import (
 )
 
 from . import escape
+from .xref import Linker
 
 logger = logging.getLogger("bloqade_docs_emit_python")
 
@@ -158,11 +159,15 @@ def _split_summary(text: str) -> tuple[str, str]:
     return summary, body
 
 
-def analyze_docstring(obj: Any) -> ParsedDoc:
+def analyze_docstring(obj: Any, linker: Linker | None = None) -> ParsedDoc:
     """Parse a griffe object's docstring into a structured ``ParsedDoc``.
 
     Robust by construction: any failure falls back to the raw docstring value
-    rendered as prose.
+    rendered as prose. When ``linker`` is provided, prose blocks (long
+    description, admonitions, examples, See-Also, ...) are run through
+    cross-reference detection so docstring references become ``<ApiXref>``
+    placeholders; ``summary``/``body`` stay raw (they are linkified later, when
+    escaped, by ``prose_block``).
     """
     doc = ParsedDoc()
     docstring = getattr(obj, "docstring", None)
@@ -194,18 +199,18 @@ def analyze_docstring(obj: Any) -> ParsedDoc:
             elif kind == DocstringSectionKind.attributes:
                 doc.attributes = list(section.value)
             elif kind == DocstringSectionKind.yields:
-                doc.extra_prose.extend(_render_yields(section))
+                doc.extra_prose.extend(_render_yields(section, linker))
             elif kind == DocstringSectionKind.receives:
-                doc.extra_prose.extend(_render_named("Receives", section))
+                doc.extra_prose.extend(_render_named("Receives", section, linker))
             elif kind == DocstringSectionKind.admonition:
-                doc.extra_prose.extend(_render_admonition(section))
+                doc.extra_prose.extend(_render_admonition(section, linker=linker))
             elif kind == DocstringSectionKind.examples:
-                doc.extra_prose.extend(_render_examples(section))
+                doc.extra_prose.extend(_render_examples(section, linker))
             elif kind == DocstringSectionKind.deprecated:
-                doc.extra_prose.extend(_render_admonition(section, "Deprecated"))
+                doc.extra_prose.extend(_render_admonition(section, "Deprecated", linker=linker))
             else:
                 # Unknown/less-common section: best-effort prose fallback.
-                doc.extra_prose.extend(_render_generic(section))
+                doc.extra_prose.extend(_render_generic(section, linker))
         except Exception as exc:  # pragma: no cover - defensive
             logger.debug("section render failed for %s: %s", getattr(obj, "path", "?"), exc)
             continue
@@ -220,22 +225,28 @@ def _section_title(section: Any, default: str) -> str:
     return title if isinstance(title, str) and title else default
 
 
-def _render_admonition(section: Any, default_title: str = "Note") -> list[str]:
+def _render_admonition(
+    section: Any, default_title: str = "Note", linker: Linker | None = None
+) -> list[str]:
     value = section.value
     title = _section_title(section, default_title)
     contents = getattr(value, "contents", None)
     if contents is None:
         contents = str(value)
+    # NumPy "See Also" section (numpy parser surfaces it as a see-also
+    # admonition): its body is a list of object names, linkified specially.
+    if linker is not None and getattr(value, "kind", None) == "see-also":
+        return linker.see_also(str(contents))
     lines = [f"**{escape.prose(title)}**", ""]
     for para in str(contents).split("\n\n"):
         para = para.strip()
         if para:
-            lines.append(escape.prose(para))
+            lines.append(_linkified_prose(para, linker))
             lines.append("")
     return lines
 
 
-def _render_examples(section: Any) -> list[str]:
+def _render_examples(section: Any, linker: Linker | None = None) -> list[str]:
     lines = ["**Examples**", ""]
     value = section.value
     # Google examples: list of (kind, text) tuples where kind == "examples" is code.
@@ -250,18 +261,18 @@ def _render_examples(section: Any) -> list[str]:
                     lines.append("```")
                     lines.append("")
                 else:
-                    lines.append(escape.prose(str(text)))
+                    lines.append(_linkified_prose(str(text), linker))
                     lines.append("")
             else:
-                lines.append(escape.prose(str(item)))
+                lines.append(_linkified_prose(str(item), linker))
                 lines.append("")
     except TypeError:
-        lines.append(escape.prose(str(value)))
+        lines.append(_linkified_prose(str(value), linker))
         lines.append("")
     return lines
 
 
-def _render_yields(section: Any) -> list[str]:
+def _render_yields(section: Any, linker: Linker | None = None) -> list[str]:
     lines = ["**Yields**", ""]
     for item in section.value:
         annotation = _annotation_str(getattr(item, "annotation", None))
@@ -270,14 +281,14 @@ def _render_yields(section: Any) -> list[str]:
         if annotation:
             bits.append(f"`{annotation}`")
         if desc:
-            bits.append(escape.prose(desc))
+            bits.append(_linkified_prose(desc, linker))
         if bits:
             lines.append(" — ".join(bits) if annotation else bits[-1])
             lines.append("")
     return lines
 
 
-def _render_named(title: str, section: Any) -> list[str]:
+def _render_named(title: str, section: Any, linker: Linker | None = None) -> list[str]:
     lines = [f"**{title}**", ""]
     for item in section.value:
         annotation = _annotation_str(getattr(item, "annotation", None))
@@ -286,21 +297,21 @@ def _render_named(title: str, section: Any) -> list[str]:
         if annotation:
             bits.append(f"`{annotation}`")
         if desc:
-            bits.append(escape.prose(desc))
+            bits.append(_linkified_prose(desc, linker))
         if bits:
             lines.append(" — ".join(bits))
             lines.append("")
     return lines
 
 
-def _render_generic(section: Any) -> list[str]:
+def _render_generic(section: Any, linker: Linker | None = None) -> list[str]:
     value = getattr(section, "value", None)
     title = _section_title(section, "")
     lines: list[str] = []
     if title:
         lines.extend([f"**{escape.prose(title)}**", ""])
     if isinstance(value, str):
-        lines.append(escape.prose(value))
+        lines.append(_linkified_prose(value, linker))
         lines.append("")
     return lines
 
@@ -310,11 +321,23 @@ def _render_generic(section: Any) -> list[str]:
 # --------------------------------------------------------------------------- #
 
 
-def prose_block(text: str) -> list[str]:
+def _linkified_prose(text: str, linker: Linker | None) -> str:
+    """Escape prose, first running docstring cross-reference detection.
+
+    Cross-reference detection MUST run before escaping (it consumes the
+    backticks that belong to a role target); the placeholders it leaves behind
+    survive escaping and are swapped for final markup by the emitter.
+    """
+    if linker is not None:
+        text = linker(text)
+    return escape.prose(text)
+
+
+def prose_block(text: str, linker: Linker | None = None) -> list[str]:
     text = (text or "").strip()
     if not text:
         return []
-    return [escape.prose(text), ""]
+    return [_linkified_prose(text, linker), ""]
 
 
 def _clean_return_desc(desc: str, annotation: str | None) -> str:
