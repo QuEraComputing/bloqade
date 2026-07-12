@@ -1,0 +1,23 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "qasm",
+  "scopeName": "source.qasm",
+  "aliases": ["openqasm", "qasm2", "qasm3", "openqasm2", "openqasm3"],
+  "comment": "Minimal OpenQASM grammar. Bundled here because Shiki ships no `qasm`/`openqasm` grammar; registered via astro.config.mjs `expressiveCode.shiki.langs` so the digital compilation guide's ```qasm blocks highlight instead of falling back to txt.",
+  "patterns": [
+    { "match": "//.*$", "name": "comment.line.double-slash.qasm" },
+    { "begin": "/\\*", "end": "\\*/", "name": "comment.block.qasm" },
+    {
+      "match": "\\b(OPENQASM|include|gate|opaque|qreg|creg|qubit|bit|barrier|measure|reset|if|else|for|in|while|return|def|defcal|gphase|delay|box|const|input|output|extern|pragma)\\b",
+      "name": "keyword.control.qasm"
+    },
+    {
+      "match": "\\b(int|uint|float|angle|bool|complex|duration|stretch|array|pi|tau|euler)\\b",
+      "name": "storage.type.qasm"
+    },
+    { "match": "\"[^\"\\n]*\"", "name": "string.quoted.double.qasm" },
+    { "match": "\\b\\d+(\\.\\d+)?([eE][-+]?\\d+)?\\b", "name": "constant.numeric.qasm" },
+    { "match": "->|==|!=|<=|>=|[-+*/=<>]", "name": "keyword.operator.qasm" },
+    { "match": "\\b[a-z][A-Za-z0-9_]*\\b(?=\\s+[A-Za-z])", "name": "entity.name.function.gate.qasm" }
+  ]
+}

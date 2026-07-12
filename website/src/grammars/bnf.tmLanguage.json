@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "bnf",
+  "scopeName": "source.bnf",
+  "comment": "Minimal Backus-Naur Form grammar. Bundled here because Shiki ships no `bnf` grammar; registered via astro.config.mjs `expressiveCode.shiki.langs` so the analog IR docstrings' ```bnf blocks highlight instead of falling back to txt.",
+  "patterns": [
+    { "match": ";.*$", "name": "comment.line.semicolon.bnf" },
+    { "match": "<[^>\\n]+>", "name": "entity.name.class.nonterminal.bnf" },
+    { "match": "\"[^\"\\n]*\"", "name": "string.quoted.double.terminal.bnf" },
+    { "match": "'[^'\\n]*'", "name": "string.quoted.single.terminal.bnf" },
+    { "match": "::=|:=|=", "name": "keyword.operator.assignment.bnf" },
+    { "match": "\\|", "name": "keyword.operator.alternation.bnf" },
+    { "match": "[+*?]", "name": "keyword.operator.repetition.bnf" }
+  ]
+}

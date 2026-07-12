@@ -9,7 +9,11 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check-build": "node scripts/check_build.mjs",
+    "crawl-runtime": "node scripts/crawl_runtime.mjs dist",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@astrojs/mdx": "4.3.14",
@@ -21,5 +25,9 @@
     "mermaid": "^11.16.0",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1",
+    "vitest": "^4.1.10"
   }
 }

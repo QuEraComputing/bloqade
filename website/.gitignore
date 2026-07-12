@@ -9,6 +9,11 @@ node_modules/
 # tsconfig.json is a real, required config file but is caught by the repo-root
 # `.gitignore` `*.json` rule; re-include it here.
 !tsconfig.json
+# Committed TextMate grammars for Shiki / Expressive Code (bnf + qasm),
+# referenced by astro.config.mjs `expressiveCode.shiki.langs`. Real, required
+# source (NOT generated), but caught by the repo-root `*.json` rule — re-include.
+!src/grammars/
+!src/grammars/*.json
 # CI clone target for resolve_sources.py --clone
 sources/
 # env / logs

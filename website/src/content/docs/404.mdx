@@ -1,0 +1,33 @@
+---
+# Site 404 page — the SINGLE `/404` route.
+#
+# Starlight 0.37 resolves its injected `/404` route's body from the `docs`
+# collection entry with id `404` when one exists (else a built-in splash). By
+# owning that entry here we get exactly one `/404` route and drop the old
+# competing `src/pages/404.astro` that collided with Starlight's `/404`.
+#
+# The on-brand markup + the `/api/latest/<symbol>` deep-link fallback live in
+# the <NotFound /> component below (the fallback's client script bakes in the
+# build-time `latest` label + site `base`).
+title: Page not found
+description: The page you are looking for doesn't exist or may have moved.
+# Splash: no sidebar / table of contents / prev-next pagination — a clean,
+# centered error page.
+template: splash
+# No "edit this page" link on the error page.
+editUrl: false
+# Keep the 404 out of the Pagefind search index.
+pagefind: false
+# `draft: true` removes this entry from Starlight's `[...slug]` catch-all
+# `getStaticPaths` in a PRODUCTION build (Starlight filters drafts there), which
+# stops Astro emitting `/404` from BOTH the catch-all and the dedicated `/404`
+# route — the source of the "Could not render /404 from route /[...slug] …
+# conflicts with higher priority route /404" warning. The dedicated `/404`
+# route reads this body via `getEntry('docs','404')`, which ignores `draft`, so
+# the single working `/404` page is unaffected.
+draft: true
+---
+
+import NotFound from '../../components/NotFound.astro';
+
+<NotFound />

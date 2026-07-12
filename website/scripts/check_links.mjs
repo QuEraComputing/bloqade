@@ -41,7 +41,7 @@
  *   (astro.config.mjs `redirects`): `/api/latest`, `/api/latest/python`,
  *   `/api/latest/rust`. DEEP links such as `/api/latest/python/bloqade/foo/`
  *   cannot be enumerated in a static build, so they are served by
- *   `src/pages/404.astro` (dist/404.html), whose inline script rewrites
+ *   `src/content/docs/404.mdx` (dist/404.html), whose inline script rewrites
  *   `/api/latest/<rest>` -> `/api/<latest>/<rest>` at runtime. This checker
  *   mirrors that: a deep `/api/latest/<rest>` link is VALID iff
  *   `/api/<latest>/<rest>` exists on disk (+ its fragment). `<latest>` is read

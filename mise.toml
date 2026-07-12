@@ -112,6 +112,29 @@ run = [
   "node scripts/check_links.mjs dist",
 ]
 
+[tasks."docs:test"]
+description = "Gate: build-warning gate + per-page RUNTIME error crawl. Green = the production build emits no non-allowlisted warning/error AND every built page loads in headless Chromium with no console error / uncaught exception / unhandled rejection / same-origin request failure. SEPARATE from docs:check (link/xref reachability); it does NOT replace it."
+dir = "website"
+# Regenerate tutorials (cache-first) first so the crawl sees every tutorial page
+# + its assets, same as docs:build / docs:check. Warm cache => near-instant.
+depends = ["docs:notebooks"]
+run = [
+  # (a) Build-warning gate. check_build.mjs runs the production build ONCE
+  # (`pnpm build`, mirroring docs:build), scans the combined stdout+stderr, and
+  # FAILS on any warning/error line except its small documented allowlist (the
+  # Starlight/Pagefind DEP0190). Leaves dist/ in place for the crawl to reuse.
+  "node scripts/check_build.mjs",
+  # (b) Per-page runtime crawl. Serves that same dist/ with `astro preview` and
+  # loads every built page (dist/**/index.html + 404.html + the /api/latest
+  # redirect stubs) in headless Chromium, failing on any per-page runtime error.
+  "node scripts/crawl_runtime.mjs dist",
+]
+
+[tasks."docs:unit"]
+description = "Gate: FAST, isolated unit tests (vitest) for the docs site's components + lib helpers. Renders each .astro component in isolation via Astro's Container API and asserts on the HTML; pure lib helpers are tested directly. No full build and NO browser — this is the THIRD docs gate, SEPARATE from docs:check (link/xref reachability) and docs:test (build-warning gate + Playwright runtime crawl), and much faster. Runs on a fresh clone with no generated API content."
+dir = "website"
+run = "pnpm test"
+
 [tasks."docs:api"]
 description = "Generate the FULL versioned API (dev) from ../bloqade-* sibling checkouts (incl. Rust; needs a rustup nightly)"
 dir = "website"

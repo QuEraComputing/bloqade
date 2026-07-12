@@ -72,6 +72,12 @@ jobs:
       - name: Install website JS deps
         run: pnpm --dir website install --frozen-lockfile
 
+      # docs:unit — FAST, isolated component/lib unit tests (vitest + Astro
+      # Container API). Needs no full build, no browser, and no generated API
+      # content, so it runs right after the JS deps install and fails fast.
+      - name: Docs component/lib unit tests (docs:unit)
+        run: pnpm --dir website test
+
       - name: Install pinned Rust nightly (rustdoc JSON format_version 57)
         uses: dtolnay/rust-toolchain@master
         with:

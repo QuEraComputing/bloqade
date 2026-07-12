@@ -14,7 +14,7 @@ A key feature of a quantum computer is the ability to physically represent qubit
 There are two modes of quantum computation that [neutral atoms](#neutral-atom-qubits) are capable of: [*Analog*](#analog-mode-quantum-computing) and [*Digital*](#digital-mode). In analog mode, the qubit is represented as in a ground state and a Rydberg state of an atom. The atoms are placed in user-specified arbitrary positions in a 2d space, and quantum computations can be enacted by driving the atoms between the ground and Rydberg state. However, adjacent atoms in the Rydberg state are always interacting, so the computation is done through a time evolution of the atoms via the Schrodinger equation
 
 $$
-i \hbar \dfrac{\partial}{\partial t} | \psi \rangle = \hat{\mathcal{H}}(t) | \psi \rangle,  \\
+i \hbar \dfrac{\partial}{\partial t} | \psi \rangle = \hat{\mathcal{H}}(t) | \psi \rangle,
 $$
 
 where $H$ is a time-dependent "Rydberg atom" Hamiltonian.
@@ -23,7 +23,7 @@ $$
 \frac{\mathcal{H}(t)}{\hbar} = \sum_j \frac{\Omega_j(t)}{2} \left( e^{i \phi_j(t) } | g_j \rangle  \langle r_j | + e^{-i \phi_j(t) } | r_j \rangle  \langle g_j | \right) - \sum_j \Delta_j(t) \hat{n}_j + \sum_{j < k} V_{jk} \hat{n}_j \hat{n}_k,
 $$
 
-where: $\Omega_j$, $\phi_j$, and $\Delta_j$ denote the Rabi frequency *amplitude*, laser *phase*, and the *detuning* of the driving laser field on atom (qubit) $j$ coupling the two states  $| g_j \rangle$ (ground state) and $| r_j \rangle$ (Rydberg state); $\hat{n}_j = |r_j\rangle \langle r_j|$ is the number operator, and $V_{jk} = C_6/|\mathbf{x}_j - \mathbf{x}_k|^6$ describes the Rydberg interaction (van der Waals interaction) between atoms $j$ and $k$ where $\mathbf{x}_j$ denotes the *position* of the atom $j$; $C_6$ is the Rydberg interaction constant that depends on the particular Rydberg state used. For Bloqade, the default $C_6 = 862690 \times 2\pi \text{ MHz μm}^6$ for $|r \rangle = \lvert 70S_{1/2} \rangle$ of the $^{87}$Rb atoms; $\hbar$ is the reduced Planck's constant.
+where: $\Omega_j$, $\phi_j$, and $\Delta_j$ denote the Rabi frequency *amplitude*, laser *phase*, and the *detuning* of the driving laser field on atom (qubit) $j$ coupling the two states  $| g_j \rangle$ (ground state) and $| r_j \rangle$ (Rydberg state); $\hat{n}_j = |r_j\rangle \langle r_j|$ is the number operator, and $V_{jk} = C_6/|\mathbf{x}_j - \mathbf{x}_k|^6$ describes the Rydberg interaction (van der Waals interaction) between atoms $j$ and $k$ where $\mathbf{x}_j$ denotes the *position* of the atom $j$; $C_6$ is the Rydberg interaction constant that depends on the particular Rydberg state used. For Bloqade, the default $C_6 = 862690 \times 2\pi \text{ MHz }\mu\text{m}^6$ for $|r \rangle = \lvert 70S_{1/2} \rangle$ of the $^{87}$Rb atoms; $\hbar$ is the reduced Planck's constant.
 
 For a more nuanced read about the neutral atoms that Bloqade and *Aquila* use, refer to QuEra's qBook section on [Qubits by puffing up atoms](https://qbook.quera.com/learn/?course=6630211af30e7d0013c66147&file=6630211af30e7d0013c66149).
 

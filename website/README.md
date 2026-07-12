@@ -122,7 +122,8 @@ mise run docs:preview      # serve the built site from dist/
 
 | Path | What |
 | --- | --- |
-| `src/pages/` | Landing page (`index.astro`), blog (`blog/`), and the `404.astro` `/api/latest` fallback. |
+| `src/pages/` | Landing page (`index.astro`) and blog (`blog/`). |
+| `src/content/docs/404.mdx` | Site 404 page (Starlight-owned `/404` route); embeds `NotFound.astro`, which also runs the `/api/latest` deep-link fallback. |
 | `src/content/docs/guides/` | Evergreen guides & tutorials (MDX). |
 | `src/content/docs/api/` | Versioned API reference (committed `index.mdx` + `compatibility.mdx`; generated `<version>/` trees). |
 | `src/content/docs/reference/` | Reference index. |
