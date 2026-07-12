@@ -20,7 +20,10 @@ dependencies = [
 ]
 
 [project.scripts]
+# Emit ONE tutorial (ad-hoc / debugging).
 bloqade-docs-emit-notebooks = "bloqade_docs_emit_notebooks.__main__:main"
+# Cache-first batch build of EVERY tutorial from the manifest (docs:notebooks).
+bloqade-docs-build-notebooks = "bloqade_docs_emit_notebooks.driver:main"
 
 [tool.uv.sources]
 # Repo root, three levels up from this file

@@ -23,10 +23,10 @@ sources/
 # xref integration at astro:config:setup); it is already covered by the root
 # `*.json` rule and must NOT be committed. Listed here for clarity:
 src/generated/xref-inventory.json
-# Per-version inventories that Phase C2 drops here ARE the committed source of
-# truth, but the root `.gitignore` ignores all `*.json` — re-include them:
-!.api-inventory/*.json
-# (emitters/*/_out is already ignored by emitters/*/.gitignore.)
+# Per-version inventories dropped here by build_versions.py are GENERATED and
+# regenerable (like the api/<V> trees + versions.json below), so they stay
+# IGNORED by the repo-root `*.json` rule — do NOT re-include. `.api-inventory/.gitkeep`
+# keeps the dir present. (emitters/*/_out is already ignored by emitters/*/.gitignore.)
 
 # Phase C2 — generated, regenerable API content.
 #   * Per-version API trees (api/dev/**, api/0.35/**, ...) are large and fully
@@ -39,3 +39,13 @@ src/content/docs/api/*/
 #     that exist). Ignored; code falls back to a committed-safe default
 #     (src/lib/versions.ts DEFAULT_MANIFEST, astro.config readLatestVersion).
 src/generated/versions.json
+
+# Generated tutorials — regenerable by `mise run docs:notebooks` (cache-first)
+# from the jupytext sources in docs/digital/**. Mirrors ppvm, which gitignores
+# its generated notebook output. Each notebook group lands in a SUBDIR here
+# (qasm2/, squin/, tutorials/, tsim/, gemini/, interop/), so ignoring every dir
+# one level under tutorials/ drops the generated pages while keeping the
+# hand-authored `guides/tutorials/index.mdx` FILE (the CardGrid overview)
+# tracked. Their image assets live under public/tutorials/ and are ignored too.
+src/content/docs/guides/tutorials/*/
+public/tutorials/

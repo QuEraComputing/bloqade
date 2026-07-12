@@ -1,0 +1,119 @@
+---
+/**
+ * Custom 404 page — also the `/api/latest/<symbol>` deep-link fallback.
+ *
+ * Astro emits this route as `dist/404.html`; GitHub Pages (and most static
+ * hosts) serve that file for any unknown path WITHOUT rewriting the URL, so the
+ * client-side script below sees the originally-requested pathname.
+ *
+ * Why this is needed: `/api/latest/**` is a meta-version alias resolved by the
+ * static `redirects` in astro.config.mjs, but a static build can only enumerate
+ * fixed redirect keys — it cannot spread a `[...slug]`. So only the landing
+ * aliases (`/api/latest`, `/api/latest/python`, `/api/latest/rust`) get real
+ * redirect pages; DEEP links like `/api/latest/python/bloqade/qasm2/...` (which
+ * guides link to) would otherwise 404. This page catches those 404s and
+ * forwards them to the concrete newest version.
+ *
+ * Both the concrete latest label and the site `base` are baked in at build
+ * time (see the `define:vars` script) so the fallback needs no runtime config.
+ */
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { loadVersions } from '../lib/versions.ts';
+
+// Concrete newest-release label the `/api/latest` alias points at (e.g. "0.35"
+// or "dev"). Read from the generated manifest, same source as the redirects.
+const latest = loadVersions().latest;
+
+// Configured deploy base (normalized with a trailing slash: "/" at the site
+// root, or e.g. "/next/" for a gh-pages preview subpath). Inlined so the
+// fallback preserves the base prefix when it rewrites the URL.
+const base = import.meta.env.BASE_URL;
+
+// Base-aware href helper for the friendly-404 CTA links, mirroring how Astro
+// prefixes internal links so they don't break under a deploy subpath.
+const withBase = (path: string) =>
+  base === '/' ? path : `${base.replace(/\/$/, '')}${path}`;
+---
+
+<SiteLayout title="Page not found — Bloqade" section="404">
+  {/*
+    Deep-link fallback. Placed FIRST so it runs as the parser reaches it —
+    before the visible 404 markup below is rendered — minimizing any flash of
+    the 404 UI when we are about to redirect. `define:vars` bakes `latest` +
+    `base` into the inline script (self-contained in 404.html).
+
+    Behaviour:
+      • Strip the configured `base` prefix from location.pathname.
+      • If what remains matches `^/api/latest/<rest>`, replace the URL with
+        `<base>/api/<latest>/<rest>` (preserving query + hash).
+      • Otherwise do NOTHING — the friendly 404 below stays on screen. Harmless
+        for every other unknown path, and it can't loop: the rewritten URL is
+        `/api/<concrete>/...`, which never matches `/api/latest/...` again.
+  */}
+  <script is:inline define:vars={{ latest, base }}>
+    (function () {
+      var b = base && base.charAt(base.length - 1) === '/' ? base : (base || '/') + '/';
+      // Prefix = base without its trailing slash ("" at the site root, else
+      // e.g. "/next"). Strip it so the regex matches a root-relative path.
+      var prefix = b === '/' ? '' : b.slice(0, -1);
+      var path = window.location.pathname;
+      if (prefix && path.indexOf(prefix + '/') === 0) {
+        path = path.slice(prefix.length);
+      }
+      var m = path.match(/^\/api\/latest\/(.+)$/);
+      if (m) {
+        window.location.replace(
+          b + 'api/' + latest + '/' + m[1] + window.location.search + window.location.hash
+        );
+      }
+    })();
+  </script>
+
+  <section class="notfound" data-pagefind-ignore>
+    <p class="notfound__code">404</p>
+    <h1 class="notfound__title">This page could not be found</h1>
+    <p class="notfound__lede">
+      The page you are looking for doesn't exist or may have moved. Try the
+      documentation, the API reference, or head back home.
+    </p>
+    <div class="notfound__cta">
+      <a class="btn btn--primary" href={withBase('/')}>Home</a>
+      <a class="btn btn--ghost" href={withBase('/guides/')}>Guides</a>
+      <a class="btn btn--ghost" href={withBase('/api/')}>API reference</a>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .notfound {
+    text-align: center;
+    padding: 4rem 0 4.5rem;
+  }
+  .notfound__code {
+    font-weight: 900;
+    font-size: clamp(3.5rem, 12vw, 7rem);
+    line-height: 1;
+    margin: 0;
+    color: var(--brand);
+    letter-spacing: -0.02em;
+  }
+  .notfound__title {
+    font-weight: 900;
+    font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 0.75rem 0 0.5rem;
+  }
+  .notfound__lede {
+    color: var(--color-muted);
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    max-width: 44ch;
+    margin: 0 auto 2rem;
+  }
+  .notfound__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+</style>

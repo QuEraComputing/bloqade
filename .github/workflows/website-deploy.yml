@@ -74,13 +74,38 @@ jobs:
           restore-keys: |
             website-cargo-astro-${{ runner.os }}-
 
-      # EXECUTE_NOTEBOOKS intentionally UNSET: tutorials render statically here.
+      # Content-addressed cache of EXECUTED notebooks (see
+      # website/emitters/notebooks/src/.../pipeline.py). The key mirrors the
+      # per-notebook fingerprint: the jupytext sources + the emitter's own
+      # source + both lockfiles. On a full match every tutorial is reused with
+      # NO kernel execution; the restore-keys fallback gives a partial hit so
+      # only the notebooks whose fingerprint changed re-execute. `v2` tracks
+      # CACHE_SCHEMA_VERSION.
+      - name: Restore notebook execution cache
+        uses: actions/cache@v5
+        with:
+          path: website/emitters/notebooks/.notebook-cache
+          key: notebooks-v2-${{ runner.os }}-${{ hashFiles('docs/digital/**/*.py', 'website/emitters/notebooks/src/**/*.py', 'website/emitters/notebooks/uv.lock', 'uv.lock') }}
+          restore-keys: |
+            notebooks-v2-${{ runner.os }}-
+
       - name: Generate dev API content
         run: >
           uv run python website/scripts/build_versions.py
           --versions dev
           --clone-dir website/sources
           --rust-toolchain nightly-2026-04-17
+
+      # Cache-first (re)generation of guides/tutorials/** from docs/digital/**.
+      # EXECUTE_NOTEBOOKS=1 => run + cache executable tutorials (a warm cache =>
+      # zero kernels; a changed notebook => only it re-executes); tsim/gemini
+      # opt out (static) per the driver manifest, and anything that fails to
+      # execute degrades to a static render (never fails the build). Runs before
+      # the Astro build so every tutorial page + its assets exist.
+      - name: Generate tutorials (cache-first)
+        env:
+          EXECUTE_NOTEBOOKS: "1"
+        run: uv run --project website/emitters/notebooks bloqade-docs-build-notebooks
 
       - name: Build Astro site
         env:
@@ -97,3 +122,18 @@ jobs:
       # matches the 'next' subpath passed here.
       - name: Publish to gh-pages:/next/
         run: bash website/scripts/publish.sh website/dist next
+
+      # Additive link + cross-reference gate for the WIP dev deploy. Runs AFTER
+      # publish (existing steps behave exactly as before) so it only reports a
+      # pass/fail signal. Isolated STRICT rebuild into `dist-check` (leaves the
+      # published `dist` untouched):
+      #   * XREF_STRICT=1   -> fail on any unresolved <ApiXref>
+      #   * check_links.mjs -> fail on any unreachable internal link / fragment
+      #     anchor. SITE_BASE from the job env keeps base-prefixing consistent.
+      # Mirrors `mise run docs:check`.
+      - name: Check internal links + API xrefs
+        env:
+          XREF_STRICT: "1"
+        run: |
+          pnpm --dir website exec astro build --outDir dist-check
+          node website/scripts/check_links.mjs website/dist-check

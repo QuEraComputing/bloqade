@@ -11,6 +11,11 @@ dependencies = [
 [project.scripts]
 bloqade-docs-emit-python = "bloqade_docs_emit_python.__main__:main"
 
+[dependency-groups]
+dev = [
+    "pytest>=8",
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

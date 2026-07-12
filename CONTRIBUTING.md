@@ -51,13 +51,13 @@ good-to-have practices:
 
 ## Documentation
 
-We use `just` for managing command line tools and scripts. It should be installed when you run `uv sync`. To build the documentation, simply run:
+We use [`mise`](https://mise.jdx.dev) to manage the toolchain and command-line tasks (`brew install mise`, then `mise install`). Run `mise run` to list every task. To preview the existing MkDocs documentation, run:
 
 ```bash
-just doc
+mise run mkdocs:serve
 ```
 
-This will launch a local server to preview the documentation. You can also run `just doc-build` to build the documentation without launching the server.
+This will launch a local server to preview the documentation. You can also run `mise run mkdocs:build` to build the documentation without launching the server. The new Astro + Starlight docs site under `website/` has its own `docs:*` tasks (`mise run docs:dev`, `mise run docs:build`, …) — see [`website/README.md`](website/README.md). The bare top-level tasks act on the Python package: `mise run build` (`uv build`) and `mise run test`.
 
 ## License
 

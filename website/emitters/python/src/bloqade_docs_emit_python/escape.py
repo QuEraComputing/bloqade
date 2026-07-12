@@ -125,9 +125,56 @@ def template(value: str) -> str:
 
 _FENCE_OPEN_RE = re.compile(r"^(\s*)(`{3,}|~{3,})")
 
+# Inline markdown link `[text](target)`, ignoring image syntax (`![...](...)`).
+_MD_LINK_RE = re.compile(r"(?<!!)\[([^\]]+)\]\(([^)]+)\)")
+# A URL scheme (`http:`, `https:`, `mailto:`, ...) or protocol-relative `//host`.
+_SCHEME_RE = re.compile(r"^(?:[a-z][a-z0-9+.\-]*:|//)", re.IGNORECASE)
+
+
+def _is_intradoc_relative(target: str) -> bool:
+    """True when a link target is a broken intra-doc relative reference.
+
+    Docstrings ported from mkdocs carry relative links like ``other.md`` or
+    ``../reference/x.md`` that have no meaning once rendered as an API page:
+    MDX would emit a dead ``<a href="...md">``. We treat a target as an
+    intra-doc relative link when it has no URL scheme and is neither an
+    absolute site path (``/...``) nor a same-page fragment (``#...``). This
+    captures every ``.md`` target and any bare relative path.
+    """
+    t = target.strip()
+    if not t:
+        return False
+    if _SCHEME_RE.match(t):
+        return False  # external / protocol-relative link — keep verbatim
+    if t.startswith("/") or t.startswith("#"):
+        return False  # absolute site path or same-page anchor — keep verbatim
+    return True
+
+
+def _strip_relative_links(segment: str) -> str:
+    """Replace broken intra-doc relative markdown links with their text only.
+
+    ``[factory](factory.md)`` -> ``factory``; ``[caps](../ref/x.md#h)`` ->
+    ``caps``. External / absolute / fragment links are left untouched so real
+    hyperlinks keep working. Net effect: no dangling ``.md`` hrefs reach MDX.
+    """
+
+    def _repl(match: "re.Match[str]") -> str:
+        label, target = match.group(1), match.group(2)
+        # Drop an optional markdown link title: `(url "title")` -> `url`.
+        url = target.split(None, 1)[0] if target.split() else target
+        return label if _is_intradoc_relative(url) else match.group(0)
+
+    return _MD_LINK_RE.sub(_repl, segment)
+
 
 def _escape_specials(segment: str) -> str:
-    """Escape `<`, `{`, `}` in a non-code prose segment."""
+    """Escape `<`, `{`, `}` in a non-code prose segment.
+
+    First neutralize broken intra-doc relative links (see
+    ``_strip_relative_links``) so no dangling ``.md`` href reaches MDX.
+    """
+    segment = _strip_relative_links(segment)
     return (
         segment.replace("<", "&lt;")
         .replace("{", "&#123;")

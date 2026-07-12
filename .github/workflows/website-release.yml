@@ -88,6 +88,17 @@ jobs:
           restore-keys: |
             website-cargo-astro-${{ runner.os }}-
 
+      # Content-addressed cache of EXECUTED notebooks — same key as the WIP
+      # deploy/preview workflows (see website/emitters/notebooks/.../pipeline.py).
+      # `v2` tracks CACHE_SCHEMA_VERSION.
+      - name: Restore notebook execution cache
+        uses: actions/cache@v5
+        with:
+          path: website/emitters/notebooks/.notebook-cache
+          key: notebooks-v2-${{ runner.os }}-${{ hashFiles('docs/digital/**/*.py', 'website/emitters/notebooks/src/**/*.py', 'website/emitters/notebooks/uv.lock', 'uv.lock') }}
+          restore-keys: |
+            notebooks-v2-${{ runner.os }}-
+
       # Release build: emit api/<X.Y>/** and PRUNE to the newest 3 releases
       # (`dev` is always kept). Mirrors pub_doc.yml's KEEP_RELEASES=3 policy.
       - name: Generate release API content (--keep 3)
@@ -97,6 +108,14 @@ jobs:
           --clone-dir website/sources
           --keep 3
           --rust-toolchain nightly-2026-04-17
+
+      # Cache-first (re)generation of guides/tutorials/** from docs/digital/**
+      # (see the deploy/preview workflows). Runs before the Astro build so every
+      # tutorial page + its assets exist.
+      - name: Generate tutorials (cache-first)
+        env:
+          EXECUTE_NOTEBOOKS: "1"
+        run: uv run --project website/emitters/notebooks bloqade-docs-build-notebooks
 
       - name: Build Astro site
         run: pnpm --dir website build

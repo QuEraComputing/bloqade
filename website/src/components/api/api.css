@@ -138,6 +138,22 @@
   scroll-margin-top: 6rem; /* clear the sticky Starlight header on anchor jumps */
 }
 
+/* Fully-qualified name — muted mono line under the heading. Mirrors
+ * `.api-module__fqname`; kept as visible page text so Pagefind indexes the
+ * dotted path for exact-phrase search and anchored sub-result titles. */
+.api-class__fqname,
+.api-fn__fqname {
+  margin: 0.2rem 0 0;
+  font-size: var(--sl-text-sm);
+  color: var(--sl-color-gray-3);
+}
+.api-class__fqname code,
+.api-fn__fqname code {
+  background: none;
+  padding: 0;
+  font-family: var(--sl-font-mono);
+}
+
 /* Symbol name — monospace, prominent, no code-chip background. */
 .api-class__name,
 .api-fn__name {

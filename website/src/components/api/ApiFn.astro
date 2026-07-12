@@ -39,6 +39,7 @@ const { name, fqName, kind = 'function', sourceUrl } = Astro.props;
       )
     }
   </h3>
+  <p class="api-fn__fqname"><code>{fqName}</code></p>
   <div class="api-fn__body">
     <slot />
   </div>

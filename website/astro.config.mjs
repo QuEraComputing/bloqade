@@ -183,8 +183,36 @@ export default defineConfig({
         { label: 'Home', link: '/' },
         { label: 'Blog', link: '/blog/' },
         {
+          // Evergreen, top-level guide pages that don't live in a section
+          // directory. Explicit links (curated order + labels): there is no
+          // dedicated autogenerate directory for these loose pages, and the
+          // KaTeX `guides/example` demo page is deliberately omitted.
           label: 'Guides',
-          autogenerate: { directory: 'guides' },
+          items: [
+            { label: 'Overview', link: '/guides/' },
+            { label: 'Manifesto', link: '/guides/manifesto/' },
+            { label: 'Contributing', link: '/guides/contributing/' },
+          ],
+        },
+        // Section groups use `autogenerate` so pages added under these
+        // directories (including ones authored concurrently, e.g. new
+        // analog/digital guides) appear automatically — no page list to
+        // maintain here. Nested subdirectories become nested sidebar groups.
+        {
+          label: 'Getting Started',
+          autogenerate: { directory: 'guides/getting-started' },
+        },
+        {
+          label: 'Bloqade Digital',
+          autogenerate: { directory: 'guides/digital' },
+        },
+        {
+          label: 'Bloqade Analog',
+          autogenerate: { directory: 'guides/analog' },
+        },
+        {
+          label: 'Tutorials',
+          autogenerate: { directory: 'guides/tutorials' },
         },
         {
           // Phase C2 — the API reference is versioned (single `bloqade`

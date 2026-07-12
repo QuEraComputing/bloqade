@@ -4,7 +4,11 @@
 # scratch output (default --out); real runs point --out elsewhere
 _out/
 
-# executed-notebook cache (keyed by source content hash)
+# content-addressed executed-notebook cache (keyed by fingerprint+source hash).
+# CI persists this via actions/cache; locally it survives across builds so a
+# prose/CSS change doesn't force a notebook re-run. See pipeline.py.
+.notebook-cache/
+# legacy cache dir from the old source-hash-only scheme (superseded).
 .cache/
 
 # python caches

@@ -38,7 +38,7 @@ EXECUTE_NOTEBOOKS=1 uv run bloqade-docs-emit-notebooks \
 | `--asset-base` | `/tutorials` | URL prefix for emitted `<img src>` attributes; the site serves `public/tutorials/*` at `/tutorials/*`. |
 | `--name` | slugified filename stem | Tutorial slug; names the `.mdx`, the `public/<name>/` asset dir, and the asset URL path. |
 | `--repo-root` | git top-level | Kernel cwd + by-basename asset fallback search root. |
-| `--cache-dir` | `emitters/notebooks/.cache` | Executed-notebook cache (keyed by source hash). |
+| `--cache-dir` | `$BLOQADE_NOTEBOOK_CACHE_DIR` or `emitters/notebooks/.notebook-cache` | Content-addressed executed-notebook cache (see below). |
 | `--kernel-python` | this venv's interpreter | Python used to launch the execution kernel. |
 | `--kernel-name` | `python3` | Kernel spec name. |
 | `--timeout` | `300` | Per-cell execution timeout (seconds). |
@@ -55,7 +55,7 @@ EXECUTE_NOTEBOOKS=1 uv run bloqade-docs-emit-notebooks \
    ▼
 [execution gate]  EXECUTE_NOTEBOOKS in {1,true,yes,on} ?
    ├── no  → render code + markdown only (no outputs)
-   └── yes → cache hit?  ── yes → load .cache/<hash>.ipynb
+   └── yes → cache hit?  ── yes → load .notebook-cache/<key>.ipynb (no kernel)
               └── no → nbclient executes in a bloqade kernel, then cache it
    ▼
 render → MDX (frontmatter + prose + fenced code + rendered outputs)
@@ -64,12 +64,31 @@ render → MDX (frontmatter + prose + fenced code + rendered outputs)
 
 Source files:
 
-* `pipeline.py` — read/parse, the execution gate, caching, `nbclient`
-  execution, and orchestration (`Config`, `run`).
+* `pipeline.py` — read/parse, the execution gate, the content-addressed cache,
+  `nbclient` execution, and per-notebook orchestration (`Config`, `run`).
+* `driver.py` — the **batch** build: a manifest mapping each jupytext source in
+  `docs/digital/**` to its `<group>/<slug>` tutorial, and a cache-first loop
+  that builds them all. This is what `mise run docs:notebooks` invokes
+  (console script `bloqade-docs-build-notebooks`).
 * `render.py` — notebook → MDX; markdown/admonition/image conversion, code
-  fences, and the output→MDX mapping (`RenderContext`, `render_notebook`).
+  fences, legacy mkdocs cross-reference link rewriting, and the output→MDX
+  mapping (`RenderContext`, `render_notebook`).
 * `escape.py` — MDX-safety escaping, ANSI stripping, fenced-block emission.
-* `__main__.py` — the CLI.
+* `__main__.py` — the single-tutorial CLI (`bloqade-docs-emit-notebooks`).
+
+## Batch build (`mise run docs:notebooks`)
+
+`driver.py` builds **every** tutorial from its `MANIFEST` (source → group/slug →
+execute flag), cache-first. The manifest — not the on-disk filename — fixes the
+page URL, so a few renames are pinned there (`deutsch_squin.py` → `squin/deutsch`,
+`circuits_with_bloqade.py` → `tutorials/circuits`, the `gemini_logical` dir →
+the `gemini` group). Sources are read **in place** from `docs/digital/**` (no
+copy) so their sibling image assets keep resolving; when `docs/` is removed,
+only `SOURCE_ROOT`/the manifest paths change. `tsim`/`gemini` set `execute:
+False` because their backend cannot run in the docs env yet — they ship as
+static renders (see `guides/tutorials/index.mdx`). Flipping a flag edits
+`driver.py`, which is part of the cache fingerprint, so the affected set
+re-executes.
 
 ## Execution gating
 
@@ -91,22 +110,56 @@ default `--allow-errors` off), the error is logged and the pipeline **falls back
 to a static (non-executed) render** rather than failing the build. Pass
 `--allow-errors` to instead capture the traceback as a rendered output.
 
-## Output caching
+## Output caching (content-addressed, ppvm-style)
 
-Executed notebooks are cached under `.cache/` (gitignored), keyed by
-`sha256(CACHE_SCHEMA + "\0" + source_bytes)` — i.e. the exact bytes of the input
-`.py` plus a schema tag (`CACHE_SCHEMA` in `pipeline.py`, bump it to invalidate
-all caches when the executor changes). The cache file is the fully-executed
-notebook, `.cache/<hash>.ipynb`.
+Executed notebooks are cached under `.notebook-cache/` (gitignored), mirroring
+ppvm's `docs/scripts/build-notebooks.py`. The per-notebook key is:
 
-* Execution enabled + `.cache/<hash>.ipynb` exists → the executed notebook is
-  loaded and the kernel is **skipped**.
-* Hash changed / no cache entry → execute, then write the cache.
-* `--no-cache` forces re-execution (and refreshes the entry).
+```
+sha256( CACHE_SCHEMA_VERSION + shared_fingerprint + notebook_source_bytes )
+```
 
-Because the key is the *source* hash, editing a tutorial re-runs it while an
-unchanged tutorial is free on every build. Rendering is always re-done (cheap),
-so tweaks to the emitter don't require re-execution.
+where `shared_fingerprint = sha256(CACHE_SCHEMA_VERSION + this emitter's own
+*.py sources + website/emitters/notebooks/uv.lock + the repo-root uv.lock)`.
+The cache artefact is the fully-executed notebook, `.notebook-cache/<key>.ipynb`.
+
+Consequences:
+
+* Editing **one** tutorial changes only its key → only that notebook
+  re-executes; every other notebook stays a cache hit.
+* A prose / CSS / Astro-only change touches nothing in the fingerprint → **no**
+  notebook re-executes.
+* Editing the emitter (`pipeline.py`, `render.py`, `escape.py`, `driver.py`, …)
+  or bumping either lockfile changes `shared_fingerprint` → the whole set
+  re-executes (a render/sanitiser change must reach every page; a dep bump may
+  change output). `CACHE_SCHEMA_VERSION` (`pipeline.py`) is the manual global
+  override.
+
+Flow: execution enabled + `<key>.ipynb` present → load it and **re-render with
+no kernel** (this also re-extracts the output images), so the page is reproduced
+offline. Miss → execute once, render, write the cache. `--no-cache` /
+`BLOQADE_NOTEBOOK_CACHE=0` force re-execution.
+
+A **static fallback** (execution requested but failed, e.g. a missing backend)
+is deliberately **not cached**, so a fixed environment re-executes and populates
+real outputs. A notebook that is *intentionally* static (execution disabled)
+never touches the cache.
+
+The package source tree of `bloqade` is intentionally **not** hashed (only its
+pinned versions, via the lockfiles); `pytest` is the safety net for pure-source
+changes, and bumping `CACHE_SCHEMA_VERSION` forces a rebuild when needed.
+
+### Environment variables
+
+| Var | Effect |
+| --- | --- |
+| `EXECUTE_NOTEBOOKS` in {1,true,yes,on} | Enable execution (else static render). |
+| `BLOQADE_NOTEBOOK_CACHE_DIR` | Override the cache dir (CI points this at an `actions/cache` location). |
+| `BLOQADE_NOTEBOOK_CACHE=0` | Force re-execution regardless of what's on disk. |
+
+CI (`.github/workflows/website-*.yml`) persists `.notebook-cache/` via
+`actions/cache`, keyed on a hash of the jupytext sources + the emitter source +
+the lockfiles, with a `restore-keys` fallback for partial reuse.
 
 ## Output → MDX mapping
 

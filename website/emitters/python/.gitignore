@@ -4,6 +4,7 @@
 # scratch output (default --out); real runs point --out elsewhere
 _out/
 
-# python caches
+# python + pytest caches
 __pycache__/
 *.pyc
+.pytest_cache/

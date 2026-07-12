@@ -23,6 +23,8 @@ from pathlib import Path
 
 from .pipeline import (
     Config,
+    cache_enabled_default,
+    default_cache_dir,
     default_python,
     detect_repo_root,
     execution_enabled,
@@ -67,9 +69,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--cache-dir",
-        default=str(here / ".cache"),
-        help="Executed-notebook cache dir, keyed by source hash "
-        "(default: emitters/notebooks/.cache).",
+        default=None,
+        help="Content-addressed executed-notebook cache dir (default: "
+        "$BLOQADE_NOTEBOOK_CACHE_DIR or emitters/notebooks/.notebook-cache).",
     )
     parser.add_argument(
         "--kernel-python",
@@ -144,12 +146,14 @@ def main(argv: list[str] | None = None) -> int:
         asset_base=args.asset_base,
         name=name,
         repo_root=repo_root,
-        cache_dir=Path(args.cache_dir).resolve(),
+        cache_dir=(
+            Path(args.cache_dir).resolve() if args.cache_dir else default_cache_dir()
+        ),
         kernel_python=args.kernel_python,
         kernel_name=args.kernel_name,
         timeout=args.timeout,
         execute=execute,
-        use_cache=args.use_cache,
+        use_cache=args.use_cache and cache_enabled_default(),
         allow_errors=args.allow_errors,
     )
 

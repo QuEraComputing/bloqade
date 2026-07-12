@@ -1,9 +1,13 @@
 # scratch output (default --out); real runs point --out elsewhere
 _out/
 
-# python caches (emit_rust.py is run via python/uv)
+# uv virtual environment (created for `uv run pytest`, see tests/)
+.venv/
+
+# python + pytest caches (emit_rust.py is run via python/uv)
 __pycache__/
 *.pyc
+.pytest_cache/
 
 # rustdoc JSON is generated in the target crate's workspace, not here, but guard anyway
 target/

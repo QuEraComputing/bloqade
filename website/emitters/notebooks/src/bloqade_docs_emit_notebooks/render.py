@@ -70,6 +70,28 @@ _TITLE_RE = re.compile(
 )
 _P_TAG_RE = re.compile(r"</?p\b[^>]*>", re.IGNORECASE)
 _IMG_RE = re.compile(r"<img\b([^>]*?)/?>", re.IGNORECASE)
+# Markdown image syntax: ![alt](src "optional title"). The legacy sources mix
+# HTML <img> tags and markdown images; we resolve+copy both so neither 404s.
+_MD_IMG_RE = re.compile(r'!\[([^\]]*)\]\(\s*([^)\s]+)(?:\s+"[^"]*")?\s*\)')
+# Markdown link syntax: [text](target). ``(?<!\!)`` skips images (handled
+# above). Used to rewrite legacy mkdocs cross-reference links (see below).
+_MD_LINK_RE = re.compile(r"(?<!\!)\[([^\]]*)\]\(([^)\s]+)\)")
+# Legacy mkdocs API-reference path: ``(../)*reference/<pkg>/src/bloqade/<path>``
+# with an optional ``#<Name>`` fragment. The mkdocs relative depth and the
+# ``reference/…/src/`` scheme are both wrong for the Astro site, which serves
+# the Python API at ``/api/latest/python/bloqade/<path>/`` with fully-qualified
+# anchor ids (``#bloqade.<dotted.path>.<Name>``).
+_REFERENCE_LINK_RE = re.compile(
+    r"^(?:\.\./)*reference/[^/]+/src/bloqade/([^#)]+?)/?(?:#([^)]+))?$"
+)
+# Guide pages that were renamed/relocated in the mkdocs -> Astro migration.
+# The sources link to the OLD single-segment relative names; map them to the
+# Astro URLs that exist today.
+_GUIDE_LINK_RENAMES = {
+    "cirq_interop": "/guides/digital/cirq-interop/",
+    "dialects_and_kernels": "/guides/digital/dialects/",
+}
+_RELATIVE_GUIDE_RE = re.compile(r"^(?:\.\./)*([A-Za-z0-9_]+)/?$")
 _SRC_RE = re.compile(r'\bsrc\s*=\s*"([^"]*)"', re.IGNORECASE)
 _ALT_RE = re.compile(r'\balt\s*=\s*"([^"]*)"', re.IGNORECASE)
 # Wrapper tags that are valid JSX as-is and should pass through un-escaped.
@@ -196,11 +218,58 @@ def _convert_img(m: re.Match[str], ctx: RenderContext) -> str:
     return ctx.stash(f'<img src="{url}" alt="{alt}" />')
 
 
+def _convert_md_img(m: re.Match[str], ctx: RenderContext) -> str:
+    alt = m.group(1)
+    src = m.group(2)
+    url = ctx.resolve_ref(src)
+    if url is None:
+        # remote/absolute/missing: keep the original markdown image verbatim
+        # (stashed so the prose escaper leaves it alone).
+        return ctx.stash(m.group(0))
+    return ctx.stash(f'<img src="{url}" alt="{alt or Path(src).stem}" />')
+
+
+def _rewrite_link_target(target: str) -> str:
+    """Map a legacy mkdocs cross-reference link to its Astro URL.
+
+    Only known-broken patterns are rewritten (API ``reference/…`` paths and the
+    two renamed guide pages); every other target is returned unchanged, so this
+    can never break a link that already resolves.
+    """
+    t = target.strip()
+    m = _REFERENCE_LINK_RE.match(t)
+    if m:
+        path = m.group(1).strip("/")
+        url = f"/api/latest/python/bloqade/{path}/"
+        frag = m.group(2)
+        if frag:
+            # Astro API anchors are the fully-qualified object id, e.g.
+            # ``bloqade.qasm2.dialects.noise.model.MoveNoiseModelABC``.
+            dotted = "bloqade." + path.replace("/", ".")
+            url += f"#{dotted}.{frag}"
+        return url
+    g = _RELATIVE_GUIDE_RE.match(t)
+    if g and g.group(1) in _GUIDE_LINK_RENAMES:
+        return _GUIDE_LINK_RENAMES[g.group(1)]
+    return target
+
+
+def _rewrite_md_link(m: re.Match[str]) -> str:
+    return f"[{m.group(1)}]({_rewrite_link_target(m.group(2))})"
+
+
 def render_markdown(text: str, ctx: RenderContext) -> str:
     # 1. admonition <div> blocks -> Starlight asides (stashed verbatim).
     text = _ADMONITION_RE.sub(lambda m: _convert_admonition(m, ctx), text)
-    # 2. <img> tags -> self-closed, asset-copied, absolute-src (stashed).
+    # 2a. markdown images ![alt](src) -> self-closed, asset-copied <img> (stashed).
+    text = _MD_IMG_RE.sub(lambda m: _convert_md_img(m, ctx), text)
+    # 2b. <img> tags -> self-closed, asset-copied, absolute-src (stashed).
     text = _IMG_RE.sub(lambda m: _convert_img(m, ctx), text)
+    # 2c. rewrite legacy mkdocs cross-reference links (API reference paths + a
+    #     couple of renamed guide pages) to their Astro URLs, so generated
+    #     tutorials don't ship dangling links. Only known-broken patterns are
+    #     touched; the link text (which may hold a code span) is left verbatim.
+    text = _MD_LINK_RE.sub(_rewrite_md_link, text)
     # 3. keep known-safe wrapper tags (div/picture/...) verbatim as JSX.
     text = _WRAPPER_RE.sub(lambda m: ctx.stash(m.group(0)), text)
     # 4. escape everything else, then restore the stashed regions.
@@ -311,7 +380,10 @@ def _extract_title(nb, fallback: str) -> str:
                 cell.source = "\n".join(lines)
                 return m.group(1).strip()
             break  # first non-blank line wasn't an H1 -> no title here
-    return fallback.replace("_", " ").replace("-", " ").strip().title()
+    # ``fallback`` is the slug, which may be namespaced (e.g. ``qasm2/qaoa``);
+    # only humanize the final path segment for the title.
+    leaf = fallback.rsplit("/", 1)[-1]
+    return leaf.replace("_", " ").replace("-", " ").strip().title()
 
 
 def _humanize(slug: str) -> str:

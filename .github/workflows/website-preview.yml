@@ -87,11 +87,25 @@ jobs:
           restore-keys: |
             website-cargo-astro-${{ runner.os }}-
 
+      # Content-addressed cache of EXECUTED notebooks (see
+      # website/emitters/notebooks/src/.../pipeline.py). The key mirrors the
+      # per-notebook fingerprint: the jupytext sources + the emitter's own
+      # source + both lockfiles. A full match reuses every tutorial with NO
+      # kernel execution; the restore-keys fallback gives a partial hit so only
+      # the notebooks whose fingerprint changed re-execute. `v2` tracks
+      # CACHE_SCHEMA_VERSION.
+      - name: Restore notebook execution cache
+        if: github.event.action != 'closed'
+        uses: actions/cache@v5
+        with:
+          path: website/emitters/notebooks/.notebook-cache
+          key: notebooks-v2-${{ runner.os }}-${{ hashFiles('docs/digital/**/*.py', 'website/emitters/notebooks/src/**/*.py', 'website/emitters/notebooks/uv.lock', 'uv.lock') }}
+          restore-keys: |
+            notebooks-v2-${{ runner.os }}-
+
       # Generates src/content/docs/api/dev/** (python + rust) + inventories +
       # versions.json. `uv run` here uses the repo env synced above so
       # resolve_sources.py can `uv pip show bloqade-*` to pin each source tag.
-      # EXECUTE_NOTEBOOKS is intentionally UNSET (tutorials render statically);
-      # notebook execution is reserved for a nightly workflow.
       - name: Generate dev API content
         if: github.event.action != 'closed'
         run: >
@@ -99,6 +113,18 @@ jobs:
           --versions dev
           --clone-dir website/sources
           --rust-toolchain nightly-2026-04-17
+
+      # Cache-first (re)generation of guides/tutorials/** from docs/digital/**.
+      # EXECUTE_NOTEBOOKS=1 => run + cache executable tutorials (a warm cache =>
+      # zero kernels; a changed notebook => only it re-executes); tsim/gemini
+      # opt out (static) per the driver manifest, and anything that fails to
+      # execute degrades to a static render (never fails the build). Runs before
+      # the Astro build so every tutorial page + its assets exist.
+      - name: Generate tutorials (cache-first)
+        if: github.event.action != 'closed'
+        env:
+          EXECUTE_NOTEBOOKS: "1"
+        run: uv run --project website/emitters/notebooks bloqade-docs-build-notebooks
 
       # Auto-runs build_inventory.mjs (config:setup), Pagefind, and the xref
       # integration that emits dist/objects.inv. XREF_STRICT=0 -> warn (don't
@@ -117,3 +143,20 @@ jobs:
           source-dir: website/dist
           umbrella-dir: astro-preview
           pages-base-url: https://bloqade.quera.com
+
+      # Gate the PR on link + cross-reference reachability. Purely ADDITIVE:
+      # runs AFTER the deploy above (which stays warn-only) so the preview is
+      # always published for inspection, and only this step's pass/fail gates the
+      # PR. Isolated STRICT rebuild into `dist-check` (leaves `website/dist`
+      # untouched):
+      #   * XREF_STRICT=1   -> the xref integration FAILS on any unresolved <ApiXref>
+      #   * check_links.mjs -> FAILS on any unreachable internal link / fragment
+      #     anchor (SITE_BASE from the job env keeps base-prefixing consistent).
+      # Mirrors `mise run docs:check`. Skipped on PR-close (teardown-only).
+      - name: Check internal links + API xrefs
+        if: github.event.action != 'closed'
+        env:
+          XREF_STRICT: "1"
+        run: |
+          pnpm --dir website exec astro build --outDir dist-check
+          node website/scripts/check_links.mjs website/dist-check

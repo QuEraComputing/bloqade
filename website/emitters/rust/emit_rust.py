@@ -57,7 +57,9 @@ RUST ITEM -> COMPONENT MAPPING (stays within the frozen vocabulary)
   doc comments (///, //!) ....... escaped MDX prose (see MDX-SAFETY)
   implemented (non-blanket,
     non-auto) traits ............ ApiClass `bases={[...]}`
-  cross references .............. <ApiXref to="fqName" /> (submodule links)
+  cross references .............. <ApiXref to="fqName" version="<V>" />
+                                    (submodule links; version keeps resolution
+                                     inside the referring page's own version)
   source file/line .............. <Source href=.../> + sourceUrl frontmatter
 
 KIND-BADGE NOTE: the frozen <ApiClass> always renders the literal word
@@ -444,7 +446,15 @@ def render_constant_sig(item: dict, name: str) -> str:
 # Emitter
 # --------------------------------------------------------------------------- #
 class RustEmitter:
-    def __init__(self, doc: dict, *, mount: str, repo: str | None, ref: str | None):
+    def __init__(
+        self,
+        doc: dict,
+        *,
+        mount: str,
+        repo: str | None,
+        ref: str | None,
+        version: str | None = None,
+    ):
         self.index: dict[str, dict] = doc["index"]
         self.paths: dict[str, dict] = doc["paths"]
         self.root_id = str(doc["root"])
@@ -452,8 +462,21 @@ class RustEmitter:
         self.mount = mount.strip("/")
         self.repo = repo
         self.ref = ref
+        # The API doc version label (e.g. "dev" / "0.35"). Explicit --version
+        # wins; otherwise it is the <V> segment of a `api/<V>/rust` mount. This
+        # is the SAME label the pages live under, so xrefs resolve within their
+        # own version's inventory map instead of the version-agnostic fallback.
+        self.version = version or self._version_from_mount(self.mount)
         self.crate = self.index[self.root_id]["name"]
         self.inventory: list[dict] = []
+
+    @staticmethod
+    def _version_from_mount(mount: str) -> str | None:
+        """Extract the version label from a `api/<version>/<lang>` mount."""
+        segs = mount.strip("/").split("/")
+        if len(segs) == 3 and segs[0] == "api":
+            return segs[1]
+        return None
 
     # -- lookups -----------------------------------------------------------
     def get(self, item_id) -> dict | None:
@@ -785,8 +808,9 @@ class RustEmitter:
             "language: rust",
             "fqName: %s" % yaml_str(module_fq),
         ]
-        if self.crate_version:
-            fm.append("apiVersion: %s" % yaml_str(self.crate_version))
+        api_version = self.version or self.crate_version
+        if api_version:
+            fm.append("apiVersion: %s" % yaml_str(api_version))
         if self.repo:
             fm.append("sourceRepo: %s" % yaml_str(self.repo))
         if self.ref:
@@ -811,8 +835,16 @@ class RustEmitter:
             body += [esc_prose(rest), ""]
         if submodules:
             body += ["**Modules**", ""]
+            # Pass the referring page's version so the xref resolves within the
+            # SAME version's inventory map (byVersion[<V>]) rather than falling
+            # back to the version-agnostic map — which can hold a stale/other
+            # version's (or versionless) URL.
+            ver_attr = ' version="%s"' % esc_attr(self.version) if self.version else ""
             for sname, sfq in submodules:
-                body += ['- <ApiXref to="%s" label="%s" />' % (esc_attr(sfq), esc_attr(sname))]
+                body += [
+                    '- <ApiXref to="%s" label="%s"%s />'
+                    % (esc_attr(sfq), esc_attr(sname), ver_attr)
+                ]
             body += [""]
 
         for k in ("struct", "enum", "trait", "type_alias", "constant"):
@@ -884,6 +916,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--json", type=Path, help="Path to rustdoc JSON (target/doc/<crate>.json).")
     ap.add_argument("--out", type=Path, default=here / "_out", help="Output directory (default: ./_out).")
     ap.add_argument("--mount", default="api/rust", help="Docs mount for URLs (default: api/rust).")
+    ap.add_argument(
+        "--version", dest="version", default=None,
+        help="API doc version label (e.g. 'dev' or '0.35'). "
+             "Defaults to the <V> segment of a 'api/<V>/rust' mount.",
+    )
     ap.add_argument("--repo", default="QuEraComputing/bloqade-lanes", help="owner/name for source links.")
     ap.add_argument("--ref", dest="ref", default="main", help="git ref for source links (default: main).")
     ap.add_argument("--no-source", action="store_true", help="Do not emit sourceUrl/Source links.")
@@ -920,7 +957,7 @@ def main(argv: list[str] | None = None) -> int:
 
     repo = None if args.no_source else args.repo
     ref = None if args.no_source else args.ref
-    emitter = RustEmitter(doc, mount=args.mount, repo=repo, ref=ref)
+    emitter = RustEmitter(doc, mount=args.mount, repo=repo, ref=ref, version=args.version)
     args.out.mkdir(parents=True, exist_ok=True)
     stats = emitter.emit(args.out)
     print("[rust-emitter] crate=%s format_version=%s -> %d pages, %d symbols"

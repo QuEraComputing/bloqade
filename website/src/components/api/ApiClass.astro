@@ -41,6 +41,7 @@ const { name, fqName, bases, summary, sourceUrl } = Astro.props;
       )
     }
   </h3>
+  <p class="api-class__fqname"><code>{fqName}</code></p>
   {
     bases && bases.length > 0 && (
       <p class="api-class__bases">
