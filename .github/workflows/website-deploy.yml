@@ -149,6 +149,7 @@ jobs:
           pnpm --dir website exec astro build --outDir dist-check
           node website/scripts/check_links.mjs website/dist-check
           node website/scripts/check_xrefs.mjs website/dist-check
+          node website/scripts/check_search_scope.mjs website/dist-check
 
       # ---- docs:test — build-warning gate + per-page RUNTIME error crawl.
       # SEPARATE from the link/xref gate above (does NOT replace it). Mirrors

@@ -23,7 +23,10 @@ const MARK = 'data-pagefind-body';
 // (and should stay searchable / are irrelevant to scoping).
 function readManifest() {
   try {
-    const m = JSON.parse(readFileSync('src/generated/versions.json', 'utf8'));
+    // Resolve relative to the dist dir (its parent is the website root), so this
+    // works whether invoked from website/ (`dist`) or the repo root
+    // (`website/dist-check`) — no dependency on the current working directory.
+    const m = JSON.parse(readFileSync(join(dist, '..', 'src', 'generated', 'versions.json'), 'utf8'));
     if (m && typeof m.latest === 'string' && Array.isArray(m.versions)) {
       return { latest: m.latest, versions: m.versions.map((v) => v.label) };
     }
