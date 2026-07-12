@@ -75,13 +75,12 @@ const show = current !== null && manifest.versions.length > 0;
 </script>
 
 <style>
+  /* Compact, inline treatment for the site header (the switcher now lives in
+     the top bar rather than the sidebar). */
   .version-switcher {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0 0.75rem;
-    margin-bottom: 0.5rem;
-    border-bottom: 1px solid var(--sl-color-hairline-light);
+    gap: 0.4rem;
   }
   .version-switcher__label {
     font-size: var(--sl-text-xs);
@@ -91,9 +90,9 @@ const show = current !== null && manifest.versions.length > 0;
     color: var(--sl-color-gray-3);
   }
   .version-switcher__select {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     min-width: 0;
-    padding: 0.3rem 0.5rem;
+    padding: 0.25rem 0.5rem;
     font-size: var(--sl-text-sm);
     color: var(--sl-color-white);
     background-color: var(--sl-color-black);

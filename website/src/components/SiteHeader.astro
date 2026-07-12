@@ -19,6 +19,9 @@
 import { primaryNav, githubUrl } from '../lib/nav';
 import logoLight from '../assets/logo.svg';
 import logoDark from '../assets/logo-dark.svg';
+// API version selector — self-hides unless the current URL is /api/<version>/…,
+// so it only appears in the header on versioned API pages.
+import VersionSwitcher from './VersionSwitcher.astro';
 
 interface Props {
   /** Render the (docs-only) search slot region. */
@@ -40,6 +43,8 @@ const { withSearch = false } = Astro.props;
       </div>
     )
   }
+
+  <VersionSwitcher />
 
   <nav class="site-nav" aria-label="Primary">
     {
