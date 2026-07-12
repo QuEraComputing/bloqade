@@ -445,6 +445,39 @@ def write_versions_manifest(latest_override: str | None) -> dict:
     return manifest
 
 
+def _ensure_pagefind_false(path: Path) -> None:
+    """Insert ``pagefind: false`` into an MDX file's YAML frontmatter
+    (idempotent). Excludes the page from the Pagefind search index WITHOUT
+    affecting the page itself, its links, or its cross-references."""
+    text = path.read_text(encoding="utf-8")
+    lines = text.split("\n")
+    if not lines or lines[0].strip() != "---":
+        return
+    try:
+        end = lines.index("---", 1)
+    except ValueError:
+        return
+    if any(l.strip().startswith("pagefind:") for l in lines[1:end]):
+        return  # already scoped
+    path.write_text("\n".join(["---", "pagefind: false", *lines[1:]]), encoding="utf-8")
+
+
+def apply_search_scope(latest: str) -> None:
+    """Scope site search to the LATEST API version. Adds ``pagefind: false`` to
+    every generated MDX under non-latest ``api/<V>/`` trees, so the site-wide
+    search returns only the latest API (plus the evergreen guides / blog /
+    reference, which live OUTSIDE ``api/<V>/`` and are untouched). Older versions
+    stay fully browsable via the header version selector."""
+    scoped = 0
+    for v in discover_versions():
+        if v == latest:
+            continue
+        for mdx in (API_DIR / v).rglob("*.mdx"):
+            _ensure_pagefind_false(mdx)
+            scoped += 1
+    eprint(f"[search] scoped {scoped} non-latest API page(s) out of search (latest={latest})")
+
+
 def run_build_inventory() -> None:
     """Best-effort: regenerate the merged xref inventory via node (the astro
     build also does this at config:setup, so this is optional convenience)."""
@@ -515,7 +548,8 @@ def main(argv: list[str] | None = None) -> int:
     if args.keep is not None:
         prune_versions(args.keep)
 
-    write_versions_manifest(args.latest)
+    manifest = write_versions_manifest(args.latest)
+    apply_search_scope(manifest["latest"])
     run_build_inventory()
     return 0
 

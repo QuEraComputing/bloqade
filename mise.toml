@@ -115,6 +115,10 @@ run = [
   # fails (exit 1) if either emitter stops emitting docstring <ApiXref>
   # (per-language floors) or any docstring anchor is unresolved.
   "node scripts/check_xrefs.mjs dist",
+  # Search must be scoped to the LATEST API version: non-latest api/<V> pages are
+  # excluded from the Pagefind index and the latest is indexed. Guards the
+  # `pagefind: false` scoping that build_versions.py applies to older versions.
+  "node scripts/check_search_scope.mjs dist",
 ]
 
 [tasks."docs:test"]
