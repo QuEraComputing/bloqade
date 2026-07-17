@@ -21,6 +21,11 @@ node = "24"
 # longer publishes (it's `pnpm-darwin-arm64` now), which breaks `mise install`.
 "npm:pnpm" = "11"
 uv = "latest"
+# AWS CLI (aqua backend). Operational tooling — reading Amplify build logs,
+# managing the Hosting app — NOT a docs-build dependency. It rides along in
+# `mise install`, which means CI/Amplify also provision it (a small, cached
+# download); move it to a personal mise.local.toml if you'd rather keep it out.
+"aws-cli" = "latest"
 
 [env]
 # Single source of truth for the pinned rustup NIGHTLY toolchain used to extract
