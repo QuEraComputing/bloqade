@@ -87,20 +87,26 @@ frontend:
     files:
       - "**/*"
   cache:
+    # IMPORTANT: Amplify rejects the ENTIRE cache tarball if it exceeds 5 GB
+    # ("Unable to write cache: File size must be less than 5GB"), which was
+    # happening — so NOTHING persisted and every build (and every notebook) ran
+    # fully cold. We now cache only small, high-value paths (~2.85 GB total).
+    #
+    # Deliberately NOT cached (multi-GB, tiny payoff): ~/.rustup (~8 GB, saves
+    # ~10 s), ~/.cache/uv (~12 GB), ~/.cargo (~1.5 GB, ~15 s), ~/.local/share/mise
+    # (mise reinstall is ~18 s). Reinstalling those each build is far cheaper than
+    # blowing the 5 GB budget and losing the caches below.
     paths:
-      # mise-installed tools (node/pnpm/uv) — avoids re-downloading each build
-      - $HOME/.local/share/mise/**/*
-      # JS + Astro incremental content
-      - website/node_modules/**/*
-      - website/.astro/**/*
-      # Content-addressed executed-notebook cache (the emitter fingerprints each
-      # notebook internally; caching the dir gives the warm-cache fast path).
+      # THE priority: content-addressed per-notebook execution cache (~4 MB). Now
+      # that it persists, a PR that changes ONE notebook re-executes only that one
+      # — the other 11 are restored (was ~4 min of kernels, becomes seconds).
       - website/emitters/notebooks/.notebook-cache/**/*
-      # Python / uv
+      # uv environments (~1.2 GB each). Restoring them makes `uv sync` /
+      # `uv run --project` near-instant instead of ~3 min of resolve+install.
+      # (If a restored venv is ever stale, uv just rebuilds it — safe.)
       - .venv/**/*
       - website/emitters/notebooks/.venv/**/*
-      - $HOME/.cache/uv/**/*
-      # Rust toolchain + compiled crate cache (large; avoids re-download/rebuild)
-      - $HOME/.rustup/**/*
-      - $HOME/.cargo/registry/**/*
-      - $HOME/.cargo/git/**/*
+      # JS deps (~420 MB) + Astro incremental build cache — skips pnpm install and
+      # speeds `astro build`.
+      - website/node_modules/**/*
+      - website/.astro/**/*
