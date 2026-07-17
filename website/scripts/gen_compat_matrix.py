@@ -110,7 +110,7 @@ def render_table(rows: list[dict[str, str]]) -> list[str]:
 def build_page(rows: list[dict[str, str]], dev_label: str | None) -> str:
     front = [
         "---",
-        'title: Compatibility matrix',
+        "title: Compatibility matrix",
         'description: "Which bloqade-* sub-package versions each bloqade meta-version pins."',
         "---",
         "",
@@ -137,10 +137,19 @@ def build_page(rows: list[dict[str, str]], dev_label: str | None) -> str:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--pyproject", type=Path, default=DEFAULT_PYPROJECT, help="Path to pyproject.toml.")
-    ap.add_argument("--extra", type=Path, default=None, help="Optional TOML of historical rows.")
+    ap.add_argument(
+        "--pyproject",
+        type=Path,
+        default=DEFAULT_PYPROJECT,
+        help="Path to pyproject.toml.",
+    )
+    ap.add_argument(
+        "--extra", type=Path, default=None, help="Optional TOML of historical rows."
+    )
     ap.add_argument("--out", type=Path, default=DEFAULT_OUT, help="Output MDX path.")
-    ap.add_argument("--no-pyproject", action="store_true", help="Do not add the pyproject row.")
+    ap.add_argument(
+        "--no-pyproject", action="store_true", help="Do not add the pyproject row."
+    )
     args = ap.parse_args(argv)
 
     rows: list[dict[str, str]] = list(load_extra_rows(args.extra))

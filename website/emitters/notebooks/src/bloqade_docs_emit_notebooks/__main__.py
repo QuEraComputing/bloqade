@@ -39,7 +39,9 @@ def build_parser() -> argparse.ArgumentParser:
         prog="bloqade-docs-emit-notebooks",
         description="Execute a jupytext percent .py tutorial and emit MDX with outputs.",
     )
-    parser.add_argument("input", help="Path to the jupytext percent-format .py tutorial.")
+    parser.add_argument(
+        "input", help="Path to the jupytext percent-format .py tutorial."
+    )
     parser.add_argument(
         "--out",
         default=str(here / "_out"),
@@ -134,8 +136,10 @@ def main(argv: list[str] | None = None) -> int:
         if args.public_dir
         else out / "public" / "tutorials"
     )
-    repo_root = Path(args.repo_root).resolve() if args.repo_root else detect_repo_root(
-        input_path.parent
+    repo_root = (
+        Path(args.repo_root).resolve()
+        if args.repo_root
+        else detect_repo_root(input_path.parent)
     )
     execute = execution_enabled() if args.execute is None else args.execute
 
@@ -169,7 +173,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     print(f"[emit-notebooks] mdx     : {result.mdx_path}", file=sys.stderr)
     if cfg.execute and result.executed:
-        print(f"[emit-notebooks] assets  : {cfg.public_dir / cfg.name}", file=sys.stderr)
+        print(
+            f"[emit-notebooks] assets  : {cfg.public_dir / cfg.name}", file=sys.stderr
+        )
     return 0
 
 

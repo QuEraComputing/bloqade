@@ -35,7 +35,11 @@ def _mini_rustdoc() -> dict:
                 "visibility": "public",
                 "docs": "Mini crate root.\n\nSecond paragraph of crate docs.",
                 "inner": {
-                    "module": {"is_crate": True, "items": ["1", "2"], "is_stripped": False}
+                    "module": {
+                        "is_crate": True,
+                        "items": ["1", "2"],
+                        "is_stripped": False,
+                    }
                 },
             },
             "1": {
@@ -46,7 +50,9 @@ def _mini_rustdoc() -> dict:
                 "span": {"filename": "src/lib.rs", "begin": [10, 0], "end": [14, 1]},
                 "inner": {
                     "struct": {
-                        "kind": {"plain": {"fields": ["3"], "has_stripped_fields": False}},
+                        "kind": {
+                            "plain": {"fields": ["3"], "has_stripped_fields": False}
+                        },
                         "generics": {"params": [], "where_predicates": []},
                         "impls": ["4"],
                     }
@@ -63,7 +69,11 @@ def _mini_rustdoc() -> dict:
                         "sig": {
                             "inputs": [["size", {"primitive": "usize"}]],
                             "output": {
-                                "resolved_path": {"path": "Widget", "id": 1, "args": None}
+                                "resolved_path": {
+                                    "path": "Widget",
+                                    "id": 1,
+                                    "args": None,
+                                }
                             },
                             "is_c_variadic": False,
                         },
@@ -144,7 +154,11 @@ def _mini_rustdoc() -> dict:
         "paths": {
             "0": {"crate_id": 0, "path": ["mini_crate"], "kind": "module"},
             "1": {"crate_id": 0, "path": ["mini_crate", "Widget"], "kind": "struct"},
-            "2": {"crate_id": 0, "path": ["mini_crate", "make_widget"], "kind": "function"},
+            "2": {
+                "crate_id": 0,
+                "path": ["mini_crate", "make_widget"],
+                "kind": "function",
+            },
         },
     }
 

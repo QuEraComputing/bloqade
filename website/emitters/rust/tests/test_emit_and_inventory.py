@@ -41,8 +41,14 @@ def test_mount_slashes_stripped(mini_doc):
 # --------------------------------------------------------------------------- #
 def test_version_derived_from_mount(mini_doc):
     # `api/<V>/rust` -> version <V>; a versionless `api/rust` -> None.
-    assert RustEmitter(mini_doc, mount="api/dev/rust", repo=None, ref=None).version == "dev"
-    assert RustEmitter(mini_doc, mount="api/0.35/rust", repo=None, ref=None).version == "0.35"
+    assert (
+        RustEmitter(mini_doc, mount="api/dev/rust", repo=None, ref=None).version
+        == "dev"
+    )
+    assert (
+        RustEmitter(mini_doc, mount="api/0.35/rust", repo=None, ref=None).version
+        == "0.35"
+    )
     assert RustEmitter(mini_doc, mount="api/rust", repo=None, ref=None).version is None
 
 
@@ -83,14 +89,18 @@ def _doc_with_submodule() -> dict:
                 "name": "mini_crate",
                 "visibility": "public",
                 "docs": "Crate root.",
-                "inner": {"module": {"is_crate": True, "items": ["1"], "is_stripped": False}},
+                "inner": {
+                    "module": {"is_crate": True, "items": ["1"], "is_stripped": False}
+                },
             },
             "1": {
                 "id": 1,
                 "name": "sub",
                 "visibility": "public",
                 "docs": "A submodule.",
-                "inner": {"module": {"is_crate": False, "items": [], "is_stripped": False}},
+                "inner": {
+                    "module": {"is_crate": False, "items": [], "is_stripped": False}
+                },
             },
         },
         "paths": {
@@ -105,9 +115,7 @@ def test_submodule_xref_carries_version(tmp_path):
     em = RustEmitter(doc, mount="api/dev/rust", repo=None, ref=None)
     em.emit(tmp_path)
     mdx = (tmp_path / "mini_crate" / "index.mdx").read_text()
-    assert (
-        '<ApiXref to="mini_crate::sub" label="sub" version="dev" />' in mdx
-    )
+    assert '<ApiXref to="mini_crate::sub" label="sub" version="dev" />' in mdx
 
 
 def test_submodule_xref_omits_version_when_unknown(tmp_path):
@@ -212,7 +220,7 @@ def test_struct_component(emitted):
     assert '<ApiClass name="Widget" fqName="mini_crate::Widget"' in mdx
     # The frozen ApiClass renders "class"; the true Rust kind is prefixed on summary.
     assert 'summary="Rust struct. A widget."' in mdx
-    assert "<Signature lang=\"rust\" code={`pub struct Widget`} />" in mdx
+    assert '<Signature lang="rust" code={`pub struct Widget`} />' in mdx
     # Fields render as a Params table titled "Fields".
     assert 'title="Fields"' in mdx
     assert "name: 'size'" in mdx
@@ -222,14 +230,20 @@ def test_struct_component(emitted):
 def test_method_component(emitted):
     mdx = emitted["mdx"]
     assert '<ApiFn name="area" fqName="mini_crate::Widget::area" kind="method"' in mdx
-    assert "<Signature lang=\"rust\" code={`pub fn area(&self) -> usize`} />" in mdx
+    assert '<Signature lang="rust" code={`pub fn area(&self) -> usize`} />' in mdx
     assert '<Returns type="usize" />' in mdx
 
 
 def test_function_component(emitted):
     mdx = emitted["mdx"]
-    assert '<ApiFn name="make_widget" fqName="mini_crate::make_widget" kind="function"' in mdx
-    assert "<Signature lang=\"rust\" code={`pub fn make_widget(size: usize) -> Widget`} />" in mdx
+    assert (
+        '<ApiFn name="make_widget" fqName="mini_crate::make_widget" kind="function"'
+        in mdx
+    )
+    assert (
+        '<Signature lang="rust" code={`pub fn make_widget(size: usize) -> Widget`} />'
+        in mdx
+    )
     # Free-function param table.
     assert "name: 'size'" in mdx
 
@@ -237,9 +251,7 @@ def test_function_component(emitted):
 def test_source_links(emitted):
     mdx = emitted["mdx"]
     # Widget's span begins at line 10 in src/lib.rs.
-    assert (
-        "https://github.com/owner/repo/blob/main/src/lib.rs#L10" in mdx
-    )
+    assert "https://github.com/owner/repo/blob/main/src/lib.rs#L10" in mdx
     assert "<Source href=" in mdx
 
 

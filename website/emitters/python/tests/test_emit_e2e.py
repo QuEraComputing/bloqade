@@ -15,8 +15,7 @@ from bloqade_docs_emit_python.emitter import Config, Emitter
 
 PKG_INIT = '"""My package.\n\nLonger package description.\n"""\n'
 
-CORE_SRC = textwrap.dedent(
-    '''\
+CORE_SRC = textwrap.dedent('''\
     """Core module.
 
     A longer description that lives in the module body.
@@ -77,8 +76,7 @@ CORE_SRC = textwrap.dedent(
 
         def _secret(self) -> None:
             """A private method that must NOT be emitted."""
-    '''
-)
+    ''')
 
 
 @pytest.fixture()
@@ -153,7 +151,7 @@ def test_function_component_and_signature(emitted):
     assert 'fqName="mypkg.core.greet"' in mdx
     assert 'kind="function"' in mdx
     assert (
-        "<Signature lang=\"python\" code={`def greet(name: str, times: int = 1) -> str`} />"
+        '<Signature lang="python" code={`def greet(name: str, times: int = 1) -> str`} />'
         in mdx
     )
     # Params table with the two documented parameters.
@@ -178,7 +176,7 @@ def test_class_component(emitted):
     assert 'name="Widget"' in mdx
     assert 'fqName="mypkg.core.Widget"' in mdx
     # Constructor signature drops `self` and includes the __init__ params.
-    assert "<Signature lang=\"python\" code={`class Widget(size: int)`} />" in mdx
+    assert '<Signature lang="python" code={`class Widget(size: int)`} />' in mdx
     # Attributes table (from the class docstring Attributes section).
     assert '<Params title="Attributes"' in mdx
     assert "name: 'size'," in mdx
@@ -191,7 +189,7 @@ def test_method_and_property_kinds(emitted):
     assert 'fqName="mypkg.core.Widget.doubled"' in mdx
     assert 'kind="property"' in mdx
     # Property signature is `name: annotation`, not a def.
-    assert "<Signature lang=\"python\" code={`doubled: int`} />" in mdx
+    assert '<Signature lang="python" code={`doubled: int`} />' in mdx
 
 
 def test_module_attributes_table(emitted):
@@ -219,7 +217,9 @@ def test_inventory_entries(emitted):
     }
     # Class + method + property with the right kinds.
     assert by_fq["mypkg.core.Widget"]["kind"] == "class"
-    assert by_fq["mypkg.core.Widget"]["url"] == "/api/python/mypkg/core/#mypkg.core.Widget"
+    assert (
+        by_fq["mypkg.core.Widget"]["url"] == "/api/python/mypkg/core/#mypkg.core.Widget"
+    )
     assert by_fq["mypkg.core.Widget.area"]["kind"] == "method"
     assert by_fq["mypkg.core.Widget.doubled"]["kind"] == "property"
 

@@ -118,7 +118,12 @@ def _doc_with_links() -> dict:
     empty_fn = {
         "sig": {"inputs": [], "output": None, "is_c_variadic": False},
         "generics": {"params": [], "where_predicates": []},
-        "header": {"is_const": False, "is_unsafe": False, "is_async": False, "abi": "Rust"},
+        "header": {
+            "is_const": False,
+            "is_unsafe": False,
+            "is_async": False,
+            "abi": "Rust",
+        },
         "has_body": True,
     }
     return {
@@ -132,21 +137,39 @@ def _doc_with_links() -> dict:
                 "name": "mini",
                 "visibility": "public",
                 "docs": "Crate root.",
-                "inner": {"module": {"is_crate": True, "items": ["1", "2", "3", "4"], "is_stripped": False}},
+                "inner": {
+                    "module": {
+                        "is_crate": True,
+                        "items": ["1", "2", "3", "4"],
+                        "is_stripped": False,
+                    }
+                },
             },
             "1": {
                 "id": 1,
                 "name": "Bar",
                 "visibility": "public",
                 "docs": "A bar.",
-                "inner": {"struct": {"kind": {"unit": None}, "generics": {"params": [], "where_predicates": []}, "impls": []}},
+                "inner": {
+                    "struct": {
+                        "kind": {"unit": None},
+                        "generics": {"params": [], "where_predicates": []},
+                        "impls": [],
+                    }
+                },
             },
             "2": {
                 "id": 2,
                 "name": "Baz",
                 "visibility": "public",
                 "docs": "A baz.",
-                "inner": {"struct": {"kind": {"unit": None}, "generics": {"params": [], "where_predicates": []}, "impls": []}},
+                "inner": {
+                    "struct": {
+                        "kind": {"unit": None},
+                        "generics": {"params": [], "where_predicates": []},
+                        "impls": [],
+                    }
+                },
             },
             "3": {
                 "id": 3,
@@ -203,8 +226,13 @@ def test_prepass_builds_id_to_fq_for_documented_items(emitted_links):
 
 def test_emit_in_crate_links_become_xrefs(emitted_links):
     mdx = emitted_links["mdx"]
-    assert '<ApiXref to="mini::Bar" origin="docstring" label="Bar" version="dev" />' in mdx
-    assert '<ApiXref to="mini::Baz" origin="docstring" label="the baz" version="dev" />' in mdx
+    assert (
+        '<ApiXref to="mini::Bar" origin="docstring" label="Bar" version="dev" />' in mdx
+    )
+    assert (
+        '<ApiXref to="mini::Baz" origin="docstring" label="the baz" version="dev" />'
+        in mdx
+    )
 
 
 def test_emit_external_link_stays_plain_text(emitted_links):

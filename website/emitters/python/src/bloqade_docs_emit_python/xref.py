@@ -197,9 +197,7 @@ _TITLE_RE = re.compile(r"^(?P<label>.*?)\s*<(?P<target>[^<>]+)>$")
 # treated as an mkdocstrings backtick autoref. Requiring a dot avoids linkifying
 # every single-word code span; the inventory-membership check then guarantees a
 # non-reference code span is restored verbatim (it degrades back to code).
-_DOTTED_ID_RE = re.compile(
-    r"^[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)+$"
-)
+_DOTTED_ID_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)+$")
 
 _FENCE_OPEN_RE = re.compile(r"^(\s*)(`{3,}|~{3,})")
 

@@ -40,7 +40,9 @@ def fake_module(name, path, filepath=None):
 # --------------------------------------------------------------------------- #
 def test_private_module_skipped(tmp_path):
     em = Emitter(make_config(repo_root=str(tmp_path)))
-    mod = fake_module("_internal", "bloqade._internal", tmp_path / "bloqade" / "_internal.py")
+    mod = fake_module(
+        "_internal", "bloqade._internal", tmp_path / "bloqade" / "_internal.py"
+    )
     skip, reason = em.should_skip_module(mod)
     assert skip is True
     assert "private module" in reason
@@ -49,7 +51,9 @@ def test_private_module_skipped(tmp_path):
 def test_dunder_init_named_module_not_private(tmp_path):
     # The private rule explicitly exempts a module literally named "__init__".
     em = Emitter(make_config(repo_root=str(tmp_path)))
-    mod = fake_module("__init__", "bloqade.pkg", tmp_path / "bloqade" / "pkg" / "__init__.py")
+    mod = fake_module(
+        "__init__", "bloqade.pkg", tmp_path / "bloqade" / "pkg" / "__init__.py"
+    )
     skip, _ = em.should_skip_module(mod)
     assert skip is False
 
@@ -88,7 +92,11 @@ def test_every_skip_keyword_triggers(tmp_path):
     # repo-relative path.
     em = Emitter(make_config(repo_root=str(tmp_path)))
     for kw in SKIP_KEYWORDS:
-        rel = "pkg/" + kw + "/leaf.py" if not kw.endswith("/") else "pkg/" + kw + "leaf.py"
+        rel = (
+            "pkg/" + kw + "/leaf.py"
+            if not kw.endswith("/")
+            else "pkg/" + kw + "leaf.py"
+        )
         fp = tmp_path / rel
         mod = fake_module("leaf", "pkg.leaf", fp)
         skip, reason = em.should_skip_module(mod)
@@ -117,7 +125,9 @@ def test_is_private(name, expected):
 # --------------------------------------------------------------------------- #
 def test_page_path_package_is_index(tmp_path):
     em = Emitter(make_config(repo_root=str(tmp_path)))
-    mod = fake_module("squin", "bloqade.squin", tmp_path / "bloqade" / "squin" / "__init__.py")
+    mod = fake_module(
+        "squin", "bloqade.squin", tmp_path / "bloqade" / "squin" / "__init__.py"
+    )
     assert em.page_path(mod) == Path("bloqade", "squin", "index.mdx")
 
 

@@ -48,12 +48,20 @@ jobs:
           fetch-depth: 0
 
       # mise is the single source of truth for node/pnpm/uv (see mise.toml).
-      # mise-action installs them + exports mise.toml [env] (RUSTDOC_NIGHTLY) to
-      # later steps, and caches the installed tools.
+      # mise-action installs them onto PATH and caches them.
       - name: Set up mise (node + pnpm + uv)
         uses: jdx/mise-action@v2
         with:
           cache: true
+
+      # jdx/mise-action does NOT propagate mise.toml [env] into $GITHUB_ENV, so
+      # surface the pinned nightly explicitly for every later step that reads it
+      # (the rustup install below + build_versions.py, which defaults
+      # --rust-toolchain to $RUSTDOC_NIGHTLY). Mirrors amplify.yml's
+      # `eval "$(mise env -s bash)"`; `mise exec` runs printenv inside the mise
+      # env where [env] is set. Single source of truth stays mise.toml.
+      - name: Export RUSTDOC_NIGHTLY (mise.toml [env]) to later steps
+        run: echo "RUSTDOC_NIGHTLY=$(mise exec -- printenv RUSTDOC_NIGHTLY)" >> "$GITHUB_ENV"
 
       - name: Install bloqade (pins the API source tags for resolve_sources.py)
         run: uv sync
@@ -76,8 +84,8 @@ jobs:
         run: pnpm --dir website test
 
       # rustdoc JSON (format_version 57) needs a pinned nightly. Date comes from
-      # $RUSTDOC_NIGHTLY (mise.toml [env], exported by mise-action). Installed as
-      # an extra toolchain only — rustup's default stays stable, so nothing drags
+      # $RUSTDOC_NIGHTLY (mise.toml [env], exported to $GITHUB_ENV above). Installed
+      # as an extra toolchain only — rustup's default stays stable, so nothing drags
       # the main crates onto nightly; build_versions.py invokes it via +override.
       - name: Install pinned Rust nightly for rustdoc JSON
         run: rustup toolchain install "$RUSTDOC_NIGHTLY" --profile minimal

@@ -46,7 +46,14 @@ def test_wrong_format_version_allowed_with_flag(tmp_path, mini_doc, capsys):
     json_path = _write(tmp_path, mini_doc)
     out = tmp_path / "out"
     rc = emit_rust.main(
-        ["--json", json_path, "--out", str(out), "--no-source", "--allow-format-version"]
+        [
+            "--json",
+            json_path,
+            "--out",
+            str(out),
+            "--no-source",
+            "--allow-format-version",
+        ]
     )
     assert rc == 0
     assert (out / "mini_crate" / "index.mdx").is_file()

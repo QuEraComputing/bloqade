@@ -38,8 +38,10 @@ uv = "latest"
 # main crates keep building with the default (stable) toolchain.
 #
 # Consumed by: build_versions.py (default for --rust-toolchain), amplify.yml and
-# the website workflows (the `rustup toolchain install` step). mise exports this
-# on `mise env` / `mise run` / jdx/mise-action, so no caller repeats the date.
+# the website workflows (the `rustup toolchain install` step). mise exposes this
+# on `mise env` / `mise run` / `mise exec`, so no caller repeats the date. NOTE:
+# jdx/mise-action does NOT auto-propagate [env] to $GITHUB_ENV, so those
+# workflows re-export it explicitly (see their "Export RUSTDOC_NIGHTLY" step).
 RUSTDOC_NIGHTLY = "nightly-2026-04-17"
 
 # ===========================================================================

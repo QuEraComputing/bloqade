@@ -139,7 +139,9 @@ def newest_release(labels: list[str]) -> str | None:
 # --------------------------------------------------------------------------- #
 # Source resolution
 # --------------------------------------------------------------------------- #
-def resolve_sources(manifest: Path, prefer_local: bool, clone_dir: Path | None) -> list[dict]:
+def resolve_sources(
+    manifest: Path, prefer_local: bool, clone_dir: Path | None
+) -> list[dict]:
     """Run resolve_sources.py and return the resolved manifest as a list."""
     cmd = [sys.executable, str(RESOLVE_SOURCES), "--manifest", str(manifest)]
     if prefer_local:
@@ -183,20 +185,33 @@ def python_src_and_package(root: Path, package_root: str | None) -> tuple[Path, 
 # --------------------------------------------------------------------------- #
 # Emitters
 # --------------------------------------------------------------------------- #
-def run_python_emitter(entry: dict, root: Path, version: str, out_dir: Path, dry: bool) -> bool:
+def run_python_emitter(
+    entry: dict, root: Path, version: str, out_dir: Path, dry: bool
+) -> bool:
     src, package = python_src_and_package(root, entry.get("package_root"))
     if not src.is_dir():
         eprint(f"[warn] {entry['name']}: python src not found: {src} (skipping).")
         return False
     cmd = [
-        "uv", "run", "python", "-m", "bloqade_docs_emit_python",
-        "--package", package,
-        "--src", str(src),
-        "--repo", entry.get("repo") or "QuEraComputing/bloqade",
-        "--ref", entry.get("ref") or "main",
-        "--version", version,
-        "--mount", f"api/{version}/python",
-        "--out", str(out_dir),
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "bloqade_docs_emit_python",
+        "--package",
+        package,
+        "--src",
+        str(src),
+        "--repo",
+        entry.get("repo") or "QuEraComputing/bloqade",
+        "--ref",
+        entry.get("ref") or "main",
+        "--version",
+        version,
+        "--mount",
+        f"api/{version}/python",
+        "--out",
+        str(out_dir),
     ]
     eprint(f"[python] {entry['name']} ({version}): {' '.join(cmd)}")
     if dry:
@@ -225,12 +240,24 @@ def run_rust_emitter(
         if not crate:
             eprint(f"[warn] {entry['name']}: rust source has no `crate` (skipping).")
             return False
-        cmd += ["--run-cargo", "--workspace", str(root), "--crate", crate, "--toolchain", toolchain]
+        cmd += [
+            "--run-cargo",
+            "--workspace",
+            str(root),
+            "--crate",
+            crate,
+            "--toolchain",
+            toolchain,
+        ]
     cmd += [
-        "--repo", entry.get("repo") or "QuEraComputing/bloqade-lanes",
-        "--ref", entry.get("ref") or "main",
-        "--mount", f"api/{version}/rust",
-        "--out", str(out_dir),
+        "--repo",
+        entry.get("repo") or "QuEraComputing/bloqade-lanes",
+        "--ref",
+        entry.get("ref") or "main",
+        "--mount",
+        f"api/{version}/rust",
+        "--out",
+        str(out_dir),
     ]
     eprint(f"[rust] {entry['name']} ({version}): {' '.join(cmd)}")
     if dry:
@@ -305,12 +332,14 @@ def parse_limits(values: list[str]) -> tuple[set[str] | None, dict[str, set[str]
                 n.strip() for n in names.split(",") if n.strip()
             )
         else:
-            glob = (glob or set())
+            glob = glob or set()
             glob.update(n.strip() for n in raw.split(",") if n.strip())
     return glob, per
 
 
-def allowed_names(version: str, glob: set[str] | None, per: dict[str, set[str]]) -> set[str] | None:
+def allowed_names(
+    version: str, glob: set[str] | None, per: dict[str, set[str]]
+) -> set[str] | None:
     if version in per:
         return per[version]
     return glob  # None => all
@@ -353,13 +382,17 @@ def build_version(
         root = source_root(entry, clone_dir)
         if lang == "python":
             if root is None:
-                eprint(f"[warn] {name}: python source unresolved (kind={entry.get('kind')}).")
+                eprint(
+                    f"[warn] {name}: python source unresolved (kind={entry.get('kind')})."
+                )
                 continue
             if run_python_emitter(entry, root, version, py_out, dry) and not dry:
                 merge_inventory(py_out, "python", version, py_inventory)
                 emitted_py = True
         elif lang == "rust":
-            if run_rust_emitter(entry, root, version, rust_out, toolchain, rust_json, dry):
+            if run_rust_emitter(
+                entry, root, version, rust_out, toolchain, rust_json, dry
+            ):
                 if not dry:
                     merge_inventory(rust_out, "rust", version, rust_inventory)
                 emitted_rust = True
@@ -390,7 +423,9 @@ def discover_versions() -> list[str]:
     the evergreen ``index.mdx`` / ``compatibility.mdx`` are files, not dirs)."""
     if not API_DIR.is_dir():
         return []
-    return sorted(p.name for p in API_DIR.iterdir() if p.is_dir() and not p.name.startswith("."))
+    return sorted(
+        p.name for p in API_DIR.iterdir() if p.is_dir() and not p.name.startswith(".")
+    )
 
 
 def prune_versions(keep: int) -> list[str]:
@@ -418,7 +453,9 @@ def write_versions_manifest(latest_override: str | None) -> dict:
         # committed-safe default so the site still builds with no api content.
         present = ["dev"]
     has_dev = "dev" in present
-    latest = latest_override or newest_release(present) or ("dev" if has_dev else present[0])
+    latest = (
+        latest_override or newest_release(present) or ("dev" if has_dev else present[0])
+    )
 
     # Order: releases newest-first, then any non-release labels (dev last).
     releases = sorted((v for v in present if is_release(v)), key=sem_key, reverse=True)
@@ -442,7 +479,9 @@ def write_versions_manifest(latest_override: str | None) -> dict:
     }
     GENERATED_DIR.mkdir(parents=True, exist_ok=True)
     VERSIONS_JSON.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
-    eprint(f"[versions] wrote {VERSIONS_JSON}: {[v['label'] for v in versions]} (latest={latest})")
+    eprint(
+        f"[versions] wrote {VERSIONS_JSON}: {[v['label'] for v in versions]} (latest={latest})"
+    )
     return manifest
 
 
@@ -458,7 +497,7 @@ def _ensure_pagefind_false(path: Path) -> None:
         end = lines.index("---", 1)
     except ValueError:
         return
-    if any(l.strip().startswith("pagefind:") for l in lines[1:end]):
+    if any(line.strip().startswith("pagefind:") for line in lines[1:end]):
         return  # already scoped
     path.write_text("\n".join(["---", "pagefind: false", *lines[1:]]), encoding="utf-8")
 
@@ -476,7 +515,9 @@ def apply_search_scope(latest: str) -> None:
         for mdx in (API_DIR / v).rglob("*.mdx"):
             _ensure_pagefind_false(mdx)
             scoped += 1
-    eprint(f"[search] scoped {scoped} non-latest API page(s) out of search (latest={latest})")
+    eprint(
+        f"[search] scoped {scoped} non-latest API page(s) out of search (latest={latest})"
+    )
 
 
 def run_build_inventory() -> None:
@@ -495,19 +536,32 @@ def run_build_inventory() -> None:
 # --------------------------------------------------------------------------- #
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--versions", default="dev", help="Comma list of version labels (default: dev).")
-    ap.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST, help="docs.sources.toml.")
-    ap.add_argument("--prefer-local", action="store_true", help="Emit from sibling checkouts.")
-    ap.add_argument("--clone-dir", type=Path, default=None, help="Clone repo sources here (CI).")
     ap.add_argument(
-        "--limit", action="append", default=[],
+        "--versions", default="dev", help="Comma list of version labels (default: dev)."
+    )
+    ap.add_argument(
+        "--manifest", type=Path, default=DEFAULT_MANIFEST, help="docs.sources.toml."
+    )
+    ap.add_argument(
+        "--prefer-local", action="store_true", help="Emit from sibling checkouts."
+    )
+    ap.add_argument(
+        "--clone-dir", type=Path, default=None, help="Clone repo sources here (CI)."
+    )
+    ap.add_argument(
+        "--limit",
+        action="append",
+        default=[],
         help="Restrict sources. 'NAME[,NAME]' (all versions) or 'VER=NAME[,NAME]'.",
     )
     ap.add_argument(
-        "--langs", default="python,rust",
+        "--langs",
+        default="python,rust",
         help="Languages to emit (comma list; default: python,rust).",
     )
-    ap.add_argument("--rust-json", type=Path, default=None, help="Reuse an existing rustdoc JSON.")
+    ap.add_argument(
+        "--rust-json", type=Path, default=None, help="Reuse an existing rustdoc JSON."
+    )
     ap.add_argument(
         # Default to the shared RUSTDOC_NIGHTLY constant (mise.toml [env]) so the
         # pinned nightly date lives in ONE place; fall back to plain "nightly"
@@ -516,24 +570,41 @@ def main(argv: list[str] | None = None) -> int:
         default=os.environ.get("RUSTDOC_NIGHTLY", "nightly"),
         help="rustdoc-JSON nightly toolchain (default: $RUSTDOC_NIGHTLY or 'nightly').",
     )
-    ap.add_argument("--clean", action="store_true", help="Wipe api/<V> before emitting each version.")
-    ap.add_argument("--latest", default=None, help="Force which label the 'latest' alias points at.")
-    ap.add_argument("--keep", type=int, default=None, help="Prune to the newest N releases (dev kept).")
-    ap.add_argument("--dry-run", action="store_true", help="Print emitter commands; do not run them.")
+    ap.add_argument(
+        "--clean",
+        action="store_true",
+        help="Wipe api/<V> before emitting each version.",
+    )
+    ap.add_argument(
+        "--latest", default=None, help="Force which label the 'latest' alias points at."
+    )
+    ap.add_argument(
+        "--keep",
+        type=int,
+        default=None,
+        help="Prune to the newest N releases (dev kept).",
+    )
+    ap.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print emitter commands; do not run them.",
+    )
     args = ap.parse_args(argv)
 
     versions = [v.strip() for v in args.versions.split(",") if v.strip()]
     if not versions:
         ap.error("--versions must list at least one label")
-    langs = {l.strip() for l in args.langs.split(",") if l.strip()}
+    langs = {lang.strip() for lang in args.langs.split(",") if lang.strip()}
     glob_limit, per_limit = parse_limits(args.limit)
 
     if not args.manifest.is_file():
         ap.error(f"manifest not found: {args.manifest}")
 
     sources = resolve_sources(args.manifest, args.prefer_local, args.clone_dir)
-    eprint(f"[resolve] {len(sources)} source(s): "
-           + ", ".join(f"{s['name']}({s['language']})" for s in sources))
+    eprint(
+        f"[resolve] {len(sources)} source(s): "
+        + ", ".join(f"{s['name']}({s['language']})" for s in sources)
+    )
 
     for version in versions:
         eprint(f"\n=== building api version '{version}' ===")
@@ -550,7 +621,9 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     if args.dry_run:
-        eprint("\n[dry-run] no files written; skipping versions.json + inventory merge.")
+        eprint(
+            "\n[dry-run] no files written; skipping versions.json + inventory merge."
+        )
         return 0
 
     if args.keep is not None:

@@ -215,7 +215,11 @@ class Emitter:
 
     def _record(self, fq_name: str, kind: str, module_fq: str) -> None:
         self.inventory.append(
-            {"fqName": fq_name, "kind": kind, "url": self.symbol_url(module_fq, fq_name)}
+            {
+                "fqName": fq_name,
+                "kind": kind,
+                "url": self.symbol_url(module_fq, fq_name),
+            }
         )
         self.stats.symbols += 1
 
@@ -238,7 +242,11 @@ class Emitter:
         lines.append(">")
         lines.append("")
         self.inventory.append(
-            {"fqName": module_fq, "kind": "module", "url": self.symbol_url(module_fq, module_fq)}
+            {
+                "fqName": module_fq,
+                "kind": "module",
+                "url": self.symbol_url(module_fq, module_fq),
+            }
         )
 
         lines.extend(render.prose_block(doc.body, linker))

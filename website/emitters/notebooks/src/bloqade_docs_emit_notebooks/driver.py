@@ -173,8 +173,15 @@ def build_parser() -> argparse.ArgumentParser:
     return p
 
 
-def _config_for(spec: NotebookSpec, args, repo_root: Path, source_root: Path,
-                out: Path, public_dir: Path, cache_dir: Path) -> Config:
+def _config_for(
+    spec: NotebookSpec,
+    args,
+    repo_root: Path,
+    source_root: Path,
+    out: Path,
+    public_dir: Path,
+    cache_dir: Path,
+) -> Config:
     # Effective execution: the global EXECUTE_NOTEBOOKS gate AND the per-entry
     # opt-out. When the gate is off, everything renders statically.
     execute = execution_enabled() and spec.execute

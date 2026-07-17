@@ -166,7 +166,6 @@ is a safe escape hatch; the PRIMARY, preferred path is this JSON->MDX emitter.
 from __future__ import annotations
 
 import argparse
-import glob
 import html
 import json
 import re
@@ -181,8 +180,14 @@ EXPECTED_FORMAT_VERSION = 57
 # Auto/marker traits and common blanket-impl traits we never surface as `bases`.
 # (Synthetic + blanket impls are already filtered structurally; this is a belt.)
 _NOISE_TRAITS = {
-    "Send", "Sync", "Unpin", "Freeze", "UnsafeUnpin",
-    "UnwindSafe", "RefUnwindSafe", "Sized",
+    "Send",
+    "Sync",
+    "Unpin",
+    "Freeze",
+    "UnsafeUnpin",
+    "UnwindSafe",
+    "RefUnwindSafe",
+    "Sized",
 }
 
 
@@ -238,7 +243,12 @@ def yaml_str(s: str | None) -> str:
     """Double-quote + escape a YAML scalar."""
     if s is None:
         s = ""
-    s = s.replace("\\", "\\\\").replace('"', '\\"').replace("\n", " ").replace("\r", " ")
+    s = (
+        s.replace("\\", "\\\\")
+        .replace('"', '\\"')
+        .replace("\n", " ")
+        .replace("\r", " ")
+    )
     return '"' + s + '"'
 
 
@@ -368,12 +378,18 @@ def render_type(t: object) -> str:
     if key == "impl_trait":
         return "impl " + render_bounds(v)
     if key == "dyn_trait":
-        parts = [render_path(pt["trait"]) for pt in v.get("traits", []) if isinstance(pt, dict) and "trait" in pt]
+        parts = [
+            render_path(pt["trait"])
+            for pt in v.get("traits", [])
+            if isinstance(pt, dict) and "trait" in pt
+        ]
         if v.get("lifetime"):
             parts.append(str(v["lifetime"]))
         return "dyn " + " + ".join(parts)
     if key == "raw_pointer":
-        return ("*mut " if v.get("is_mutable") else "*const ") + render_type(v.get("type"))
+        return ("*mut " if v.get("is_mutable") else "*const ") + render_type(
+            v.get("type")
+        )
     if key == "qualified_path":
         self_t = render_type(v.get("self_type"))
         nm = str(v.get("name", ""))
@@ -447,7 +463,9 @@ def render_fn_sig(item: dict, name: str) -> str:
     sig = f.get("sig", {})
     inputs: list[str] = []
     for pname, pt in sig.get("inputs", []):
-        inputs.append(render_self(pt) if pname == "self" else pname + ": " + render_type(pt))
+        inputs.append(
+            render_self(pt) if pname == "self" else pname + ": " + render_type(pt)
+        )
     out = sig.get("output")
     ret = "" if out is None else " -> " + render_type(out)
     return "%sfn %s%s(%s)%s" % (prefix, name, gen, ", ".join(inputs), ret)
@@ -455,12 +473,20 @@ def render_fn_sig(item: dict, name: str) -> str:
 
 def render_struct_sig(item: dict, name: str) -> str:
     s = item["inner"]["struct"]
-    return "%sstruct %s%s" % (_vis_prefix(item), name, render_generics(s.get("generics", {})))
+    return "%sstruct %s%s" % (
+        _vis_prefix(item),
+        name,
+        render_generics(s.get("generics", {})),
+    )
 
 
 def render_enum_sig(item: dict, name: str) -> str:
     e = item["inner"]["enum"]
-    return "%senum %s%s" % (_vis_prefix(item), name, render_generics(e.get("generics", {})))
+    return "%senum %s%s" % (
+        _vis_prefix(item),
+        name,
+        render_generics(e.get("generics", {})),
+    )
 
 
 def render_trait_sig(item: dict, name: str) -> str:
@@ -557,7 +583,10 @@ class RustEmitter:
         line = span.get("begin", [None])[0]
         anchor = "#L%d" % line if line else ""
         return "https://github.com/%s/blob/%s/%s%s" % (
-            self.repo, self.ref, span["filename"], anchor,
+            self.repo,
+            self.ref,
+            span["filename"],
+            anchor,
         )
 
     # -- module discovery --------------------------------------------------
@@ -616,7 +645,9 @@ class RustEmitter:
         label = display.strip("`").strip()
         ver = ' version="%s"' % esc_attr(self.version) if self.version else ""
         return '<ApiXref to="%s" origin="docstring" label="%s"%s />' % (
-            esc_attr(fq), esc_attr(label), ver,
+            esc_attr(fq),
+            esc_attr(label),
+            ver,
         )
 
     @staticmethod
@@ -744,7 +775,11 @@ class RustEmitter:
                 continue
             for mid in inner.get("items", []):
                 m = self.get(mid)
-                if m and self.kind_of(m) == "function" and m.get("name") not in seen_methods:
+                if (
+                    m
+                    and self.kind_of(m) == "function"
+                    and m.get("name") not in seen_methods
+                ):
                     seen_methods.add(m["name"])
                     methods.append(m)
         methods.sort(key=lambda m: m.get("name") or "")
@@ -756,16 +791,22 @@ class RustEmitter:
         sig = render_fn_sig(item, name)
         src = self.source_url(item)
         self.add_inventory(
-            fq, "method" if kind == "method" else "function", page_url, fq,
+            fq,
+            "method" if kind == "method" else "function",
+            page_url,
+            fq,
             item_id=item.get("id"),
         )
         lines = [
-            '<ApiFn name="%s" fqName="%s" kind="%s"%s>' % (
-                esc_attr(name), esc_attr(fq), kind,
+            '<ApiFn name="%s" fqName="%s" kind="%s"%s>'
+            % (
+                esc_attr(name),
+                esc_attr(fq),
+                kind,
                 ' sourceUrl="%s"' % esc_attr(src) if src else "",
             ),
             "",
-            "<Signature lang=\"rust\" code={`%s`} />" % esc_template(sig),
+            '<Signature lang="rust" code={`%s`} />' % esc_template(sig),
             "",
         ]
         # Parameters table (skip a bare `self` receiver).
@@ -790,7 +831,8 @@ class RustEmitter:
             if pname == "self":
                 continue
             rows.append(
-                "    { name: '%s', type: '%s' }," % (esc_desc_js(pname), esc_desc_js(render_type(pt)))
+                "    { name: '%s', type: '%s' },"
+                % (esc_desc_js(pname), esc_desc_js(render_type(pt)))
             )
         if not rows:
             return ""
@@ -813,15 +855,22 @@ class RustEmitter:
             sig = render_enum_sig(item, name)
             inner = item["inner"]["enum"]
             methods, traits = self.analyze_impls(inner.get("impls", []))
-            member_title, members = "Variants", self._variants_rows(inner.get("variants", []), fq, page_url)
+            member_title, members = "Variants", self._variants_rows(
+                inner.get("variants", []), fq, page_url
+            )
         elif kind == "trait":
             sig = render_trait_sig(item, name)
             inner = item["inner"]["trait"]
             traits = []
-            methods = [m for m in (self.get(i) for i in inner.get("items", []))
-                       if m and self.kind_of(m) == "function"]
+            methods = [
+                m
+                for m in (self.get(i) for i in inner.get("items", []))
+                if m and self.kind_of(m) == "function"
+            ]
             methods.sort(key=lambda m: m.get("name") or "")
-            member_title, members = "Associated items", self._assoc_rows(inner.get("items", []), fq, page_url)
+            member_title, members = "Associated items", self._assoc_rows(
+                inner.get("items", []), fq, page_url
+            )
         elif kind == "type_alias":
             sig = render_type_alias_sig(item, name)
             methods, traits, member_title, members = [], [], "", []
@@ -833,18 +882,23 @@ class RustEmitter:
             " " + first_paragraph(docs) if first_paragraph(docs) else ""
         )
         attrs = 'name="%s" fqName="%s" summary="%s"' % (
-            esc_attr(name), esc_attr(fq), esc_attr(summary),
+            esc_attr(name),
+            esc_attr(fq),
+            esc_attr(summary),
         )
         if traits:
-            attrs += " bases={[%s]}" % ", ".join("'%s'" % esc_desc_js(t) for t in traits)
+            attrs += " bases={[%s]}" % ", ".join(
+                "'%s'" % esc_desc_js(t) for t in traits
+            )
         if src:
             attrs += ' sourceUrl="%s"' % esc_attr(src)
 
         lines = ["<ApiClass %s>" % attrs, ""]
-        lines += ["<Signature lang=\"rust\" code={`%s`} />" % esc_template(sig), ""]
+        lines += ['<Signature lang="rust" code={`%s`} />' % esc_template(sig), ""]
         if members:
             lines += [
-                "<Params\n  title=\"%s\"\n  items={[\n%s\n  ]}\n/>" % (member_title, "\n".join(members)),
+                '<Params\n  title="%s"\n  items={[\n%s\n  ]}\n/>'
+                % (member_title, "\n".join(members)),
                 "",
             ]
         body = rest_paragraphs(docs)
@@ -880,17 +934,25 @@ class RustEmitter:
             ftype = render_type(f["inner"]["struct_field"])
             desc = first_paragraph(f.get("docs"))
             self.add_inventory(
-                "%s::%s" % (parent_fq, fname), "field", page_url, parent_fq,
+                "%s::%s" % (parent_fq, fname),
+                "field",
+                page_url,
+                parent_fq,
                 item_id=f.get("id"),
             )
             rows.append(
-                "    { name: '%s', type: '%s', description: '%s' }," % (
-                    esc_desc_js(fname), esc_desc_js(ftype), esc_desc_js(desc),
+                "    { name: '%s', type: '%s', description: '%s' },"
+                % (
+                    esc_desc_js(fname),
+                    esc_desc_js(ftype),
+                    esc_desc_js(desc),
                 )
             )
         return rows
 
-    def _variants_rows(self, variant_ids: list, parent_fq: str, page_url: str) -> list[str]:
+    def _variants_rows(
+        self, variant_ids: list, parent_fq: str, page_url: str
+    ) -> list[str]:
         rows: list[str] = []
         for vid in variant_ids:
             v = self.get(vid)
@@ -901,19 +963,28 @@ class RustEmitter:
             payload = ""
             if isinstance(vk, dict):
                 if "tuple" in vk:
-                    parts = [render_type(self.get(i)["inner"]["struct_field"])
-                             for i in vk["tuple"] if i is not None and self.get(i)]
+                    parts = [
+                        render_type(self.get(i)["inner"]["struct_field"])
+                        for i in vk["tuple"]
+                        if i is not None and self.get(i)
+                    ]
                     payload = "(" + ", ".join(parts) + ")"
                 elif "struct" in vk:
                     payload = "{ ... }"
             desc = first_paragraph(v.get("docs"))
             self.add_inventory(
-                "%s::%s" % (parent_fq, vname), "variant", page_url, parent_fq,
+                "%s::%s" % (parent_fq, vname),
+                "variant",
+                page_url,
+                parent_fq,
                 item_id=v.get("id"),
             )
             rows.append(
-                "    { name: '%s', type: '%s', description: '%s' }," % (
-                    esc_desc_js(vname), esc_desc_js(payload), esc_desc_js(desc),
+                "    { name: '%s', type: '%s', description: '%s' },"
+                % (
+                    esc_desc_js(vname),
+                    esc_desc_js(payload),
+                    esc_desc_js(desc),
                 )
             )
         return rows
@@ -936,14 +1007,24 @@ class RustEmitter:
             else:
                 continue
             name = it.get("name") or "_"
-            desc = "%s. %s" % (label, first_paragraph(it.get("docs"))) if it.get("docs") else label
+            desc = (
+                "%s. %s" % (label, first_paragraph(it.get("docs")))
+                if it.get("docs")
+                else label
+            )
             self.add_inventory(
-                "%s::%s" % (parent_fq, name), k, page_url, parent_fq,
+                "%s::%s" % (parent_fq, name),
+                k,
+                page_url,
+                parent_fq,
                 item_id=it.get("id"),
             )
             rows.append(
-                "    { name: '%s', type: '%s', description: '%s' }," % (
-                    esc_desc_js(name), esc_desc_js(ty), esc_desc_js(desc),
+                "    { name: '%s', type: '%s', description: '%s' },"
+                % (
+                    esc_desc_js(name),
+                    esc_desc_js(ty),
+                    esc_desc_js(desc),
                 )
             )
         return rows
@@ -957,8 +1038,12 @@ class RustEmitter:
 
         child_ids = item["inner"]["module"].get("items", [])
         buckets: dict[str, list[tuple[str, dict]]] = {
-            "struct": [], "enum": [], "trait": [], "type_alias": [],
-            "constant": [], "function": [],
+            "struct": [],
+            "enum": [],
+            "trait": [],
+            "type_alias": [],
+            "constant": [],
+            "function": [],
         }
         submodules: list[tuple[str, str]] = []
         for cid in child_ids:
@@ -979,11 +1064,14 @@ class RustEmitter:
 
         # frontmatter
         docs = item.get("docs")
-        title = module_fq if len(module_fq.split("::")) > 1 else "%s (crate)" % module_fq
+        title = (
+            module_fq if len(module_fq.split("::")) > 1 else "%s (crate)" % module_fq
+        )
         fm = [
             "---",
             "title: %s" % yaml_str(title),
-            "description: %s" % yaml_str(first_paragraph(docs) or ("Rust API for %s" % module_fq)),
+            "description: %s"
+            % yaml_str(first_paragraph(docs) or ("Rust API for %s" % module_fq)),
             "language: rust",
             "fqName: %s" % yaml_str(module_fq),
         ]
@@ -1002,10 +1090,15 @@ class RustEmitter:
         body = [
             "{/* GENERATED by website/emitters/rust/emit_rust.py — do not edit by hand. */}",
             "",
-            '<ApiModule name="%s" fqName="%s"%s>' % (
+            '<ApiModule name="%s" fqName="%s"%s>'
+            % (
                 esc_attr(module_fq.split("::")[-1]),
                 esc_attr(module_fq),
-                ' summary="%s"' % esc_attr(first_paragraph(docs)) if first_paragraph(docs) else "",
+                (
+                    ' summary="%s"' % esc_attr(first_paragraph(docs))
+                    if first_paragraph(docs)
+                    else ""
+                ),
             ),
             "",
         ]
@@ -1028,7 +1121,11 @@ class RustEmitter:
 
         for k in ("struct", "enum", "trait", "type_alias", "constant"):
             for cfq, child in buckets[k]:
-                rendered = self.render_type_item(child, cfq, page_url) if k != "constant" else None
+                rendered = (
+                    self.render_type_item(child, cfq, page_url)
+                    if k != "constant"
+                    else None
+                )
                 if k == "constant":
                     rendered = self._render_constant(child, cfq, page_url)
                 if rendered:
@@ -1037,7 +1134,10 @@ class RustEmitter:
             body += [self.render_callable(child, cfq, "function", page_url), ""]
 
         body.append("</ApiModule>")
-        return self.module_relpath(module_fq), "\n".join(fm) + "\n\n" + "\n".join(body) + "\n"
+        return (
+            self.module_relpath(module_fq),
+            "\n".join(fm) + "\n\n" + "\n".join(body) + "\n",
+        )
 
     def _render_constant(self, item: dict, fq: str, page_url: str) -> str:
         name = item.get("name") or fq.split("::")[-1]
@@ -1045,9 +1145,10 @@ class RustEmitter:
         sig = render_constant_sig(item, name)
         docs = item.get("docs")
         lines = [
-            '<ApiFn name="%s" fqName="%s" kind="property">' % (esc_attr(name), esc_attr(fq)),
+            '<ApiFn name="%s" fqName="%s" kind="property">'
+            % (esc_attr(name), esc_attr(fq)),
             "",
-            "<Signature lang=\"rust\" code={`%s`} />" % esc_template(sig),
+            '<Signature lang="rust" code={`%s`} />' % esc_template(sig),
             "",
         ]
         if docs:
@@ -1075,8 +1176,14 @@ class RustEmitter:
             dest.write_text(content, encoding="utf-8")
             pages += 1
         inv_path = out_dir / "inventory.rust.json"
-        inv_path.write_text(json.dumps(self.inventory, indent=2) + "\n", encoding="utf-8")
-        return {"pages": pages, "symbols": len(self.inventory), "inventory": str(inv_path)}
+        inv_path.write_text(
+            json.dumps(self.inventory, indent=2) + "\n", encoding="utf-8"
+        )
+        return {
+            "pages": pages,
+            "symbols": len(self.inventory),
+            "inventory": str(inv_path),
+        }
 
 
 # --------------------------------------------------------------------------- #
@@ -1084,15 +1191,27 @@ class RustEmitter:
 # --------------------------------------------------------------------------- #
 def run_cargo(workspace: Path, crate: str, toolchain: str) -> Path:
     cmd = [
-        "cargo", "+%s" % toolchain, "rustdoc", "-p", crate,
-        "--", "-Z", "unstable-options", "--output-format", "json",
+        "cargo",
+        "+%s" % toolchain,
+        "rustdoc",
+        "-p",
+        crate,
+        "--",
+        "-Z",
+        "unstable-options",
+        "--output-format",
+        "json",
     ]
     print("[rust-emitter] $ %s (cwd=%s)" % (" ".join(cmd), workspace), file=sys.stderr)
     proc = subprocess.run(cmd, cwd=workspace)
     if proc.returncode != 0:
-        raise SystemExit("[rust-emitter] cargo rustdoc failed (exit %d)" % proc.returncode)
+        raise SystemExit(
+            "[rust-emitter] cargo rustdoc failed (exit %d)" % proc.returncode
+        )
     doc_dir = workspace / "target" / "doc"
-    candidates = sorted(doc_dir.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+    candidates = sorted(
+        doc_dir.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True
+    )
     if not candidates:
         raise SystemExit("[rust-emitter] no JSON found in %s" % doc_dir)
     print("[rust-emitter] using %s" % candidates[0], file=sys.stderr)
@@ -1101,25 +1220,60 @@ def run_cargo(workspace: Path, crate: str, toolchain: str) -> Path:
 
 def main(argv: list[str] | None = None) -> int:
     here = Path(__file__).resolve().parent
-    ap = argparse.ArgumentParser(description="rustdoc JSON -> MDX (Bloqade API contract).")
-    ap.add_argument("--json", type=Path, help="Path to rustdoc JSON (target/doc/<crate>.json).")
-    ap.add_argument("--out", type=Path, default=here / "_out", help="Output directory (default: ./_out).")
-    ap.add_argument("--mount", default="api/rust", help="Docs mount for URLs (default: api/rust).")
-    ap.add_argument(
-        "--version", dest="version", default=None,
-        help="API doc version label (e.g. 'dev' or '0.35'). "
-             "Defaults to the <V> segment of a 'api/<V>/rust' mount.",
+    ap = argparse.ArgumentParser(
+        description="rustdoc JSON -> MDX (Bloqade API contract)."
     )
-    ap.add_argument("--repo", default="QuEraComputing/bloqade-lanes", help="owner/name for source links.")
-    ap.add_argument("--ref", dest="ref", default="main", help="git ref for source links (default: main).")
-    ap.add_argument("--no-source", action="store_true", help="Do not emit sourceUrl/Source links.")
-    ap.add_argument("--allow-format-version", action="store_true",
-                    help="Proceed even if format_version != %d." % EXPECTED_FORMAT_VERSION)
+    ap.add_argument(
+        "--json", type=Path, help="Path to rustdoc JSON (target/doc/<crate>.json)."
+    )
+    ap.add_argument(
+        "--out",
+        type=Path,
+        default=here / "_out",
+        help="Output directory (default: ./_out).",
+    )
+    ap.add_argument(
+        "--mount", default="api/rust", help="Docs mount for URLs (default: api/rust)."
+    )
+    ap.add_argument(
+        "--version",
+        dest="version",
+        default=None,
+        help="API doc version label (e.g. 'dev' or '0.35'). "
+        "Defaults to the <V> segment of a 'api/<V>/rust' mount.",
+    )
+    ap.add_argument(
+        "--repo",
+        default="QuEraComputing/bloqade-lanes",
+        help="owner/name for source links.",
+    )
+    ap.add_argument(
+        "--ref",
+        dest="ref",
+        default="main",
+        help="git ref for source links (default: main).",
+    )
+    ap.add_argument(
+        "--no-source", action="store_true", help="Do not emit sourceUrl/Source links."
+    )
+    ap.add_argument(
+        "--allow-format-version",
+        action="store_true",
+        help="Proceed even if format_version != %d." % EXPECTED_FORMAT_VERSION,
+    )
     # cargo runner
-    ap.add_argument("--run-cargo", action="store_true", help="Run cargo rustdoc to produce the JSON.")
-    ap.add_argument("--workspace", type=Path, help="Cargo workspace dir (with --run-cargo).")
+    ap.add_argument(
+        "--run-cargo",
+        action="store_true",
+        help="Run cargo rustdoc to produce the JSON.",
+    )
+    ap.add_argument(
+        "--workspace", type=Path, help="Cargo workspace dir (with --run-cargo)."
+    )
     ap.add_argument("--crate", help="Crate name to document (with --run-cargo).")
-    ap.add_argument("--toolchain", default="nightly", help="Nightly toolchain (default: nightly).")
+    ap.add_argument(
+        "--toolchain", default="nightly", help="Nightly toolchain (default: nightly)."
+    )
     args = ap.parse_args(argv)
 
     if args.run_cargo:
@@ -1137,20 +1291,27 @@ def main(argv: list[str] | None = None) -> int:
 
     fv = doc.get("format_version")
     if fv != EXPECTED_FORMAT_VERSION:
-        msg = ("[rust-emitter] rustdoc format_version=%s but this emitter targets %d. "
-               "Regenerate with the pinned nightly, or pass --allow-format-version "
-               "after reviewing schema changes." % (fv, EXPECTED_FORMAT_VERSION))
+        msg = (
+            "[rust-emitter] rustdoc format_version=%s but this emitter targets %d. "
+            "Regenerate with the pinned nightly, or pass --allow-format-version "
+            "after reviewing schema changes." % (fv, EXPECTED_FORMAT_VERSION)
+        )
         if not args.allow_format_version:
             raise SystemExit(msg)
         print("[rust-emitter][warn] " + msg, file=sys.stderr)
 
     repo = None if args.no_source else args.repo
     ref = None if args.no_source else args.ref
-    emitter = RustEmitter(doc, mount=args.mount, repo=repo, ref=ref, version=args.version)
+    emitter = RustEmitter(
+        doc, mount=args.mount, repo=repo, ref=ref, version=args.version
+    )
     args.out.mkdir(parents=True, exist_ok=True)
     stats = emitter.emit(args.out)
-    print("[rust-emitter] crate=%s format_version=%s -> %d pages, %d symbols"
-          % (emitter.crate, fv, stats["pages"], stats["symbols"]), file=sys.stderr)
+    print(
+        "[rust-emitter] crate=%s format_version=%s -> %d pages, %d symbols"
+        % (emitter.crate, fv, stats["pages"], stats["symbols"]),
+        file=sys.stderr,
+    )
     print("[rust-emitter] output: %s" % args.out, file=sys.stderr)
     print("[rust-emitter] inventory: %s" % stats["inventory"], file=sys.stderr)
     return 0

@@ -179,7 +179,7 @@ def resolve_source(source: dict, prefer_local: bool) -> dict:
     if ref is None:
         eprint(f"[warn] {name}: no ref/path given; ref stays null.")
     elif ref.startswith(PIN_PREFIX):
-        package = ref[len(PIN_PREFIX):].strip()
+        package = ref[len(PIN_PREFIX) :].strip()
         entry["ref"] = pinned_version_tag(package)
     else:
         # Literal tag/branch/sha.

@@ -93,7 +93,10 @@ def test_parse_autoref_explicit():
 
 
 def test_parse_autoref_empty_target_uses_label():
-    assert xref._parse_autoref("pkg.core.greet", "") == ("pkg.core.greet", "pkg.core.greet")
+    assert xref._parse_autoref("pkg.core.greet", "") == (
+        "pkg.core.greet",
+        "pkg.core.greet",
+    )
 
 
 def test_parse_autoref_backtick_target():
@@ -270,8 +273,7 @@ def _module(func_src: str) -> str:
 # Convention 1: reStructuredText / Sphinx roles
 # --------------------------------------------------------------------------- #
 def test_rst_roles_each_variant(tmp_path):
-    src = _module(
-        '''
+    src = _module('''
         def use() -> None:
             """Use things.
 
@@ -283,17 +285,25 @@ def test_rst_roles_each_variant(tmp_path):
 
                :class:`Target` for details.
             """
-        '''
-    )
+        ''')
     mdx, inv = _emit(tmp_path, src, style="sphinx")
     _assert_no_unresolved(mdx, inv)
     # Resolvable roles -> ApiXref (relative, dotted, and absolute forms).
     assert '<ApiXref to="pkg.core.Target" origin="docstring" label="Target" />' in mdx
-    assert '<ApiXref to="pkg.core.Target.area" origin="docstring" label="Target.area" />' in mdx
-    assert '<ApiXref to="pkg.core.use" origin="docstring" label="pkg.core.use" />' in mdx
+    assert (
+        '<ApiXref to="pkg.core.Target.area" origin="docstring" label="Target.area" />'
+        in mdx
+    )
+    assert (
+        '<ApiXref to="pkg.core.use" origin="docstring" label="pkg.core.use" />' in mdx
+    )
     # ~short display + explicit-title display forms.
-    assert '<ApiXref to="pkg.core.Target" origin="docstring" label="Target" />' in mdx  # ~form
-    assert '<ApiXref to="pkg.core.Target" origin="docstring" label="the target" />' in mdx
+    assert (
+        '<ApiXref to="pkg.core.Target" origin="docstring" label="Target" />' in mdx
+    )  # ~form
+    assert (
+        '<ApiXref to="pkg.core.Target" origin="docstring" label="the target" />' in mdx
+    )
     # `.. seealso::` roles are linkified inline too.
     assert mdx.count('<ApiXref to="pkg.core.Target"') >= 3
     # External role -> inline code, no xref.
@@ -305,15 +315,13 @@ def test_rst_roles_each_variant(tmp_path):
 # Convention 2a: Google style with Sphinx roles
 # --------------------------------------------------------------------------- #
 def test_google_style_with_roles(tmp_path):
-    src = _module(
-        '''
+    src = _module('''
         def use() -> None:
             """Use things.
 
             See :class:`Target` and the external :func:`kirin.ir.Method`.
             """
-        '''
-    )
+        ''')
     mdx, inv = _emit(tmp_path, src, style="google")
     _assert_no_unresolved(mdx, inv)
     assert '<ApiXref to="pkg.core.Target" origin="docstring" label="Target" />' in mdx
@@ -325,20 +333,22 @@ def test_google_style_with_roles(tmp_path):
 # Convention 2b: Google style with Markdown autorefs
 # --------------------------------------------------------------------------- #
 def test_google_style_with_markdown_autorefs(tmp_path):
-    src = _module(
-        '''
+    src = _module('''
         def use() -> None:
             """Use things.
 
             Markdown: [the target][pkg.core.Target], [pkg.core.use][],
             [`Target`][], bare [`Target`]. External [nd][numpy.ndarray].
             """
-        '''
-    )
+        ''')
     mdx, inv = _emit(tmp_path, src, style="google")
     _assert_no_unresolved(mdx, inv)
-    assert '<ApiXref to="pkg.core.Target" origin="docstring" label="the target" />' in mdx
-    assert '<ApiXref to="pkg.core.use" origin="docstring" label="pkg.core.use" />' in mdx
+    assert (
+        '<ApiXref to="pkg.core.Target" origin="docstring" label="the target" />' in mdx
+    )
+    assert (
+        '<ApiXref to="pkg.core.use" origin="docstring" label="pkg.core.use" />' in mdx
+    )
     assert '<ApiXref to="pkg.core.Target" origin="docstring" label="Target" />' in mdx
     # External autoref -> plain text label (has no whitespace here -> code).
     assert "`nd`" in mdx
@@ -349,8 +359,7 @@ def test_google_style_with_markdown_autorefs(tmp_path):
 # Convention 3: NumPy style — roles in prose AND a See Also section
 # --------------------------------------------------------------------------- #
 def test_numpy_roles_and_see_also(tmp_path):
-    src = _module(
-        '''
+    src = _module('''
         def use(x):
             """Use things.
 
@@ -363,15 +372,19 @@ def test_numpy_roles_and_see_also(tmp_path):
             numpy.dot : External, stays text.
             """
             return x
-        '''
-    )
+        ''')
     mdx, inv = _emit(tmp_path, src, style="numpy")
     _assert_no_unresolved(mdx, inv)
     # Inline role.
-    assert '<ApiXref to="pkg.core.use" origin="docstring" label="pkg.core.use" />' in mdx
+    assert (
+        '<ApiXref to="pkg.core.use" origin="docstring" label="pkg.core.use" />' in mdx
+    )
     # See Also section header + linkified documented names.
     assert "**See Also**" in mdx
-    assert '<ApiXref to="pkg.core.Target" origin="docstring" label="pkg.core.Target" />' in mdx
+    assert (
+        '<ApiXref to="pkg.core.Target" origin="docstring" label="pkg.core.Target" />'
+        in mdx
+    )
     # External See-Also entry -> inline code, not an xref.
     assert "`numpy.dot`" in mdx
     assert "numpy.dot" not in " ".join(_xref_targets(mdx))
@@ -381,16 +394,14 @@ def test_numpy_roles_and_see_also(tmp_path):
 # Convention 4: Markdown / mkdocstrings autorefs (default google parser)
 # --------------------------------------------------------------------------- #
 def test_markdown_autorefs_and_plain_links(tmp_path):
-    src = _module(
-        '''
+    src = _module('''
         def use() -> None:
             """Use things.
 
             Autoref [Target][pkg.core.Target]. Undocumented [gone][pkg.core.Nope].
             Plain external link [site](https://example.com).
             """
-        '''
-    )
+        ''')
     mdx, inv = _emit(tmp_path, src, style="google")
     _assert_no_unresolved(mdx, inv)
     assert '<ApiXref to="pkg.core.Target" origin="docstring" label="Target" />' in mdx
@@ -405,17 +416,16 @@ def test_markdown_autorefs_and_plain_links(tmp_path):
 # Cross-module relative resolution + undocumented sibling
 # --------------------------------------------------------------------------- #
 def test_bare_backtick_autoref_e2e(tmp_path):
-    src = _module(
-        '''
+    src = _module('''
         def use() -> None:
             """Uses `pkg.core.Target` and the external `numpy.ndarray`."""
-        '''
-    )
+        ''')
     mdx, inv = _emit(tmp_path, src, style="google")
     _assert_no_unresolved(mdx, inv)
     # Documented dotted code span -> ApiXref (mkdocstrings backtick autoref).
     assert (
-        '<ApiXref to="pkg.core.Target" origin="docstring" label="pkg.core.Target" />' in mdx
+        '<ApiXref to="pkg.core.Target" origin="docstring" label="pkg.core.Target" />'
+        in mdx
     )
     # External dotted code span stays inline code.
     assert "`numpy.ndarray`" in mdx
@@ -424,8 +434,7 @@ def test_bare_backtick_autoref_e2e(tmp_path):
 
 def test_reference_to_undocumented_private_is_text(tmp_path):
     # `_Hidden` is private -> never documented -> reference must degrade to text.
-    src = textwrap.dedent(
-        '''\
+    src = textwrap.dedent('''\
         """Core."""
 
         class _Hidden:
@@ -436,8 +445,7 @@ def test_reference_to_undocumented_private_is_text(tmp_path):
 
         def use() -> None:
             """See :class:`Target` and :class:`_Hidden`."""
-        '''
-    )
+        ''')
     mdx, inv = _emit(tmp_path, src, style="google")
     _assert_no_unresolved(mdx, inv)
     assert '<ApiXref to="pkg.core.Target" origin="docstring" label="Target" />' in mdx
@@ -448,8 +456,7 @@ def test_reference_to_undocumented_private_is_text(tmp_path):
 
 def test_mdx_safety_hostile_chars_around_refs(tmp_path):
     # A reference next to MDX-hostile characters must stay safe.
-    src = textwrap.dedent(
-        '''\
+    src = textwrap.dedent('''\
         """Core."""
 
         class Target:
@@ -457,8 +464,7 @@ def test_mdx_safety_hostile_chars_around_refs(tmp_path):
 
         def use() -> None:
             """Compare {a} < b then see :class:`Target`."""
-        '''
-    )
+        ''')
     mdx, inv = _emit(tmp_path, src, style="google")
     _assert_no_unresolved(mdx, inv)
     assert "&#123;a&#125; &lt; b" in mdx

@@ -32,5 +32,8 @@ jobs:
       - name: Install the project
         run: uv sync --all-extras --dev
       - name: Run tests
-        # For example, using `pytest`
-        run: uv run pytest
+        # Scope to the package's own suite (matches `mise run test` = `pytest
+        # test`). Bare `pytest` would also sweep website/emitters/*/tests, whose
+        # standalone packages aren't installed by `uv sync` here → collection
+        # errors. Those emitter suites run under the website tooling instead.
+        run: uv run pytest test

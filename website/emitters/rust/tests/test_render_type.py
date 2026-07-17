@@ -8,9 +8,7 @@ build; that fallback is pinned too.
 
 from __future__ import annotations
 
-import pytest
 
-import emit_rust
 from emit_rust import (
     render_args,
     render_bounds,
@@ -38,14 +36,21 @@ def test_generic():
 
 def test_resolved_path_bare():
     # Path is reduced to its last segment.
-    assert render_type({"resolved_path": {"path": "std::vec::Vec", "args": None}}) == "Vec"
+    assert (
+        render_type({"resolved_path": {"path": "std::vec::Vec", "args": None}}) == "Vec"
+    )
 
 
 def test_resolved_path_with_generic_args():
     node = {
         "resolved_path": {
             "path": "std::vec::Vec",
-            "args": {"angle_bracketed": {"args": [{"type": {"primitive": "u8"}}], "constraints": []}},
+            "args": {
+                "angle_bracketed": {
+                    "args": [{"type": {"primitive": "u8"}}],
+                    "constraints": [],
+                }
+            },
         }
     }
     assert render_type(node) == "Vec<u8>"
@@ -71,12 +76,24 @@ def test_resolved_path_with_lifetime_and_const_args():
 
 
 def test_borrowed_ref_plain():
-    node = {"borrowed_ref": {"lifetime": None, "is_mutable": False, "type": {"primitive": "str"}}}
+    node = {
+        "borrowed_ref": {
+            "lifetime": None,
+            "is_mutable": False,
+            "type": {"primitive": "str"},
+        }
+    }
     assert render_type(node) == "&str"
 
 
 def test_borrowed_ref_mut_with_lifetime():
-    node = {"borrowed_ref": {"lifetime": "'a", "is_mutable": True, "type": {"primitive": "str"}}}
+    node = {
+        "borrowed_ref": {
+            "lifetime": "'a",
+            "is_mutable": True,
+            "type": {"primitive": "str"},
+        }
+    }
     assert render_type(node) == "&'a mut str"
 
 
@@ -85,7 +102,9 @@ def test_slice():
 
 
 def test_array():
-    assert render_type({"array": {"type": {"primitive": "u8"}, "len": "4"}}) == "[u8; 4]"
+    assert (
+        render_type({"array": {"type": {"primitive": "u8"}, "len": "4"}}) == "[u8; 4]"
+    )
 
 
 def test_tuple():
@@ -145,14 +164,19 @@ def test_qualified_path_with_trait():
 
 
 def test_qualified_path_without_trait():
-    node = {"qualified_path": {"self_type": {"generic": "T"}, "name": "Item", "trait": None}}
+    node = {
+        "qualified_path": {"self_type": {"generic": "T"}, "name": "Item", "trait": None}
+    }
     assert render_type(node) == "T::Item"
 
 
 def test_function_pointer():
     node = {
         "function_pointer": {
-            "sig": {"inputs": [["x", {"primitive": "i32"}]], "output": {"primitive": "bool"}}
+            "sig": {
+                "inputs": [["x", {"primitive": "i32"}]],
+                "output": {"primitive": "bool"},
+            }
         }
     }
     assert render_type(node) == "fn(i32) -> bool"
@@ -196,7 +220,15 @@ def test_render_generics_type_and_const_params():
     generics = {
         "params": [
             {"name": "'a", "kind": {"lifetime": {"outlives": []}}},
-            {"name": "T", "kind": {"type": {"bounds": [{"trait_bound": {"trait": {"path": "Clone"}}}], "is_synthetic": False}}},
+            {
+                "name": "T",
+                "kind": {
+                    "type": {
+                        "bounds": [{"trait_bound": {"trait": {"path": "Clone"}}}],
+                        "is_synthetic": False,
+                    }
+                },
+            },
             {"name": "N", "kind": {"const": {"type": {"primitive": "usize"}}}},
         ]
     }
@@ -206,7 +238,10 @@ def test_render_generics_type_and_const_params():
 def test_render_generics_skips_synthetic_impl_trait():
     generics = {
         "params": [
-            {"name": "impl_arg", "kind": {"type": {"bounds": [], "is_synthetic": True}}},
+            {
+                "name": "impl_arg",
+                "kind": {"type": {"bounds": [], "is_synthetic": True}},
+            },
         ]
     }
     assert render_generics(generics) == ""

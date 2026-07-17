@@ -28,17 +28,25 @@ def build_parser() -> argparse.ArgumentParser:
         prog="bloqade-docs-emit-python",
         description="Emit Bloqade Python API reference as Starlight-compatible MDX.",
     )
-    parser.add_argument("--package", required=True, help="Top-level import package, e.g. 'bloqade'.")
+    parser.add_argument(
+        "--package", required=True, help="Top-level import package, e.g. 'bloqade'."
+    )
     parser.add_argument(
         "--src",
         required=True,
         help="Path to the package root (the dir named like --package), e.g. .../src/bloqade.",
     )
     parser.add_argument(
-        "--repo", required=True, help="Source repo slug, e.g. 'QuEraComputing/bloqade-circuit'."
+        "--repo",
+        required=True,
+        help="Source repo slug, e.g. 'QuEraComputing/bloqade-circuit'.",
     )
-    parser.add_argument("--ref", required=True, help="Git ref (tag/branch/sha) for source links.")
-    parser.add_argument("--version", required=True, help="API doc version, e.g. 'dev' or '0.14'.")
+    parser.add_argument(
+        "--ref", required=True, help="Git ref (tag/branch/sha) for source links."
+    )
+    parser.add_argument(
+        "--version", required=True, help="API doc version, e.g. 'dev' or '0.14'."
+    )
     parser.add_argument(
         "--mount",
         default="api/python",

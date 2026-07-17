@@ -74,11 +74,7 @@ _PROTECT_RE = re.compile(
 
 def _escape_specials(segment: str) -> str:
     """Escape MDX-hostile ``<`` ``{`` ``}`` in a plain (non-code/math) segment."""
-    return (
-        segment.replace("<", "&lt;")
-        .replace("{", "&#123;")
-        .replace("}", "&#125;")
-    )
+    return segment.replace("<", "&lt;").replace("{", "&#123;").replace("}", "&#125;")
 
 
 def escape_prose_inline(text: str) -> str:

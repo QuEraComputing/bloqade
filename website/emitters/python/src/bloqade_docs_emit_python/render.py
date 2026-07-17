@@ -14,7 +14,6 @@ from typing import Any
 
 from griffe import (
     DocstringSectionKind,
-    Kind,
     ParameterKind,
 )
 
@@ -128,7 +127,7 @@ def class_signature(cls: Any) -> str:
 
 
 def signature_block(code: str) -> list[str]:
-    return [f"<Signature lang=\"python\" code={{`{escape.template(code)}`}} />", ""]
+    return [f'<Signature lang="python" code={{`{escape.template(code)}`}} />', ""]
 
 
 # --------------------------------------------------------------------------- #
@@ -207,12 +206,16 @@ def analyze_docstring(obj: Any, linker: Linker | None = None) -> ParsedDoc:
             elif kind == DocstringSectionKind.examples:
                 doc.extra_prose.extend(_render_examples(section, linker))
             elif kind == DocstringSectionKind.deprecated:
-                doc.extra_prose.extend(_render_admonition(section, "Deprecated", linker=linker))
+                doc.extra_prose.extend(
+                    _render_admonition(section, "Deprecated", linker=linker)
+                )
             else:
                 # Unknown/less-common section: best-effort prose fallback.
                 doc.extra_prose.extend(_render_generic(section, linker))
         except Exception as exc:  # pragma: no cover - defensive
-            logger.debug("section render failed for %s: %s", getattr(obj, "path", "?"), exc)
+            logger.debug(
+                "section render failed for %s: %s", getattr(obj, "path", "?"), exc
+            )
             continue
 
     combined = "\n\n".join(chunk for chunk in text_chunks if chunk.strip())
@@ -343,14 +346,16 @@ def prose_block(text: str, linker: Linker | None = None) -> list[str]:
 def _clean_return_desc(desc: str, annotation: str | None) -> str:
     desc = (desc or "").strip()
     if annotation and desc.startswith(annotation):
-        rest = desc[len(annotation):].lstrip()
+        rest = desc[len(annotation) :].lstrip()
         if rest.startswith(":"):
             rest = rest[1:].lstrip()
         desc = rest
     return desc
 
 
-def _params_from_signature(callable_obj: Any, doc: ParsedDoc, drop_self: bool) -> list[dict]:
+def _params_from_signature(
+    callable_obj: Any, doc: ParsedDoc, drop_self: bool
+) -> list[dict]:
     """Merge signature parameters with docstring parameter descriptions."""
     doc_by_name = {}
     for item in doc.params:
@@ -359,7 +364,12 @@ def _params_from_signature(callable_obj: Any, doc: ParsedDoc, drop_self: bool) -
             doc_by_name[name] = item
 
     params = list(callable_obj.parameters)
-    if drop_self and params and params[0].name in ("self", "cls") and params[0].annotation is None:
+    if (
+        drop_self
+        and params
+        and params[0].name in ("self", "cls")
+        and params[0].annotation is None
+    ):
         params = params[1:]
 
     rows: list[dict] = []
@@ -380,7 +390,12 @@ def _params_from_signature(callable_obj: Any, doc: ParsedDoc, drop_self: bool) -
                 annotation = _annotation_str(getattr(doc_item, "annotation", None))
             desc = (getattr(doc_item, "description", "") or "").strip()
         rows.append(
-            {"name": display, "type": annotation, "default": default, "description": desc}
+            {
+                "name": display,
+                "type": annotation,
+                "default": default,
+                "description": desc,
+            }
         )
     return rows
 
@@ -396,13 +411,17 @@ def params_table(rows: list[dict], title: str | None = None) -> list[str]:
         lines.append("    {")
         lines.append(f"      name: '{escape.js_str(row['name'])}',")
         if row.get("type"):
-            lines.append(f"      type: '{escape.js_str(escape.truncate(row['type'], 200))}',")
+            lines.append(
+                f"      type: '{escape.js_str(escape.truncate(row['type'], 200))}',"
+            )
         if row.get("default") is not None:
             lines.append(
                 f"      default: '{escape.js_str(escape.truncate(str(row['default']), 120))}',"
             )
         if row.get("description"):
-            lines.append(f"      description: '{escape.desc_literal(row['description'])}',")
+            lines.append(
+                f"      description: '{escape.desc_literal(row['description'])}',"
+            )
         lines.append("    },")
     lines.append("  ]}")
     lines.append("/>")
@@ -486,6 +505,11 @@ def attributes_table(doc: ParsedDoc, attr_members: list[Any]) -> list[str]:
                 d = analyze_docstring(member)
                 desc = (d.summary + (" " + d.body if d.body else "")).strip()
             rows.append(
-                {"name": name, "type": annotation, "default": value, "description": desc}
+                {
+                    "name": name,
+                    "type": annotation,
+                    "default": value,
+                    "description": desc,
+                }
             )
     return params_table(rows, title="Attributes")

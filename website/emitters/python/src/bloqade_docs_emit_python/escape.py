@@ -81,11 +81,7 @@ def html_text(value: str) -> str:
     of being interpreted as markup. The result is later wrapped by ``js_str``.
     """
     value = _collapse_ws(value)
-    return (
-        value.replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
-    )
+    return value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
 def desc_literal(value: str) -> str:
@@ -175,11 +171,7 @@ def _escape_specials(segment: str) -> str:
     ``_strip_relative_links``) so no dangling ``.md`` href reaches MDX.
     """
     segment = _strip_relative_links(segment)
-    return (
-        segment.replace("<", "&lt;")
-        .replace("{", "&#123;")
-        .replace("}", "&#125;")
-    )
+    return segment.replace("<", "&lt;").replace("{", "&#123;").replace("}", "&#125;")
 
 
 def _escape_inline(line: str) -> str:
