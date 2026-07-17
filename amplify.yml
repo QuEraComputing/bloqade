@@ -23,6 +23,13 @@ env:
     NODE_VERSION: "24"
     PNPM_VERSION: "11"
     UV_VERSION: "0.5.1"
+    # Pin the Python uv uses. The repo declares requires-python ">=3.10", but the
+    # docs tooling (resolve_sources.py, gen_compat_matrix.py) hard-imports
+    # `tomllib`, which is stdlib only in 3.11+. Amplify's Amazon Linux gave uv a
+    # <=3.10 interpreter (ModuleNotFoundError: No module named 'tomllib'); this
+    # forces uv to fetch/use 3.13 for both the root env and the notebook emitter
+    # project (both resolve to 3.13 locally). Applies to `uv sync` and `uv run`.
+    UV_PYTHON: "3.13"
     RUST_TOOLCHAIN: "nightly-2026-04-17" # rustdoc JSON format_version 57
     # Served at the domain root on Amplify — no subpath. Override SITE_URL
     # per-branch in the Amplify console if you want correct canonical/sitemap
