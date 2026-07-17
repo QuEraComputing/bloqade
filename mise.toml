@@ -22,6 +22,22 @@ node = "24"
 "npm:pnpm" = "11"
 uv = "latest"
 
+[env]
+# Single source of truth for the pinned rustup NIGHTLY toolchain used to extract
+# rustdoc JSON (build_versions.py -> emit_rust.py: `cargo +$RUSTDOC_NIGHTLY
+# rustdoc -- --output-format json`; rustdoc JSON is a nightly-only format).
+#
+# This is a PLAIN SHARED CONSTANT, NOT a rust-toolchain.toml: a rust-toolchain
+# file would set the default channel for EVERY cargo/rustc call in the tree and
+# drag the main bloqade crates onto nightly. Here nightly is only ever invoked
+# via an explicit `+$RUSTDOC_NIGHTLY` override for docstring extraction — the
+# main crates keep building with the default (stable) toolchain.
+#
+# Consumed by: build_versions.py (default for --rust-toolchain), amplify.yml and
+# the website workflows (the `rustup toolchain install` step). mise exports this
+# on `mise env` / `mise run` / jdx/mise-action, so no caller repeats the date.
+RUSTDOC_NIGHTLY = "nightly-2026-04-17"
+
 # ===========================================================================
 # Package — the `bloqade` Python package is this repo's primary artifact, so
 # the intuitive top-level names build/test IT (not the docs).

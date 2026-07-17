@@ -13,24 +13,25 @@
 # runtime crawl) — those stay in GitHub Actions on PRs. Amplify only needs to
 # produce the servable dist/.
 #
+# TOOL VERSIONS ARE NOT PINNED HERE. node/pnpm/uv come from mise.toml (the single
+# source of truth) via `mise install`; the rustdoc nightly date comes from
+# mise.toml [env] RUSTDOC_NIGHTLY. Only build-behavior config + the docs-build
+# Python floor live below.
+#
 # Because Amplify serves both production and PR previews at a domain ROOT (never
 # a gh-pages subpath), SITE_BASE is "/" here — all the gh-pages `/next/` and
 # `/astro-preview/pr-N/` base juggling simply disappears.
 version: 1
 env:
   variables:
-    # Pins mirror the GitHub Actions workflow so builds are reproducible.
-    NODE_VERSION: "24"
-    PNPM_VERSION: "11"
-    UV_VERSION: "0.5.1"
-    # Pin the Python uv uses. The repo declares requires-python ">=3.10", but the
-    # docs tooling (resolve_sources.py, gen_compat_matrix.py) hard-imports
-    # `tomllib`, which is stdlib only in 3.11+. Amplify's Amazon Linux gave uv a
-    # <=3.10 interpreter (ModuleNotFoundError: No module named 'tomllib'); this
-    # forces uv to fetch/use 3.13 for both the root env and the notebook emitter
-    # project (both resolve to 3.13 locally). Applies to `uv sync` and `uv run`.
+    # Python floor for the docs tooling. resolve_sources.py / gen_compat_matrix.py
+    # hard-import `tomllib` (stdlib only in 3.11+), but the repo's requires-python
+    # is ">=3.10", so Amplify's Amazon Linux gave uv a <=3.10 interpreter
+    # (ModuleNotFoundError: No module named 'tomllib'). Force 3.13 for the root env
+    # AND the notebook emitter project (both resolve to 3.13 locally). Kept HERE,
+    # not in mise.toml [env], because ci.yml tests a real 3.10/3.11/3.12 matrix
+    # that a global UV_PYTHON would clobber.
     UV_PYTHON: "3.13"
-    RUST_TOOLCHAIN: "nightly-2026-04-17" # rustdoc JSON format_version 57
     # Served at the domain root on Amplify — no subpath. Override SITE_URL
     # per-branch in the Amplify console if you want correct canonical/sitemap
     # URLs on the production branch (e.g. https://bloqade.quera.com).
@@ -44,36 +45,38 @@ frontend:
   phases:
     preBuild:
       commands:
-        # --- Node 24 + pnpm 11 (corepack ships with Node 24) --------------
-        - nvm install "$NODE_VERSION"
-        - nvm use "$NODE_VERSION"
-        - corepack enable
-        - corepack prepare "pnpm@$PNPM_VERSION" --activate
-        # --- uv (Python) — installs to ~/.local/bin --------------------------
-        - curl -LsSf "https://astral.sh/uv/${UV_VERSION}/install.sh" | sh
+        # --- mise: single source of truth for node/pnpm/uv (from mise.toml) ---
+        - curl https://mise.run | sh
         - export PATH="$HOME/.local/bin:$PATH"
+        - mise trust
+        - mise install # provisions node + pnpm + uv per mise.toml [tools]
+        # Put those tools on PATH AND export mise.toml [env] (RUSTDOC_NIGHTLY).
+        # `-s bash` is required — CodeBuild runs bash; without it mise guesses.
+        - eval "$(mise env -s bash)"
         # Install bloqade into the root env so resolve_sources.py can pin each
         # API source tag via `uv pip show bloqade-*`.
         - uv sync
-        # --- Rust nightly for rustdoc JSON ----------------------------------
+        # --- Rust nightly for rustdoc JSON docstring extraction ONLY ----------
+        # Deliberately NOT mise-managed (see mise.toml): the main crates never
+        # build here; nightly is only invoked as `cargo +$RUSTDOC_NIGHTLY rustdoc`.
         - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain none
         - export PATH="$HOME/.cargo/bin:$PATH"
-        - rustup toolchain install "$RUST_TOOLCHAIN" --profile minimal
+        - rustup toolchain install "$RUSTDOC_NIGHTLY" --profile minimal
         # --- website JS deps ------------------------------------------------
         - pnpm --dir website install --frozen-lockfile
     build:
       commands:
-        # Re-establish PATH for the build phase (Amplify may start a fresh shell
-        # per phase; harmless if it persists).
+        # Re-establish PATH + mise env for this phase (Amplify may start a fresh
+        # shell per phase; harmless if it persists).
         - export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
-        - nvm use "$NODE_VERSION"
+        - eval "$(mise env -s bash)"
         # Generate src/content/docs/api/dev/** (python + rust) + inventories +
-        # versions.json.
+        # versions.json. --rust-toolchain defaults to $RUSTDOC_NIGHTLY (mise env),
+        # so the nightly date is not repeated here.
         - >
           uv run python website/scripts/build_versions.py
           --versions dev
           --clone-dir website/sources
-          --rust-toolchain "$RUST_TOOLCHAIN"
         # Generate guides/tutorials/** from docs/digital/** (cache-first: a warm
         # .notebook-cache => zero kernel executions).
         - uv run --project website/emitters/notebooks bloqade-docs-build-notebooks
@@ -85,6 +88,8 @@ frontend:
       - "**/*"
   cache:
     paths:
+      # mise-installed tools (node/pnpm/uv) — avoids re-downloading each build
+      - $HOME/.local/share/mise/**/*
       # JS + Astro incremental content
       - website/node_modules/**/*
       - website/.astro/**/*

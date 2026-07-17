@@ -47,27 +47,24 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
+      # mise is the single source of truth for node/pnpm/uv (see mise.toml).
+      # mise-action installs them + exports mise.toml [env] (RUSTDOC_NIGHTLY) to
+      # later steps, and caches the installed tools.
+      - name: Set up mise (node + pnpm + uv)
+        uses: jdx/mise-action@v2
         with:
-          version: "0.5.1"
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
+          cache: true
 
       - name: Install bloqade (pins the API source tags for resolve_sources.py)
         run: uv sync
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+      - name: Cache the pnpm store
+        uses: actions/cache@v5
         with:
-          version: 11
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: pnpm
-          cache-dependency-path: website/pnpm-lock.yaml
+          path: ~/.local/share/pnpm/store
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('website/pnpm-lock.yaml') }}
+          restore-keys: |
+            pnpm-store-${{ runner.os }}-
 
       - name: Install website JS deps
         run: pnpm --dir website install --frozen-lockfile
@@ -78,10 +75,12 @@ jobs:
       - name: Docs component/lib unit tests (docs:unit)
         run: pnpm --dir website test
 
-      - name: Install pinned Rust nightly (rustdoc JSON format_version 57)
-        uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: nightly-2026-04-17
+      # rustdoc JSON (format_version 57) needs a pinned nightly. Date comes from
+      # $RUSTDOC_NIGHTLY (mise.toml [env], exported by mise-action). Installed as
+      # an extra toolchain only — rustup's default stays stable, so nothing drags
+      # the main crates onto nightly; build_versions.py invokes it via +override.
+      - name: Install pinned Rust nightly for rustdoc JSON
+        run: rustup toolchain install "$RUSTDOC_NIGHTLY" --profile minimal
 
       - name: Cache cargo registry + Astro content
         uses: actions/cache@v5
@@ -113,7 +112,6 @@ jobs:
           --versions ${{ inputs.version }}
           --clone-dir website/sources
           --keep 3
-          --rust-toolchain nightly-2026-04-17
 
       # Cache-first (re)generation of guides/tutorials/** from docs/digital/**
       # (see the deploy/preview workflows). Runs before the Astro build so every

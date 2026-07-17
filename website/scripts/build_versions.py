@@ -64,6 +64,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -507,7 +508,14 @@ def main(argv: list[str] | None = None) -> int:
         help="Languages to emit (comma list; default: python,rust).",
     )
     ap.add_argument("--rust-json", type=Path, default=None, help="Reuse an existing rustdoc JSON.")
-    ap.add_argument("--rust-toolchain", default="nightly", help="Nightly toolchain (default: nightly).")
+    ap.add_argument(
+        # Default to the shared RUSTDOC_NIGHTLY constant (mise.toml [env]) so the
+        # pinned nightly date lives in ONE place; fall back to plain "nightly"
+        # when the env var is unset (e.g. an ad-hoc local run outside mise).
+        "--rust-toolchain",
+        default=os.environ.get("RUSTDOC_NIGHTLY", "nightly"),
+        help="rustdoc-JSON nightly toolchain (default: $RUSTDOC_NIGHTLY or 'nightly').",
+    )
     ap.add_argument("--clean", action="store_true", help="Wipe api/<V> before emitting each version.")
     ap.add_argument("--latest", default=None, help="Force which label the 'latest' alias points at.")
     ap.add_argument("--keep", type=int, default=None, help="Prune to the newest N releases (dev kept).")
