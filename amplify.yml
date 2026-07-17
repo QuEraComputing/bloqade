@@ -1,0 +1,94 @@
+# AWS Amplify Hosting build spec for the Bloqade Astro/Starlight docs site.
+#
+# WHY THIS LIVES AT THE REPO ROOT (not website/): the site build is NOT
+# self-contained under website/. It runs `uv sync` against the root pyproject,
+# reads docs/digital/** for the tutorial emitter, and clones the API source
+# tags with the root-installed `bloqade-*` packages. So Amplify must build from
+# the repo root — do NOT configure a monorepo `appRoot` in the console; leave
+# the app root at "/" so this file is used verbatim. Artifacts are then pointed
+# at website/dist below.
+#
+# This mirrors the generate->build half of .github/workflows/website-deploy.yml.
+# It deliberately OMITS the CI gates (vitest, link/xref checks, Playwright
+# runtime crawl) — those stay in GitHub Actions on PRs. Amplify only needs to
+# produce the servable dist/.
+#
+# Because Amplify serves both production and PR previews at a domain ROOT (never
+# a gh-pages subpath), SITE_BASE is "/" here — all the gh-pages `/next/` and
+# `/astro-preview/pr-N/` base juggling simply disappears.
+version: 1
+env:
+  variables:
+    # Pins mirror the GitHub Actions workflow so builds are reproducible.
+    NODE_VERSION: "24"
+    PNPM_VERSION: "11"
+    UV_VERSION: "0.5.1"
+    RUST_TOOLCHAIN: "nightly-2026-04-17" # rustdoc JSON format_version 57
+    # Served at the domain root on Amplify — no subpath. Override SITE_URL
+    # per-branch in the Amplify console if you want correct canonical/sitemap
+    # URLs on the production branch (e.g. https://bloqade.quera.com).
+    SITE_BASE: "/"
+    SITE_URL: "https://bloqade.quera.com"
+    # WIP-parity: warn (don't fail the deploy) on unresolved <ApiXref>. Flip to
+    # "1" once the API content is stable if you want strict previews.
+    XREF_STRICT: "0"
+    EXECUTE_NOTEBOOKS: "1" # execute tutorials (cache-first; failures degrade to static)
+frontend:
+  phases:
+    preBuild:
+      commands:
+        # --- Node 24 + pnpm 11 (corepack ships with Node 24) --------------
+        - nvm install "$NODE_VERSION"
+        - nvm use "$NODE_VERSION"
+        - corepack enable
+        - corepack prepare "pnpm@$PNPM_VERSION" --activate
+        # --- uv (Python) — installs to ~/.local/bin --------------------------
+        - curl -LsSf "https://astral.sh/uv/${UV_VERSION}/install.sh" | sh
+        - export PATH="$HOME/.local/bin:$PATH"
+        # Install bloqade into the root env so resolve_sources.py can pin each
+        # API source tag via `uv pip show bloqade-*`.
+        - uv sync
+        # --- Rust nightly for rustdoc JSON ----------------------------------
+        - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain none
+        - export PATH="$HOME/.cargo/bin:$PATH"
+        - rustup toolchain install "$RUST_TOOLCHAIN" --profile minimal
+        # --- website JS deps ------------------------------------------------
+        - pnpm --dir website install --frozen-lockfile
+    build:
+      commands:
+        # Re-establish PATH for the build phase (Amplify may start a fresh shell
+        # per phase; harmless if it persists).
+        - export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+        - nvm use "$NODE_VERSION"
+        # Generate src/content/docs/api/dev/** (python + rust) + inventories +
+        # versions.json.
+        - >
+          uv run python website/scripts/build_versions.py
+          --versions dev
+          --clone-dir website/sources
+          --rust-toolchain "$RUST_TOOLCHAIN"
+        # Generate guides/tutorials/** from docs/digital/** (cache-first: a warm
+        # .notebook-cache => zero kernel executions).
+        - uv run --project website/emitters/notebooks bloqade-docs-build-notebooks
+        # Build the static site -> website/dist.
+        - pnpm --dir website build
+  artifacts:
+    baseDirectory: website/dist
+    files:
+      - "**/*"
+  cache:
+    paths:
+      # JS + Astro incremental content
+      - website/node_modules/**/*
+      - website/.astro/**/*
+      # Content-addressed executed-notebook cache (the emitter fingerprints each
+      # notebook internally; caching the dir gives the warm-cache fast path).
+      - website/emitters/notebooks/.notebook-cache/**/*
+      # Python / uv
+      - .venv/**/*
+      - website/emitters/notebooks/.venv/**/*
+      - $HOME/.cache/uv/**/*
+      # Rust toolchain + compiled crate cache (large; avoids re-download/rebuild)
+      - $HOME/.rustup/**/*
+      - $HOME/.cargo/registry/**/*
+      - $HOME/.cargo/git/**/*
