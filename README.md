@@ -3,7 +3,7 @@
 [![CI](https://github.com/QuEraComputing/bloqade/actions/workflows/ci.yml/badge.svg)](https://github.com/QuEraComputing/bloqade/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/QuEraComputing/bloqade/graph/badge.svg?token=BpHsAYuzdo)](https://codecov.io/gh/QuEraComputing/bloqade)
 [![Supported Python versions](https://img.shields.io/pypi/pyversions/bloqade.svg?color=%2334D058)](https://pypi.org/project/bloqade)
-[![Documentation](https://img.shields.io/badge/Documentation-6437FF)](https://bloqade.quera.com/)
+[![Documentation](https://img.shields.io/badge/Documentation-6437FF)](https://queracomputing.github.io/bloqade/)
 [![DOI](https://zenodo.org/badge/629628885.svg)](https://zenodo.org/doi/10.5281/zenodo.11114109)
 
 
@@ -23,11 +23,11 @@ uv add bloqade
 
 ## Documentation
 
-The documentation is available at [https://bloqade.quera.com/latest/](https://bloqade.quera.com/latest/). We are at an early stage of completing the documentation with more details and examples, so comments and contributions are most welcome!
+The documentation is available at [https://queracomputing.github.io/bloqade/latest/](https://queracomputing.github.io/bloqade/latest/). We are at an early stage of completing the documentation with more details and examples, so comments and contributions are most welcome!
 
 ## Contributing
 
-We welcome contributions! Please check the [contribution guidelines](https://bloqade.quera.com/latest/contrib/) for a detailed guide.
+We welcome contributions! Please check the [contribution guidelines](https://queracomputing.github.io/bloqade/latest/contrib/) for a detailed guide.
 
 > [!NOTE]
 >
