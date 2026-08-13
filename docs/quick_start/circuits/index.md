@@ -106,7 +106,7 @@ sampler = circuit.compile_detector_sampler()
 detector_bits, observable_bits = sampler.sample(shots=1_000_000, separate_observables=True)
 
 ```
-A detailed tutorial of how to use TSIM for QEC workflows is available [here](https://bloqade.quera.com/latest/digital/examples/tsim/magic_state_distillation/).
+A detailed tutorial of how to use TSIM for QEC workflows is available [here](https://queracomputing.github.io/bloqade/latest/digital/examples/tsim/magic_state_distillation/).
 
 
 ### Hardware execution
