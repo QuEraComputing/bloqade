@@ -1,0 +1,26 @@
+---
+/**
+ * Starlight Header override (registered via `components.Header` in
+ * astro.config.mjs) so the docs top-chrome matches the landing header exactly.
+ *
+ * This renders into PageFrame's fixed `<header class="header">` slot. It reuses
+ * the shared <SiteHeader/> markup (same logo/nav/GitHub/theme-toggle as the
+ * landing) and composes Starlight's own primitives to preserve functionality:
+ *
+ *   - <Search/> (Starlight's Pagefind modal trigger) is passed into SiteHeader's
+ *     `search` slot, so the search button + ⌘K modal keep working.
+ *   - The MOBILE MENU toggle is NOT rendered here on purpose: Starlight mounts
+ *     <MobileMenuToggle/> (the <starlight-menu-button> that opens the sidebar
+ *     drawer) inside PageFrame's <nav class="sidebar">, independently of the
+ *     Header. Overriding the Header therefore leaves mobile navigation intact.
+ *
+ * The `.header` wrapper's translucent blur / brand hairline is themed in
+ * brand.css (targeting Starlight's `.header` class).
+ */
+import Search from '@astrojs/starlight/components/Search.astro';
+import SiteHeader from './SiteHeader.astro';
+---
+
+<SiteHeader withSearch>
+  <Search slot="search" />
+</SiteHeader>

@@ -1,0 +1,36 @@
+---
+/**
+ * Shared site footer content — the SINGLE source of the brand footer markup.
+ *
+ * Rendered by BOTH:
+ *   - src/layouts/SiteLayout.astro (landing + blog), inside <footer class="site-footer">
+ *   - src/components/Footer.astro  (Starlight docs), BELOW Starlight's own
+ *     prev/next pagination so docs pages keep both the pager and the brand
+ *     footer.
+ */
+import { footerLinks } from '../lib/nav';
+import logoLight from '../assets/logo.svg';
+import logoDark from '../assets/logo-dark.svg';
+
+const year = new Date().getFullYear();
+---
+
+<div class="site-footer__inner">
+  <div class="site-footer__brand">
+    <img class="site-logo site-logo-light" src={logoLight.src} alt="Bloqade" height="24" />
+    <img class="site-logo site-logo-dark" src={logoDark.src} alt="Bloqade" height="24" />
+    <p>The Neutral Atom SDK, by QuEra Computing.</p>
+  </div>
+  <nav class="site-footer__links" aria-label="Footer">
+    {
+      footerLinks.map((item) => (
+        <a href={item.href} rel={item.external ? 'noopener' : undefined}>
+          {item.label}
+        </a>
+      ))
+    }
+  </nav>
+</div>
+<p class="site-footer__legal">
+  &copy; {year} QuEra Computing Inc. Licensed under Apache 2.0.
+</p>

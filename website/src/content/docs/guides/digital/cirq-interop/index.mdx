@@ -1,0 +1,38 @@
+---
+title: Interoperability with Cirq
+description: Convert between cirq.Circuit objects and squin kernels for joint use of Bloqade and Cirq.
+---
+
+The [Cirq](https://quantumai.google/cirq) framework is a powerful tool for writing quantum circuits targeting near-term devices.
+Instead of reinventing the wheel, Bloqade offers convenient interoperability with Cirq that allows you to jointly use both libraries in order to develop your quantum program.
+
+Specifically, you can turn a [`cirq.Circuit`](https://quantumai.google/reference/python/cirq/Circuit) object into a [squin](/guides/digital/dialects/#squin) kernel function and vice versa.
+
+For details on each of these, please see the documentation pages below:
+
+* [Obtaining a squin kernel function from a `cirq.Circuit`](/guides/digital/cirq-interop/cirq-to-squin/)
+* [Emitting a `cirq.Circuit` from a squin kernel](/guides/digital/cirq-interop/squin-to-cirq/)
+
+For the API reference, please see the `cirq_utils` submodule in the API reference, specifically [here](/api/latest/python/bloqade/cirq_utils/lowering/) and [here](/api/latest/python/bloqade/cirq_utils/emit/base/).
+
+## TL;DR
+
+Here's a short example:
+
+```python
+from bloqade import cirq_utils
+import cirq
+
+q = cirq.LineQubit.range(2)
+circuit = cirq.Circuit(
+    cirq.H(q[0]),
+    cirq.CX(q[0], q[1])
+)
+print(circuit)
+
+main = cirq_utils.load_circuit(circuit)
+main.print()
+
+roundtrip_circuit = cirq_utils.emit_circuit(main)
+print(roundtrip_circuit)
+```

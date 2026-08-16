@@ -1,0 +1,27 @@
+---
+/**
+ * Returns — the return value of a callable.
+ *
+ * CONTRACT (props are FROZEN):
+ *   type?: string
+ *   description?: string
+ *
+ * Rendered as a compact labeled block (a single value doesn't warrant a table),
+ * styled consistently with Params/Raises. The type is left as plain text for a
+ * later rehype linkify phase; the description may contain inline HTML.
+ */
+import './api.css';
+
+interface Props {
+  type?: string;
+  description?: string;
+}
+const { type, description } = Astro.props;
+---
+<div class="api-returns">
+  <p class="api-returns__title">Returns</p>
+  <p class="api-returns__body">
+    {type && <code class="api-returns__type">{type}</code>}
+    {description && <span class="api-returns__description" set:html={description} />}
+  </p>
+</div>

@@ -1,0 +1,16 @@
+---
+/**
+ * Sidebar override (Phase C2).
+ *
+ * Registered via `starlight({ components: { Sidebar } })` in astro.config.mjs.
+ * It renders the API <VersionSwitcher> at the top of the sidebar, then defers
+ * to Starlight's built-in Sidebar for the normal navigation tree. The switcher
+ * decides on its own whether to render (only on `/api/<version>/…` pages), so
+ * every other page shows the stock sidebar unchanged.
+ */
+import Default from '@astrojs/starlight/components/Sidebar.astro';
+---
+
+{/* The API version selector now lives in the site header (SiteHeader.astro);
+    this override is a pass-through kept for future sidebar customization. */}
+<Default><slot /></Default>

@@ -1,0 +1,113 @@
+---
+/**
+ * Bespoke landing page for the site root.
+ *
+ * Starlight intentionally does NOT own `/` (there is no
+ * src/content/docs/index.*), leaving this route free for a custom splash.
+ * Copy is adapted from the legacy docs/index.md.
+ */
+import SiteLayout from '../layouts/SiteLayout.astro';
+import logoLight from '../assets/logo.svg';
+import logoDark from '../assets/logo-dark.svg';
+
+const features = [
+  {
+    title: 'Bloqade Digital',
+    tagline: 'Gate-based circuits, hardware-aware',
+    body: 'Program gate-based computation for reconfigurable neutral atom architectures. Extends QASM2 with parallelism and global gates, and ships compiler passes, emulation and code generation.',
+    href: '/api/latest/python',
+    cta: 'Explore the digital API',
+  },
+  {
+    title: 'Bloqade Analog',
+    tagline: 'The original analog SDK',
+    body: 'Build, analyze and run analog programs on QuEra’s cloud-accessible "Aquila" hardware. Everything from the classic Bloqade lives on under the bloqade.analog namespace.',
+    href: '/api/latest/python',
+    cta: 'Explore the analog API',
+  },
+  {
+    title: 'Built on Kirin',
+    tagline: 'A hub of composable eDSLs',
+    body: 'Bloqade is a hub of embedded domain-specific languages built on Kirin, the Kernel Intermediate Representation Infrastructure — hybrid, kernel-based, and made for co-design.',
+    href: 'https://github.com/QuEraComputing/kirin',
+    cta: 'Learn about Kirin',
+  },
+];
+---
+
+<SiteLayout
+  title="Bloqade — The Neutral Atom SDK"
+  description="Bloqade is QuEra Computing's Software Development Kit for neutral atom quantum computers."
+  wide
+  section="home"
+>
+  <section class="hero">
+    <div class="hero__logo">
+      <img class="site-logo-light" src={logoLight.src} alt="Bloqade" />
+      <img class="site-logo-dark" src={logoDark.src} alt="Bloqade" />
+    </div>
+    <h1 class="hero__title">the Software Development Kit for neutral atom quantum computers</h1>
+    <p class="hero__lede">
+      Bloqade is <a href="https://quera.com" rel="noopener">QuEra Computing</a>'s SDK for
+      neutral atom quantum computers &mdash; a hub of embedded domain-specific languages spanning
+      analog, digital, and logical quantum computation.
+    </p>
+
+    <div class="install" aria-label="Install Bloqade">
+      <code id="install-cmd" class="install__cmd"><span class="install__prompt" aria-hidden="true">$ </span>pip install bloqade</code>
+      <button class="install__copy" type="button" data-copy-target="install-cmd" aria-label="Copy install command">
+        <svg class="install__icon-copy" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        <svg class="install__icon-check" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 6 9 17l-5-5"></path>
+        </svg>
+        <span class="install__copied" role="status" aria-live="polite"></span>
+      </button>
+    </div>
+
+    {/* Pure navigation buttons — excluded from search so results surface the
+        hero prose + feature copy below, not these link labels. */}
+    <div class="cta-row" data-pagefind-ignore>
+      <a class="btn btn--primary" href="/guides/getting-started/installation/">Get started</a>
+      <a class="btn btn--ghost" href="/api/">API reference</a>
+      <a class="btn btn--ghost" href="/guides/">Guides</a>
+    </div>
+  </section>
+
+  <section class="features" aria-label="What Bloqade offers">
+    {
+      features.map((f) => (
+        <a class="feature-card" href={f.href} rel={f.href.startsWith('http') ? 'noopener' : undefined}>
+          <span class="feature-card__tagline">{f.tagline}</span>
+          <h2 class="feature-card__title">{f.title}</h2>
+          <p class="feature-card__body">{f.body}</p>
+          <span class="feature-card__cta">{f.cta} &rarr;</span>
+        </a>
+      ))
+    }
+  </section>
+</SiteLayout>
+
+<script is:inline>
+  document.querySelectorAll('[data-copy-target]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const target = document.getElementById(btn.getAttribute('data-copy-target'));
+      if (!target) return;
+      const text = 'pip install bloqade';
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        return;
+      }
+      btn.classList.add('is-copied');
+      const status = btn.querySelector('.install__copied');
+      if (status) status.textContent = 'Copied!';
+      setTimeout(() => {
+        btn.classList.remove('is-copied');
+        if (status) status.textContent = '';
+      }, 1800);
+    });
+  });
+</script>

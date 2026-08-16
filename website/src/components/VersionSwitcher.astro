@@ -1,0 +1,106 @@
+---
+/**
+ * VersionSwitcher.astro — API version dropdown (Phase C2).
+ *
+ * Scoped to versioned API pages only. It is rendered from the Sidebar override
+ * (src/components/Sidebar.astro) on EVERY Starlight page, but renders nothing
+ * unless the current URL is `/api/<version>/…` (see currentApiVersion). That
+ * keeps it off guides / blog / reference and off the evergreen `/api/` landing
+ * + `/api/compatibility/` (which have no version segment).
+ *
+ * The current version is derived from the URL segment `/api/<version>/` — no
+ * per-page frontmatter is required. On change, the client navigates to the same
+ * sub-path under the chosen version, falling back to that version's
+ * `/api/<version>/<lang>/` then `/api/<version>/python/` when the exact
+ * sub-path does not exist in the target version.
+ *
+ * Styling is scoped below (brand.css is untouched).
+ */
+import { loadVersions, currentApiVersion } from '../lib/versions';
+
+const manifest = loadVersions();
+const current = currentApiVersion(Astro.url.pathname, manifest);
+const show = current !== null && manifest.versions.length > 0;
+---
+
+{
+  show && (
+    <div class="version-switcher" data-version-switcher>
+      <label class="version-switcher__label" for="api-version-select">
+        Version
+      </label>
+      <select id="api-version-select" class="version-switcher__select" aria-label="API version">
+        {manifest.versions.map((v) => (
+          <option value={v.label} selected={v.label === current}>
+            {v.label}
+            {v.dev ? ' (dev)' : v.latest ? ' (latest)' : ''}
+          </option>
+        ))}
+      </select>
+    </div>
+  )
+}
+
+<script>
+  // Navigate to the same API sub-path under the chosen version. The current
+  // version + sub-path are read from the live URL (robust to `/api/latest/…`
+  // having been redirected to a concrete version before this runs).
+  document.querySelectorAll('[data-version-switcher] select').forEach((el) => {
+    const select = el as HTMLSelectElement;
+    select.addEventListener('change', async () => {
+      const newV = select.value;
+      const parts = window.location.pathname.split('/'); // ['', 'api', <cur>, ...]
+      const rest = parts.slice(3).join('/'); // e.g. "python/bloqade/squin/"
+      const lang = rest.split('/')[0]; // "python" | "rust" | ""
+      const candidates: string[] = [];
+      if (rest) candidates.push(`/api/${newV}/${rest}`);
+      if (lang) candidates.push(`/api/${newV}/${lang}/`);
+      candidates.push(`/api/${newV}/python/`);
+      candidates.push(`/api/${newV}/`);
+      for (const target of candidates) {
+        try {
+          const res = await fetch(target, { method: 'HEAD' });
+          if (res.ok) {
+            window.location.href = target;
+            return;
+          }
+        } catch {
+          /* try next candidate */
+        }
+      }
+      // Last-resort: navigate to the version root even if HEAD failed.
+      window.location.href = candidates[candidates.length - 1];
+    });
+  });
+</script>
+
+<style>
+  /* Compact, inline treatment for the site header (the switcher now lives in
+     the top bar rather than the sidebar). */
+  .version-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .version-switcher__label {
+    font-size: var(--sl-text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--sl-color-gray-3);
+  }
+  .version-switcher__select {
+    flex: 0 0 auto;
+    min-width: 0;
+    padding: 0.25rem 0.5rem;
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-white);
+    background-color: var(--sl-color-black);
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.375rem;
+    cursor: pointer;
+  }
+  .version-switcher__select:hover {
+    border-color: var(--sl-color-accent);
+  }
+</style>

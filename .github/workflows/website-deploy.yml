@@ -1,0 +1,184 @@
+name: Website Deploy (Astro -> /next/)
+
+# Publishes the WIP Astro/Starlight docs site to the gh-pages SUBPATH `/next/`
+# on every push to the `astro-docs` development branch. This is ADDITIVE to the
+# live MkDocs site: `mike` (devdoc.yml/pub_doc.yml) owns the branch ROOT plus
+# `dev/`, `latest/`, `v*/`; this workflow only ever writes under `/next/`.
+#
+# NOTE: deliberately wired to `astro-docs`, NOT `main`. Production cutover to
+# the root is Phase F (see website-release.yml).
+on:
+  push:
+    branches: [astro-docs]
+
+# Share the single gh-pages writer group (see website-preview.yml) so this
+# deploy serializes with every mike deploy / PR preview / history squash.
+concurrency:
+  group: gh-pages-write
+  cancel-in-progress: false
+
+permissions:
+  contents: write # publish.sh pushes to the gh-pages branch
+
+jobs:
+  deploy:
+    name: Build + publish /next/
+    runs-on: ubuntu-latest
+    env:
+      # Publish subpath. `base` MUST equal the publish subpath (see publish.sh).
+      SITE_BASE: /next/
+      SITE_URL: https://bloqade.quera.com
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      # mise is the single source of truth for node/pnpm/uv (see mise.toml).
+      # mise-action installs them onto PATH and caches them.
+      - name: Set up mise (node + pnpm + uv)
+        uses: jdx/mise-action@v2
+        with:
+          cache: true
+
+      # jdx/mise-action does NOT propagate mise.toml [env] into $GITHUB_ENV, so
+      # surface the pinned nightly explicitly for every later step that reads it
+      # (the rustup install below + build_versions.py, which defaults
+      # --rust-toolchain to $RUSTDOC_NIGHTLY). Mirrors amplify.yml's
+      # `eval "$(mise env -s bash)"`; `mise exec` runs printenv inside the mise
+      # env where [env] is set. Single source of truth stays mise.toml.
+      - name: Export RUSTDOC_NIGHTLY (mise.toml [env]) to later steps
+        run: echo "RUSTDOC_NIGHTLY=$(mise exec -- printenv RUSTDOC_NIGHTLY)" >> "$GITHUB_ENV"
+
+      - name: Install bloqade (pins the API source tags for resolve_sources.py)
+        run: uv sync
+
+      - name: Cache the pnpm store
+        uses: actions/cache@v5
+        with:
+          path: ~/.local/share/pnpm/store
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('website/pnpm-lock.yaml') }}
+          restore-keys: |
+            pnpm-store-${{ runner.os }}-
+
+      - name: Install website JS deps
+        run: pnpm --dir website install --frozen-lockfile
+
+      # docs:unit — FAST, isolated component/lib unit tests (vitest + Astro
+      # Container API). The THIRD docs gate, SEPARATE from the link/xref gate
+      # (docs:check) and the build-warning + Playwright runtime gate (docs:test)
+      # below. Needs no full build, no browser, and no generated API content, so
+      # it runs right after the JS deps install and fails fast.
+      - name: Docs component/lib unit tests (docs:unit)
+        run: pnpm --dir website test
+
+      # rustdoc JSON (format_version 57) needs a pinned nightly. Date comes from
+      # $RUSTDOC_NIGHTLY (mise.toml [env], exported to $GITHUB_ENV above). Installed
+      # as an extra toolchain only — rustup's default stays stable, so nothing drags
+      # the main crates onto nightly; build_versions.py invokes it via +override.
+      - name: Install pinned Rust nightly for rustdoc JSON
+        run: rustup toolchain install "$RUSTDOC_NIGHTLY" --profile minimal
+
+      - name: Cache cargo registry + Astro content
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            website/.astro
+          key: website-cargo-astro-${{ runner.os }}-${{ hashFiles('website/pnpm-lock.yaml', 'website/docs.sources.toml') }}
+          restore-keys: |
+            website-cargo-astro-${{ runner.os }}-
+
+      # Content-addressed cache of EXECUTED notebooks (see
+      # website/emitters/notebooks/src/.../pipeline.py). The key mirrors the
+      # per-notebook fingerprint: the jupytext sources + the emitter's own
+      # source + both lockfiles. On a full match every tutorial is reused with
+      # NO kernel execution; the restore-keys fallback gives a partial hit so
+      # only the notebooks whose fingerprint changed re-execute. `v2` tracks
+      # CACHE_SCHEMA_VERSION.
+      - name: Restore notebook execution cache
+        uses: actions/cache@v5
+        with:
+          path: website/emitters/notebooks/.notebook-cache
+          key: notebooks-v2-${{ runner.os }}-${{ hashFiles('docs/digital/**/*.py', 'website/emitters/notebooks/src/**/*.py', 'website/emitters/notebooks/uv.lock', 'uv.lock') }}
+          restore-keys: |
+            notebooks-v2-${{ runner.os }}-
+
+      - name: Generate dev API content
+        run: >
+          uv run python website/scripts/build_versions.py
+          --versions dev
+          --clone-dir website/sources
+
+      # Cache-first (re)generation of guides/tutorials/** from docs/digital/**.
+      # EXECUTE_NOTEBOOKS=1 => run + cache executable tutorials (a warm cache =>
+      # zero kernels; a changed notebook => only it re-executes); tsim/gemini
+      # opt out (static) per the driver manifest, and anything that fails to
+      # execute degrades to a static render (never fails the build). Runs before
+      # the Astro build so every tutorial page + its assets exist.
+      - name: Generate tutorials (cache-first)
+        env:
+          EXECUTE_NOTEBOOKS: "1"
+        run: uv run --project website/emitters/notebooks bloqade-docs-build-notebooks
+
+      - name: Build Astro site
+        env:
+          XREF_STRICT: "0" # warn (don't fail the WIP deploy) on unresolved xrefs
+        run: pnpm --dir website build
+
+      - name: Configure Git user
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      # publish.sh replaces ONLY gh-pages:/next/ and preserves every sibling
+      # (the MkDocs root + dev/latest/v*/pr-preview/). SITE_BASE above ('/next/')
+      # matches the 'next' subpath passed here.
+      - name: Publish to gh-pages:/next/
+        run: bash website/scripts/publish.sh website/dist next
+
+      # Additive link + cross-reference gate for the WIP dev deploy. Runs AFTER
+      # publish (existing steps behave exactly as before) so it only reports a
+      # pass/fail signal. Isolated STRICT rebuild into `dist-check` (leaves the
+      # published `dist` untouched):
+      #   * XREF_STRICT=1   -> fail on any unresolved <ApiXref>
+      #   * check_links.mjs -> fail on any unreachable internal link / fragment
+      #     anchor. SITE_BASE from the job env keeps base-prefixing consistent.
+      #   * check_xrefs.mjs -> fail if either emitter stops PRODUCING docstring
+      #     <ApiXref> (per-language floors) or any docstring anchor is
+      #     unresolved. Reuses the SAME dist-check build (no redundant build).
+      # Mirrors `mise run docs:check`.
+      - name: Check internal links + API xrefs
+        env:
+          XREF_STRICT: "1"
+        run: |
+          pnpm --dir website exec astro build --outDir dist-check
+          node website/scripts/check_links.mjs website/dist-check
+          node website/scripts/check_xrefs.mjs website/dist-check
+          node website/scripts/check_search_scope.mjs website/dist-check
+
+      # ---- docs:test — build-warning gate + per-page RUNTIME error crawl.
+      # SEPARATE from the link/xref gate above (does NOT replace it). Mirrors
+      # `mise run docs:test`, but the tutorials were already generated above, so
+      # it just runs the two harness scripts directly. ----
+      - name: Cache Playwright browsers
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          # Keyed on the pnpm lockfile, which pins the exact playwright version
+          # (the browser build revision is tied to that version).
+          key: playwright-${{ runner.os }}-${{ hashFiles('website/pnpm-lock.yaml') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+
+      - name: Install Playwright chromium
+        run: pnpm --dir website exec playwright install --with-deps chromium
+
+      - name: Docs build-warning gate + runtime crawl (docs:test)
+        # check_build.mjs rebuilds website/dist (mirroring docs:build) and FAILS
+        # on any non-allowlisted build warning/error; crawl_runtime.mjs then
+        # serves that dist/ and loads every built page in headless Chromium,
+        # failing on any per-page runtime error.
+        run: |
+          node website/scripts/check_build.mjs
+          node website/scripts/crawl_runtime.mjs website/dist

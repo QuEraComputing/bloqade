@@ -1,0 +1,62 @@
+---
+/**
+ * ApiClass — a generated class entry.
+ *
+ * CONTRACT (props are FROZEN):
+ *   name: string       — class name
+ *   fqName: string     — fully-qualified id (also the heading anchor id)
+ *   bases?: string[]   — base class names
+ *   summary?: string   — one-line summary
+ *   sourceUrl?: string — link to source
+ *
+ * Renders a heading (class badge + monospace name + hover permalink + optional
+ * source link), a "Bases: ..." line, the summary, then the slotted members.
+ */
+import Source from './Source.astro';
+import './api.css';
+
+interface Props {
+  name: string;
+  fqName: string;
+  bases?: string[];
+  summary?: string;
+  sourceUrl?: string;
+}
+const { name, fqName, bases, summary, sourceUrl } = Astro.props;
+---
+<section class="api-class" data-fq-name={fqName}>
+  <h3 class="api-class__heading" id={fqName}>
+    <span class="api-badge api-badge--class">class</span>
+    <code class="api-class__name">{name}</code>
+    <a
+      class="api-permalink"
+      href={'#' + fqName}
+      aria-label={`Permalink to ${name}`}
+    >¶</a>
+    {
+      sourceUrl && (
+        <span class="api-class__source">
+          <Source href={sourceUrl} label="source" />
+        </span>
+      )
+    }
+  </h3>
+  <p class="api-class__fqname"><code>{fqName}</code></p>
+  {
+    bases && bases.length > 0 && (
+      <p class="api-class__bases">
+        Bases:{' '}
+        {bases.map((b, i) => (
+          <>
+            {i > 0 && ', '}
+            <code>{b}</code>
+          </>
+        ))}
+      </p>
+    )
+  }
+  {summary && <p class="api-class__summary">{summary}</p>}
+  <div class="api-class__body">
+    <slot />
+  </div>
+</section>

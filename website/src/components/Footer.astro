@@ -1,0 +1,19 @@
+---
+/**
+ * Starlight Footer override (registered via `components.Footer` in
+ * astro.config.mjs) so docs pages end with the landing's brand footer.
+ *
+ * Composition preserves Starlight functionality: the DEFAULT Starlight footer
+ * (edit link, last-updated, and crucially the prev/next PAGINATION pager) is
+ * rendered FIRST, then the shared brand footer is rendered below it. Dropping
+ * <Default/> would remove the pager — so it stays.
+ */
+import Default from '@astrojs/starlight/components/Footer.astro';
+import SiteFooter from './SiteFooter.astro';
+---
+
+<Default />
+
+<footer class="site-footer site-footer--docs">
+  <SiteFooter />
+</footer>

@@ -1,0 +1,59 @@
+---
+title: Bloqade Digital
+description: The digital submodule of Bloqade (bloqade-circuit) — eDSLs for building digital quantum programs.
+---
+
+The digital submodule of Bloqade, called `bloqade-circuit`, defines a set of embedded domain-specific languages (eDSLs) that can be used to define digital quantum programs.
+These programs are intended for both simulation and to be run on hardware. This package is open source and can be found [on GitHub](https://github.com/QuEraComputing/bloqade-circuit).
+
+Please refer to the [Dialects and Kernels](/guides/digital/dialects/) section of this documentation for an overview over the most important eDSLs.
+The infrastructure behind these compilers is built on top of [Kirin](https://queracomputing.github.io/kirin/latest/).
+
+It is easiest to learn how to use this package by checking out the [examples & tutorials section](/guides/tutorials/), where we show how you can build and study different quantum programs written in different DSLs.
+You can also find the corresponding scripts in [jupytext format](https://jupytext.readthedocs.io/en/latest/) at the [bloqade repository](https://github.com/QuEraComputing/bloqade) under `docs/digital/examples/`.
+
+Finally, if you want the full details on the API, please refer to the [API reference documentation](/api/latest/python/bloqade/device/).
+
+## Installation
+
+The package comes as a submodule of Bloqade, so you can just run
+
+```sh
+pip install bloqade
+```
+
+in order to obtain it.
+
+Sometimes, you may want to reduce the number of dependencies, in which case you can also only install the submodule
+
+```sh
+pip install bloqade-circuit
+```
+
+Note, that bloqade-circuit also has some optional dependencies, which you may want to install.
+For example
+
+```sh
+pip install bloqade-circuit[cirq,qasm2,stim]
+```
+
+## TL;DR
+
+Here's a GHZ preparation circuit with a measurement at the end written in the [`squin`](/guides/digital/dialects/squin/) dialect:
+
+```python
+from bloqade import squin
+
+@squin.kernel
+def ghz(n: int):
+    q = squin.qalloc(n)
+
+    squin.gate.h(q[0])
+
+    for i in range(1, n):
+        squin.gate.cx(q[i - 1], q[i])
+
+    return squin.broadcast.measure(q)
+```
+
+Here are [some more examples](/guides/tutorials/).

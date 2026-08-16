@@ -1,0 +1,21 @@
+# Test-only project wiring for the Rust docs emitter.
+#
+# `emit_rust.py` itself is a standalone, dependency-free PEP 723 script run via
+# `uv run website/emitters/rust/emit_rust.py ...` (its inline metadata block is
+# authoritative). This pyproject exists ONLY so `uv run pytest` has a pytest to
+# run against; it declares no build target (virtual project) and adds no runtime
+# dependency to the emitter.
+[project]
+name = "bloqade-docs-emit-rust-tests"
+version = "0.0.0"
+description = "Test harness for the Bloqade Rust docs emitter (emit_rust.py)."
+requires-python = ">=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+]
+
+[tool.uv]
+package = false

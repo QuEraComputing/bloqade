@@ -1,0 +1,67 @@
+---
+/**
+ * Params — a parameter table.
+ *
+ * CONTRACT (props are FROZEN):
+ *   items: Array<{ name: string; type?: string; default?: string; description?: string }>
+ *   title?: string   (default 'Parameters')
+ *
+ * The Default column is omitted entirely when no item declares a default.
+ * Names + types are monospace; descriptions may contain inline HTML (emitted by
+ * the docstring converter) and are injected with `set:html`. Type strings are
+ * left as plain text — a later rehype phase linkifies them. The table sits in a
+ * keyboard-focusable scroll container so it can overflow gracefully on mobile.
+ */
+import './api.css';
+
+interface ParamItem {
+  name: string;
+  type?: string;
+  default?: string;
+  description?: string;
+}
+interface Props {
+  items: ParamItem[];
+  title?: string;
+}
+const { items, title = 'Parameters' } = Astro.props;
+
+const showDefault = items.some((item) => item.default !== undefined && item.default !== '');
+---
+<div class="api-params">
+  <p class="api-params__title">{title}</p>
+  <div class="api-table-wrap" tabindex="0" role="group" aria-label={title}>
+    <table class="api-table api-params__table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          {showDefault && <th>Default</th>}
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          items.map((item) => (
+            <tr>
+              <td class="api-table__name"><code>{item.name}</code></td>
+              <td class="api-table__type">
+                {item.type ? <code>{item.type}</code> : <span class="api-table__muted">—</span>}
+              </td>
+              {showDefault && (
+                <td class="api-table__default">
+                  {item.default !== undefined && item.default !== '' ? (
+                    <code>{item.default}</code>
+                  ) : (
+                    <span class="api-table__muted">required</span>
+                  )}
+                </td>
+              )}
+              <td class="api-table__desc" set:html={item.description ?? ''} />
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

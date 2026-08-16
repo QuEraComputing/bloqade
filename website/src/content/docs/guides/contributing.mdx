@@ -1,6 +1,11 @@
-# Contributing
+---
+title: Contributing
+description: How to set up a development environment, run the tests, and follow Bloqade's code style and contribution guidelines.
+sidebar:
+  order: 11
+---
 
-Please see [Installation](install.md) for instructions on how to set up your development environment.
+Please see [Installation](/guides/getting-started/installation/) for instructions on how to set up your development environment.
 
 ## AI policy
 
@@ -51,13 +56,13 @@ good-to-have practices:
 
 ## Documentation
 
-We use [`mise`](https://mise.jdx.dev) to manage the toolchain and command-line tasks (`brew install mise`, then `mise install`). Run `mise run` to list every task. To preview the existing MkDocs documentation, run:
+We use `just` for managing command line tools and scripts. It should be installed when you run `uv sync`. To build the documentation, simply run:
 
 ```bash
-mise run mkdocs:serve
+just doc
 ```
 
-This will launch a local server to preview the documentation. You can also run `mise run mkdocs:build` to build the documentation without launching the server. The new Astro + Starlight docs site under `website/` has its own `docs:*` tasks (`mise run docs:dev`, `mise run docs:build`, …) — see [`website/README.md`](website/README.md). The bare top-level tasks act on the Python package: `mise run build` (`uv build`) and `mise run test`.
+This will launch a local server to preview the documentation. You can also run `just doc-build` to build the documentation without launching the server.
 
 ## License
 

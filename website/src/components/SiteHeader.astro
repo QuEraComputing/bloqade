@@ -1,0 +1,97 @@
+---
+/**
+ * Shared site header — the SINGLE source of the top-chrome markup.
+ *
+ * Rendered by BOTH:
+ *   - src/layouts/SiteLayout.astro (landing + blog), wrapped in <header class="site-header">
+ *   - src/components/Header.astro  (Starlight docs), injected into PageFrame's
+ *     fixed <header class="header"> via the `components.Header` override.
+ *
+ * So the docs and the landing show the identical brand logo, primary nav,
+ * GitHub icon and sun/moon theme toggle. The docs context additionally passes
+ * Starlight's <Search /> primitive into the `search` slot (SiteLayout, which
+ * lives outside the Starlight context, simply omits it).
+ *
+ * The theme toggle writes localStorage['starlight-theme'] and sets
+ * <html data-theme>, the exact mechanism Starlight's ThemeProvider reads on
+ * load — so docs + landing stay in sync in both directions.
+ */
+import { primaryNav, githubUrl } from '../lib/nav';
+import logoLight from '../assets/logo.svg';
+import logoDark from '../assets/logo-dark.svg';
+// API version selector — self-hides unless the current URL is /api/<version>/…,
+// so it only appears in the header on versioned API pages.
+import VersionSwitcher from './VersionSwitcher.astro';
+
+interface Props {
+  /** Render the (docs-only) search slot region. */
+  withSearch?: boolean;
+}
+const { withSearch = false } = Astro.props;
+---
+
+<div class="site-header__inner">
+  <a class="site-brand" href="/" aria-label="Bloqade home">
+    <img class="site-logo site-logo-light" src={logoLight.src} alt="Bloqade" height="28" />
+    <img class="site-logo site-logo-dark" src={logoDark.src} alt="Bloqade" height="28" />
+  </a>
+
+  {
+    withSearch && (
+      <div class="site-header__search">
+        <slot name="search" />
+      </div>
+    )
+  }
+
+  <VersionSwitcher />
+
+  <nav class="site-nav" aria-label="Primary">
+    {
+      primaryNav.map((item) => (
+        <a href={item.href} rel={item.external ? 'noopener' : undefined}>
+          {item.label}
+        </a>
+      ))
+    }
+    <a class="site-nav__icon" href={githubUrl} aria-label="Bloqade on GitHub" rel="noopener">
+      <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true" fill="currentColor">
+        <path
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+        ></path>
+      </svg>
+    </a>
+    <button
+      class="theme-toggle"
+      type="button"
+      aria-label="Toggle color theme"
+      data-theme-toggle
+    >
+      <svg class="theme-toggle__sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+      </svg>
+      <svg class="theme-toggle__moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
+      </svg>
+    </button>
+  </nav>
+</div>
+
+<script>
+  // Theme toggle shared by the landing (SiteLayout) and the docs (Starlight
+  // Header override). Writes the SAME localStorage key Starlight's ThemeProvider
+  // reads (`starlight-theme`) and flips <html data-theme>, so a choice made on
+  // the docs persists on the landing and vice-versa. Bundled (not is:inline) so
+  // it runs once, after the button is in the DOM.
+  document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const next =
+        document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      try {
+        localStorage.setItem('starlight-theme', next);
+      } catch {}
+    });
+  });
+</script>

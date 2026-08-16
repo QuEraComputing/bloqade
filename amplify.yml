@@ -1,0 +1,117 @@
+# AWS Amplify Hosting build spec for the Bloqade Astro/Starlight docs site.
+#
+# WHY THIS LIVES AT THE REPO ROOT (not website/): the site build is NOT
+# self-contained under website/. It runs `uv sync` against the root pyproject,
+# reads docs/digital/** for the tutorial emitter, and clones the API source
+# tags with the root-installed `bloqade-*` packages. So Amplify must build from
+# the repo root — do NOT configure a monorepo `appRoot` in the console; leave
+# the app root at "/" so this file is used verbatim. Artifacts are then pointed
+# at website/dist below.
+#
+# This mirrors the generate->build half of .github/workflows/website-deploy.yml.
+# It deliberately OMITS the CI gates (vitest, link/xref checks, Playwright
+# runtime crawl) — those stay in GitHub Actions on PRs. Amplify only needs to
+# produce the servable dist/.
+#
+# TOOL VERSIONS ARE NOT PINNED HERE. node/pnpm/uv come from mise.toml (the single
+# source of truth) via `mise install`; the rustdoc nightly date comes from
+# mise.toml [env] RUSTDOC_NIGHTLY. Only build-behavior config + the docs-build
+# Python floor live below.
+#
+# Because Amplify serves both production and PR previews at a domain ROOT (never
+# a gh-pages subpath), SITE_BASE is "/" here — all the gh-pages `/next/` and
+# `/astro-preview/pr-N/` base juggling simply disappears.
+version: 1
+env:
+  variables:
+    # Python floor for the docs tooling. resolve_sources.py / gen_compat_matrix.py
+    # hard-import `tomllib` (stdlib only in 3.11+), but the repo's requires-python
+    # is ">=3.10", so Amplify's Amazon Linux gave uv a <=3.10 interpreter
+    # (ModuleNotFoundError: No module named 'tomllib'). Force 3.13 for the root env
+    # AND the notebook emitter project (both resolve to 3.13 locally). Kept HERE,
+    # not in mise.toml [env], because ci.yml tests a real 3.10/3.11/3.12 matrix
+    # that a global UV_PYTHON would clobber.
+    UV_PYTHON: "3.13"
+    # Served at the domain root on Amplify — no subpath. Override SITE_URL
+    # per-branch in the Amplify console if you want correct canonical/sitemap
+    # URLs on the production branch (e.g. https://bloqade.quera.com).
+    SITE_BASE: "/"
+    SITE_URL: "https://bloqade.quera.com"
+    # WIP-parity: warn (don't fail the deploy) on unresolved <ApiXref>. Flip to
+    # "1" once the API content is stable if you want strict previews.
+    XREF_STRICT: "0"
+    EXECUTE_NOTEBOOKS: "1" # execute tutorials (cache-first; failures degrade to static)
+frontend:
+  phases:
+    preBuild:
+      commands:
+        # --- mise: single source of truth for node/pnpm/uv (from mise.toml) ---
+        - curl https://mise.run | sh
+        - export PATH="$HOME/.local/bin:$PATH"
+        - mise trust
+        - mise install # provisions node + pnpm + uv per mise.toml [tools]
+        # Put those tools on PATH AND export mise.toml [env] (RUSTDOC_NIGHTLY).
+        # `-s bash` is required — CodeBuild runs bash; without it mise guesses.
+        - eval "$(mise env -s bash)"
+        # Install bloqade into the root env so resolve_sources.py can pin each
+        # API source tag via `uv pip show bloqade-*`.
+        - uv sync
+        # --- Rust nightly for rustdoc JSON docstring extraction ONLY ----------
+        # Deliberately NOT mise-managed (see mise.toml): the main crates never
+        # build here; nightly is only invoked as `cargo +$RUSTDOC_NIGHTLY rustdoc`.
+        - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain none
+        - export PATH="$HOME/.cargo/bin:$PATH"
+        - rustup toolchain install "$RUSTDOC_NIGHTLY" --profile minimal
+        # --- website JS deps ------------------------------------------------
+        - pnpm --dir website install --frozen-lockfile
+    build:
+      commands:
+        # Re-establish PATH + mise env for this phase (Amplify may start a fresh
+        # shell per phase; harmless if it persists).
+        - export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+        - eval "$(mise env -s bash)"
+        # Generate src/content/docs/api/dev/** (python + rust) + inventories +
+        # versions.json. --rust-toolchain defaults to $RUSTDOC_NIGHTLY (mise env),
+        # so the nightly date is not repeated here.
+        - >
+          uv run python website/scripts/build_versions.py
+          --versions dev
+          --clone-dir website/sources
+        # Generate guides/tutorials/** from docs/digital/** (cache-first: a warm
+        # .notebook-cache => zero kernel executions).
+        - uv run --project website/emitters/notebooks bloqade-docs-build-notebooks
+        # Build the static site -> website/dist.
+        - pnpm --dir website build
+        # Diagnostic: log the real Amplify (Linux) sizes of every cache candidate
+        # so we can tune cache.paths against the 5 GB limit (local `du` undercounts
+        # — Linux venvs are larger). Non-fatal.
+        - 'du -sh website/emitters/notebooks/.notebook-cache website/.astro website/node_modules .venv website/emitters/notebooks/.venv 2>/dev/null | sed "s/^/[cache-size] /" || true'
+  artifacts:
+    baseDirectory: website/dist
+    files:
+      - "**/*"
+  cache:
+    # IMPORTANT: Amplify rejects the ENTIRE cache tarball if it exceeds 5 GB
+    # ("Unable to write cache: File size must be less than 5GB"), which was
+    # happening — so NOTHING persisted and every build (and every notebook) ran
+    # fully cold. We now cache only small, high-value paths (~2.85 GB total).
+    #
+    # Deliberately NOT cached (multi-GB, tiny payoff): ~/.rustup (~8 GB, saves
+    # ~10 s), ~/.cache/uv (~12 GB), ~/.cargo (~1.5 GB, ~15 s), ~/.local/share/mise
+    # (mise reinstall is ~18 s). Reinstalling those each build is far cheaper than
+    # blowing the 5 GB budget and losing the caches below.
+    # NOTE: the uv venvs were tried here too but the total STILL blew the 5 GB
+    # limit on Amplify's Linux (venvs are much larger there than the ~1.2 GB local
+    # `du` showed — different wheels + uv copy-not-hardlink), so the whole cache
+    # kept getting rejected. Cache ONLY the tiny, high-value paths that reliably
+    # fit; the `[cache-size]` probe in the build phase logs the real sizes so we
+    # can revisit adding a venv if there's headroom.
+    paths:
+      # THE priority: content-addressed per-notebook execution cache (~4 MB). With
+      # this persisted, a PR that changes ONE notebook re-executes only that one —
+      # the other 11 are restored (was ~4 min of kernels, becomes seconds).
+      - website/emitters/notebooks/.notebook-cache/**/*
+      # JS deps (~420 MB) + Astro incremental build cache — skips pnpm install and
+      # speeds `astro build`.
+      - website/node_modules/**/*
+      - website/.astro/**/*

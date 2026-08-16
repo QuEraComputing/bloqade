@@ -1,0 +1,61 @@
+# API documentation sources for the Bloqade website.
+#
+# Each source is either a remote repo pinned to a tag, or a local monorepo path.
+#   language: "python" | "rust"
+#   ref: "pin-from:<pypi-package>" resolves to git tag v<installed-version>, OR a
+#        literal tag (e.g. "v1.2.0"), OR omit and use path=.
+#
+# Seed values derived from the current mkdocs.yml reference paths and
+# docs/scripts/gen_ref_nav.py package roots.
+
+[[source]]
+name = "bloqade-circuit"
+language = "python"
+repo = "QuEraComputing/bloqade-circuit"
+ref = "pin-from:bloqade-circuit"
+package_root = "src/bloqade"   # path within the repo to the importable package
+mount = "api/python"
+
+[[source]]
+name = "bloqade-analog"
+language = "python"
+repo = "QuEraComputing/bloqade-analog"
+ref = "pin-from:bloqade-analog"
+package_root = "src/bloqade/analog"
+mount = "api/python"
+
+[[source]]
+name = "bloqade-lanes"
+language = "python"
+repo = "QuEraComputing/bloqade-lanes"
+ref = "pin-from:bloqade-lanes"
+package_root = "python/bloqade"
+mount = "api/python"
+
+# The Rust half of bloqade-lanes. Same repo/sibling checkout as the python
+# source above (so `--prefer-local` resolves both to ../bloqade-lanes); the
+# rust emitter runs `cargo +nightly rustdoc` in the workspace root and documents
+# the `crate` below. `workspace` (optional) overrides the cargo working dir;
+# it defaults to the resolved source root.
+[[source]]
+name = "bloqade-lanes"
+language = "rust"
+repo = "QuEraComputing/bloqade-lanes"
+ref = "pin-from:bloqade-lanes"
+crate = "bloqade-lanes-search"
+mount = "api/rust"
+
+# --- future examples (leave commented) ---
+# [[source]]
+# name = "ppvm"          # external Rust crate, python wrapper moves into bloqade later
+# language = "rust"
+# repo = "QuEraComputing/ppvm"
+# ref = "v1.2.0"
+# crate = "ppvm"
+# mount = "api/rust"
+#
+# [[source]]              # once the monorepo lands, flip a source to a local path — nothing else changes
+# name = "bloqade-circuit"
+# language = "python"
+# path = "../crates/bloqade-circuit/src/bloqade"
+# mount = "api/python"

@@ -1,0 +1,65 @@
+---
+/**
+ * Signature — a syntax-highlighted code signature block.
+ *
+ * CONTRACT (props are FROZEN):
+ *   code: string                — the signature source
+ *   lang?: 'python' | 'rust'    (default 'python')
+ *   collapsible?: boolean       — wrap in a <details> so it can be folded
+ *
+ * Highlighting uses Astro's built-in Shiki `<Code>` (astro:components) with the
+ * `css-variables` theme: every token references an `--astro-code-*` custom
+ * property that api.css resolves per Starlight theme, so colors track light/dark
+ * with no bundled Shiki theme and no client JS. When `collapsible` is set — or
+ * the signature is long/multiline — it is wrapped in a native <details>/<summary>
+ * disclosure (keyboard accessible out of the box). Long lines soft-wrap
+ * (`wrap`) rather than overflow, matching mkdocstrings' signature rendering.
+ */
+import { Code } from 'astro:components';
+import './api.css';
+
+interface Props {
+  code: string;
+  lang?: 'python' | 'rust';
+  collapsible?: boolean;
+}
+const { code, lang = 'python', collapsible = false } = Astro.props;
+
+// Fold automatically when explicitly requested, or when the signature is long
+// enough that an always-open block would dominate the page (multi-line, or a
+// long single line that would wrap).
+const isLong = code.includes('\n') || code.length > 72;
+const useDetails = collapsible || isLong;
+---
+{
+  useDetails ? (
+    <details class="api-signature" data-lang={lang} open>
+      <summary class="api-signature__summary">
+        <svg
+          class="api-signature__chevron"
+          aria-hidden="true"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="9 6 15 12 9 18" />
+        </svg>
+        <span>Signature</span>
+      </summary>
+      <div class="api-signature__code">
+        <Code code={code} lang={lang} theme="css-variables" wrap={true} />
+      </div>
+    </details>
+  ) : (
+    <div class="api-signature" data-lang={lang}>
+      <div class="api-signature__code">
+        <Code code={code} lang={lang} theme="css-variables" wrap={true} />
+      </div>
+    </div>
+  )
+}

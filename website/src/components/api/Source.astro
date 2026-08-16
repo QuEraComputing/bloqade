@@ -1,0 +1,35 @@
+---
+/**
+ * Source — a compact "view source" link with an inline code icon.
+ *
+ * CONTRACT (props are FROZEN):
+ *   href: string
+ *   label?: string   (default 'source')
+ *
+ * The icon is an inline SVG (no icon dependency). Rendered inline-flex so it can
+ * sit in a heading row or in the body flow.
+ */
+import './api.css';
+
+interface Props {
+  href: string;
+  label?: string;
+}
+const { href, label = 'source' } = Astro.props;
+---
+<a class="api-source" href={href} target="_blank" rel="noopener noreferrer">
+  <svg
+    class="api-source__icon"
+    aria-hidden="true"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <polyline points="16 18 22 12 16 6" />
+    <polyline points="8 6 2 12 8 18" />
+  </svg>
+  <span>{label}</span>
+</a>

@@ -1,0 +1,981 @@
+/*
+ * Bloqade brand theming — the SINGLE design system for the whole site.
+ *
+ * There is one canonical token layer (defined once at `:root` for dark and
+ * `:root[data-theme='light']` for light). BOTH consumers read from it:
+ *   1. The bespoke landing/blog pages (`.site-body`, via SiteLayout) — their
+ *      `--page-*` names are now thin ALIASES onto the shared tokens, so there
+ *      are no duplicated colour literals.
+ *   2. Starlight docs pages — the full `--sl-*` design-variable set is mapped
+ *      onto the same shared tokens, so Starlight no longer looks like "default
+ *      Starlight tinted purple" but adopts the landing's exact palette, Lato
+ *      typography, weight-900 headings and brand hairlines.
+ *
+ * The theme mechanism (both chromes) is `data-theme` on <html> +
+ * localStorage['starlight-theme']; the shared header toggle (SiteHeader.astro)
+ * writes that same key so docs + landing stay in sync.
+ *
+ * Fonts (Lato) are loaded via @fontsource in astro.config `customCss` (400/700)
+ * and SiteLayout (900); the 900 weight is also pulled in here so weight-900
+ * headings render on Starlight docs pages too. KaTeX CSS is loaded globally via
+ * `katex/dist/katex.min.css` in `customCss`.
+ */
+@import '@fontsource/lato/900.css';
+
+/* ==========================================================================
+ * 1. Canonical design tokens (source of truth = the landing brand system)
+ *
+ * `:root` is the DARK theme; `:root[data-theme='light']` overrides for LIGHT.
+ * `data-theme` is always present on <html> (set pre-paint by Starlight's
+ * ThemeProvider and by SiteLayout's inline script), so the bare `:root` values
+ * apply for dark and the `[data-theme='light']` values for light.
+ * ========================================================================== */
+:root {
+  /* DARK */
+  --color-bg: #0c0d14;
+  --color-fg: #f2f2f8;
+  --color-muted: #a6a9bd;
+  --color-border: #262838;
+  --color-surface: #14151f;
+  --color-surface-hover: #1d1e2c;
+  --brand: #9d80ff;
+  --brand-strong: #b6a1ff;
+  --brand-soft: #1c1740;
+  --on-brand: #ffffff;
+}
+
+:root[data-theme='light'] {
+  --color-bg: #ffffff;
+  --color-fg: #1a1b22;
+  --color-muted: #55596b;
+  --color-border: #e6e6ef;
+  --color-surface: #f7f7fb;
+  --color-surface-hover: #f0eefb;
+  --brand: #6437ff;
+  --brand-strong: #4f27d6;
+  --brand-soft: #efeaff;
+  --on-brand: #ffffff;
+}
+
+/* ==========================================================================
+ * 2. Starlight design-variable mapping
+ *
+ * Every `--sl-*` colour/layout/type variable Starlight derives its chrome from
+ * is mapped onto the canonical tokens above. Values expressed with `var(--…)`
+ * are defined ONCE here (dark) and re-resolve automatically for light because
+ * the underlying token flips; only the intermediate neutral ramp and the couple
+ * of variables whose *semantics* differ per theme are re-declared in the light
+ * block below.
+ *
+ * `--sl-color-white` / `--sl-color-black` are Starlight's "max-contrast fg" /
+ * "page bg" (they invert between themes), so they map to fg / bg respectively.
+ * ========================================================================== */
+:root {
+  /* Neutral ramp (dark: gray-1 lightest → gray-6 darkest). */
+  --sl-color-white: var(--color-fg);
+  --sl-color-gray-1: #e3e4ee;
+  --sl-color-gray-2: #c6c9d8;
+  --sl-color-gray-3: var(--color-muted);
+  --sl-color-gray-4: #6b6e84;
+  --sl-color-gray-5: #363a4d;
+  --sl-color-gray-6: var(--color-surface);
+  --sl-color-black: var(--color-bg);
+
+  /* Accent = brand. */
+  --sl-color-accent-low: var(--brand-soft);
+  --sl-color-accent: var(--brand);
+  --sl-color-accent-high: #c9bbff;
+
+  /* Semantic colours. */
+  --sl-color-text: var(--sl-color-gray-2);
+  --sl-color-text-accent: var(--brand-strong);
+  --sl-color-text-invert: var(--color-bg);
+  --sl-color-bg: var(--color-bg);
+  --sl-color-bg-nav: var(--color-surface);
+  --sl-color-bg-sidebar: var(--color-surface);
+  --sl-color-bg-inline-code: var(--color-surface-hover);
+  --sl-color-bg-accent: var(--brand);
+  --sl-color-hairline-light: var(--color-border);
+  --sl-color-hairline: var(--color-border);
+  --sl-color-hairline-shade: var(--color-border);
+
+  /* Typography — Lato body, matching mono, landing line-height. */
+  --sl-font:
+    'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  --sl-font-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  --sl-line-height: 1.6;
+
+  /* Layout — match the landing's column + a roomy nav bar. */
+  --sl-content-width: 48rem;
+  --sl-nav-height: 3.75rem;
+}
+
+:root[data-theme='light'] {
+  /* Neutral ramp (light: gray-1 darkest → gray-7 lightest). */
+  --sl-color-gray-1: #23252f;
+  --sl-color-gray-2: #33364a;
+  --sl-color-gray-4: #82859a;
+  --sl-color-gray-5: #c3c4d4;
+  --sl-color-gray-6: var(--color-border);
+  --sl-color-gray-7: var(--color-surface);
+
+  --sl-color-accent-high: #3a1d9e;
+
+  /* Semantics that differ per theme. */
+  --sl-color-text-invert: var(--on-brand);
+  --sl-color-bg-sidebar: var(--color-bg);
+}
+
+/* ==========================================================================
+ * 3. Shared logo + theme-toggle icon swaps (used by BOTH chromes)
+ *
+ * Global (not scoped to `.site-body`) so the docs header/footer swap the
+ * light/dark brand logo and the sun/moon glyph exactly like the landing.
+ * ========================================================================== */
+.site-logo-dark {
+  display: none;
+}
+:root[data-theme='dark'] .site-logo-light {
+  display: none;
+}
+:root[data-theme='dark'] .site-logo-dark {
+  display: inline-block;
+}
+
+.theme-toggle__moon {
+  display: none;
+}
+:root[data-theme='dark'] .theme-toggle__sun {
+  display: none;
+}
+:root[data-theme='dark'] .theme-toggle__moon {
+  display: inline;
+}
+
+/* ==========================================================================
+ * 4. Shared header chrome (SiteHeader.astro — landing + docs)
+ *
+ * `.site-header__inner`, `.site-brand`, `.site-nav`, `.theme-toggle` are the
+ * shared markup. `.site-header` is the landing's own sticky wrapper; on docs
+ * the identical inner sits inside Starlight's fixed `.header` (themed below).
+ * ========================================================================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  height: 100%;
+}
+
+/* Landing/blog: centered max-width column with its own padding. */
+.site-header .site-header__inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+}
+
+.site-brand {
+  display: inline-flex;
+  align-items: center;
+  /* Push the nav + actions to the right in both chromes. */
+  margin-right: auto;
+}
+.site-logo {
+  display: block;
+  width: auto;
+}
+
+.site-header__search {
+  flex: 0 1 18rem;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+.site-nav a {
+  color: var(--color-fg);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.site-nav a:hover {
+  color: var(--brand-strong);
+}
+.site-nav__icon {
+  display: inline-flex;
+  color: var(--color-muted);
+}
+.site-nav__icon:hover {
+  color: var(--brand-strong);
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-fg);
+  cursor: pointer;
+}
+.theme-toggle:hover {
+  border-color: var(--brand);
+  color: var(--brand-strong);
+}
+
+/* --- Docs-only header wrapper (Starlight PageFrame's fixed `.header`) ------ */
+.header {
+  background-color: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-border);
+}
+/* The docs inner fills the already-padded wrapper edge-to-edge. */
+.header .site-header__inner {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 50rem) {
+  /* On mobile the sidebar drawer (opened by Starlight's floating menu button)
+     carries Guides/API/Blog, so drop the docs header's text links to avoid
+     crowding; keep the GitHub icon, theme toggle and (icon-only) search. */
+  .header .site-nav a:not(.site-nav__icon) {
+    display: none;
+  }
+  .site-header__search {
+    flex: 0 0 auto;
+  }
+}
+
+/* ==========================================================================
+ * 5. Docs content typography (Starlight `.sl-markdown-content` + page title)
+ *
+ * Bring the docs body in line with the landing `.prose`: Lato (inherited),
+ * weight-900 headings, brand-strong links, landing-style inline code.
+ * ========================================================================== */
+.sl-markdown-content :is(h1, h2, h3, h4, h5, h6),
+.content-panel h1 {
+  font-weight: 900;
+}
+.sl-markdown-content a {
+  color: var(--brand-strong);
+}
+.sl-markdown-content :not(pre) > code {
+  color: var(--brand-strong);
+  background-color: var(--color-surface-hover);
+}
+
+/* ==========================================================================
+ * 6. Mermaid diagrams (docs pages)
+ *
+ * ```mermaid fences are rendered client-side (see src/components/MermaidHead.astro,
+ * wired via `components.Head` in astro.config.mjs). Expressive Code first turns
+ * the fence into a <pre data-language="mermaid"> code block; we hide that raw
+ * block until the script replaces it with a .mermaid-diagram <svg>. On a render
+ * error the script reveals the original block again (inline display:block).
+ * ========================================================================== */
+.expressive-code:has(pre[data-language='mermaid']) {
+  display: none;
+}
+
+.mermaid-diagram {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.mermaid-diagram svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ==========================================================================
+ * 7. Custom (non-Starlight) pages: landing + blog
+ *
+ * These routes render with src/layouts/SiteLayout.astro (<body class="site-body">)
+ * instead of the Starlight layout. Everything below is scoped under `.site-body`
+ * so it CANNOT leak into Starlight pages — Starlight styles live in CSS
+ * `@layer`s, and unlayered rules would otherwise win the cascade over them.
+ *
+ * The `--page-*` names are thin aliases onto the shared tokens (§1), so these
+ * rules carry NO colour literals of their own.
+ * ========================================================================== */
+.site-body {
+  --page-bg: var(--color-bg);
+  --page-fg: var(--color-fg);
+  --page-muted: var(--color-muted);
+  --page-border: var(--color-border);
+  --page-surface: var(--color-surface);
+  --page-surface-hover: var(--color-surface-hover);
+
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--page-bg);
+  color: var(--page-fg);
+  font-family: var(--sl-font);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.site-body *,
+.site-body *::before,
+.site-body *::after {
+  box-sizing: border-box;
+}
+
+.site-body a {
+  color: var(--brand-strong);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--brand);
+  color: var(--on-brand);
+  padding: 0.6rem 1rem;
+  border-radius: 0 0 8px 0;
+  z-index: 100;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+/* --- Main column ---------------------------------------------------------- */
+.site-main {
+  flex: 1;
+  width: 100%;
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+.site-main--wide {
+  max-width: 72rem;
+}
+
+/* --- Landing hero --------------------------------------------------------- */
+.hero {
+  text-align: center;
+  padding: 3rem 0 3.5rem;
+}
+.hero__logo img {
+  width: min(460px, 78%);
+  height: auto;
+  margin: 0 auto 1.5rem;
+}
+.hero__title {
+  font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  max-width: 30ch;
+  margin: 0 auto 1rem;
+}
+.hero__lede {
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  color: var(--page-muted);
+  max-width: 55ch;
+  margin: 0 auto 2rem;
+}
+
+/* --- Install snippet ------------------------------------------------------ */
+.install {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 0 auto 2rem;
+  border: 1px solid var(--page-border);
+  border-radius: 10px;
+  background: var(--page-surface);
+  overflow: hidden;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+}
+.install__cmd {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  background: transparent;
+}
+.install__prompt {
+  color: var(--brand-strong);
+  user-select: none;
+  margin-right: 0.25rem;
+}
+.install__copy {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0 0.9rem;
+  border: none;
+  border-left: 1px solid var(--page-border);
+  background: transparent;
+  color: var(--page-muted);
+  cursor: pointer;
+}
+.install__copy:hover {
+  color: var(--brand-strong);
+  background: var(--page-surface-hover);
+}
+.install__icon-check {
+  display: none;
+  color: #16a34a;
+}
+.install__copy.is-copied .install__icon-copy {
+  display: none;
+}
+.install__copy.is-copied .install__icon-check {
+  display: inline;
+}
+.install__copied {
+  font-family: var(--sl-font);
+  font-size: 0.8rem;
+  color: #16a34a;
+}
+
+/* --- CTA buttons ----------------------------------------------------------
+ * The button SHAPE is defined ONCE (see §8 "Shared widget shapes"), covering
+ * BOTH the landing `.btn` and Starlight's `.sl-link-button`. Only the landing
+ * layout wrapper lives here. */
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+/* --- Feature cards --------------------------------------------------------
+ * The card SHAPE (border/radius/surface + hover lift) is defined ONCE in §8,
+ * shared with Starlight `.sl-link-card` / `<Card>` and the blog list. Only the
+ * feature-grid layout + the card's inner copy live here. */
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+.feature-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  color: var(--page-fg);
+}
+.feature-card__tagline {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--brand-strong);
+}
+.feature-card__title {
+  font-size: 1.3rem;
+  font-weight: 900;
+  margin: 0.4rem 0 0.6rem;
+}
+.feature-card__body {
+  flex: 1;
+  margin: 0 0 1rem;
+  color: var(--page-muted);
+  font-size: 0.96rem;
+}
+.feature-card__cta {
+  font-weight: 700;
+  color: var(--brand-strong);
+}
+
+/* --- Blog listing --------------------------------------------------------- */
+.page-head {
+  margin-bottom: 2.5rem;
+}
+.page-head h1 {
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-weight: 900;
+  margin: 0 0 0.5rem;
+}
+.page-head p {
+  color: var(--page-muted);
+  margin: 0;
+}
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+/* Shape (border/radius/surface + hover) shared via §8; blog-specific padding only. */
+.post-list__link {
+  display: block;
+  padding: 1.5rem;
+  color: var(--page-fg);
+}
+.post-list__date {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--brand-strong);
+}
+.post-list__title {
+  font-size: 1.4rem;
+  font-weight: 900;
+  margin: 0.35rem 0 0.5rem;
+}
+.post-list__excerpt {
+  margin: 0 0 0.75rem;
+  color: var(--page-muted);
+}
+.post-list__authors {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--page-muted);
+}
+
+/* --- Blog post ------------------------------------------------------------ */
+.post__header {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--page-border);
+  padding-bottom: 1.5rem;
+}
+.post__back {
+  display: inline-block;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: var(--brand-strong);
+}
+.post__title {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 900;
+  line-height: 1.15;
+  margin: 0 0 0.75rem;
+}
+.post__meta {
+  margin: 0;
+  color: var(--page-muted);
+  font-size: 0.95rem;
+}
+
+/* --- Prose (rendered markdown) -------------------------------------------- */
+.prose {
+  font-size: 1.05rem;
+}
+.prose > :first-child {
+  margin-top: 0;
+}
+.prose h2 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  margin: 2.25rem 0 0.75rem;
+  line-height: 1.25;
+}
+.prose h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 1.75rem 0 0.5rem;
+}
+.prose p,
+.prose ul,
+.prose ol {
+  margin: 0 0 1.15rem;
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.4rem;
+}
+.prose li {
+  margin: 0.35rem 0;
+}
+.prose a {
+  color: var(--brand-strong);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.5rem auto;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 0.75rem;
+  border: 1px solid var(--page-border);
+}
+.prose :not(pre) > code {
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  padding: 0.15em 0.4em;
+  border-radius: 6px;
+  background: var(--page-surface-hover);
+  color: var(--brand-strong);
+}
+.prose blockquote {
+  margin: 1.5rem 0;
+  padding: 0.5rem 1.25rem;
+  border-left: 3px solid var(--brand);
+  color: var(--page-muted);
+}
+
+/* --- Footer (shared: SiteFooter.astro — landing + docs) ------------------- */
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+  margin-top: auto;
+}
+/* On docs the brand footer follows Starlight's pager inside the content column. */
+.site-footer--docs {
+  margin-top: 3rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+}
+.site-footer__inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 2rem 1.5rem 1rem;
+}
+.site-footer__brand p {
+  margin: 0.5rem 0 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+.site-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+.site-footer__links a {
+  color: var(--color-fg);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.site-footer__links a:hover {
+  color: var(--brand-strong);
+}
+.site-footer__legal {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 1.5rem 2rem;
+  color: var(--color-muted);
+  font-size: 0.82rem;
+}
+
+/* --- Responsive ----------------------------------------------------------- */
+@media (max-width: 34rem) {
+  .site-nav {
+    gap: 0.85rem;
+  }
+  .install {
+    width: 100%;
+  }
+  .install__cmd {
+    flex: 1;
+  }
+  .btn {
+    flex: 1;
+  }
+}
+
+/* ==========================================================================
+ * 8. Shared visual widgets — ONE language across landing + Starlight docs
+ *
+ * Everything below is UNLAYERED. Starlight ships all of its widget CSS inside
+ * `@layer starlight.components` and Expressive Code ships inside the same
+ * layer, so these unlayered rules win the cascade over Starlight's defaults
+ * WITHOUT `!important` and regardless of source order (layer precedence beats
+ * specificity). All values come from the canonical §1 tokens, so light + dark
+ * both flip automatically and there are no colour literals here.
+ * ========================================================================== */
+
+/* --- 8.0 ONE card shape --------------------------------------------------
+ * The landing feature cards, the blog list, Starlight `<LinkCard>` and
+ * `<Card>` are the SAME component: 1px hairline, 14px radius, surface bg, and
+ * a translateY lift to a brand border + soft brand shadow on hover. This is
+ * the single source of truth; the per-widget rules below only add the inner
+ * layout/typography each markup needs. */
+.feature-card,
+.post-list__link,
+.sl-link-card,
+.sl-markdown-content .card {
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-surface);
+  text-decoration: none;
+  transition:
+    transform 0.12s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.feature-card:hover,
+.post-list__link:hover,
+.sl-link-card:hover,
+.sl-markdown-content .card:hover {
+  transform: translateY(-3px);
+  border-color: var(--brand);
+  /* Keep the surface on hover (overrides Starlight's grey hover fill). */
+  background: var(--color-surface);
+  box-shadow: 0 12px 28px -18px color-mix(in srgb, var(--brand) 60%, transparent);
+}
+
+/* --- 8.0 ONE button shape ------------------------------------------------
+ * The landing `.btn` and Starlight `<LinkButton>` (`.sl-link-button`) share a
+ * single shape: 10px radius, weight 700, primary = brand fill / on-brand text,
+ * ghost/secondary = transparent + hairline that turns brand on hover. */
+.btn,
+.sl-link-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  padding: 0.7rem 1.4rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.98rem;
+  line-height: 1.2;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition:
+    transform 0.08s ease,
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+.btn:active,
+.sl-link-button:active {
+  transform: translateY(1px);
+}
+.btn--primary,
+.sl-link-button.primary {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--on-brand);
+}
+.btn--primary:hover,
+.sl-link-button.primary:hover {
+  background: var(--brand-strong);
+  border-color: var(--brand-strong);
+  color: var(--on-brand);
+}
+.btn--ghost,
+.sl-link-button.secondary {
+  background: transparent;
+  color: var(--color-fg);
+  border-color: var(--color-border);
+}
+.btn--ghost:hover,
+.sl-link-button.secondary:hover {
+  border-color: var(--brand);
+  color: var(--brand-strong);
+}
+/* Minimal LinkButton = a bare brand text link. */
+.sl-link-button.minimal {
+  padding-inline: 0;
+  color: var(--brand-strong);
+}
+
+/* --- 8.1 Asides / callouts (`:::note`, `:::tip`, `:::caution`, `:::danger`)
+ * Reshaped from Starlight's square left-bar into the landing card language:
+ * rounded surface card, hairline tinted by the callout accent and a faint
+ * accent wash. note/tip = brand; caution = amber, danger = red (Starlight's
+ * existing semantic `--sl-color-*` palette — not new literals). Titles + links
+ * + in-aside code/table borders all follow the accent (both themes legible). */
+.starlight-aside {
+  --aside-accent: var(--brand);
+  --aside-title: var(--brand-strong);
+  /* Drive Starlight's in-aside code/table/hr borders off our accent too. */
+  --sl-color-asides-text-accent: var(--aside-title);
+  padding: 1rem 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--aside-accent) 35%, var(--color-border));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--aside-accent) 7%, var(--color-surface));
+  color: var(--color-fg);
+}
+.starlight-aside--note,
+.starlight-aside--tip {
+  --aside-accent: var(--brand);
+  --aside-title: var(--brand-strong);
+}
+.starlight-aside--caution {
+  --aside-accent: var(--sl-color-orange);
+  --aside-title: var(--sl-color-orange-high);
+}
+.starlight-aside--danger {
+  --aside-accent: var(--sl-color-red);
+  --aside-title: var(--sl-color-red-high);
+}
+.starlight-aside__title {
+  color: var(--aside-title);
+}
+.starlight-aside__content a {
+  color: var(--aside-title);
+}
+
+/* --- 8.2 Cards: `<LinkCard>` + `<Card>` + `<CardGrid>` --------------------
+ * The card SHELL is styled in §8.0. Here: inner typography + a brand arrow /
+ * icon so a docs CardGrid reads as the landing feature grid, and neutralise
+ * Starlight's rainbow `<Card>` border/icon accents down to the brand system. */
+.sl-link-card .title {
+  color: var(--color-fg);
+  font-weight: 700;
+}
+.sl-link-card .description {
+  color: var(--color-muted);
+}
+.sl-link-card .icon {
+  color: var(--brand-strong); /* the → arrow, like `.feature-card__cta` */
+}
+.sl-link-card:hover .icon {
+  color: var(--brand-strong);
+}
+/* `<Card>` — override the nth-child rainbow accents to the single brand hue. */
+.sl-markdown-content .card {
+  --sl-card-border: var(--brand);
+  --sl-card-bg: var(--brand-soft);
+}
+.sl-markdown-content .card .title {
+  color: var(--color-fg);
+  font-weight: 700;
+}
+.sl-markdown-content .card .icon {
+  border-color: var(--brand);
+  background-color: var(--brand-soft);
+  color: var(--brand-strong);
+}
+/* Match the landing feature-grid gutter. */
+.sl-markdown-content .card-grid {
+  gap: 1.25rem;
+}
+
+/* --- 8.3 Tabs (`<Tabs>` / `<TabItem>`) ------------------------------------
+ * Minimal underline tabs (the landing's own idiom) with our hairline, a brand
+ * underline + brand-strong label on the active tab, brand hover on the rest. */
+/* NB: `starlight-tabs` is a custom ELEMENT (not a `.class`); the inner tab
+ * anchors sit inside `.sl-markdown-content`, so these rules must also out-rank
+ * the generic `.sl-markdown-content a { color: brand }` link rule (§5) to keep
+ * INACTIVE tabs muted. */
+starlight-tabs [role='tablist'] {
+  border-bottom: 1px solid var(--color-border);
+}
+starlight-tabs .tab > [role='tab'] {
+  --sl-tab-color-border: transparent;
+  color: var(--color-muted);
+  font-weight: 700;
+  border-radius: 8px 8px 0 0;
+}
+starlight-tabs .tab > [role='tab']:hover {
+  color: var(--brand-strong);
+  background: var(--color-surface);
+}
+starlight-tabs .tab > [role='tab'][aria-selected='true'] {
+  --sl-tab-color-border: var(--brand);
+  color: var(--brand-strong);
+}
+
+/* --- 8.4 Code blocks (Expressive Code) ------------------------------------
+ * EC frames already read their code background from our surface (via the
+ * gray-6/7 mapping in §2); the remaining defaults were the SQUARE corners,
+ * grey-5 hairlines and a non-brand copy button. Retheme those via EC's own
+ * `--ec-*` custom properties (one block, both themes flip through the tokens).
+ * Syntax token colours (per-span `--0/--1`) are untouched. The mermaid rule in
+ * §6 hides `pre[data-language='mermaid']` frames and is unaffected. */
+.expressive-code {
+  --ec-brdRad: 10px;
+  --ec-brdCol: var(--color-border);
+  --ec-codeBg: var(--color-surface);
+  --ec-frm-edTabBarBrdCol: var(--color-border);
+  --ec-frm-edTabBarBrdBtmCol: var(--color-border);
+  --ec-frm-trmTtbBrdBtmCol: var(--color-border);
+  --ec-gtrBrdCol: color-mix(in srgb, var(--color-border) 65%, transparent);
+  /* Copy button: muted glyph, brand tint + border on hover/focus. */
+  --ec-frm-inlBtnFg: var(--color-muted);
+  --ec-frm-inlBtnBg: var(--brand);
+  --ec-frm-inlBtnBrd: var(--brand);
+  --ec-focusBrd: var(--brand);
+}
+
+/* --- 8.5 Docs content chrome: badges, kbd, blockquote, tables -------------
+ * Bring the remaining Starlight markdown primitives onto the token hairlines /
+ * surfaces so nothing reads as "default Starlight". */
+.sl-badge {
+  border-radius: 6px;
+}
+.sl-markdown-content kbd:not(:where(.not-content *)),
+.prose kbd {
+  font-family: var(--sl-font-mono);
+  font-size: 0.85em;
+  padding: 0.15em 0.45em;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface-hover);
+  color: var(--color-fg);
+  box-shadow: 0 1px 0 var(--color-border);
+}
+/* Blockquote — match the landing `.prose blockquote` (3px brand rule, muted). */
+.sl-markdown-content blockquote:not(:where(.not-content *)) {
+  border-inline-start: 3px solid var(--brand);
+  color: var(--color-muted);
+}
+/* Tables — hairline borders + a legible header, from tokens. */
+.sl-markdown-content :is(th, td):not(:where(.not-content *)) {
+  border-bottom-color: var(--color-border);
+}
+.sl-markdown-content th:not(:where(.not-content *)) {
+  color: var(--color-fg);
+}
+
+/* --- 8.6 Pager (prev / next) ---------------------------------------------
+ * Restyle Starlight's pagination links as the same card/lift widget, so the
+ * bottom of every doc page belongs to the landing system too. */
+.pagination-links a {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+  box-shadow: none;
+  color: var(--color-fg);
+  transition:
+    transform 0.12s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.pagination-links a:hover {
+  border-color: var(--brand);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -18px color-mix(in srgb, var(--brand) 60%, transparent);
+}
+.pagination-links a .link-title {
+  color: var(--brand-strong);
+}

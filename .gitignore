@@ -25,6 +25,11 @@ eggs/
 .eggs/
 lib/
 lib64/
+# The broad `lib/` rule above (Python build artifacts) ALSO matches the website's
+# real TypeScript source + test dirs, silently excluding them from every clone
+# (broke the Astro build: "Could not resolve ../lib/nav"). Re-include them.
+!website/src/lib/
+!website/tests/unit/lib/
 parts/
 sdist/
 var/
@@ -185,5 +190,8 @@ main.py
 *.json
 .ruff_cache
 .python-version
+# personal, per-machine mise overrides (e.g. operational tools like aws-cli that
+# must NOT reach CI/Amplify `mise install`)
+mise.local.toml
 !package.json
 !src/**/**/main.py

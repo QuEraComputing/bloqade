@@ -1,0 +1,450 @@
+/*
+ * Shared styling for the API component library (src/components/api/).
+ *
+ * This file is a *co-located, global* stylesheet imported by every API
+ * `.astro` component (e.g. `import './api.css'`). It is intentionally global
+ * (not an Astro scoped `<style>`) for two reasons:
+ *   1. The <Signature> block injects Shiki's highlighted HTML via `set:html`,
+ *      so those `.shiki` nodes never receive Astro's scoping attribute — they
+ *      can only be reached from a global stylesheet.
+ *   2. <ApiXref> must keep a byte-for-byte identical `<a>` element (part of the
+ *      frozen contract); a scoped `<style>` would inject a `data-astro-cid-*`
+ *      attribute onto it, so all xref styling lives here instead.
+ *
+ * Everything is class-scoped under the `api-*` prefixes, and all colors come
+ * from Starlight theme variables (`--sl-color-*`) so light + dark both work.
+ * The look targets parity with mkdocstrings-Material.
+ */
+
+/* ==========================================================================
+ * Shared primitives
+ * ========================================================================== */
+
+/* Kind badge (class / function / method / property). */
+.api-badge {
+  display: inline-block;
+  flex: none;
+  padding: 0.1em 0.55em;
+  border-radius: 999px;
+  font-size: var(--sl-text-2xs, 0.75rem);
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  vertical-align: middle;
+  /* Primary symbols (class, function) use the accent tint. */
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-accent-high);
+}
+
+/* Secondary/attached members read as neutral so the accent stays meaningful. */
+.api-badge--method,
+.api-badge--property {
+  background: var(--sl-color-gray-6);
+  color: var(--sl-color-gray-2);
+}
+
+/* Hover/focus permalink (¶), mirroring the mkdocstrings-Material headerlink. */
+.api-permalink {
+  margin-left: 0.35em;
+  color: var(--sl-color-gray-3);
+  text-decoration: none;
+  opacity: 0;
+  transition:
+    opacity 0.15s ease-in-out,
+    color 0.15s ease-in-out;
+  font-weight: 400;
+}
+.api-permalink:hover {
+  color: var(--sl-color-text-accent);
+}
+/* Reveal on heading hover and always when the link itself is focused. */
+.api-module__heading:hover .api-permalink,
+.api-class__heading:hover .api-permalink,
+.api-fn__heading:hover .api-permalink,
+.api-permalink:focus,
+.api-permalink:focus-visible {
+  opacity: 1;
+}
+.api-permalink:focus-visible {
+  outline: 2px solid var(--sl-color-text-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ==========================================================================
+ * ApiModule
+ * ========================================================================== */
+
+.api-module {
+  margin-block: 1.5rem;
+}
+.api-module__heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4em;
+  margin-block: 0 0.25rem;
+}
+.api-module__heading code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+.api-module__fqname {
+  margin: 0;
+  font-size: var(--sl-text-sm);
+  color: var(--sl-color-gray-3);
+}
+.api-module__fqname code {
+  background: none;
+  padding: 0;
+  font-family: var(--sl-font-mono);
+}
+.api-module__summary {
+  margin-block: 0.5rem;
+  color: var(--sl-color-text);
+}
+.api-module__body {
+  margin-top: 1rem;
+}
+
+/* ==========================================================================
+ * ApiClass / ApiFn — symbol entries
+ * ========================================================================== */
+
+.api-class,
+.api-fn {
+  margin-block: 1.75rem;
+  padding-top: 0.25rem;
+}
+
+/* A subtle left rule visually groups a symbol's signature/params/body. */
+.api-class__body,
+.api-fn__body {
+  margin-top: 0.75rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--sl-color-hairline-light, var(--sl-color-gray-6));
+}
+
+.api-class__heading,
+.api-fn__heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-block: 0;
+  scroll-margin-top: 6rem; /* clear the sticky Starlight header on anchor jumps */
+}
+
+/* Fully-qualified name — muted mono line under the heading. Mirrors
+ * `.api-module__fqname`; kept as visible page text so Pagefind indexes the
+ * dotted path for exact-phrase search and anchored sub-result titles. */
+.api-class__fqname,
+.api-fn__fqname {
+  margin: 0.2rem 0 0;
+  font-size: var(--sl-text-sm);
+  color: var(--sl-color-gray-3);
+}
+.api-class__fqname code,
+.api-fn__fqname code {
+  background: none;
+  padding: 0;
+  font-family: var(--sl-font-mono);
+}
+
+/* Symbol name — monospace, prominent, no code-chip background. */
+.api-class__name,
+.api-fn__name {
+  background: none;
+  padding: 0;
+  font-family: var(--sl-font-mono);
+  font-size: inherit;
+  font-weight: 600;
+  color: var(--sl-color-white);
+}
+
+/* Right-aligned inline source link in the heading row. */
+.api-class__source,
+.api-fn__source {
+  margin: 0 0 0 auto;
+  font-size: var(--sl-text-sm);
+  font-weight: 400;
+}
+
+.api-class__bases {
+  margin-block: 0.4rem 0;
+  font-size: var(--sl-text-sm);
+  color: var(--sl-color-gray-3);
+}
+.api-class__bases code {
+  background: none;
+  padding: 0 0.1em;
+  font-family: var(--sl-font-mono);
+  color: var(--sl-color-text-accent);
+}
+
+.api-class__summary,
+.api-fn__summary {
+  margin-block: 0.5rem;
+}
+
+/* ==========================================================================
+ * Signature
+ * ========================================================================== */
+
+.api-signature {
+  margin-block: 0.75rem;
+}
+
+/* <details> variant: a foldable panel with a chevron summary. */
+details.api-signature {
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--sl-color-gray-6);
+}
+.api-signature__summary {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.4rem 0.75rem;
+  font-size: var(--sl-text-sm);
+  font-weight: 600;
+  color: var(--sl-color-text);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+/* Hide the native disclosure triangle across engines. */
+.api-signature__summary::-webkit-details-marker {
+  display: none;
+}
+.api-signature__summary:hover {
+  color: var(--sl-color-text-accent);
+}
+.api-signature__summary:focus-visible {
+  outline: 2px solid var(--sl-color-text-accent);
+  outline-offset: -2px;
+}
+.api-signature__chevron {
+  flex: none;
+  transition: transform 0.15s ease-in-out;
+}
+details.api-signature[open] .api-signature__chevron {
+  transform: rotate(90deg);
+}
+details.api-signature[open] .api-signature__summary {
+  border-bottom: 1px solid var(--sl-color-hairline);
+}
+
+/*
+ * The highlighted code. <Signature> renders via Astro's built-in `<Code>` using
+ * the `css-variables` Shiki theme, so every token references an `--astro-code-*`
+ * custom property (and Astro renames the `.shiki` class to `.astro-code`). The
+ * <pre> reads `--astro-code-background` / `--astro-code-foreground` from inline
+ * styles that resolve against the variables defined below — so the signature
+ * tracks the active Starlight theme with no bundled theme and no client JS.
+ */
+.api-signature__code {
+  margin: 0;
+}
+.api-signature__code .astro-code {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: var(--sl-text-sm);
+  line-height: 1.6;
+  tab-size: 4;
+}
+/* Standalone (non-<details>) signatures draw their own border. */
+.api-signature:not(details) .api-signature__code .astro-code {
+  border: 1px solid var(--sl-color-hairline);
+}
+/* Inside a <details> the wrapper already draws the border + radius. */
+details.api-signature .api-signature__code .astro-code {
+  border: none;
+  border-radius: 0;
+}
+
+/*
+ * Token palette for the css-variables theme. The base values target Starlight's
+ * default dark theme; `[data-theme='light']` overrides them. `--astro-code-*`
+ * inherits down to every token span, so this fully controls the highlight.
+ * Colors follow the familiar GitHub dark/light syntax palettes.
+ */
+.api-signature__code {
+  --astro-code-background: var(--sl-color-gray-6);
+  --astro-code-foreground: #e6edf3;
+  --astro-code-token-comment: #8b949e;
+  --astro-code-token-keyword: #ff7b72;
+  --astro-code-token-string: #a5d6ff;
+  --astro-code-token-string-expression: #a5d6ff;
+  --astro-code-token-constant: #79c0ff;
+  --astro-code-token-function: #d2a8ff;
+  --astro-code-token-parameter: #e6edf3;
+  --astro-code-token-punctuation: #e6edf3;
+  --astro-code-token-link: #a5d6ff;
+}
+[data-theme='light'] .api-signature__code {
+  --astro-code-foreground: #24292f;
+  --astro-code-token-comment: #6e7781;
+  --astro-code-token-keyword: #cf222e;
+  --astro-code-token-string: #0a3069;
+  --astro-code-token-string-expression: #0a3069;
+  --astro-code-token-constant: #0550ae;
+  --astro-code-token-function: #8250df;
+  --astro-code-token-parameter: #24292f;
+  --astro-code-token-punctuation: #24292f;
+  --astro-code-token-link: #0969da;
+}
+
+/* ==========================================================================
+ * Tables — Params / Raises (shared) + Returns
+ * ========================================================================== */
+
+.api-params,
+.api-raises,
+.api-returns {
+  margin-block: 1rem;
+}
+
+.api-params__title,
+.api-raises__title,
+.api-returns__title {
+  margin: 0 0 0.4rem;
+  font-size: var(--sl-text-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--sl-color-gray-3);
+}
+
+/* Horizontal-scroll container; `tabindex` (set in markup) keeps it reachable
+ * by keyboard so an overflowing table can still be scrolled. */
+.api-table-wrap {
+  overflow-x: auto;
+}
+.api-table-wrap:focus-visible {
+  outline: 2px solid var(--sl-color-text-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.api-table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: var(--sl-text-sm);
+}
+.api-table thead th {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 2px solid var(--sl-color-hairline);
+  font-weight: 600;
+  color: var(--sl-color-white);
+  white-space: nowrap;
+}
+.api-table tbody td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--sl-color-hairline-light, var(--sl-color-gray-6));
+  vertical-align: top;
+}
+.api-table tbody tr:last-child td {
+  border-bottom: none;
+}
+/* Monospace name + type cells; keep them from wrapping mid-identifier. */
+.api-table code {
+  background: none;
+  padding: 0;
+  font-family: var(--sl-font-mono);
+  white-space: nowrap;
+}
+.api-table__name code {
+  color: var(--sl-color-white);
+  font-weight: 600;
+}
+.api-table__type code,
+.api-table__default code {
+  color: var(--sl-color-text-accent);
+}
+.api-table__muted {
+  color: var(--sl-color-gray-4);
+}
+.api-table__desc {
+  min-width: 16rem;
+}
+.api-table__desc :first-child {
+  margin-top: 0;
+}
+.api-table__desc :last-child {
+  margin-bottom: 0;
+}
+
+/* Returns — a compact labeled block (no table needed for a single value). */
+.api-returns__body {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5em;
+}
+.api-returns__type {
+  background: none;
+  padding: 0;
+  font-family: var(--sl-font-mono);
+  font-weight: 600;
+  color: var(--sl-color-text-accent);
+}
+.api-returns__description {
+  color: var(--sl-color-text);
+}
+
+/* ==========================================================================
+ * Source link + cross references
+ * ========================================================================== */
+
+.api-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  font-size: var(--sl-text-sm);
+  color: var(--sl-color-gray-3);
+  text-decoration: none;
+}
+.api-source:hover {
+  color: var(--sl-color-text-accent);
+  text-decoration: underline;
+}
+.api-source__icon {
+  flex: none;
+  width: 1em;
+  height: 1em;
+}
+
+.api-xref {
+  color: var(--sl-color-text-accent);
+  text-decoration: none;
+  border-bottom: 1px dashed currentColor;
+}
+.api-xref:hover {
+  border-bottom-style: solid;
+}
+
+/* ==========================================================================
+ * Small screens
+ * ========================================================================== */
+
+@media (max-width: 30rem) {
+  .api-class__body,
+  .api-fn__body {
+    padding-left: 0.6rem;
+  }
+  .api-class__source,
+  .api-fn__source {
+    /* Wrap the source link onto its own line instead of crowding the name. */
+    margin-left: 0;
+    flex-basis: 100%;
+  }
+}

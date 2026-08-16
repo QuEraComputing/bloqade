@@ -1,0 +1,226 @@
+# mise-managed toolchain + tasks for the bloqade repo.
+#
+#   mise install          # provision the pinned tools below
+#   mise run              # list all tasks
+#   mise run <task>       # run a task
+#
+# Task namespaces:
+#   (top-level)  package tasks — build/test the `bloqade` Python package
+#   docs:*       the new Astro + Starlight docs site (website/)
+#   mkdocs:*     the existing/legacy MkDocs site (removed after cutover)
+#   coverage[:*] test coverage
+#
+# NOTE: the Rust API docs additionally need a rustup *nightly* toolchain
+# (`rustup toolchain install nightly`) for `cargo +nightly rustdoc` — it is
+# intentionally NOT managed here so it doesn't clash with rustup's `+nightly`.
+
+[tools]
+node = "24"
+# Install pnpm via the npm backend rather than the default aqua backend: older
+# mise releases' aqua registry looks for a `pnpm-macos-arm64` asset that pnpm no
+# longer publishes (it's `pnpm-darwin-arm64` now), which breaks `mise install`.
+"npm:pnpm" = "11"
+uv = "latest"
+# NOTE: operational-only tools (e.g. aws-cli) do NOT belong here — this config is
+# consumed by `mise install` in CI/Amplify, where resolving aqua tools hits the
+# GitHub API UNAUTHENTICATED and gets 403 rate-limited, failing the whole build.
+# Put such tools in a personal, gitignored mise.local.toml instead.
+
+[env]
+# Single source of truth for the pinned rustup NIGHTLY toolchain used to extract
+# rustdoc JSON (build_versions.py -> emit_rust.py: `cargo +$RUSTDOC_NIGHTLY
+# rustdoc -- --output-format json`; rustdoc JSON is a nightly-only format).
+#
+# This is a PLAIN SHARED CONSTANT, NOT a rust-toolchain.toml: a rust-toolchain
+# file would set the default channel for EVERY cargo/rustc call in the tree and
+# drag the main bloqade crates onto nightly. Here nightly is only ever invoked
+# via an explicit `+$RUSTDOC_NIGHTLY` override for docstring extraction — the
+# main crates keep building with the default (stable) toolchain.
+#
+# Consumed by: build_versions.py (default for --rust-toolchain), amplify.yml and
+# the website workflows (the `rustup toolchain install` step). mise exposes this
+# on `mise env` / `mise run` / `mise exec`, so no caller repeats the date. NOTE:
+# jdx/mise-action does NOT auto-propagate [env] to $GITHUB_ENV, so those
+# workflows re-export it explicitly (see their "Export RUSTDOC_NIGHTLY" step).
+RUSTDOC_NIGHTLY = "nightly-2026-04-17"
+
+# ===========================================================================
+# Package — the `bloqade` Python package is this repo's primary artifact, so
+# the intuitive top-level names build/test IT (not the docs).
+# ===========================================================================
+
+[tasks.build]
+description = "Build the bloqade Python package (wheel + sdist) into dist/"
+run = "uv build"
+
+[tasks.test]
+description = "Run the test suite"
+run = "pytest test"
+
+[tasks.coverage]
+description = "Run tests with coverage, then report"
+depends = ["coverage:run", "coverage:xml", "coverage:report"]
+
+[tasks."coverage:run"]
+description = "Run pytest under coverage"
+run = "coverage run -m pytest test"
+
+[tasks."coverage:xml"]
+run = "coverage xml"
+
+[tasks."coverage:report"]
+run = "coverage report"
+
+[tasks."coverage:html"]
+description = "Generate the HTML coverage report"
+run = "coverage html"
+
+[tasks."coverage:open"]
+description = "Open the HTML coverage report"
+run = "open htmlcov/index.html"
+
+# ===========================================================================
+# docs:* — the new Astro + Starlight docs site (website/).
+# Tasks run in website/ via `dir`, so you can invoke them from the repo root.
+# ===========================================================================
+
+[tasks."docs:install"]
+description = "Install the docs site's Node deps (pnpm)"
+dir = "website"
+run = "pnpm install"
+
+[tasks."docs:dev"]
+description = "Serve the docs site with hot-reload (http://localhost:4321; auto-picks next free port)"
+dir = "website"
+run = "pnpm dev"
+
+[tasks."docs:notebooks"]
+description = "Cache-first (re)generate ALL tutorials from the jupytext sources (docs/digital/**) into guides/tutorials/<group>/. Unchanged notebooks hit the content-addressed .notebook-cache; only a changed one re-executes."
+dir = "website"
+# Turn the execution gate on: the point of docs:notebooks is to run the
+# tutorials once and cache them. tsim/gemini opt out per the driver manifest
+# (static); anything that fails to execute degrades to a static render.
+env = { EXECUTE_NOTEBOOKS = "1" }
+# `uv run --project` uses the emitter's own venv (jupytext/nbclient/ipykernel +
+# an editable bloqade) without changing the cwd. The driver resolves its
+# source/out/public/cache defaults from the git repo root.
+run = "uv run --project emitters/notebooks bloqade-docs-build-notebooks"
+
+[tasks."docs:build"]
+description = "Production build of the docs site (inventory merge + Pagefind + dist/objects.inv) into website/dist/"
+dir = "website"
+# Regenerate tutorials (cache-first) first so guides/tutorials/** always exists
+# and no tutorial link 404s. Warm cache => this is near-instant.
+depends = ["docs:notebooks"]
+run = "pnpm build"
+
+[tasks."docs:preview"]
+description = "Preview the docs production build (run `mise run docs:build` first)"
+dir = "website"
+run = "pnpm preview"
+
+[tasks."docs:check"]
+description = "Gate: strict-xref build + internal link / fragment-anchor reachability crawl + docstring-xref production guard. Green = every internal link reachable, every <ApiXref> resolved, AND docstring-derived xrefs are still being emitted by both emitters. (Does NOT change the default `docs:build`, which stays warn-only.)"
+dir = "website"
+# Regenerate tutorials (cache-first) first so the strict crawl sees every
+# tutorial page + its image assets and no internal link 404s.
+depends = ["docs:notebooks"]
+run = [
+  # XREF_STRICT=1 makes the xref integration FAIL the build on any unresolved
+  # <ApiXref> (default build only warns). Scoped to this command via inline env.
+  "XREF_STRICT=1 pnpm build",
+  # Crawl the built HTML: fails (exit 1) on any unreachable internal link or
+  # fragment anchor, including resolved-but-dangling API xref targets.
+  "node scripts/check_links.mjs dist",
+  # Guard the PRODUCTION of docstring-derived xrefs (check_links only proves the
+  # ones present resolve; this proves any exist). Reuses the SAME built dist/:
+  # fails (exit 1) if either emitter stops emitting docstring <ApiXref>
+  # (per-language floors) or any docstring anchor is unresolved.
+  "node scripts/check_xrefs.mjs dist",
+  # Search must be scoped to the LATEST API version: non-latest api/<V> pages are
+  # excluded from the Pagefind index and the latest is indexed. Guards the
+  # `pagefind: false` scoping that build_versions.py applies to older versions.
+  "node scripts/check_search_scope.mjs dist",
+]
+
+[tasks."docs:test"]
+description = "Gate: build-warning gate + per-page RUNTIME error crawl. Green = the production build emits no non-allowlisted warning/error AND every built page loads in headless Chromium with no console error / uncaught exception / unhandled rejection / same-origin request failure. SEPARATE from docs:check (link/xref reachability); it does NOT replace it."
+dir = "website"
+# Regenerate tutorials (cache-first) first so the crawl sees every tutorial page
+# + its assets, same as docs:build / docs:check. Warm cache => near-instant.
+depends = ["docs:notebooks"]
+run = [
+  # (a) Build-warning gate. check_build.mjs runs the production build ONCE
+  # (`pnpm build`, mirroring docs:build), scans the combined stdout+stderr, and
+  # FAILS on any warning/error line except its small documented allowlist (the
+  # Starlight/Pagefind DEP0190). Leaves dist/ in place for the crawl to reuse.
+  "node scripts/check_build.mjs",
+  # (b) Per-page runtime crawl. Serves that same dist/ with `astro preview` and
+  # loads every built page (dist/**/index.html + 404.html + the /api/latest
+  # redirect stubs) in headless Chromium, failing on any per-page runtime error.
+  "node scripts/crawl_runtime.mjs dist",
+]
+
+[tasks."docs:unit"]
+description = "Gate: FAST, isolated unit tests (vitest) for the docs site's components + lib helpers. Renders each .astro component in isolation via Astro's Container API and asserts on the HTML; pure lib helpers are tested directly. No full build and NO browser — this is the THIRD docs gate, SEPARATE from docs:check (link/xref reachability) and docs:test (build-warning gate + Playwright runtime crawl), and much faster. Runs on a fresh clone with no generated API content."
+dir = "website"
+run = "pnpm test"
+
+[tasks."docs:api"]
+description = "Generate the FULL versioned API (dev) from ../bloqade-* sibling checkouts (incl. Rust; needs a rustup nightly)"
+dir = "website"
+run = "uv run scripts/build_versions.py --versions dev --prefer-local"
+
+[tasks."docs:api-quick"]
+description = "Fast API loop: python-only, one small package (bloqade-lanes) — seconds, not minutes"
+dir = "website"
+run = "uv run scripts/build_versions.py --versions dev --prefer-local --langs python --limit dev=bloqade-lanes"
+
+[tasks."docs:api-dry"]
+description = "Print the emitter commands `mise run docs:api` would run; write nothing"
+dir = "website"
+run = "uv run scripts/build_versions.py --versions dev --prefer-local --dry-run"
+
+[tasks."docs:bootstrap"]
+description = "Clean checkout -> running docs site: install deps, generate the dev API, then serve"
+dir = "website"
+depends = ["docs:install", "docs:api"]
+run = "pnpm dev"
+
+[tasks."docs:clean"]
+description = "Reset regenerable generated docs content (api/<version> trees, generated tutorials, inventories, versions.json, dist/). Keeps committed api/index.mdx, api/compatibility.mdx, guides/tutorials/index.mdx, .gitkeep. Does NOT clear the notebook cache (see docs:clean-cache)."
+dir = "website"
+run = [
+  # per-version API trees are dirs one level under api/; the evergreen
+  # index.mdx / compatibility.mdx are files, so -type d leaves them untouched.
+  "find src/content/docs/api -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} +",
+  # generated tutorials: dirs one level under tutorials/ (qasm2/, squin/, ...);
+  # the hand-authored index.mdx is a FILE, so -type d leaves it untouched.
+  "find src/content/docs/guides/tutorials -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} +",
+  # generated tutorial image assets
+  "rm -rf public/tutorials",
+  # per-version merged inventories (keep .gitkeep)
+  "find .api-inventory -type f -name 'inventory.*.json' -delete",
+  # generated switcher manifest + merged cross-reference lookup
+  "rm -f src/generated/versions.json src/generated/xref-inventory.json",
+  # production build output
+  "rm -rf dist",
+]
+
+[tasks."docs:clean-cache"]
+description = "Clear the content-addressed notebook execution cache (.notebook-cache). Forces every tutorial to re-execute on the next `docs:notebooks`."
+dir = "website"
+run = "rm -rf emitters/notebooks/.notebook-cache"
+
+# ===========================================================================
+# mkdocs:* — the existing/legacy MkDocs site (still the production docs until
+# the Astro site cuts over; these tasks go away at cutover).
+# ===========================================================================
+
+[tasks."mkdocs:serve"]
+description = "Serve the existing (legacy) MkDocs site"
+run = "mkdocs serve"
+
+[tasks."mkdocs:build"]
+description = "Build the existing (legacy) MkDocs site"
+run = "mkdocs build"

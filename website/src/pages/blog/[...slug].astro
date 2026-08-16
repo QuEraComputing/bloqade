@@ -1,0 +1,47 @@
+---
+/**
+ * Per-post blog rendering. Uses the `blog` content collection and Astro's
+ * `render()` so the shared markdown pipeline (remark-math + rehype-katex,
+ * image optimization) applies to posts exactly like the docs.
+ */
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const fmt = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<SiteLayout
+  title={`${post.data.title} — Bloqade Blog`}
+  description={post.data.excerpt}
+  section="blog"
+>
+  <article class="post">
+    <header class="post__header">
+      <a class="post__back" href="/blog/" data-pagefind-ignore>&larr; All posts</a>
+      <h1 class="post__title">{post.data.title}</h1>
+      <p class="post__meta">
+        <time datetime={post.data.date.toISOString()}>{fmt.format(post.data.date)}</time>
+        {
+          post.data.authors && post.data.authors.length > 0 && (
+            <span class="post__authors"> · {post.data.authors.join(', ')}</span>
+          )
+        }
+      </p>
+    </header>
+    <div class="post__body prose">
+      <Content />
+    </div>
+  </article>
+</SiteLayout>

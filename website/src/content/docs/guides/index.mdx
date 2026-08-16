@@ -1,0 +1,72 @@
+---
+title: Guides
+description: Start here — install Bloqade, learn the background, and follow the digital and analog quick starts.
+sidebar:
+  label: Overview
+  order: 0
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Bloqade is [QuEra Computing](https://quera.com)'s software development kit (SDK) for
+neutral atom quantum computers — a hub of embedded domain-specific languages (eDSLs) built on top of
+[Kirin](https://github.com/QuEraComputing/kirin), the Kernel Intermediate Representation Infrastructure.
+
+These guides walk you through installing Bloqade, understanding the physics behind neutral atom quantum
+computing, and writing your first digital (gate-based) and analog programs.
+
+## Getting started
+
+<CardGrid>
+  <LinkCard
+    title="Installation"
+    description="Install Bloqade and its sub-packages, and set up a development environment."
+    href="/guides/getting-started/installation/"
+  />
+  <LinkCard
+    title="Background"
+    description="Neutral atom qubits, and the analog vs. digital modes of quantum computation."
+    href="/guides/getting-started/background/"
+  />
+  <LinkCard
+    title="Digital quick start"
+    description="Write, optimize, and run gate-based circuits with the digital eDSLs."
+    href="/guides/getting-started/quickstart-digital/"
+  />
+  <LinkCard
+    title="Analog quick start"
+    description="Build geometries and waveforms, then emulate or run on Aquila hardware."
+    href="/guides/getting-started/quickstart-analog/"
+  />
+</CardGrid>
+
+## Explore further
+
+<CardGrid>
+  <LinkCard
+    title="Bloqade Digital"
+    description="Domain-specific languages, compilation, simulation, and Cirq interoperability."
+    href="/guides/digital/"
+  />
+  <LinkCard
+    title="Bloqade Analog"
+    description="The original analog SDK — builder reference, hardware capabilities, and gotchas."
+    href="/guides/analog/"
+  />
+  <LinkCard
+    title="API reference"
+    description="Browse the full Python and Rust API for every Bloqade sub-package."
+    href="/api/"
+  />
+  <LinkCard
+    title="Tutorials"
+    description="Worked examples, including GHZ state preparation with parallelism."
+    href="/guides/tutorials/qasm2/ghz/"
+  />
+</CardGrid>
+
+## More
+
+- Read the [Bloqade Manifesto](/guides/manifesto/) for the vision behind the project.
+- Want to contribute? See the [contributing guide](/guides/contributing/).
+- Explore the [analog tutorials](https://queracomputing.github.io/bloqade-analog-examples/dev/) and the [qBook](https://qbook.quera.com/).

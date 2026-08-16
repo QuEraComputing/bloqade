@@ -1,0 +1,100 @@
+---
+/**
+ * Shared shell for the custom (non-Starlight) routes: the landing page and the
+ * blog. Starlight owns /guides, /api and /reference; these routes render with
+ * this lightweight layout instead so the site root can be a bespoke splash.
+ *
+ * The header/footer markup is the SHARED SiteHeader/SiteFooter components (also
+ * used by the Starlight Header/Footer overrides), so the landing and the docs
+ * render literally the same chrome. Brand tokens, typography (Lato) and the
+ * custom-page styles all live in ../styles/brand.css (also loaded by Starlight
+ * via astro.config `customCss`). KaTeX CSS is imported here too so math renders
+ * on blog posts, matching the docs pipeline.
+ */
+import '@fontsource/lato/400.css';
+import '@fontsource/lato/700.css';
+import '@fontsource/lato/900.css';
+import 'katex/dist/katex.min.css';
+import '../styles/brand.css';
+
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Widen the main column for splash-style pages (the landing). */
+  wide?: boolean;
+  /**
+   * Pagefind section tag for this route, used as the `section` filter value so
+   * search results can be grouped/faceted ('home' | 'blog' | ...). The custom
+   * routes are the only pages that render through this layout; the Starlight
+   * docs (guides / api / reference) are indexed separately by Starlight.
+   */
+  section?: string;
+}
+
+const {
+  title,
+  description = 'The Software Development Kit for neutral atom quantum computers.',
+  wide = false,
+  section = 'page',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {/* Apply the persisted Starlight theme before paint to avoid a flash and
+        to keep the custom pages in sync with the docs' light/dark choice. */}
+    <script is:inline>
+      (() => {
+        const stored = localStorage.getItem('starlight-theme');
+        const theme =
+          stored === 'light' || stored === 'dark'
+            ? stored
+            : window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+  </head>
+  <body class="site-body">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <SiteHeader />
+    </header>
+
+    {/*
+      Pagefind indexing for the custom (non-Starlight) routes. Starlight already
+      tags its own docs pages with `data-pagefind-body`; once ANY page on the
+      site has that marker Pagefind SKIPS pages that lack it, so these bespoke
+      routes were previously invisible to search. Marking the main content region
+      here brings the landing page and the whole blog into the unified index:
+        - data-pagefind-body    → index this region (header/footer are outside
+                                  <main>, so nav/chrome is excluded automatically)
+        - data-pagefind-meta    → explicit result title (the page `title` prop)
+        - data-pagefind-filter  → `section` facet so results can be grouped
+                                  (home | blog | …)
+    */}
+    <main
+      id="main"
+      class={wide ? 'site-main site-main--wide' : 'site-main'}
+      data-pagefind-body
+      data-pagefind-meta={`title:${title}`}
+      data-pagefind-filter={`section:${section}`}
+    >
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <SiteFooter />
+    </footer>
+  </body>
+</html>
