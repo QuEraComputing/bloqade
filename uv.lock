@@ -509,10 +509,10 @@ examples = [
 
 [package.metadata]
 requires-dist = [
-    { name = "bloqade-analog", specifier = "~=0.16.3" },
-    { name = "bloqade-circuit", extras = ["cirq", "qasm2", "qbraid", "vis", "stim"], specifier = "~=0.14.1" },
-    { name = "bloqade-lanes", specifier = "~=0.10.6" },
-    { name = "bloqade-tsim", specifier = "~=0.1.4" },
+    { name = "bloqade-analog", specifier = "~=0.16.9" },
+    { name = "bloqade-circuit", extras = ["cirq", "qasm2", "qbraid", "vis", "stim"], specifier = "~=0.15.2" },
+    { name = "bloqade-lanes", specifier = "~=0.11.8" },
+    { name = "bloqade-tsim", specifier = "~=0.1.5" },
 ]
 
 [package.metadata.requires-dev]
@@ -575,7 +575,7 @@ wheels = [
 
 [[package]]
 name = "bloqade-circuit"
-version = "0.14.2"
+version = "0.15.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "bloqade-decoders" },
@@ -588,9 +588,9 @@ dependencies = [
     { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/90/07/3cb60f87c45b5b3d6e70cfd4607f534b6dd7447bf84c0cf22135b76f9911/bloqade_circuit-0.14.2.tar.gz", hash = "sha256:f385069887f17b2ba3c40c5ea301baead9e93eaa56e9e7ec71dc679e8ee58d5b", size = 421248, upload-time = "2026-05-12T09:41:52.295Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/bd/1b/e8ad753a75f039f5886bc73ef96e83a7c6a77186646e9b5533945dcbc121/bloqade_circuit-0.15.2.tar.gz", hash = "sha256:5268e7ba282fd611226479d361f44cf0eb396d8003db10e4034f2236a344b03b", size = 517255, upload-time = "2026-09-14T14:24:21.854Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/60/f5/67ae94c50f0e502cf30b586cebd3fdb1229d7bfa119d5eef40c0c801a0cd/bloqade_circuit-0.14.2-py3-none-any.whl", hash = "sha256:ad5b0474407a3a5b768eb20240e7bfa2406e6fdbc4658beb077136dbee681286", size = 254764, upload-time = "2026-05-12T09:41:50.802Z" },
+    { url = "https://files.pythonhosted.org/packages/7d/6b/13aa557d3af1163554d225a7371662156f3e3fca7810736445213515172d/bloqade_circuit-0.15.2-py3-none-any.whl", hash = "sha256:636259086bc19720ec26fd6f8044f57151ef4a69a3664ee468289e48f2d0237e", size = 318284, upload-time = "2026-09-14T14:24:20.195Z" },
 ]
 
 [package.optional-dependencies]
@@ -598,7 +598,6 @@ cirq = [
     { name = "cirq-core", version = "1.5.0", source = { registry = "https://pypi.org/simple" }, extra = ["contrib"], marker = "python_full_version < '3.11'" },
     { name = "cirq-core", version = "1.6.1", source = { registry = "https://pypi.org/simple" }, extra = ["contrib"], marker = "python_full_version >= '3.11'" },
     { name = "numba" },
-    { name = "qpsolvers", extra = ["clarabel"] },
 ]
 qasm2 = [
     { name = "lark" },
@@ -619,16 +618,17 @@ vis = [
 
 [[package]]
 name = "bloqade-core"
-version = "0.6.4"
+version = "0.6.12"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "kirin-toolchain" },
     { name = "loguru" },
     { name = "qlam-core" },
+    { name = "semver" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a6/3c/0ed1838120d3ccc4df2e83fa146c39a6b1568758abc39b1ffc9272804df8/bloqade_core-0.6.4.tar.gz", hash = "sha256:4e26e6d53df4d20ba774e5fcd850e706b495c7f0d02600c5084ab88e5295dad3", size = 211838, upload-time = "2026-06-08T15:45:00.931Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/3d/b1/5f0c74f61296ee178dfec189133a9d32c1b6970b9355706744ada97f18d4/bloqade_core-0.6.12.tar.gz", hash = "sha256:9941fbc0f43f0c2bd2c2b87c60a7599e73e123a1824dc245cd478e4f95939bab", size = 237071, upload-time = "2026-09-17T13:47:09.287Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/39/46/758b3c0666fbc62e88f2635eb88def4e7e8cd7467ad4143471312e804c34/bloqade_core-0.6.4-py3-none-any.whl", hash = "sha256:b168e1b4aa1139dd31ff073273ccfb18e673ff9a07c2414be93c73e6cc5780f4", size = 44161, upload-time = "2026-06-08T15:44:59.67Z" },
+    { url = "https://files.pythonhosted.org/packages/67/9d/05a2a02ce80a7cf13fe52b424c3d8df4ee19df8bb9b3a9cf818fa7164990/bloqade_core-0.6.12-py3-none-any.whl", hash = "sha256:236b12c8b2399b591a849d5ad34d02bad4bbaaac28f4ce5210fc5a198045e584", size = 55193, upload-time = "2026-09-17T13:47:08.079Z" },
 ]
 
 [[package]]
@@ -649,7 +649,7 @@ wheels = [
 
 [[package]]
 name = "bloqade-lanes"
-version = "0.10.6"
+version = "0.11.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "bloqade-circuit", extra = ["qasm2"] },
@@ -662,21 +662,22 @@ dependencies = [
     { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c8/37/de76c1969f83ef96efb9df70ea444b3564c6697d872997e2242b440ec4b9/bloqade_lanes-0.10.6.tar.gz", hash = "sha256:63ae3aaf370ceee4f7da7ed4e7b5bc2fdf86559b6e704ff324d4a61e87ee60d6", size = 423595, upload-time = "2026-06-15T14:48:57.027Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/36/c1/439cb462402ee3b690b3c3c4c7a047967d4a0ab4e321c757d3975f9046df/bloqade_lanes-0.11.8.tar.gz", hash = "sha256:abf19cb2b3ab3a83db8c81e54dc16cc917266b58ce9eee775efa3626676d22c7", size = 938362, upload-time = "2026-09-22T19:18:01.294Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/19/e4/1650a8c458a8bdb1a82e6a253db228c4019e1a641fd869597cdd1a72fe4e/bloqade_lanes-0.10.6-cp310-abi3-macosx_10_12_x86_64.whl", hash = "sha256:c64724b9342ed8854fff002cf02dcb874b5ece01e518c49cfb677c6f6385bf30", size = 8544619, upload-time = "2026-06-15T14:48:45.846Z" },
-    { url = "https://files.pythonhosted.org/packages/ad/97/3bc71f7ee141c0b0421cc5fa26212d42e1502b71e9dbf690ca6a41518c5c/bloqade_lanes-0.10.6-cp310-abi3-macosx_11_0_arm64.whl", hash = "sha256:f1eed454cc7b6b0f5a8120e0a3ed79b1d75a494da02015ed41f823a7924e1a66", size = 8485624, upload-time = "2026-06-15T14:48:48.167Z" },
-    { url = "https://files.pythonhosted.org/packages/4f/91/4b015c1261e36ece66168b10bc270d8c739c15b098d072a4fd1ff6c94dd2/bloqade_lanes-0.10.6-cp310-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:32a1ff3585140d80ee35170998408819e301f04b22c249c2b7d6dee01098c392", size = 8776561, upload-time = "2026-06-15T14:48:50.178Z" },
-    { url = "https://files.pythonhosted.org/packages/69/8c/f6fdb50db878c6e154c03a28c2af9cf118c94196320b36d10c93b06c2827/bloqade_lanes-0.10.6-cp310-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:366407987f31a527cadef6901b1dccbbeb54a1f7646581c426ac49fe3bc23aa8", size = 8905482, upload-time = "2026-06-15T14:48:52.701Z" },
-    { url = "https://files.pythonhosted.org/packages/6c/fb/bf477555550ff900c5689fc19fd9e9a8f566cb256d0a3bc85f7b5a7e539f/bloqade_lanes-0.10.6-cp310-abi3-win_amd64.whl", hash = "sha256:bd7307d440ee900a8a9448511214411d67d25cc119369841ae6e918f03f9089f", size = 6219468, upload-time = "2026-06-15T14:48:54.739Z" },
+    { url = "https://files.pythonhosted.org/packages/31/1d/1ad59d572c38f2aac8dd7db2cf3a92e2bf15b85553fd7279cb732cb56e03/bloqade_lanes-0.11.8-cp310-abi3-macosx_10_12_x86_64.whl", hash = "sha256:dbf1e9173e004a7885cab634497d78443a399f09e8a27da8847cccf25f0cf8e6", size = 26044491, upload-time = "2026-09-22T19:17:44.825Z" },
+    { url = "https://files.pythonhosted.org/packages/bf/40/59843d397d1cf07c768863c850ec91a32e3762b624e6bf5f280f34df4532/bloqade_lanes-0.11.8-cp310-abi3-macosx_11_0_arm64.whl", hash = "sha256:ea4e3fc090dadeb9e7da5fa18e1511b8bc7880dd3a7eb39c7671a4c5a80c77b2", size = 25932875, upload-time = "2026-09-22T19:17:48.45Z" },
+    { url = "https://files.pythonhosted.org/packages/ca/79/1e3de55db17b5b1dcba3afbe35d057afafe98ab695454dd788faf59f0c0f/bloqade_lanes-0.11.8-cp310-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:f6a9ca56fcd72379fe755bcf116779f3b9da05290650102cc7233279d71bf10d", size = 29423189, upload-time = "2026-09-22T19:17:51.48Z" },
+    { url = "https://files.pythonhosted.org/packages/30/04/e3ab47689321dc6f716cd1967c3010e5cdd4ccfe6d4a3ac706f11a06f3b7/bloqade_lanes-0.11.8-cp310-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:2e9ae0cdc8e9c41e501bfbd86bbcff30e6ab0f8b34a7f9f5a2264d8d536970e7", size = 28557393, upload-time = "2026-09-22T19:17:54.421Z" },
+    { url = "https://files.pythonhosted.org/packages/28/a7/10e27ade9168eaf11a8c1162a446b956b4457464a4ff297823cfaadd1208/bloqade_lanes-0.11.8-cp310-abi3-win_amd64.whl", hash = "sha256:d03afcb99b219be6a8bc8d2df7e3e8ae83c34a5d9a8711332e1a3b0c4b41ea24", size = 26217091, upload-time = "2026-09-22T19:17:58.566Z" },
 ]
 
 [[package]]
 name = "bloqade-tsim"
-version = "0.1.4"
+version = "0.1.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "equinox" },
+    { name = "ipywidgets" },
     { name = "jax", version = "0.6.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "jax", version = "0.10.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "lxml" },
@@ -685,9 +686,9 @@ dependencies = [
     { name = "pyzx-param" },
     { name = "stim" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/cf/3e/0ae0e867405e7a34d53e8d8ff086a88656dc3cbe88a506a0be190e024aa6/bloqade_tsim-0.1.4.tar.gz", hash = "sha256:a50a6c6faae9dfa8fa25b6783a51a95f5f518a4c8d82a574fc017b69fb035ae5", size = 470603, upload-time = "2026-04-28T15:26:04.826Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c2/b6/5e85c7c9f3e021114facf6b80baa36bf1d8853a237a40760d88476e201dc/bloqade_tsim-0.1.5.tar.gz", hash = "sha256:d50d75edea34cecc6827bc7f320786b74217cd308615abbb7e4ce0545ca9fe20", size = 1202965, upload-time = "2026-07-21T22:16:59.107Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e8/e6/34ccb7ca46d71e106ec43da6dfb0bff8259a64e5a5d68602d5e5d1c78266/bloqade_tsim-0.1.4-py3-none-any.whl", hash = "sha256:96f2a2631aec20f836fb5028f52c5d5ec8b036590f7777fd123b96d403e3e240", size = 85290, upload-time = "2026-04-28T15:26:03.388Z" },
+    { url = "https://files.pythonhosted.org/packages/e0/2d/748b475304692d54ce9e7669bfaea96a680ce693f29cc64f67989d188077/bloqade_tsim-0.1.5-py3-none-any.whl", hash = "sha256:31512e004618ad1f7d8fe531ce924d16e9ee02057b521101ac4b5fdc6a2e4d75", size = 96237, upload-time = "2026-07-21T22:16:57.269Z" },
 ]
 
 [[package]]
@@ -1031,25 +1032,6 @@ contrib = [
     { name = "ply", marker = "python_full_version >= '3.11'" },
     { name = "pylatex", marker = "python_full_version >= '3.11'" },
     { name = "quimb", version = "1.14.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-]
-
-[[package]]
-name = "clarabel"
-version = "0.11.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "cffi" },
-    { name = "numpy" },
-    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/81/e2/47f692161779dbd98876015de934943effb667a014e6f79a6d746b3e4c2a/clarabel-0.11.1.tar.gz", hash = "sha256:e7c41c47f0e59aeab99aefff9e58af4a8753ee5269bbeecbd5526fc6f41b9598", size = 253949, upload-time = "2025-06-11T16:49:05.864Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/34/f7/f82698b6d00a40a80c67e9a32b2628886aadfaf7f7b32daa12a463e44571/clarabel-0.11.1-cp39-abi3-macosx_10_12_x86_64.whl", hash = "sha256:c39160e4222040f051f2a0598691c4f9126b4d17f5b9e7678f76c71d611e12d8", size = 1039511, upload-time = "2025-06-11T16:48:58.525Z" },
-    { url = "https://files.pythonhosted.org/packages/b0/8f/13650cfe25762b51175c677330e6471d5d2c5851a6fbd6df77f0681bb34e/clarabel-0.11.1-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:8963687ee250d27310d139eea5a6816f9c3ae31f33691b56579ca4f0f0b64b63", size = 935135, upload-time = "2025-06-11T16:48:59.901Z" },
-    { url = "https://files.pythonhosted.org/packages/2b/9e/7af10d2b540b39f1a05d1ebba604fce933cc9bc0e65e88ec3b7a84976425/clarabel-0.11.1-cp39-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e4837b9d0db01e98239f04b1e3526a6cf568529d3c19a8b3f591befdc467f9bb", size = 1079226, upload-time = "2025-06-11T16:49:00.987Z" },
-    { url = "https://files.pythonhosted.org/packages/6b/a9/c76edf781ca3283186ff4b54a9a4fb51367fd04313a68e2b09f062407439/clarabel-0.11.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:c8c41aaa6f3f8c0f3bd9d86c3e568dcaee079562c075bd2ec9fb3a80287380ef", size = 1164345, upload-time = "2025-06-11T16:49:02.675Z" },
-    { url = "https://files.pythonhosted.org/packages/41/e6/4eee3062088c221e5a18b054e51c69f616e0bb0dc1b0a1a5e0fe90dfa18e/clarabel-0.11.1-cp39-abi3-win_amd64.whl", hash = "sha256:557d5148a4377ae1980b65d00605ae870a8f34f95f0f6a41e04aa6d3edf67148", size = 887310, upload-time = "2025-06-11T16:49:04.277Z" },
 ]
 
 [[package]]
@@ -2472,7 +2454,7 @@ wheels = [
 
 [[package]]
 name = "kirin-toolchain"
-version = "0.22.11"
+version = "0.22.16"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beartype" },
@@ -2480,9 +2462,9 @@ dependencies = [
     { name = "rich" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4c/b6/768047b9bc4858b8ab51342ad464e34f8667cdbb864a1e91e9ecbbc17a42/kirin_toolchain-0.22.11.tar.gz", hash = "sha256:c4a725d40329aabd70aa26eed180c3fcd97c48e828a7b46a3909506af4ae8179", size = 1251166, upload-time = "2026-05-08T15:35:50.501Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/85/dc/825a8abad47abd3eb7268060fe90719c61ffdc4246920f2aa20c0b0c24d2/kirin_toolchain-0.22.16.tar.gz", hash = "sha256:c2d308d0f7e229e508a227846db0659c14789057d519572941b7785bd9096eb6", size = 1270477, upload-time = "2026-09-02T15:13:39.247Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/39/2f/5ac78fb8b495883dd3496b4b395334e1c6d7f9deac2cc18e667332e07012/kirin_toolchain-0.22.11-py3-none-any.whl", hash = "sha256:9d65975ef27ead55b82c3a592f1597dea8d7e7095da106c033492c6e6af4fd3b", size = 258663, upload-time = "2026-05-08T15:35:48.53Z" },
+    { url = "https://files.pythonhosted.org/packages/56/f8/41e0ba5d16a35531d09f90315ac7aee9472adcc76c0ad03896693824772f/kirin_toolchain-0.22.16-py3-none-any.whl", hash = "sha256:afcc09abaf8460858bcc2a42035919dd67ffe49fe242c560613de2a42e5969d9", size = 264250, upload-time = "2026-09-02T15:13:37.324Z" },
 ]
 
 [[package]]
@@ -4875,7 +4857,7 @@ wheels = [
 
 [[package]]
 name = "qlam-core"
-version = "0.3.0"
+version = "0.7.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "email-validator" },
@@ -4885,26 +4867,7 @@ dependencies = [
     { name = "segno" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8b/53/a4722726e167664ccc29d74ce3d6700c4f88e0bfc9bee8709b3ce9dddfd7/qlam_core-0.3.0-py3-none-any.whl", hash = "sha256:380477363c1ff29220811aeeb93e07fa9a73c2ae0687ad1a72355fb63a0a3602", size = 148646, upload-time = "2026-06-04T13:53:20.783Z" },
-]
-
-[[package]]
-name = "qpsolvers"
-version = "4.12.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "numpy" },
-    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/b9/35/fc1f8b033b7ba6ecede5db093741df6a3adba6059346a586550f46254315/qpsolvers-4.12.0.tar.gz", hash = "sha256:2ec9c46294ae02bdac8969352726d2c2d5ed85f00c096881b27909e4f103ca7c", size = 235173, upload-time = "2026-05-08T09:18:06.925Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/da/68/c6e6f378f79dff83584ed18acae88c1de1ea56afc5ba9a2831ad3716083d/qpsolvers-4.12.0-py3-none-any.whl", hash = "sha256:30545f3eba98655a3c9410a071c70bb016e320a8d80a0c1a854aba00963b9b7f", size = 106752, upload-time = "2026-05-08T09:18:02.366Z" },
-]
-
-[package.optional-dependencies]
-clarabel = [
-    { name = "clarabel" },
+    { url = "https://files.pythonhosted.org/packages/db/b6/0e8f8161293bacf2fed7cf8d9cd824ec7c411022dabe365a5485b0cc340b/qlam_core-0.7.0-py3-none-any.whl", hash = "sha256:185f05e6742b5d374a7c8fd48e9247a45347d990a1ff5d4894fae8f88e05785a", size = 171784, upload-time = "2026-09-11T20:14:57.988Z" },
 ]
 
 [[package]]
@@ -5577,11 +5540,11 @@ wheels = [
 
 [[package]]
 name = "semver"
-version = "3.0.4"
+version = "3.1.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/72/d1/d3159231aec234a59dd7d601e9dd9fe96f3afff15efd33c1070019b26132/semver-3.0.4.tar.gz", hash = "sha256:afc7d8c584a5ed0a11033af086e8af226a9c0b206f313e0301f8dd7b6b589602", size = 269730, upload-time = "2025-01-24T13:19:27.617Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/92/f5/e1dfe8e1d91c54ce212fd93916eb01fd1c590f413be0a0978c39a97aa1bb/semver-3.1.0.tar.gz", hash = "sha256:14bc073439513d7773662a338f4db9829cf16c12b74b9568e2d2689975fbd7fc", size = 304162, upload-time = "2026-09-12T18:38:14.045Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a6/24/4d91e05817e92e3a61c8a21e08fd0f390f5301f1c448b137c57c4bc6e543/semver-3.0.4-py3-none-any.whl", hash = "sha256:9c824d87ba7f7ab4a1890799cec8596f15c1241cb473404ea1cb0c55e4b04746", size = 17912, upload-time = "2025-01-24T13:19:24.949Z" },
+    { url = "https://files.pythonhosted.org/packages/be/02/bce7a1d70e9d0f6ea8623c16386138c251b5855af6cd3a11433d3fba4e66/semver-3.1.0-py3-none-any.whl", hash = "sha256:6e4998f8b4762acdfea85f9bfd5b4032e0bb50038dc04bf82011b42d5d1145c5", size = 18783, upload-time = "2026-09-12T18:38:12.457Z" },
 ]
 
 [[package]]
