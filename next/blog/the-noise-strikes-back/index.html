@@ -1,0 +1,133 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><title>Simulating noisy circuits for near-term quantum hardware — Bloqade Blog</title><meta name="description" content="Bloqade now ships circuit-level noise models that closely mimic QuEra's Gemini-class hardware, letting you optimize circuits and run feasibility checks before you hit real devices."><script>
+      (() => {
+        const stored = localStorage.getItem('starlight-theme');
+        const theme =
+          stored === 'light' || stored === 'dark'
+            ? stored
+            : window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script><link rel="stylesheet" href="/next/_astro/index.CAuBxtA_.css">
+<link rel="stylesheet" href="/next/_astro/_slug_.Bn3oorhl.css"><script type="module" src="/next/_astro/page.B1D-nYk3.js"></script><link rel="stylesheet" href="/next/_astro/api.CuBnw5Q7.css"></head> <body class="site-body"> <a class="skip-link" href="#main">Skip to content</a> <header class="site-header"> <div class="site-header__inner"> <a class="site-brand" href="/" aria-label="Bloqade home"> <img class="site-logo site-logo-light" src="/next/_astro/logo.5u8zFnG2.svg" alt="Bloqade" height="28"> <img class="site-logo site-logo-dark" src="/next/_astro/logo-dark.CB6A5JOA.svg" alt="Bloqade" height="28"> </a>  <script type="module">document.querySelectorAll("[data-version-switcher] select").forEach(c=>{const o=c;o.addEventListener("change",async()=>{const e=o.value,n=window.location.pathname.split("/").slice(3).join("/"),s=n.split("/")[0],t=[];n&&t.push(`/api/${e}/${n}`),s&&t.push(`/api/${e}/${s}/`),t.push(`/api/${e}/python/`),t.push(`/api/${e}/`);for(const a of t)try{if((await fetch(a,{method:"HEAD"})).ok){window.location.href=a;return}}catch{}window.location.href=t[t.length-1]})});</script> <nav class="site-nav" aria-label="Primary"> <a href="/guides/example/"> Guides </a><a href="/api/"> API </a><a href="/blog/"> Blog </a> <a class="site-nav__icon" href="https://github.com/QuEraComputing/bloqade" aria-label="Bloqade on GitHub" rel="noopener"> <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true" fill="currentColor"> <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path> </svg> </a> <button class="theme-toggle" type="button" aria-label="Toggle color theme" data-theme-toggle> <svg class="theme-toggle__sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"> <circle cx="12" cy="12" r="4"></circle> <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path> </svg> <svg class="theme-toggle__moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path> </svg> </button> </nav> </div> <script type="module">document.querySelectorAll("[data-theme-toggle]").forEach(t=>{t.addEventListener("click",()=>{const e=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=e;try{localStorage.setItem("starlight-theme",e)}catch{}})});</script> </header>  <main id="main" class="site-main" data-pagefind-body data-pagefind-meta="title:Simulating noisy circuits for near-term quantum hardware — Bloqade Blog" data-pagefind-filter="section:blog">  <article class="post"> <header class="post__header"> <a class="post__back" href="/blog/" data-pagefind-ignore>&larr; All posts</a> <h1 class="post__title">Simulating noisy circuits for near-term quantum hardware</h1> <p class="post__meta"> <time datetime="2025-07-30T00:00:00.000Z">July 30, 2025</time> <span class="post__authors"> · Tyler A. Cochran, Luis A. Martinez, David Plankensteiner</span> </p> </header> <div class="post__body prose"> <p>With recent experimental demonstrations of digital quantum circuits executed on neutral atom devices, a new era is beginning for this still-nascent technology. At QuEra, we have used our newly completed <strong>Gemini-class quantum computer</strong> to demonstrate a key building block of fault-tolerant quantum computation: <a href="https://www.nature.com/articles/s41586-025-09367-3">logical magic state distillation</a>. By both leveraging the universal quantum gate-set and all-to-all connectivity offered by our hardware, while also maximizing parallelism, this work demonstrates the potential of neutral atom QPUs. As the availability of Gemini-class machines increases in the near future, it is paramount to provide researchers with tools to develop quantum circuits that are well-suited for Gemini. With that goal in mind, we have released circuit-level noise models in bloqade that closely mimic the performance of the device for small system sizes, allowing for circuit optimization and feasibility checks.</p>
+<h2 id="motivation-for-gemini-class-digital-qpus">Motivation for Gemini-class digital QPUs</h2>
+<p>Operating in an analog mode of quantum computation QuEra’s <a href="https://www.quera.com/aquila">Aquila</a> quantum computer has opened exciting opportunities to leverage the flexibility of a neutral atom platform to explore the application forefront (such as <a href="https://arxiv.org/abs/2407.02553">optimization problems</a>, and <a href="https://pubs.acs.org/doi/10.1021/acs.jcim.5c00958">machine learning</a>), as well as to address more scientifically oriented questions (preparation of <a href="https://www.nature.com/articles/s41586-025-09051-6">exotic phases of matter</a>).</p>
+<p>In our journey towards building useful quantum computers, however, we find that operating in an analog mode limits the range of problems that we can address, as we only have control of a handful of parameters of the underlying device Hamiltonian. This is where a fully programmable digital quantum computer comes into the picture. The promise of this mode of operation is the ability to encode non-native problems to the neutral atom platform. For instance, one of the envisioned and most exciting applications of quantum computers is the accurate simulation (in terms of estimating ground state energy) of electrons in molecules and materials. The fermionic statistics of the target particles to simulate stand in contrast to the bosonic nature of the Rubidium atoms that constitute the building blocks of our platform.</p>
+<p>Furthermore, we need full control in the quantum device to encode interactions and tunneling parameters between the fermionic modes that discretize our target molecules and materials.
+In our quest to reach this level of maturity in quantum hardware, we introduce Gemini-class devices, that incorporate digital programmability features into our neutral atom quantum computing platform.</p>
+<h2 id="circuit-level-compared-to-hardware-level-programming">Circuit-level compared to hardware-level programming</h2>
+<p>Gemini-class devices are digital quantum computers.
+This allows the user to work on the circuit-level of abstraction rather than the hardware-level.
+While this opens many new classes of problems for study with our quantum hardware, in the current era of noisy intermediate scale quantum devices, it is imperative to
+consider potential noise processes when developing quantum programs.</p>
+<p>When writing a circuit, noise processes can be taken into account as channels that cause decoherence, thereby reducing
+the overall circuit fidelity.
+If the fidelity is too low, the results of the computation may include unwanted bias or the signal may be suppressed towards zero.
+Therefore, before executing a circuit it is critical to know whether this circuit will actually yield the desired results.
+This is where emulation comes in, which, in order to faithfully represent the results of Gemini, needs to account
+for noise.</p>
+<p>At the hardware level, quantum circuit design always needs to incorporate (or work around) the noise that is inherent to the QPU system.
+This comes at the loss of abstraction and subsequently high-level tooling.
+At the same time, however, it enables researchers to devise individual strategies in order to suppress noise in specific
+applications, which will oftentimes outperform today’s general-use compilers.
+Here, we will focus on circuit-level programming, but please refer
+to <a href="https://queracomputing.github.io/bloqade-shuttle/dev/">bloqade-shuttle</a> to learn more about our hardware-level
+programming capabilities.</p>
+<p>Even including noise channels, circuit-level programming remains abstract in that you do not have to consider the
+specific hardware you are running the circuit on.
+However, it is the very nature of the noise channels, where the details of the hardware come into play.
+To know whether a circuit will execute with a sufficiently high fidelity, the noise parameters and channels need to
+represent the infidelity of the gates executed on the particular hardware (in this case, Gemini).</p>
+<p>In order to provide users with the required set of tools, we have spent considerable time researching and implementing
+an easy-to-use framework that allows you to include Gemini’s particular noise processes in a high-level circuit.</p>
+<h2 id="heuristic-approach-to-noise">Heuristic approach to noise</h2>
+<p>The abstraction of noise to the circuit level allows all the noise sources on the device to be combined into
+“effective” Pauli noise channels. The effective channels are heuristic in nature, designed to capture the average
+behavior of atoms when the system performs certain circuit-level operations. The quantitative error probabilities are based on
+benchmarking experiments on Gemini hardware. They also take into account the dynamical decoupling that is needed to
+eliminate the effects of differential stark shifts during atom moves. Overall, the models can be expressed by six
+main noise channels:</p>
+<ol>
+<li>Global single qubit gate error
+<ul>
+<li>Depolarizing error applied to all qubits after a single qubit gate is applied to all qubits in parallel.</li>
+</ul>
+</li>
+<li>Local single qubit gate error
+<ul>
+<li>Depolarizing error applied to gated single qubits after a single qubit gate is applied to a subset of qubits.</li>
+</ul>
+</li>
+<li>CZ gate error
+<ul>
+<li>Pauli error channel that is biased towards phase errors applied to both qubits that are within the blockade radius
+during a Rydberg pulse.</li>
+<li>Incorporates errors from the Rydberg pulse and dynamical decoupling.</li>
+</ul>
+</li>
+<li>Unpaired Rydberg error
+<ul>
+<li>Pauli error channel is biased towards phase errors applied to single qubits that experience a Rydberg pulse but do
+not have a partner qubit within the blockade radius.</li>
+<li>Incorporates errors from the Rydberg pulse and dynamical decoupling.</li>
+</ul>
+</li>
+<li>Mover error
+<ul>
+<li>Pauli error channel that is also biased towards phase errors applied to qubits that must move during a circuit.</li>
+<li>Incorporates errors from transferring atoms from fixed tweezer traps to dynamical traps for moves, dynamical
+decoupling, move errors, and idling errors.</li>
+</ul>
+</li>
+<li>Sitter error
+<ul>
+<li>Pauli error channel that is applied to atoms that are stationary while other atoms are moving.</li>
+<li>Incorporates errors from dynamical decoupling and idling errors.</li>
+</ul>
+</li>
+</ol>
+<h2 id="example-noise-in-the-ghz-state">Example: Noise in the GHZ state</h2>
+<p>It is often most convenient to study an example in order to learn how to use a set of tools.
+To this end, we included a tutorial that shows how to annotate a GHZ preparation circuit using the different
+heuristic noise models.
+We’ll discuss some underlying concepts and highlight interesting parts of the tutorial in this section.
+If you want all the details, please find <a href="https://bloqade.quera.com/latest/digital/examples/interop/noisy_ghz/">the full example here</a>.</p>
+<h3 id="flow-chart">Flow chart</h3>
+<p>The intended workflow for using the circuit-level noise models is described in the flow chart below. The first step for
+a user interested in testing a specific quantum algorithm is to write an explicit circuit
+in <a href="https://quantumai.google/cirq">Cirq</a>. Once defined in Cirq, the circuit operations can be visualized with
+<code>print(circuit)</code>, which can be used to inspect the circuit after being passed through the various transformers within <code>bloqade</code>.
+Also, at any point, one may choose to simulate the result of the circuit with the tools provided by Cirq.</p>
+<p>By passing the circuit through the transformers in <code>parallelize.py</code>, within the <code>bloqade-circuit.cirq_utils</code> repository,
+the circuit structure can be brought closer to optimal for the neutral atom platform. Then, by using the transformers
+in <code>noise.transform.py</code>, Pauli error channels are locally added to the circuit. The function <code>transform_circuit</code> acts as
+a wrapper for the different noise models, which correspond to different modes of hardware operation.</p>
+<p>Finally, we maintain interoperability between Squin (Bloqade’s circuit-level intermediate representation) and
+Cirq. Squin allows for simulation with different backends, including PyQrack, while also allowing for lowering to
+hardware-level programs for execution on Gemini.</p>
+<p><img src="/blog/flowchart.png" alt="cirq_utils_flowchart"/></p>
+<h3 id="annotated-circuit">Annotated circuit</h3>
+<p>In practice, our heuristic noise models are used to annotate circuits with incoherent channels, with a “coarse-grained”
+awareness of hardware. As a simple example, let’s consider the following that assumes noise annotation according to a
+two-zone layout using the <code>GeminiTwoZoneNoiseModel</code> in <code>bloqade-circuit.cirq_utils.noise.models</code>:</p>
+<p><img src="/blog/example_annotation.svg" alt="Noise annotation example. Two zone model"/></p>
+<p>In our annotation scheme, assume that we are iterating sequentially over the layers of a quantum circuit, and we encounter the layer depicted in a) on which we will add the noise channels. One important assumption in our two-zone model to keep in mind is that the qubits corresponding to the gates appearing in a given layer will be treated as being in the gate zone, and thus the rest of the qubits are assumed to be in the storage zone.</p>
+<p>To capture the cost of moves to reach a given configuration, we need to take a closer look at the layer that precedes our current target layer. In b), we explicitly show the layer that was annotated with noise in the previous iteration, with its corresponding qubit spatial layout below it. The move cost to reach the target qubit configuration before qubit execution is shown in c), and noise annotation is carried out according to three sequential stages: 1) qubits that need to be removed from the gate zone undergo move error (orange crosses), and the rest get sitter error, 2) similarly, qubits that need to be added to the gate zone get move error and the rest get sitter noise, and 3) additional move error to “pair up” qubits is added before gate execution (notice that more than one layer might be needed to account for this cost).</p>
+<p>Finally, noise is annotated after gates, where it is assumed that entangling gates are executed in hardware before single qubit gates. In doing so, qubits that are not participant in the entangling gates receive unpaired cz error (green pentagons).</p>
+<h3 id="ghz-data">GHZ data</h3>
+<p>Now, let’s look at some results of <a href="https://bloqade.quera.com/latest/digital/examples/interop/noisy_ghz/">the example</a> that compares the different
+noise processes.</p>
+<p>The different noise models lead to overall different infidelities of the circuit:</p>
+<p><img src="/blog/noisy_ghz_fidelity.svg" alt="GHZ circuit fidelity with different noise models"/></p>
+<p>As you’d expect, the general trend is that fidelity decreases with a growing number of qubits.
+Depending on how many qubits you need, you may want to run the above simulation in order to decide whether you’d want to
+operate Gemini in a one-zone or a two-zone setup.</p>
+<p>On a more abstract level, you may also want to optimize the circuit that you use to obtain the result you want.
+The example uses a linear-depth GHZ algorithm, which is arguably not the best choice to prepare a GHZ state.</p>
+<p>Using our noise framework, you can explore and analyze different strategies to find the one best suited for your
+particular application.</p>
+<h2 id="learn-more">Learn more</h2>
+<p>The future for Gemini is bright! Apart from demonstrating <a href="https://arxiv.org/abs/2412.15165">logical magic state distillation</a>, Gemini-class QPUs also form the foundation of QuEra’s participation in the <a href="https://www.quera.com/press-releases/two-projects-powered-by-quera-computing-contributions-move-to-phase-three-of-wellcome-leaps-quantum-for-bio-challenge-focused-on-healthcare-and-biology-applications">Quantum for Bio</a> program. QuEra will serve as the hardware provider for 2 of 6 of the teams that have advanced to the final phase of the challenge. With an eye towards general availability of Gemini-class devices, there’s no better time for quantum developers to begin crafting circuits that are well-suited for Gemini. The <a href="https://bloqade.quera.com/latest/digital/">documentation for Bloqade-circuit</a> as well as our <a href="https://bloqade.quera.com/latest/digital/examples/">tutorial guides</a> are a great place to start.</p> </div> </article>  </main> <footer class="site-footer"> <div class="site-footer__inner"> <div class="site-footer__brand"> <img class="site-logo site-logo-light" src="/next/_astro/logo.5u8zFnG2.svg" alt="Bloqade" height="24"> <img class="site-logo site-logo-dark" src="/next/_astro/logo-dark.CB6A5JOA.svg" alt="Bloqade" height="24"> <p>The Neutral Atom SDK, by QuEra Computing.</p> </div> <nav class="site-footer__links" aria-label="Footer"> <a href="/guides/example/"> Guides </a><a href="/api/"> API </a><a href="/blog/"> Blog </a><a href="https://quera.com" rel="noopener"> QuEra </a><a href="https://github.com/QuEraComputing/bloqade" rel="noopener"> GitHub </a> </nav> </div> <p class="site-footer__legal">
+&copy; 2026 QuEra Computing Inc. Licensed under Apache 2.0.
+</p> </footer> </body></html>
