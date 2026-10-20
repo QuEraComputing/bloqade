@@ -13,7 +13,10 @@ import re
 from pathlib import Path
 from urllib.request import Request, urlopen
 
-import tomllib
+try:
+    import tomllib
+except ModuleNotFoundError:  # Python 3.10, covered by Bloqade's CI matrix.
+    import tomli as tomllib
 
 PIN = re.compile(
     r"^(?P<name>[A-Za-z0-9_.-]+)(?:\[[^]]+\])?~=(?P<version>\d+\.\d+\.\d+)$"

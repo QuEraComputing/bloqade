@@ -521,6 +521,7 @@ dev = [
     { name = "pytest" },
     { name = "ruff" },
     { name = "rust-just" },
+    { name = "tomli", marker = "python_full_version < '3.11'" },
     { name = "tomlkit" },
 ]
 doc = [
@@ -579,6 +580,7 @@ dev = [
     { name = "pytest", specifier = ">=8.3.3" },
     { name = "ruff", specifier = ">=0.7.3" },
     { name = "rust-just", specifier = ">=1.36.0" },
+    { name = "tomli", marker = "python_full_version < '3.11'", specifier = ">=2.0.1" },
     { name = "tomlkit", specifier = ">=0.13.2" },
 ]
 doc = [
