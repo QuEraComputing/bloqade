@@ -10,9 +10,10 @@ import argparse
 import json
 import os
 import re
-import tomllib
 from pathlib import Path
 from urllib.request import Request, urlopen
+
+import tomllib
 
 PIN = re.compile(
     r"^(?P<name>[A-Za-z0-9_.-]+)(?:\[[^]]+\])?~=(?P<version>\d+\.\d+\.\d+)$"
