@@ -472,7 +472,7 @@ css = [
 
 [[package]]
 name = "bloqade"
-version = "0.37.0.dev0"
+version = "0.37.1.dev0"
 source = { editable = "." }
 dependencies = [
     { name = "bloqade-analog" },
