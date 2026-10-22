@@ -24,7 +24,8 @@ dependencies = [
     "bloqade-analog~=0.16.9",
     "bloqade-lanes~=0.11.9",
     "bloqade-tsim~=0.1.5",
-    "bloqade-core~=0.6.8"
+    "bloqade-core~=0.6.13",
+    "bloqade-decoders~=0.6.1"
 ]
 
 [project.optional-dependencies]
@@ -32,9 +33,7 @@ cudaq = [
     "bloqade-lanes[cudaq]"
 ]
 sim = [
-    "bloqade-lanes[sim, ppvm]",
-    # TODO: this can be cleaned up later
-    "ppvm",
+    "bloqade-lanes[sim]",
     "bloqade-lanes[clifft]; python_version >= '3.12'"
 ]
 decoding = [
@@ -63,6 +62,12 @@ allow-direct-references = true
 packages = ["src/bloqade"]
 
 [dependency-groups]
+# Temporary until QuEra's PPVM has a PyPI release. Keep Git-source PPVM out of
+# published project and optional dependencies, including the sim extra.
+ppvm = [
+    "bloqade-lanes[ppvm]",
+    "ppvm",
+]
 dev = [
     "black>=24.10.0",
     "bloqade-tsim>=0.1.0",
@@ -76,6 +81,7 @@ dev = [
     "pytest>=8.3.3",
     "ruff>=0.7.3",
     "rust-just>=1.36.0",
+    "tomli>=2.0.1; python_version < '3.11'",
     "tomlkit>=0.13.2",
 ]
 doc = [
