@@ -25,7 +25,8 @@ dependencies = [
     "bloqade-lanes~=0.11.9",
     "bloqade-tsim~=0.1.5",
     "bloqade-core~=0.6.13",
-    "bloqade-decoders~=0.6.1"
+    "bloqade-decoders~=0.6.1",
+    "bloqade-ppvm~=0.1.1"
 ]
 
 [project.optional-dependencies]
@@ -62,12 +63,6 @@ allow-direct-references = true
 packages = ["src/bloqade"]
 
 [dependency-groups]
-# Temporary until QuEra's PPVM has a PyPI release. Keep Git-source PPVM out of
-# published project and optional dependencies, including the sim extra.
-ppvm = [
-    "bloqade-lanes[ppvm]",
-    "ppvm",
-]
 dev = [
     "black>=24.10.0",
     "bloqade-tsim>=0.1.0",
@@ -145,6 +140,3 @@ include = ["src/bloqade/*"]
 [tool.ruff.lint.per-file-ignores]
 "docs/digital/tutorials/*.py" = ["E402", "F401"]  # ignore import not at top and unused
 "docs/digital/examples/*.py" = ["E402"]  # ignore imports not at top
-
-[tool.uv.sources]
-ppvm = { git = "https://github.com/QuEraComputing/ppvm.git", subdirectory = "ppvm-python" }
