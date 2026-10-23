@@ -1,0 +1,82 @@
+name: Backport merged PR
+
+on:
+  pull_request_target:
+    branches: [main]
+    types: [closed, labeled]
+  workflow_dispatch:
+    inputs:
+      pull_number:
+        description: Merged main PR to backport using its current backport labels
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backport-${{ github.event.pull_request.number || inputs.pull_number }}
+  cancel-in-progress: false
+
+jobs:
+  backport:
+    if: >-
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request_target' &&
+       github.event.pull_request.merged == true &&
+       (github.event.action == 'closed' || startsWith(github.event.label.name, 'backport v')))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      # This privileged workflow never checks out or executes an unmerged PR.
+      # Do not execute repository scripts after the action cherry-picks changes.
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          token: ${{ secrets.BACKPORT_TOKEN || github.token }}
+
+      - name: Resolve and validate release targets
+        id: targets
+        uses: actions/github-script@v9
+        env:
+          SOURCE_PR: ${{ github.event.pull_request.number || inputs.pull_number }}
+        with:
+          script: |
+            const { prepare } = require('./.github/scripts/backport-targets.cjs');
+            await prepare({ github, context, core, pullNumber: process.env.SOURCE_PR });
+
+      - name: Explain token limitations
+        if: steps.targets.outputs.targets != ''
+        uses: actions/github-script@v9
+        env:
+          HAS_BACKPORT_TOKEN: ${{ secrets.BACKPORT_TOKEN != '' }}
+        with:
+          script: |
+            if (process.env.HAS_BACKPORT_TOKEN !== 'true') {
+              core.warning('Using GITHUB_TOKEN: a maintainer must approve the backport PR workflows before CI runs. See CONTRIBUTING.md for details and optional BACKPORT_TOKEN setup.');
+            }
+
+      - name: Create backport PRs
+        id: backport
+        if: steps.targets.outputs.targets != ''
+        uses: korthout/backport-action@8560fb503c275d433c56f05a2f64850093baa9f7 # v4
+        with:
+          github_token: ${{ secrets.BACKPORT_TOKEN || github.token }}
+          source_pr_number: ${{ steps.targets.outputs.pull_number }}
+          # Labels are translated and validated above, not interpreted as refs.
+          label_pattern: ''
+          target_branches: ${{ steps.targets.outputs.targets }}
+          branch_name: codex/backport-${pull_number}-to-${target_branch}
+          pull_title: '${pull_title} (backport of #${pull_number})'
+          copy_labels_pattern: '^(?!.*[Bb][Aa][Cc][Kk][Pp][Oo][Rr][Tt]).*$'
+          cherry_picking: auto
+          comment_style: summary
+          auto_merge_enabled: false
+
+      - name: Fail if any target could not be backported
+        if: steps.backport.outputs.was_successful == 'false'
+        uses: actions/github-script@v9
+        with:
+          script: core.setFailed('Some backports failed. See the summary comment on the source PR for recovery instructions.');
