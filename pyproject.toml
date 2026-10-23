@@ -24,7 +24,8 @@ dependencies = [
     "bloqade-analog~=0.16.9",
     "bloqade-lanes~=0.11.9",
     "bloqade-tsim~=0.1.5",
-    "bloqade-core~=0.6.8"
+    "bloqade-core~=0.6.8",
+    "bloqade-ppvm~=0.1.1"
 ]
 
 [project.optional-dependencies]
@@ -32,9 +33,7 @@ cudaq = [
     "bloqade-lanes[cudaq]"
 ]
 sim = [
-    "bloqade-lanes[sim, ppvm]",
-    # TODO: this can be cleaned up later
-    "ppvm",
+    "bloqade-lanes[sim]",
     "bloqade-lanes[clifft]; python_version >= '3.12'"
 ]
 decoding = [
@@ -139,6 +138,3 @@ include = ["src/bloqade/*"]
 [tool.ruff.lint.per-file-ignores]
 "docs/digital/tutorials/*.py" = ["E402", "F401"]  # ignore import not at top and unused
 "docs/digital/examples/*.py" = ["E402"]  # ignore imports not at top
-
-[tool.uv.sources]
-ppvm = { git = "https://github.com/QuEraComputing/ppvm.git", subdirectory = "ppvm-python" }
