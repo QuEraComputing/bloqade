@@ -1,0 +1,50 @@
+name: Update direct dependencies
+
+on:
+  schedule:
+    - cron: "23 06 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: update-direct-dependencies
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.10.9"
+      - name: Check direct PyPI dependencies
+        id: bump
+        run: python .github/scripts/bump_dependencies.py --pr-body "$RUNNER_TEMP/dependency-update-pr.md"
+      - name: Refresh lockfile
+        if: steps.bump.outputs.changed == 'true'
+        run: uv lock
+      - name: Install and test proposed update
+        if: steps.bump.outputs.changed == 'true'
+        run: |
+          uv sync --locked --all-extras --dev
+          uv run --locked --all-extras pytest
+      - name: Create or update dependency PR
+        if: steps.bump.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: codex/automated-dependency-updates
+          commit-message: "update direct dependencies"
+          title: "Update Bloqade direct dependencies"
+          body-path: ${{ runner.temp }}/dependency-update-pr.md
+          add-paths: |
+            pyproject.toml
+            uv.lock
