@@ -35,8 +35,8 @@ jobs:
       - name: Install and test proposed update
         if: steps.bump.outputs.changed == 'true'
         run: |
-          uv sync --locked --all-extras --dev --group ppvm
-          uv run --locked --all-extras --group ppvm pytest
+          uv sync --locked --all-extras --dev
+          uv run --locked --all-extras pytest
       - name: Create or update dependency PR
         if: steps.bump.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v8

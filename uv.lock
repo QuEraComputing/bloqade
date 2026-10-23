@@ -480,6 +480,7 @@ dependencies = [
     { name = "bloqade-core" },
     { name = "bloqade-decoders" },
     { name = "bloqade-lanes" },
+    { name = "bloqade-ppvm" },
     { name = "bloqade-tsim" },
 ]
 
@@ -541,10 +542,6 @@ examples = [
     { name = "networkx", version = "3.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "networkx", version = "3.6.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
-ppvm = [
-    { name = "bloqade-lanes", extra = ["ppvm"] },
-    { name = "ppvm" },
-]
 
 [package.metadata]
 requires-dist = [
@@ -562,6 +559,7 @@ requires-dist = [
     { name = "bloqade-lanes", extras = ["decoding"], marker = "extra == 'decoding'" },
     { name = "bloqade-lanes", extras = ["sim"], marker = "extra == 'sim'" },
     { name = "bloqade-lanes", extras = ["visualization"], marker = "extra == 'atom-vis'" },
+    { name = "bloqade-ppvm", specifier = "~=0.1.1" },
     { name = "bloqade-tsim", specifier = "~=0.1.5" },
 ]
 provides-extras = ["cudaq", "sim", "decoding", "atom-vis", "circ-opt", "pyqrack-accel"]
@@ -597,10 +595,6 @@ doc = [
     { name = "pygments", specifier = "<2.20" },
 ]
 examples = [{ name = "networkx", specifier = ">=3.4.2" }]
-ppvm = [
-    { name = "bloqade-lanes", extras = ["ppvm"] },
-    { name = "ppvm", git = "https://github.com/QuEraComputing/ppvm.git?subdirectory=ppvm-python" },
-]
 
 [[package]]
 name = "bloqade-analog"
@@ -775,9 +769,6 @@ cudaq = [
 decoding = [
     { name = "bloqade-decoders", extra = ["mld", "mle"] },
 ]
-ppvm = [
-    { name = "ppvm" },
-]
 sim = [
     { name = "bloqade-circuit", extra = ["cirq", "tsim"] },
     { name = "bloqade-tsim" },
@@ -789,6 +780,25 @@ visualization = [
     { name = "pyqt5", marker = "sys_platform == 'darwin' or sys_platform == 'linux'" },
     { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+]
+
+[[package]]
+name = "bloqade-ppvm"
+version = "0.1.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "bloqade-circuit" },
+    { name = "kirin-toolchain" },
+    { name = "numpy" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/50/96/2e8a548c2431c698472ff60fa440ff4076839886cb904fd99d50316b475c/bloqade_ppvm-0.1.1.tar.gz", hash = "sha256:76cf77c3be2f335179b139c65e8711fe16651132ff7de8f52e339d2ba67c1e40", size = 568918, upload-time = "2026-10-23T13:14:10.708Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8d/29/0350d1ece3d8c871baa39fa0474f8e949b27a3e4555072a158fa2fddd62f/bloqade_ppvm-0.1.1-cp310-abi3-macosx_10_12_x86_64.whl", hash = "sha256:8181af353121d088b5e5d46bee859c92a70de7faa415dd493a7232d07b801ce7", size = 4651792, upload-time = "2026-10-23T13:14:00.045Z" },
+    { url = "https://files.pythonhosted.org/packages/ab/91/b65d76d379f256fa7ca5cb17b3cba55bf02431041e0562cb6debffa4a386/bloqade_ppvm-0.1.1-cp310-abi3-macosx_11_0_arm64.whl", hash = "sha256:3f1e925bf8ad3efdc58b17a25262115033ee9caf77e60185c65312f3473027e3", size = 4604601, upload-time = "2026-10-23T13:14:01.704Z" },
+    { url = "https://files.pythonhosted.org/packages/1c/73/385f4b887b55fde349c3629b73aabe9284d87c8bd81dc5c89add738cb5e7/bloqade_ppvm-0.1.1-cp310-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:da0ca979d7fa42d58f98f86b3e2954e703e4e4bb9e794d22b09082dfda0708cd", size = 18445175, upload-time = "2026-10-23T13:14:03.848Z" },
+    { url = "https://files.pythonhosted.org/packages/49/fa/1dfabf3d720da0953a13e71358a490ba7572f886ffb69f6e379c783a3c16/bloqade_ppvm-0.1.1-cp310-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:94a517008780d070d6f0486a11ca06c051549d5faf3494af70026e6ce8c9f11e", size = 19571481, upload-time = "2026-10-23T13:14:06.715Z" },
+    { url = "https://files.pythonhosted.org/packages/fd/7e/d57a7e6116a47b674049f5a001c572c2a32bb613c8b8e3885b76dcc8583c/bloqade_ppvm-0.1.1-cp310-abi3-win_amd64.whl", hash = "sha256:278be7d3f55bb0b62c4a018c5c1819a471f9aa6d8657ac0d59eb8d8dbdf5cfdf", size = 4859059, upload-time = "2026-10-23T13:14:09.305Z" },
 ]
 
 [[package]]
@@ -4856,16 +4866,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/7f/05/304deee59a95865e1b5e9ec7b066069b49093b81b768f473d9d3b165c686/polars_runtime_32-2.0.0-cp310-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:55c26eef325b6840584d91aac232e9cf3ac19e1b904594b9b54131be1edeab4d", size = 54413293, upload-time = "2026-10-06T11:50:31.828Z" },
     { url = "https://files.pythonhosted.org/packages/61/59/8c9fd7199f7c4eb1b64e640306a946a2e4a46337b3bbb33b840972c7d84b/polars_runtime_32-2.0.0-cp310-abi3-win_amd64.whl", hash = "sha256:7da1caf3c7b4f397fb213c984013a0c755557619a2d511899a1ff74392484078", size = 54229989, upload-time = "2026-10-06T11:50:35.206Z" },
     { url = "https://files.pythonhosted.org/packages/e2/93/43608026f38aa6ed4d22da8597706a61682ee403caef0021ce8e6dc73227/polars_runtime_32-2.0.0-cp310-abi3-win_arm64.whl", hash = "sha256:c30ba698c8904048df4a9bc3d6c5033cc2d0a7cbb0e13f4fd2de5a1947b61994", size = 48730655, upload-time = "2026-10-06T11:50:38.756Z" },
-]
-
-[[package]]
-name = "ppvm"
-version = "0.1.0"
-source = { git = "https://github.com/QuEraComputing/ppvm.git?subdirectory=ppvm-python#864fd4786d5df347fb8d9a429387403ed2dd2b72" }
-dependencies = [
-    { name = "bloqade-circuit" },
-    { name = "kirin-toolchain" },
-    { name = "numpy" },
 ]
 
 [[package]]
