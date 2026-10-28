@@ -14,11 +14,12 @@ classifiers = [
     "Development Status :: 3 - Alpha",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12"
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14"
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "bloqade-circuit[cirq,qasm2,qasm3,qbraid,vis,stim]~=0.15.3",
     "bloqade-analog~=0.16.9",
@@ -76,7 +77,6 @@ dev = [
     "pytest>=8.3.3",
     "ruff>=0.7.3",
     "rust-just>=1.36.0",
-    "tomli>=2.0.1; python_version < '3.11'",
     "tomlkit>=0.13.2",
 ]
 doc = [
@@ -107,7 +107,7 @@ src_paths = ["src/bloqade"]
 line-length = 88
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py311"
 exclude = [
     ".bzr",
     ".direnv",
