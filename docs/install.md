@@ -1,6 +1,6 @@
 # Installation
 
-Bloqade is compatible with Python 3.10+ and available on [PyPI](https://pypi.org/project/bloqade/).
+Bloqade is compatible with Python 3.11+ and available on [PyPI](https://pypi.org/project/bloqade/).
 You can install it via [`pip`](https://pypi.org/project/pip/) into your environment:
 
 
