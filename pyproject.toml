@@ -20,13 +20,17 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 dependencies = [
-    "bloqade-circuit[cirq,qasm2,qasm3,qbraid,vis,stim]~=0.15.3",
+    "bloqade-circuit[cirq,qasm2,qasm3,qbraid,vis,stim]~=0.15.5",
     "bloqade-analog~=0.16.9",
-    "bloqade-lanes~=0.11.9",
+    "bloqade-lanes>=0.12.0.dev0,<0.13",
     "bloqade-tsim~=0.1.5",
     "bloqade-core~=0.6.13",
     "bloqade-decoders~=0.6.1",
-    "bloqade-ppvm~=0.1.1"
+    "bloqade-ppvm~=0.1.1",
+    "kirin-toolchain~=0.22.14",
+    "numpy>=2.2.6",
+    "scipy>=1.15.3",
+    "typing-extensions>=4.12"
 ]
 
 [project.optional-dependencies]
@@ -132,6 +136,8 @@ exclude = [
 ]
 
 [tool.ruff.lint]
+# Preserve explicit typed re-exports; import formatting is handled by isort.
+ignore = ["I001", "PLC0414", "PLR0402"]
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.coverage.run]
@@ -140,3 +146,8 @@ include = ["src/bloqade/*"]
 [tool.ruff.lint.per-file-ignores]
 "docs/digital/tutorials/*.py" = ["E402", "F401"]  # ignore import not at top and unused
 "docs/digital/examples/*.py" = ["E402"]  # ignore imports not at top
+
+[tool.pytest.ini_options]
+markers = [
+    "msd_numerical_regression: optional long-running, environment-specific MSD numerical regression",
+]

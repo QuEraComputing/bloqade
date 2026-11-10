@@ -21,6 +21,12 @@ Bloqade is a Python SDK for neutral atom quantum computing. It provides a set of
 uv add bloqade
 ```
 
+This distribution includes `bloqade.gemini`: logical and physical kernel
+decorators, device/simulator interfaces, and decoding workflows. Compiler
+infrastructure is provided by the `bloqade-lanes` dependency. See
+[Gemini migration notes](GEMINI_MIGRATION.md) for the coordinated release
+requirements and compatibility details.
+
 ## Documentation
 
 The documentation is available at [https://queracomputing.github.io/bloqade/latest/](https://queracomputing.github.io/bloqade/latest/). We are at an early stage of completing the documentation with more details and examples, so comments and contributions are most welcome!
