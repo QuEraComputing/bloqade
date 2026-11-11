@@ -4790,7 +4790,7 @@ squin = [
 [[package]]
 name = "qlam-core"
 version = "0.8.0"
-source = { registry = "https://quera.jfrog.io/artifactory/api/pypi/Development/simple" }
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "email-validator" },
     { name = "httpx" },
@@ -4799,7 +4799,7 @@ dependencies = [
     { name = "segno" },
 ]
 wheels = [
-    { url = "https://quera.jfrog.io/artifactory/api/pypi/Development/qlam_core-0.8.0-py3-none-any.whl", hash = "sha256:1943709404648047e53cd62dcf61f139acc87950521d5c8dcd687e933dc5c28c" },
+    { url = "https://files.pythonhosted.org/packages/13/a0/243d692910480a40c857bc44f1ea4b7439ce62450bdc2c7849abb2210c75/qlam_core-0.8.0-py3-none-any.whl", hash = "sha256:1943709404648047e53cd62dcf61f139acc87950521d5c8dcd687e933dc5c28c", size = 171819, upload-time = "2026-10-01T19:21:57.039Z" },
 ]
 
 [[package]]
