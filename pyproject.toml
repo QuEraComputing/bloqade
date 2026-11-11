@@ -21,7 +21,7 @@ classifiers = [
 ]
 requires-python = ">=3.11"
 dependencies = [
-    "bloqade-circuit[cirq,qasm2,qasm3,qbraid,vis,stim]~=0.15.3",
+    "bloqade-circuit[cirq,qasm2,qasm3,qbraid,vis,stim]~=0.15.5",
     "bloqade-analog~=0.16.9",
     "bloqade-lanes~=0.11.9",
     "bloqade-tsim~=0.1.5",
