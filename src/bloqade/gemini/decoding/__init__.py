@@ -3,8 +3,7 @@
 """Notebook-focused Gemini decoding helpers."""
 
 from bloqade.gemini.decoding.confidence import (
-    ConfidenceDecoder,
-    GurobiDecoderWithConfidence,
+    GurobiDecoder,
 )
 from bloqade.gemini.decoding.tomography import TomographyResult
 from bloqade.gemini.decoding.experiments import (
@@ -14,14 +13,13 @@ from bloqade.gemini.decoding.experiments import (
     single_qubit_state_tomography,
 )
 from bloqade.gemini.decoding.postselection import PostselectionCurveData
-from bloqade.gemini.decoding.table_decoders import TableDecoderWithConfidence
+from bloqade.gemini.decoding.table_decoders import TableDecoder
 
 __all__ = [
-    "ConfidenceDecoder",
-    "GurobiDecoderWithConfidence",
+    "GurobiDecoder",
     "PostSelectionExperiment",
     "PostselectionCurveData",
-    "TableDecoderWithConfidence",
+    "TableDecoder",
     "TomographyResult",
     "empty_logical_circuit",
     "magic_state_dist_steane",

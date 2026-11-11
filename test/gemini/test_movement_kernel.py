@@ -6,14 +6,14 @@ from bloqade.squin import gate, qubit
 from kirin.prelude import structural_no_opt
 from kirin.dialects import debug, ilist
 from kirin.ir.exception import ValidationErrorGroup
-from bloqade.lanes.dialects import arch as arch_dialect
+from bloqade.lanes.dialects import arch as arch_dialect, arrange as arrange_dialect
 from kirin.lowering.exception import BuildError
 from bloqade.decoders.dialects import annotate
-from bloqade.lanes.dialects.arch import new_at
 from bloqade.lanes.bytecode.encoding import LocationAddress
 
 import bloqade.gemini as gemini
-from bloqade.gemini.logical import loc, move_to, terminal_measure
+from bloqade.gemini import new_at, move_to
+from bloqade.gemini.logical import loc, terminal_measure
 from bloqade.gemini.physical import kernel as movement_kernel
 
 
@@ -29,8 +29,7 @@ def test_movement_kernel_has_only_physical_source_dialects():
                 qubit,
                 gate,
                 annotate,
-                gemini.common.dialects.qubit,
-                gemini.common.dialects.arrange,
+                arrange_dialect,
                 arch_dialect,
                 debug,
             ]

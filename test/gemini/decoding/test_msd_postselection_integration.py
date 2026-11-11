@@ -5,7 +5,7 @@ import numpy as np
 from bloqade.gemini.device import TsimSimulatorBackend, GeminiLogicalSimulator
 from bloqade.gemini.decoding import (
     PostSelectionExperiment,
-    TableDecoderWithConfidence,
+    TableDecoder,
     empty_logical_circuit,
     magic_state_dist_steane,
     single_qubit_state_tomography,
@@ -16,7 +16,21 @@ _TARGET_BLOCH = np.ones(3, dtype=np.float64) / np.sqrt(3.0)
 _DECODER_SEED = 10
 _SIMULATOR_SEED = 10
 _DECODER_TRAINING_SHOTS = 100
-_SIMULATION_SHOTS = 100
+# Retain enough factory-postselected shots to cover every tomography basis.
+_SIMULATION_SHOTS = 1_000
+
+
+def _initialize_seeded_decoders(experiment: PostSelectionExperiment) -> None:
+    # Upstream training is unseeded; supply deterministic samples via its public API.
+    for pair in experiment.initialize_decoders().values():
+        for decoder in pair:
+            assert isinstance(decoder, TableDecoder)
+            detectors, observables, _ = decoder.dem.compile_sampler(
+                seed=_DECODER_SEED
+            ).sample(_DECODER_TRAINING_SHOTS)
+            decoder.update_det_obs_counts(
+                np.concatenate([detectors, observables], axis=1)
+            )
 
 
 def _sample_tasks_sequentially(
@@ -43,16 +57,15 @@ def _run_seeded_distilled_msd() -> float:
         nonclifford_prefix,
         clifford_circuit,
         single_qubit_state_tomography(),
-        TableDecoderWithConfidence,
+        TableDecoder,
         decoder_init_args={
-            "seed": _DECODER_SEED,
-            "num_shots": _DECODER_TRAINING_SHOTS,
+            "num_shots": 0,
         },
     )
     experiment.kernels(num_logical_qubits=5)
     experiment.dem_circuits()
     experiment.dems()
-    experiment.initialize_decoders()
+    _initialize_seeded_decoders(experiment)
     _sample_tasks_sequentially(
         experiment,
         GeminiLogicalSimulator(backend=TsimSimulatorBackend(seed=_SIMULATOR_SEED)),
@@ -67,16 +80,15 @@ def _run_seeded_injected_msd() -> float:
         nonclifford_prefix,
         empty_logical_circuit(),
         single_qubit_state_tomography(),
-        TableDecoderWithConfidence,
+        TableDecoder,
         decoder_init_args={
-            "seed": _DECODER_SEED,
-            "num_shots": _DECODER_TRAINING_SHOTS,
+            "num_shots": 0,
         },
     )
     experiment.kernels(num_logical_qubits=1)
     experiment.dem_circuits()
     experiment.dems()
-    experiment.initialize_decoders()
+    _initialize_seeded_decoders(experiment)
     _sample_tasks_sequentially(
         experiment,
         GeminiLogicalSimulator(backend=TsimSimulatorBackend(seed=_SIMULATOR_SEED)),

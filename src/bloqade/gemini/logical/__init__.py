@@ -33,11 +33,11 @@ from bloqade.lanes.dialects.steane713 import terminal_measure as terminal_measur
 
 from bloqade.gemini.logical import (
     impl as impl,
-    dialects as dialects,
     extensions as extensions,
     validation as validation,
 )
 from bloqade.gemini.logical.group import kernel as kernel
+from bloqade.gemini.logical.extensions import star_rz as star_rz
 from bloqade.gemini.logical.stdlib import (
     broadcast as broadcast,
     qalloc_at as qalloc_at,
@@ -63,7 +63,6 @@ __all__ = [
     "cy",
     "cz",
     "default_post_processing",
-    "dialects",
     "extensions",
     "h",
     "ilist",
@@ -85,6 +84,7 @@ __all__ = [
     "sqrt_y_adj",
     "sqrt_z",
     "sqrt_z_adj",
+    "star_rz",
     "swap",
     "t",
     "t_adj",

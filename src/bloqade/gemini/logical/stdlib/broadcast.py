@@ -24,3 +24,5 @@ from bloqade.squin.stdlib.broadcast import (
     sqrt_y_adj as sqrt_y_adj,
     sqrt_z_adj as sqrt_z_adj,
 )
+
+from bloqade.gemini.logical.extensions.broadcast import star_rz as star_rz

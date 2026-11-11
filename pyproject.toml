@@ -24,8 +24,8 @@ dependencies = [
     "bloqade-analog~=0.16.9",
     "bloqade-lanes>=0.12.0.dev0,<0.13",
     "bloqade-tsim~=0.1.5",
-    "bloqade-core~=0.6.13",
-    "bloqade-decoders~=0.6.1",
+    "bloqade-core~=0.6.15",
+    "bloqade-decoders>=0.7.0",
     "bloqade-ppvm~=0.1.1",
     "kirin-toolchain~=0.22.14",
     "numpy>=2.2.6",
@@ -43,7 +43,9 @@ sim = [
 ]
 decoding = [
     "bloqade-lanes[decoding]",
-    "bloqade-decoders[mwpf, mle, mld, sinter]",
+    "bloqade-decoders[mwpf, mle, milp, mld, sinter]",
+    # MILPDecoder 0.7 uses the PuLP 3 variable API.
+    "pulp>=2.9,<4",
     "bloqade-decoders[tesseract]; python_version >= '3.12'"
 ]
 atom-vis = [

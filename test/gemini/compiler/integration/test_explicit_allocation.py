@@ -1,7 +1,7 @@
 """End-to-end integration tests for explicit qubit allocation.
 
 These tests exercise the full ``squin_to_move`` pipeline with kernels that mix
-``squin.qalloc`` (un-pinned) and ``gemini.common.new_at`` (pinned) qubits, and
+``squin.qalloc`` (un-pinned) and ``gemini.new_at`` (pinned) qubits, and
 verify the resulting move IR carries the requested pinned addresses.
 Failure-mode tests confirm const-prop, over-constraining and
 semantic-illegality errors surface at compile time.

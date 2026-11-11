@@ -20,12 +20,13 @@ import bloqade.gemini as gemini
 
 
 def test_star_rz_public_api_single_qubit_lowers_to_statement():
+    assert gemini.logical.star_rz is gemini.logical.extensions.star_rz
     theta = math.pi / 16
 
-    @gemini.logical.kernel(aggressive_unroll=True, verify=False)
+    @gemini.logical.kernel
     def kernel():
         reg = squin.qalloc(1)
-        gemini.logical.extensions.star_rz(theta, reg[0])
+        gemini.logical.star_rz(theta, reg[0])
         gemini.logical.terminal_measure(reg)
 
     star_nodes = [
@@ -39,12 +40,16 @@ def test_star_rz_public_api_single_qubit_lowers_to_statement():
 
 
 def test_star_rz_broadcast_lowers_to_statement():
+    assert (
+        gemini.logical.broadcast.star_rz is gemini.logical.extensions.broadcast.star_rz
+    )
     theta = math.pi / 16
 
-    @gemini.logical.kernel(aggressive_unroll=True)
+    @gemini.logical.kernel
     def kernel():
-        reg = squin.qalloc(1)
-        gemini.logical.extensions.broadcast.star_rz(theta, reg)
+        reg = squin.qalloc(2)
+        gemini.logical.broadcast.h(reg)
+        gemini.logical.broadcast.star_rz(theta, reg)
         gemini.logical.terminal_measure(reg)
 
     star_nodes = [

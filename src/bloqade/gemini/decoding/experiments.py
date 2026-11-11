@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import math
-from typing import TYPE_CHECKING, cast
-from collections.abc import Mapping, Callable
+from typing import TYPE_CHECKING
+from collections.abc import Mapping
 
 import stim
 import numpy as np
@@ -28,9 +28,9 @@ from bloqade.gemini.decoding.kernels import (
 )
 from bloqade.gemini.decoding.sampling import _BasisDataset
 from bloqade.gemini.decoding.workflow import _plot_decoder_curves
-from bloqade.gemini.decoding.confidence import ConfidenceDecoder
-from bloqade.gemini.decoding.tomography import _DEFAULT_TARGET_BLOCH, TomographyResult
+from bloqade.gemini.decoding.tomography import TomographyResult
 from bloqade.gemini.decoding.postselection import (
+    _DEFAULT_TARGET_BLOCH,
     PostselectionCurveData,
     _DecodedPostselectionResult,
     _shots_at_accepted_fraction,
@@ -104,7 +104,7 @@ class _PostSelectionExperimentCache:
     dem_kernels: dict[str, ir.Method[..., _LogicalTomographyReturn]] | None
     dem_circuits: Mapping[str, tsim_backend.Circuit] | None
     dems: Mapping[str, stim.DetectorErrorModel] | None
-    decoders_with_confidence: Mapping[str, tuple[ConfidenceDecoder, BaseDecoder]] | None
+    decoders_with_confidence: Mapping[str, tuple[BaseDecoder, BaseDecoder]] | None
     raw_results: Mapping[str, _BasisDataset] | None
     decoded_results: Mapping[str, _DecodedPostselectionResult] | None
     thresholded_data: PostselectionCurveData | None
@@ -151,7 +151,7 @@ class PostSelectionExperiment:
         These kernels will be appended to your circuits in the following fashion, for each `basis_label in tomography_circuits`:
             `nonclifford_prefix + clifford_circuit + tomography_circuits[basis_label]`
             From these circuits in each basis, a DEM will be extracted to initialize decoders in each basis.
-        decoder (type[ConfidenceDecoder]): A type of ConfidenceDecoder used to initialize decoders.
+        decoder (type[BaseDecoder]): A type of BaseDecoder used to initialize decoders.
         decoder_init_args (Mapping[str, object] | None): Optional arguments that can be passed in to initialize the decoder. Defaults to None.
     """
 
@@ -160,7 +160,7 @@ class PostSelectionExperiment:
         nonclifford_prefix: ir.Method[..., None],
         clifford_circuit: ir.Method[..., None],
         tomography_circuits: Mapping[str, ir.Method[..., None]],
-        decoder: type[ConfidenceDecoder],
+        decoder: type[BaseDecoder],
         decoder_init_args: Mapping[str, object] | None = None,
     ):
         self.nonclifford_prefix = nonclifford_prefix
@@ -259,7 +259,7 @@ class PostSelectionExperiment:
         self._postselection_exp_cache.dems = dems
         return dems
 
-    def initialize_decoders(self) -> dict[str, tuple[ConfidenceDecoder, BaseDecoder]]:
+    def initialize_decoders(self) -> dict[str, tuple[BaseDecoder, BaseDecoder]]:
         """
         Initializes the decoders for the tomography circuits in each basis from the detector error models.
         This function utilizes correlated decoding (https://arxiv.org/abs/2403.03272).
@@ -272,13 +272,13 @@ class PostSelectionExperiment:
         Note: this function depends on dems() being called.
 
         Returns:
-            dict[str, tuple[ConfidenceDecoder, BaseDecoder]]: A dictionary mapping each basis label to (factory_decoder, full_decoder), where factory_decoder
+            dict[str, tuple[BaseDecoder, BaseDecoder]]: A dictionary mapping each basis label to (factory_decoder, full_decoder), where factory_decoder
             decodes the ancilla qubits jointly and full_decoder decodes the output qubit jointly with the information on all logical qubits.
         """
         dems_bases = self._postselection_exp_cache.dems
         if dems_bases is None:
             raise RuntimeError("dems must be called before initialize_decoders.")
-        decoders_bases: dict[str, tuple[ConfidenceDecoder, BaseDecoder]] = {}
+        decoders_bases: dict[str, tuple[BaseDecoder, BaseDecoder]] = {}
         # NOTE: there is a question of if we want to support multi-qubit
         # tomography in this experiment. For now, probably not; if we did, we
         # would have to specify the number of output qubits and their locations
@@ -306,16 +306,9 @@ class PostSelectionExperiment:
             # to build the 2 decoders. It might be more efficient if, from the same sampled data, we constructed the factory and full decoders (so we just
             # have to sample once per basis). But, the current TableDecoder does not support that API (as we assume that training happens during
             # initialization of the TableDecoder).
-            # TODO: this is because the current API does NOT support decoder(dem, **kwargs) for the constructor so we have to
-            # do a cast. We would want to decide on the decoder __init__ API to be able to avoid such a cast (e.g., to have **kwargs in the __init__ function
-            # in the abstract class)
-            # The reason why the factory decoder is a ConfidenceDecoder is that technically, we only need confidence scores when decoding the ancilla qubits.
-            decoder_constructor = cast(Callable[..., ConfidenceDecoder], self.decoder)
-            full_decoder = cast(
-                BaseDecoder,
-                decoder_constructor(full_dem, **self.decoder_init_args),
-            )
-            factory_decoder = decoder_constructor(factory_dem, **self.decoder_init_args)
+            # Both decoders follow BaseDecoder; only the factory needs confidence.
+            full_decoder = self.decoder(full_dem, **self.decoder_init_args)
+            factory_decoder = self.decoder(factory_dem, **self.decoder_init_args)
             decoders_bases[basis_label] = (factory_decoder, full_decoder)
         self._postselection_exp_cache.decoders_with_confidence = decoders_bases
         return decoders_bases
@@ -475,7 +468,12 @@ class PostSelectionExperiment:
             accepting all shots that passed postselection, not all shots used to perform the experiment.
 
         Returns:
-            TomographyResult: The resulting shots in each basis based on the accepted_fraction provided.
+            TomographyResult: Single-qubit tomography using a one-dimensional
+                shot array per basis.
+
+        Raises:
+            ValueError: If any basis has no selected shots. Increase the accepted
+                fraction or collect more shots to retain coverage of every basis.
         """
 
         decoded_results = self._postselection_exp_cache.decoded_results
@@ -490,7 +488,32 @@ class PostSelectionExperiment:
             accepted_fraction,
             basis_labels=basis_labels,
         )
-        return TomographyResult(shots_by_basis)
+        empty_bases = [
+            basis for basis, shots in shots_by_basis.items() if not len(shots)
+        ]
+        if empty_bases:
+            selected_counts = {
+                basis: len(shots) for basis, shots in shots_by_basis.items()
+            }
+            postselected_counts = {
+                basis: len(result.observables)
+                for basis, result in decoded_results.items()
+            }
+            advice = (
+                "Collect more shots or review the factory postselection criteria."
+                if any(postselected_counts[basis] == 0 for basis in empty_bases)
+                else "Increase accepted_fraction to retain shots in every basis."
+            )
+            raise ValueError(
+                "Cannot estimate tomography without shots in every basis; "
+                f"empty bases: {', '.join(empty_bases)}. "
+                f"Selected counts: {selected_counts}; "
+                f"postselected counts before the confidence cut: {postselected_counts}. "
+                + advice
+            )
+        return TomographyResult(
+            {basis: shots[:, 0] for basis, shots in shots_by_basis.items()}
+        )
 
     def analysis_visualization(
         self, min_accepted_fraction: float = 0.04, title: str | None = None

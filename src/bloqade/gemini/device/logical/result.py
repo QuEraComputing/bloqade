@@ -121,15 +121,13 @@ class GeminiLogicalResult(Result, Generic[RetType]):
         True indicates a projective measurement of the |1> state or atom loss; False indicates a projective measurement of the |0> state.
         > To be specific, True means that the atom was not detected, meaning that it could be lost or in an excited state. False means the atom was detected, so it was in the ground state.
         """
-        from bloqade.gemini.device.logical.utils import shot_results_for_subtasks
-
         ret_vals: list[list[list[bool]]] = []
-        # TODO: OK to set verify=True?
-        subtasks = self.subtasks(verify=True)
-        postprocessing_functions = self._slm_postprocessing_functions()
-        shot_results = shot_results_for_subtasks(
-            self.storage, self.shot_filter, subtasks, frame_type="DETECTED"
+        detected_result = replace(
+            self, shot_filter=replace(self.shot_filter, frame_type="DETECTED")
         )
+        subtasks = detected_result.subtasks(verify=True)
+        postprocessing_functions = self._slm_postprocessing_functions()
+        shot_results = detected_result.shot_results()
 
         for shot_result, subtask in zip(shot_results, subtasks):
             func = postprocessing_functions[subtask["program_index"]][0]
@@ -191,18 +189,13 @@ class GeminiLogicalResult(Result, Generic[RetType]):
 
         True indicates that the atom was present in the sorted frame; False indicates that the atom was not present in the sorted frame.
         """
-        from bloqade.gemini.device.logical.utils import (
-            aligned_detected_and_sorted_shots_for_subtasks,
-        )
-
         ret_vals: list[list[list[bool]]] = []
-        subtasks = self.subtasks(verify=True)
-        postprocessing_functions = self._slm_postprocessing_functions()
-        _, shot_results = aligned_detected_and_sorted_shots_for_subtasks(
-            self.storage,
-            self.shot_filter,
-            subtasks,
+        sorted_result = replace(
+            self, shot_filter=replace(self.shot_filter, frame_type="SORTED")
         )
+        subtasks = sorted_result.subtasks(verify=True)
+        postprocessing_functions = self._slm_postprocessing_functions()
+        shot_results = sorted_result.shot_results()
 
         for shot_result, subtask in zip(shot_results, subtasks):
             func = postprocessing_functions[subtask["program_index"]][0]

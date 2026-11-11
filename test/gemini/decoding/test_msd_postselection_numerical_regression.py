@@ -13,7 +13,7 @@ import pytest
 from bloqade.gemini.device import CliffTSimulatorBackend, GeminiLogicalSimulator
 from bloqade.gemini.decoding import (
     PostSelectionExperiment,
-    TableDecoderWithConfidence,
+    TableDecoder,
     empty_logical_circuit,
     magic_state_dist_steane,
     single_qubit_state_tomography,
@@ -28,6 +28,19 @@ _EXPECTED_INJECTED_FIDELITY = 0.945448826690564
 # Seeded Stim samples are stable enough for numerical-regression checks but not
 # bit-identical across all supported runner configurations.
 _FIDELITY_TOLERANCE = 1e-2
+
+
+def _initialize_seeded_decoders(experiment: PostSelectionExperiment) -> None:
+    # Upstream training is unseeded; supply deterministic samples via its public API.
+    for pair in experiment.initialize_decoders().values():
+        for decoder in pair:
+            assert isinstance(decoder, TableDecoder)
+            detectors, observables, _ = decoder.dem.compile_sampler(seed=_SEED).sample(
+                10**7
+            )
+            decoder.update_det_obs_counts(
+                np.concatenate([detectors, observables], axis=1)
+            )
 
 
 def _sample_tasks_sequentially(
@@ -48,13 +61,13 @@ def _run_distilled_msd() -> float:
         nonclifford_prefix,
         clifford_circuit,
         single_qubit_state_tomography(),
-        TableDecoderWithConfidence,
-        decoder_init_args={"seed": _SEED},
+        TableDecoder,
+        decoder_init_args={"num_shots": 0},
     )
     experiment.kernels(num_logical_qubits=5)
     experiment.dem_circuits()
     experiment.dems()
-    experiment.initialize_decoders()
+    _initialize_seeded_decoders(experiment)
     _sample_tasks_sequentially(
         experiment,
         GeminiLogicalSimulator(backend=CliffTSimulatorBackend(seed=_SEED)),
@@ -69,13 +82,13 @@ def _run_injected_msd() -> float:
         nonclifford_prefix,
         empty_logical_circuit(),
         single_qubit_state_tomography(),
-        TableDecoderWithConfidence,
-        decoder_init_args={"seed": _SEED},
+        TableDecoder,
+        decoder_init_args={"num_shots": 0},
     )
     experiment.kernels(num_logical_qubits=1)
     experiment.dem_circuits()
     experiment.dems()
-    experiment.initialize_decoders()
+    _initialize_seeded_decoders(experiment)
     _sample_tasks_sequentially(
         experiment,
         GeminiLogicalSimulator(backend=CliffTSimulatorBackend(seed=_SEED)),

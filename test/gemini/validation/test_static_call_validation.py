@@ -93,7 +93,7 @@ def test_flat_kernel_has_no_errors():
 def test_gemini_logical_validation_still_reports_calls_on_its_own():
     """`SteaneLogicalValidation` is public; composing it alone must still work.
 
-    It is re-exported from `bloqade.gemini.logical.validation.clifford`, so a
+    It is available from `bloqade.lanes.validation.steane`, so a
     caller can assemble their own suite from it. Moving the call check out to
     `NoStaticCallValidation` must not quietly narrow what they get -- this pins
     the delegation so the pass stays a drop-in.

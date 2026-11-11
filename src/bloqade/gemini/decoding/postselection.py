@@ -8,10 +8,10 @@ from bloqade.decoders import BaseDecoder
 
 from bloqade.gemini.decoding.layout import _DEFAULT_SYNDROME_LAYOUT, _split_factory_bits
 from bloqade.gemini.decoding.sampling import _BasisDataset
-from bloqade.gemini.decoding.confidence import ConfidenceDecoder
-from bloqade.gemini.decoding.tomography import _DEFAULT_TARGET_BLOCH, TomographyResult
+from bloqade.gemini.decoding.tomography import TomographyResult
 
 _DEFAULT_BASIS_LABELS = ("X", "Y", "Z")
+_DEFAULT_TARGET_BLOCH = np.ones(3, dtype=np.float64) / np.sqrt(3.0)
 _ProgressLabel = str | bool
 
 
@@ -75,7 +75,7 @@ def _decode_detector_batch(
 
 
 def _decode_confidence_batch(
-    decoder: ConfidenceDecoder,
+    decoder: BaseDecoder,
     detector_bits: np.ndarray,
 ) -> tuple[np.ndarray, np.ndarray]:
     """Decode unique factory detector rows and return corrections/confidences."""
@@ -86,7 +86,7 @@ def _decode_confidence_batch(
     if detector_bits.shape[0] == 0:
         return np.zeros((0, 0), dtype=np.uint8), np.zeros(0, dtype=np.float64)
 
-    rows = [decoder.decode_with_confidence(row) for row in detector_bits]
+    rows = [decoder.decode_confidence(row) for row in detector_bits]
     corrections = [
         np.asarray(correction, dtype=np.uint8).reshape(-1) for correction, _ in rows
     ]
@@ -103,7 +103,7 @@ def _decode_confidence_batch(
 
 def _resolve_progress_label(
     progress_label: _ProgressLabel,
-    decoder_map: Mapping[str, tuple[ConfidenceDecoder, BaseDecoder]],
+    decoder_map: Mapping[str, tuple[BaseDecoder, BaseDecoder]],
 ) -> str | None:
     if progress_label is False:
         return None
@@ -117,7 +117,7 @@ def _resolve_progress_label(
 
 def _build_generic_threshold_tables(
     actual_data: Mapping[str, _BasisDataset],
-    decoder_map: Mapping[str, tuple[ConfidenceDecoder, BaseDecoder]],
+    decoder_map: Mapping[str, tuple[BaseDecoder, BaseDecoder]],
     *,
     targets: np.ndarray,
     basis_labels: Sequence[str],
@@ -168,10 +168,17 @@ def _build_generic_threshold_tables(
                 return_inverse=True,
             )
             unique_anc_det = anc_det[unique_anc_indices]
-            unique_anc_corrections, unique_confidence = _decode_confidence_batch(
-                factory_decoder,
-                unique_anc_det,
-            )
+            if anc_det.shape[1] == 0 and anc_obs.shape[1] == 0:
+                # No factory subsystem: there is nothing to decode or postselect.
+                unique_anc_corrections = np.zeros(
+                    (len(unique_anc_det), 0), dtype=np.uint8
+                )
+                unique_confidence = np.ones(len(unique_anc_det), dtype=np.float64)
+            else:
+                unique_anc_corrections, unique_confidence = _decode_confidence_batch(
+                    factory_decoder,
+                    unique_anc_det,
+                )
 
             packed_anc_obs = _pack_boolean_array(anc_obs)
             packed_anc_correction = _pack_boolean_array(unique_anc_corrections)
@@ -318,13 +325,12 @@ def _evaluate_cached_threshold_curve(
         for basis in basis_labels:
             basis_results = decoded_results[basis]
             keep = basis_results.confidence >= float(threshold)
-            shots = basis_results.observables[keep].astype(np.uint8, copy=False)
+            shots = basis_results.observables[keep, 0].astype(np.uint8, copy=False)
             shots_by_basis[basis] = shots
             accepted_count += int(shots.shape[0])
 
-        if (
-            min(shots_by_basis[basis].shape[0] for basis in basis_labels)
-            < min_accepted_per_basis
+        if min(shots_by_basis[basis].shape[0] for basis in basis_labels) < max(
+            1, min_accepted_per_basis
         ):
             continue
 

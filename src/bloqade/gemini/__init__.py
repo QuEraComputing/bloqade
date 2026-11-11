@@ -1,5 +1,9 @@
+from bloqade.lanes.dialects.arch import new_at as new_at
+from bloqade.lanes.dialects.arrange import move_to as move_to
+
 from bloqade.gemini import (
     common as common,
+    arrange as arrange,
     logical as logical,
     decoding as decoding,
     physical as physical,
@@ -42,8 +46,11 @@ __all__ = [
     "Result",
     "SimulatorResult",
     "TsimSimulatorBackend",
+    "arrange",
     "common",
     "decoding",
     "logical",
+    "move_to",
+    "new_at",
     "physical",
 ]

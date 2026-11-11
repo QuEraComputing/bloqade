@@ -9,18 +9,25 @@ from kirin.serialization import JSONSerializer
 from bloqade.lanes.dialects import arch, steane713
 from bloqade.lanes.dialects.steane713 import extensions
 
-from bloqade.gemini import logical
-from bloqade.gemini.common.dialects.qubit import new_at
-from bloqade.gemini.common.dialects.qubit.stmts import NewAt
-from bloqade.gemini.logical.dialects.operations.stmts import TerminalLogicalMeasurement
+from bloqade.gemini import new_at, logical
 
 
-def test_compatibility_aliases_keep_identity():
+def test_public_frontend_exports_keep_identity():
     assert new_at is arch.new_at
-    assert NewAt is arch.NewAt
-    assert TerminalLogicalMeasurement is steane713.stmts.TerminalLogicalMeasurement
     assert logical.terminal_measure is steane713.terminal_measure
     assert extensions.dialect is not steane713.dialect
+
+
+def test_public_terminal_measure_lowers_to_steane_statement():
+    @logical.kernel
+    def program():
+        q = logical.qalloc(1)
+        return logical.terminal_measure(q)
+
+    assert any(
+        isinstance(stmt, steane713.stmts.TerminalLogicalMeasurement)
+        for stmt in program.callable_region.walk()
+    )
 
 
 def test_new_dialect_serialization_roundtrip():
@@ -33,10 +40,9 @@ def test_new_dialect_serialization_roundtrip():
     serializer = JSONSerializer()
     payload = serializer.encode(program.dialects.encode(program, version="1.0.0"))
     restored = program.dialects.decode(serializer.decode(payload))
-    assert (
-        serializer.encode(restored.dialects.encode(restored, version="1.0.0"))
-        == payload
-    )
+    # Deserialization may intern equal type attributes, changing JSON reference
+    # IDs without changing the IR. Compare the decoded program structurally.
+    assert program.code.is_structurally_equal(restored.code)
 
 
 @pytest.mark.parametrize("first", ["bloqade.lanes.transform", "bloqade.gemini"])

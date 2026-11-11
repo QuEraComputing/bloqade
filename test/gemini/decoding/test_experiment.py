@@ -15,16 +15,15 @@ from bloqade.squin.gate import stmts as gate_stmts
 
 from bloqade.gemini.device import DetectorResult, GeminiLogicalSimulator
 from bloqade.gemini.decoding import (
+    GurobiDecoder,
     TomographyResult,
     PostSelectionExperiment,
-    TableDecoderWithConfidence,
-    GurobiDecoderWithConfidence,
+    TableDecoder,
     empty_logical_circuit,
     magic_state_dist_steane,
     single_qubit_state_tomography,
 )
 from bloqade.gemini.decoding.sampling import _BasisDataset
-from bloqade.gemini.decoding.confidence import ConfidenceDecoder
 from bloqade.gemini.decoding.experiments import _basis_dataset_from_task_result
 
 
@@ -81,9 +80,8 @@ def msd_mld_exp(msd_circuits, tomography_circuits):
         nonclifford_prefix,
         clifford_circuit,
         tomography_circuits,
-        TableDecoderWithConfidence,
+        TableDecoder,
         {
-            "seed": 10,
             "num_shots": 100,
         },
     )
@@ -188,9 +186,8 @@ def _new_mld_experiment(msd_circuits, tomography_circuits) -> PostSelectionExper
         nonclifford_prefix,
         clifford_circuit,
         tomography_circuits,
-        TableDecoderWithConfidence,
+        TableDecoder,
         {
-            "seed": 10,
             "num_shots": 10,
         },
     )
@@ -370,7 +367,7 @@ def test_postselection_experiment_dems_have_expected_shape(msd_mld_dems):
 
 
 def _assert_decoders_validate_detector_width(
-    decoders: dict[str, tuple[ConfidenceDecoder, BaseDecoder]],
+    decoders: dict[str, tuple[BaseDecoder, BaseDecoder]],
 ) -> None:
     factory_decoder, full_decoder = decoders["X"]
     factory_detector_count = int(cast(Any, factory_decoder).num_detectors)
@@ -380,21 +377,23 @@ def _assert_decoders_validate_detector_width(
         np.zeros(factory_detector_count - 1, dtype=np.bool_),
         np.zeros(factory_detector_count + 1, dtype=np.bool_),
     ):
-        with pytest.raises(ValueError, match="decode_with_confidence expects"):
-            factory_decoder.decode_with_confidence(detector_bits)
+        with pytest.raises(ValueError):
+            factory_decoder.decode_confidence(detector_bits)
 
     for detector_bits in (
         np.zeros(full_detector_count - 1, dtype=np.bool_),
         np.zeros(full_detector_count + 1, dtype=np.bool_),
     ):
-        with pytest.raises(ValueError, match="decode expects"):
+        with pytest.raises(ValueError):
             full_decoder.decode(detector_bits)
 
 
-def test_postselection_experiment_initialize_mld_decoders_validate_width(
-    msd_mld_decoders,
-):
-    _assert_decoders_validate_detector_width(msd_mld_decoders)
+def test_postselection_experiment_initializes_upstream_table_decoders(msd_mld_decoders):
+    from bloqade.decoders import TableDecoder as UpstreamTableDecoder
+
+    for factory, full in msd_mld_decoders.values():
+        assert type(factory) is UpstreamTableDecoder
+        assert type(full) is UpstreamTableDecoder
 
 
 def test_postselection_experiment_initialize_mle_decoders_validate_width(
@@ -408,7 +407,7 @@ def test_postselection_experiment_initialize_mle_decoders_validate_width(
         nonclifford_prefix,
         clifford_circuit,
         tomography_circuits,
-        GurobiDecoderWithConfidence,
+        GurobiDecoder,
     )
     exp._postselection_exp_cache.dems = msd_mld_dems
 
@@ -518,9 +517,33 @@ def test_postselection_experiment_analysis_curve_shapes(msd_mld_exp, msd_mld_dec
 
 def test_postselection_experiment_tomography_result_matches_full_curve_point(
     msd_mld_exp,
-    msd_mld_decoded,
+    monkeypatch,
 ):
-    _ = msd_mld_decoded
+    from bloqade.gemini.decoding.postselection import _DecodedPostselectionResult
+
+    # Compare estimates with known basis coverage rather than relying on a
+    # small random sample surviving postselection in every basis.
+    decoded = {
+        basis: _DecodedPostselectionResult(
+            observables=np.array([[0], [0], [1]], dtype=np.uint8),
+            confidence=np.array([0.9, 0.8, 0.1]),
+        )
+        for basis in ("X", "Y", "Z")
+    }
+    monkeypatch.setattr(
+        msd_mld_exp._postselection_exp_cache, "decoded_results", decoded
+    )
+    monkeypatch.setattr(
+        msd_mld_exp._postselection_exp_cache,
+        "raw_results",
+        {
+            basis: _BasisDataset(
+                detectors=np.zeros((3, 0), dtype=np.uint8),
+                observables=result.observables,
+            )
+            for basis, result in decoded.items()
+        },
+    )
     target_bloch = np.ones(3, dtype=np.float64) / np.sqrt(3.0)
     curve = msd_mld_exp.analysis_f_vs_fraction(
         target_bloch=target_bloch,
@@ -535,9 +558,9 @@ def test_postselection_experiment_tomography_result_matches_full_curve_point(
 def test_tomography_result_rejects_bloch_vector_with_norm_greater_than_one():
     result = TomographyResult(
         {
-            "X": np.array([[0], [1]], dtype=np.uint8),
-            "Y": np.array([[0], [1]], dtype=np.uint8),
-            "Z": np.array([[0], [1]], dtype=np.uint8),
+            "X": np.array([0, 1], dtype=np.uint8),
+            "Y": np.array([0, 1], dtype=np.uint8),
+            "Z": np.array([0, 1], dtype=np.uint8),
         }
     )
 

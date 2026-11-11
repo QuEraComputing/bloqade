@@ -41,7 +41,7 @@ def kernel(self):
 
     Physical kernels use ordinary SQuIN gates and end with one
     ``squin.broadcast.measure`` that consumes every allocated qubit. They may
-    also use ``new_at``, ``arrange.move_to`` / ``arrange.permute``, and
+    also use ``new_at``, ``gemini.move_to`` / ``gemini.arrange.permute``, and
     architecture-location primitives such as ``loc`` and ``cz_partner``.
     """
 

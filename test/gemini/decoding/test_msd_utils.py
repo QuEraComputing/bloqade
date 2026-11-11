@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import numpy as np
 import matplotlib
+from bloqade.decoders import BaseDecoder
 
 from bloqade.gemini.decoding import (
     TomographyResult,
-    ConfidenceDecoder,
     PostselectionCurveData,
-    TableDecoderWithConfidence,
+    TableDecoder,
     empty_logical_circuit,
     single_qubit_state_tomography,
 )
@@ -19,12 +19,12 @@ matplotlib.use("Agg")
 
 
 def test_public_facade_exports_simplified_decoder_and_tomography_types():
-    assert issubclass(TableDecoderWithConfidence, ConfidenceDecoder)
+    assert issubclass(TableDecoder, BaseDecoder)
     result = TomographyResult(
         {
-            "X": np.array([[0], [0]], dtype=np.uint8),
-            "Y": np.array([[0], [1]], dtype=np.uint8),
-            "Z": np.array([[0], [1]], dtype=np.uint8),
+            "X": np.array([0, 0], dtype=np.uint8),
+            "Y": np.array([0, 1], dtype=np.uint8),
+            "Z": np.array([0, 1], dtype=np.uint8),
         }
     )
     assert result.density_matrix.shape == (2, 2)

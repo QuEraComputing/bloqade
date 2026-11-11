@@ -1,6 +1,6 @@
 """Reject the experimental extension statements on paths that cannot support them.
 
-The statements in :mod:`bloqade.gemini.logical.dialects.extensions` are part of
+The statements in :mod:`bloqade.lanes.dialects.steane713.extensions` are part of
 the ``@gemini.logical.kernel`` dialect group, so they lower and compile like any
 other logical statement. What sets them apart is that they are *not* logical
 operations: ``StarRz`` puts physical Z rotations on the three qubits of a

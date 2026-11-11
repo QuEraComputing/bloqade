@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+import stim
 import numpy as np
-from bloqade.decoders import BaseDecoder
+import pytest
+from bloqade.decoders import BaseDecoder, TableDecoder
 
 from bloqade.gemini.decoding import experiments as experiments_module
 from bloqade.gemini.decoding.sampling import _BasisDataset
-from bloqade.gemini.decoding.confidence import ConfidenceDecoder
 from bloqade.gemini.decoding.tomography import TomographyResult
 from bloqade.gemini.decoding.experiments import (
     PostSelectionExperiment,
@@ -43,11 +44,17 @@ def _dataset() -> _BasisDataset:
     )
 
 
-class _FactoryDecoder(ConfidenceDecoder):
-    def decode_with_confidence(
+class _FactoryDecoder(BaseDecoder):
+    def __init__(self) -> None:
+        super().__init__(stim.DetectorErrorModel())
+
+    def _decode(self, detector_bits: np.ndarray) -> np.ndarray:
+        return self._decode_confidence(detector_bits)[0]
+
+    def _decode_confidence(
         self,
         detector_bits: np.ndarray,
-    ) -> tuple[np.ndarray, np.float64]:
+    ) -> tuple[np.ndarray, float]:
         factory_bit = int(detector_bits[0]) if len(detector_bits) else 0
         return (
             (
@@ -55,7 +62,7 @@ class _FactoryDecoder(ConfidenceDecoder):
                 if len(detector_bits)
                 else np.zeros(0, dtype=np.bool_)
             ),
-            np.float64(0.9 if factory_bit == 0 else 0.1),
+            float(0.9 if factory_bit == 0 else 0.1),
         )
 
 
@@ -68,7 +75,7 @@ class _FullDecoder(BaseDecoder):
         return np.array([0], dtype=np.bool_)
 
 
-def _decoder_pair() -> tuple[ConfidenceDecoder, BaseDecoder]:
+def _decoder_pair() -> tuple[BaseDecoder, BaseDecoder]:
     return _FactoryDecoder(), _FullDecoder()
 
 
@@ -103,7 +110,10 @@ def test_build_generic_threshold_tables_supports_empty_factory_postselection():
     )
 
     data = {basis: dataset for basis in ("X", "Y", "Z")}
-    decoders = {basis: _decoder_pair() for basis in ("X", "Y", "Z")}
+    decoders = {
+        basis: (TableDecoder(stim.DetectorErrorModel(), num_shots=0), _FullDecoder())
+        for basis in ("X", "Y", "Z")
+    }
 
     decoded = _build_generic_threshold_tables(
         data,
@@ -115,19 +125,22 @@ def test_build_generic_threshold_tables_supports_empty_factory_postselection():
     assert decoded["X"].observables.shape == (3, 1)
     np.testing.assert_array_equal(decoded["X"].observables[:, 0], np.array([0, 1, 0]))
 
+    np.testing.assert_array_equal(decoded["X"].confidence, np.ones(3))
 
-class _BatchFactoryDecoder(ConfidenceDecoder):
+
+class _BatchFactoryDecoder(_FactoryDecoder):
     def __init__(self) -> None:
-        self.decode_with_confidence_calls = 0
+        super().__init__()
+        self.decode_confidence_calls = 0
         self.decoded_rows: list[int] = []
 
-    def decode_with_confidence(
+    def _decode_confidence(
         self,
         detector_bits: np.ndarray,
-    ) -> tuple[np.ndarray, np.float64]:
-        self.decode_with_confidence_calls += 1
+    ) -> tuple[np.ndarray, float]:
+        self.decode_confidence_calls += 1
         self.decoded_rows.append(detector_bits.shape[0])
-        return detector_bits[:1].astype(np.bool_), np.float64(1.0)
+        return detector_bits[:1].astype(np.bool_), 1.0
 
 
 class _BatchFullDecoder(BaseDecoder):
@@ -159,7 +172,7 @@ def test_build_generic_threshold_tables_batch_decodes_unique_detector_patterns()
     )
 
     assert decoded["X"].observables.shape == (3, 1)
-    assert factory.decode_with_confidence_calls == 2
+    assert factory.decode_confidence_calls == 2
     assert factory.decoded_rows == [1, 1]
     assert full.decode_calls == 1
     assert full.decoded_rows == [2]
@@ -292,3 +305,51 @@ def test_shots_at_accepted_fraction_is_relative_to_postselected_shots():
     )
 
     assert sum(shots.shape[0] for shots in accepted.values()) == 3
+
+
+@pytest.mark.parametrize("missing_before_cut", [False, True])
+def test_tomography_reports_missing_basis(missing_before_cut):
+    exp = object.__new__(PostSelectionExperiment)
+    exp._postselection_exp_cache = _PostSelectionExperimentCache()
+    exp._postselection_exp_cache.decoded_results = {
+        basis: _DecodedPostselectionResult(
+            observables=np.zeros(
+                (0 if missing_before_cut and basis == "Z" else 4, 1), dtype=np.uint8
+            ),
+            confidence=np.full(
+                0 if missing_before_cut and basis == "Z" else 4,
+                0.1 if basis == "Z" else 0.9,
+            ),
+        )
+        for basis in ("X", "Y", "Z")
+    }
+    advice = (
+        "Collect more shots" if missing_before_cut else "Increase accepted_fraction"
+    )
+    with pytest.raises(ValueError, match=advice):
+        exp.tomography_result(0.5)
+    if not missing_before_cut:
+        result = exp.tomography_result(1.0)
+        assert all(shots.shape == (4,) for shots in result.shots_by_basis.values())
+
+
+@pytest.mark.parametrize("missing_basis", [False, True])
+def test_threshold_curve_requires_basis_coverage_even_with_zero_minimum(missing_basis):
+    decoded = {
+        basis: _DecodedPostselectionResult(
+            observables=np.array([[0], [1]], dtype=np.uint8),
+            confidence=np.array([0.8 if basis == "Z" else 0.9, 0.1]),
+        )
+        for basis in ("X", "Y", "Z")
+    }
+    if missing_basis:
+        decoded["Z"] = _DecodedPostselectionResult(
+            observables=np.zeros((0, 1), dtype=np.uint8), confidence=np.zeros(0)
+        )
+    curve = _evaluate_cached_threshold_curve(
+        decoded, total_shots=6, threshold_points=6, min_accepted_per_basis=0
+    )
+    np.testing.assert_allclose(
+        curve.accepted_fraction, [] if missing_basis else [0.5, 1.0]
+    )
+    assert np.all(np.isfinite(curve.fidelity))

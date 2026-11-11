@@ -1,8 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, TypeVar
-from dataclasses import replace
-from collections.abc import Callable, Sequence
+from collections.abc import Callable
 
 import numpy as np
 from kirin import ir
@@ -17,99 +16,6 @@ RetType = TypeVar("RetType")
 
 class ShotRemappingException(Exception):
     """Exception if we failed to produce a shot remapping."""
-
-
-def _shot_identity(shot) -> tuple[str, int, int, int]:
-    """Return the storage identity shared by a shot's frame records."""
-    return (
-        shot.task_id,
-        shot.subtask_index,
-        shot.subtask_shot_index,
-        shot.shot_index,
-    )
-
-
-def _shots_for_subtask_frame(storage, shot_filter, subtask_index, frame_type):
-    subtask_filter = replace(
-        shot_filter,
-        subtask_indices=(subtask_index,),
-        frame_type=frame_type,
-    )
-    return sorted(
-        storage.get_shots(shot_filter=subtask_filter),
-        key=_shot_identity,
-    )
-
-
-def shot_results_for_subtasks(
-    storage,
-    shot_filter,
-    subtasks: Sequence[dict],
-    *,
-    frame_type: str | None = None,
-) -> list[np.ndarray]:
-    """Return selected shot bitstrings grouped and sorted by subtask.
-
-    ``StorageBackend.get_shots`` does not promise an ordering.  This helper
-    preserves the caller-provided subtask order and sorts each subtask by its
-    full storage identity. ``frame_type`` optionally overrides the frame type
-    already present in ``shot_filter``.
-    """
-    results = []
-    for subtask in subtasks:
-        selected_frame = shot_filter.frame_type if frame_type is None else frame_type
-        rows = _shots_for_subtask_frame(
-            storage,
-            shot_filter,
-            subtask["subtask_index"],
-            selected_frame,
-        )
-        results.append(np.asarray([row.bitstring for row in rows], dtype=bool))
-
-    return results
-
-
-def aligned_detected_and_sorted_shots_for_subtasks(
-    storage,
-    shot_filter,
-    subtasks: Sequence[dict],
-) -> tuple[list[np.ndarray], list[np.ndarray]]:
-    """Return DETECTED and SORTED frames aligned shot-for-shot per subtask.
-
-    Each frame is ordered by the complete storage identity. A mismatch means
-    that the two frames cannot safely be compared by array position.
-    """
-    detected_results = []
-    sorted_results = []
-
-    for subtask in subtasks:
-        subtask_index = subtask["subtask_index"]
-        detected_rows = _shots_for_subtask_frame(
-            storage, shot_filter, subtask_index, "DETECTED"
-        )
-        sorted_rows = _shots_for_subtask_frame(
-            storage, shot_filter, subtask_index, "SORTED"
-        )
-
-        detected_keys = tuple(map(_shot_identity, detected_rows))
-        sorted_keys = tuple(map(_shot_identity, sorted_rows))
-        if detected_keys != sorted_keys:
-            detected_only = sorted(set(detected_keys) - set(sorted_keys))
-            sorted_only = sorted(set(sorted_keys) - set(detected_keys))
-            raise ValueError(
-                "DETECTED and SORTED frames are not aligned for "
-                f"subtask_index={subtask_index}: "
-                f"missing SORTED={detected_only}, missing DETECTED={sorted_only}."
-            )
-
-        detected_results.append(
-            np.asarray([row.bitstring for row in detected_rows], dtype=bool)
-        )
-        sorted_results.append(
-            np.asarray([row.bitstring for row in sorted_rows], dtype=bool)
-        )
-
-    return detected_results, sorted_results
 
 
 def get_slm_mapping_postprocessing(
