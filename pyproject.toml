@@ -35,15 +35,18 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# Requirements for code that moved here from bloqade-lanes are listed
+# explicitly: lanes >= 0.12.2 no longer defines the `cudaq`, `clifft`, or
+# `decoding` extras, and a missing extra is only a warning, not an error.
 cudaq = [
-    "bloqade-lanes[cudaq]"
+    "cudaq>=0.13.0; sys_platform != 'win32'",
+    "qbraid-qir[squin]>=0.5.1; sys_platform != 'win32'",
 ]
 sim = [
     "bloqade-lanes[sim]",
-    "bloqade-lanes[clifft]; python_version >= '3.12'"
+    "clifft; python_version >= '3.12'",
 ]
 decoding = [
-    "bloqade-lanes[decoding]",
     "bloqade-decoders[mwpf, mle, milp, mld, sinter]",
     # MILPDecoder 0.7 uses the PuLP 3 variable API.
     "pulp>=2.9,<4",
@@ -81,6 +84,7 @@ dev = [
     "pre-commit>=4.0.1",
     "pyright>=1.1.388",
     "pytest>=8.3.3",
+    "pytest-mock>=3.15.1",
     "ruff>=0.7.3",
     "rust-just>=1.36.0",
     "tomlkit>=0.13.2",
@@ -150,6 +154,9 @@ include = ["src/bloqade/*"]
 "docs/digital/examples/*.py" = ["E402"]  # ignore imports not at top
 
 [tool.pytest.ini_options]
+# The MSD numerical regression is long-running and needs `clifft` (Python
+# >= 3.12 only); run it explicitly with `pytest -m msd_numerical_regression`.
+addopts = "-m 'not msd_numerical_regression'"
 markers = [
     "msd_numerical_regression: optional long-running, environment-specific MSD numerical regression",
 ]
