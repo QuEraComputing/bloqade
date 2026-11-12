@@ -11,61 +11,9 @@ import bloqade.squin as squin
 from kirin.dialects import ilist
 from kirin.ir.exception import ValidationErrorGroup
 from bloqade.lanes.dialects.arch import new_at
-from bloqade.lanes.validation.const_address import ConstAddressValidation
 
 import bloqade.gemini as gemini
 from bloqade.gemini.physical import kernel as movement_kernel
-
-# ---------------------------------------------------------------------------
-# The pass in isolation
-# ---------------------------------------------------------------------------
-
-
-def test_non_const_arg_reported():
-    """A new_at whose zone_id is a kernel argument is not const-foldable."""
-
-    @gemini.logical.kernel(verify=False)
-    def kernel(z: int):
-        q = new_at(z, 0, 0)  # noqa: F841
-
-    _, errors = ConstAddressValidation().run(kernel)
-    assert len(errors) == 1
-    assert "address argument 'zone_id' is not a compile-time constant" in str(errors[0])
-
-
-def test_every_non_const_arg_reported():
-    """All three args are checked, so one pass reports all three failures."""
-
-    @gemini.logical.kernel(verify=False)
-    def kernel(z: int, w: int, s: int):
-        q = new_at(z, w, s)  # noqa: F841
-
-    _, errors = ConstAddressValidation().run(kernel)
-    assert len(errors) == 3
-    reported = str(errors)
-    for arg_name in ("zone_id", "word_id", "site_id"):
-        assert f"address argument '{arg_name}'" in reported
-
-
-def test_const_args_no_diagnostics():
-    """Literal addresses const-fold and produce no errors.
-
-    Out-of-range is deliberately not this pass's business -- word 10_000 does
-    not exist in any bundled arch, and the range check that says so needs an
-    ArchSpec this pass does not have.
-    """
-
-    @gemini.logical.kernel(verify=False)
-    def kernel():
-        q = new_at(0, 10_000, 0)  # noqa: F841
-
-    _, errors = ConstAddressValidation().run(kernel)
-    assert errors == []
-
-
-# ---------------------------------------------------------------------------
-# Kernel-decoration time
-# ---------------------------------------------------------------------------
 
 
 def test_logical_kernel_decorator_rejects_non_const_address():
@@ -119,11 +67,6 @@ def test_callee_address_arg_still_compiles():
         return gemini.logical.default_post_processing(register)
 
     assert outer is not None
-
-
-# ---------------------------------------------------------------------------
-# Regression: a non-const address used to hide later duplicates
-# ---------------------------------------------------------------------------
 
 
 def test_non_const_address_does_not_mask_later_duplicates():

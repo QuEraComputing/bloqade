@@ -61,14 +61,18 @@ def test_import_order(first):
 
 
 @pytest.mark.parametrize("frontend", ["logical", "physical"])
-def test_frontend_registers_method_tables(frontend):
-    # A fresh process distinguishes explicit registration from test import order.
+def test_frontend_reuses_lanes_method_tables(frontend):
+    # Importing either frontend must not replace compiler-owned registrations.
     result = subprocess.run(
         [
             sys.executable,
             "-c",
             f"""
 from bloqade.lanes.dialects import arch, steane713, arrange
+from bloqade.lanes.validation import (
+    address, const_address, duplicate_address, steane, terminal_measure,
+    terminal_measurement,
+)
 from bloqade import qubit
 from bloqade.squin import gate
 from kirin.dialects import func, scf
@@ -87,11 +91,11 @@ requirements += [(d, 'lanes.validate.logical') for d in
     (qubit.dialect, gate.dialect, scf.dialect, extensions.dialect)]
 requirements += [(d, 'lanes.validate.terminal_measurement') for d in
     (qubit.dialect, gate.dialect, func.dialect, steane713.dialect, extensions.dialect)]
-assert all(key not in dialect.interps for dialect, key in requirements)
+tables = [dialect.interps[key] for dialect, key in requirements]
+assert all(type(table).__module__.startswith("bloqade.lanes.") for table in tables)
 import bloqade.gemini.{frontend}
-for dialect, key in requirements:
-    assert key in dialect.interps, (dialect.name, key)
-    assert type(dialect.interps[key]).__module__.startswith('bloqade.gemini.')
+for (dialect, key), table in zip(requirements, tables):
+    assert dialect.interps[key] is table, (dialect.name, key)
 """,
         ],
         capture_output=True,
