@@ -57,13 +57,11 @@ def test_bit_packing_helpers_support_zero_width_rows():
 
 
 def test_sub_detector_error_model_composes_duplicate_projected_errors():
-    dem = stim.DetectorErrorModel(
-        """
+    dem = stim.DetectorErrorModel("""
         error(0.1) D0 L0
         error(0.2) D0 L0
         error(0.3) D1
-        """
-    )
+        """)
 
     projected = _sub_detector_error_model(
         dem,
@@ -139,12 +137,10 @@ def test_table_decoder_reports_zero_confidence_for_unseen_syndromes():
 @pytest.mark.parametrize("untrained", [False, True])
 def test_gurobi_decoder_reports_normalized_logical_gap(untrained: bool):
     pytest.importorskip("gurobipy")
-    dem = stim.DetectorErrorModel(
-        """
+    dem = stim.DetectorErrorModel("""
         error(0.1) D0
         error(0.01) D0 L0
-        """
-    )
+        """)
     decoder = GurobiDecoder.instantiate(dem) if untrained else GurobiDecoder(dem)
     assert decoder._solver_name == "GUROBI"
 

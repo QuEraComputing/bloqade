@@ -68,9 +68,7 @@ def test_physical_pinned_loader_rejects_register_as_argument():
 
 def test_physical_new_at_emits_without_importing_logical_converter(tmp_path):
     script = tmp_path / "physical_cirq_emission.py"
-    script.write_text(
-        textwrap.dedent(
-            """
+    script.write_text(textwrap.dedent("""
             import sys
 
             from kirin.dialects import ilist
@@ -89,9 +87,7 @@ def test_physical_new_at_emits_without_importing_logical_converter(tmp_path):
             circuit = emit_circuit(program, ignore_returns=True)
             assert "bloqade.gemini.logical.cirq_conversion" not in sys.modules
             print(repr(next(iter(circuit.all_qubits()))))
-            """
-        )
-    )
+            """))
 
     completed = subprocess.run(
         [sys.executable, str(script)],

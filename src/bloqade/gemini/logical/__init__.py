@@ -37,13 +37,13 @@ from bloqade.gemini.logical import (
     validation as validation,
 )
 from bloqade.gemini.logical.group import kernel as kernel
-from bloqade.gemini.logical.extensions import star_rz as star_rz
 from bloqade.gemini.logical.stdlib import (
     broadcast as broadcast,
     qalloc_at as qalloc_at,
     default_post_processing as default_post_processing,
 )
 from bloqade.gemini.logical.studio import to_studio_url as to_studio_url
+from bloqade.gemini.logical.extensions import star_rz as star_rz
 
 
 def _get_cirq_loader():

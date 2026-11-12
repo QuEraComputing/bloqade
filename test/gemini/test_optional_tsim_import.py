@@ -34,8 +34,7 @@ def _run_import_guard(code: str) -> None:
 
 
 def test_logical_device_import_does_not_import_optional_backends():
-    _run_import_guard(
-        """
+    _run_import_guard("""
         import sys
 
         from bloqade.gemini import logical as gemini_logical
@@ -43,25 +42,21 @@ def test_logical_device_import_does_not_import_optional_backends():
 
         assert gemini_logical is not None
         assert GeminiLogicalDevice.__name__ == "GeminiLogicalDevice"
-        """
-    )
+        """)
 
 
 def test_logical_simulator_import_does_not_import_optional_backends():
-    _run_import_guard(
-        """
+    _run_import_guard("""
         import sys
 
         from bloqade.gemini import GeminiLogicalSimulator
 
         assert GeminiLogicalSimulator.__name__ == "GeminiLogicalSimulator"
-        """
-    )
+        """)
 
 
 def test_simulator_backend_imports_are_lazy():
-    _run_import_guard(
-        """
+    _run_import_guard("""
         import sys
 
         import bloqade.gemini as gemini
@@ -81,13 +76,11 @@ def test_simulator_backend_imports_are_lazy():
         assert _PyQrackSimulatorBackend.__name__ == "_PyQrackSimulatorBackend"
         assert not hasattr(gemini, "_PyQrackSimulatorBackend")
         assert not hasattr(device, "_PyQrackSimulatorBackend")
-        """
-    )
+        """)
 
 
 def test_simulator_runtime_does_not_import_test_modules():
-    _run_import_guard(
-        """
+    _run_import_guard("""
         import sys
 
         import bloqade.gemini.device
@@ -101,13 +94,11 @@ def test_simulator_runtime_does_not_import_test_modules():
             raise SystemExit(
                 f"unexpected test-module imports: {loaded_test_modules}"
             )
-        """
-    )
+        """)
 
 
 def test_composed_backends_fail_before_sampling_with_specific_tsim_guidance():
-    code = textwrap.dedent(
-        """
+    code = textwrap.dedent("""
         import importlib.abc
         import sys
         from unittest.mock import MagicMock
@@ -148,7 +139,6 @@ def test_composed_backends_fail_before_sampling_with_specific_tsim_guidance():
             else:
                 raise AssertionError("expected missing-Tsim failure")
             backend.sample.assert_not_called()
-        """
-    )
+        """)
 
     subprocess.run([sys.executable, "-c", code], check=True)
