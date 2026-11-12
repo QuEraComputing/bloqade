@@ -32,7 +32,6 @@ from bloqade.lanes.dialects.arrange import move_to as move_to
 from bloqade.lanes.dialects.steane713 import terminal_measure as terminal_measure
 
 from bloqade.gemini.logical import (
-    impl as impl,
     extensions as extensions,
     validation as validation,
 )
