@@ -13,9 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      # Intentionally unpinned: CI always runs the latest ruff so a new release
+      # that adds rules surfaces as a CI failure — our signal to bump the pinned
+      # ruff in .pre-commit-config.yaml (and fix/ignore the new findings).
       - uses: chartboost/ruff-action@v1
+        with:
+          src: "./src"
   black:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: psf/black@stable
+        with:
+          src: "./src"
