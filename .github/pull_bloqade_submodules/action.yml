@@ -12,7 +12,7 @@ runs:
 
       - name: clone the latest bloqade-circuit release
         id: clone_bloqade_circuit
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           repository: QuEraComputing/bloqade-circuit
           path: 'submodules/bloqade-circuit'
@@ -27,7 +27,7 @@ runs:
 
       - name: clone the latest bloqade-analog release
         id: clone_bloqade_analog
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           repository: QuEraComputing/bloqade-analog
           path: 'submodules/bloqade-analog'
@@ -42,7 +42,7 @@ runs:
 
       - name: clone the latest bloqade-lanes release
         id: clone_bloqade_lanes
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           repository: QuEraComputing/bloqade-lanes
           path: 'submodules/bloqade-lanes'
