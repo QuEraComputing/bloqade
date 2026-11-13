@@ -26,8 +26,8 @@ from bloqade.gemini.device._task_runtime import (
     _SimulatorTaskBase,
 )
 from bloqade.gemini.device.simulator_backend import (
-    TsimSimulatorBackend,
     PPVMSimulatorBackend,
+    TsimSimulatorBackend,
     AbstractSimulatorBackend,
 )
 
