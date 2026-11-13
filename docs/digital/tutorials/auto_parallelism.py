@@ -117,7 +117,7 @@ SVGCircuit(log_ghz)
 # ### The benefits of parallelism
 # We'll run noise simulations for both circuits and compare their fidelities as we scale the number of qubits.
 #
-# See our blog post [Simulating noisy circuits for near-term quantum hardware](https://bloqade.quera.com/latest/blog/2025/07/30/simulating-noisy-circuits-for-near-term-quantum-hardware/) for detailed information about the noise model used here. The analysis workflow is:
+# See our blog post [Simulating noisy circuits for near-term quantum hardware](https://queracomputing.github.io/bloqade/latest/blog/2025/07/30/simulating-noisy-circuits-for-near-term-quantum-hardware/) for detailed information about the noise model used here. The analysis workflow is:
 #
 # 1. Build a noiseless (ideal) circuit.
 # 2. Choose a noise model (we use the Gemini noise model).
