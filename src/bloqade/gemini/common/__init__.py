@@ -1,0 +1,1 @@
+"""Shared Gemini frontend utilities."""
