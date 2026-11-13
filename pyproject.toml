@@ -48,7 +48,7 @@ sim = [
 ]
 decoding = [
     "bloqade-decoders[mwpf, mle, milp, mld, sinter]",
-    # MILPDecoder 0.7 uses the PuLP 3 variable API.
+    # MILPDecoder 0.7 works with PuLP 2.9 and 3.x; keep this tested range.
     "pulp>=2.9,<4",
     "bloqade-decoders[tesseract]; python_version >= '3.12'"
 ]

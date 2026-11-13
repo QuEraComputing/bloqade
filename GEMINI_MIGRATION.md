@@ -19,9 +19,9 @@ Compiler definitions belong to `bloqade.lanes`:
 
 The `bloqade.gemini.logical.dialects` compatibility package is removed;
 import compiler definitions directly from `bloqade.lanes.dialects.steane713`.
-`common` contains shared Gemini method tables and Cirq
-support. Its `common.validation` compatibility package is removed; import
-validation passes directly from `bloqade.lanes.validation`.
+`common` contains Gemini's shared Cirq conversion support. Its
+`common.validation` compatibility package is removed; import validation passes
+directly from `bloqade.lanes.validation`.
 Device-only extension rejection and kernel argument policies remain in Gemini.
 The experimental STAR dialect remains separate from the ordinary Steane dialect.
 
@@ -39,22 +39,29 @@ implementation details directly from `bloqade.lanes.dialects.arch` or
 
 ## Method-table registration
 
-Gemini owns its qubit-address, Steane type-inference/measurement, and validation
-method tables. Importing its logical or physical kernel groups loads these
-implementations before constructing the groups. Registration attaches them to
-the shared lanes/Kirin dialect objects; it is process-wide, not per kernel group.
-Validation passes and analysis classes remain in lanes, which never imports
-Gemini. Direct compiler callers must first load their frontend's tables;
-missing required registrations raise a clear error. Generic move/place and
-architecture evaluation/constant-propagation tables remain in lanes.
+Lanes 0.12.2 owns and registers the shared compiler method tables, including
+qubit-address analysis, Steane type inference, measurement analysis, and
+validation. Its dialect and validation modules load these implementations;
+compiler callers do not need to import Gemini. Gemini's kernel groups reuse
+these registrations without replacing them. Registration attaches tables to
+shared lanes/Kirin dialect objects and is process-wide, not per kernel group.
+Generic move/place and architecture evaluation/constant-propagation tables also
+remain in lanes, which never imports Gemini.
+
+Gemini retains the Cirq emission tables (`emit.cirq`) loaded by its Cirq
+conversion modules and the device-only extension-rejection table
+(`lanes.validate.no_extensions`) loaded by its extension-validation package.
+Kernel argument validation and device policy also remain in Gemini.
 
 ## Coordinated release
 
-This change requires lanes 0.12 and circuit 0.15.5 or newer within their declared
-compatible ranges. Publish the updated lanes package before releasing this
-bloqade change. Regenerate `uv.lock` against that release; an older lanes wheel
-both lacks the new compiler modules and owns the old Gemini package files.
-Do not install the new bloqade wheel alongside lanes 0.11.
+This change requires `bloqade-lanes>=0.12.2,<0.13` and
+`bloqade-circuit~=0.15.6`. The committed `uv.lock` resolves lanes 0.12.2,
+circuit 0.15.6, and decoders 0.7.0 from published packages; no prerequisite
+release or deferred lockfile regeneration remains for this migration.
+Lanes 0.12.2 supplies the compiler-owned method-table registrations. Lanes 0.11
+still owns the old Gemini package files and must not be installed alongside
+the new bloqade wheel.
 
 For testing unreleased source, install the two checkouts into the same environment
 with compatible circuit/Kirin dependencies. A local uv source override for
@@ -102,10 +109,9 @@ export, is now the class from `bloqade.analysis.tomography`. Pass one-dimensiona
 shot arrays per basis. Gemini's experiment helpers convert their internal shot
 arrays and reject confidence cuts that leave a tomography basis empty.
 
-The circuit requirement already starts at the latest published release, 0.15.5.
-That release still requires `bloqade-decoders<0.7.0`, conflicting with this
-branch's decoder requirement. A circuit release allowing decoder 0.7 or newer
-is also required before resolving dependencies and publishing this branch.
+The declared circuit minimum is 0.15.6, which permits decoders 0.7.0. These
+versions are resolved together in `uv.lock`; the earlier circuit/decoder
+dependency conflict is resolved.
 
 The `bloqade.gemini.logical.dialects.extensions` compatibility package is removed.
 Compiler consumers should use `bloqade.lanes.dialects.steane713.extensions`.
@@ -127,5 +133,6 @@ rewrites directly from `bloqade.lanes.rewrite`.
 The deprecated `GeminiLogicalValidation` and `GeminiTerminalMeasurementValidation`
 re-exports and `bloqade.gemini.star` shim are removed. Import the validation
 passes from `bloqade.lanes.validation` and STAR support definitions from
-`bloqade.lanes.dialects.steane713.star`. Gemini retains its actual validation
-method tables and loads them when constructing its kernel groups.
+`bloqade.lanes.dialects.steane713.star`. Their compiler method tables are
+registered by lanes. Gemini retains its device-only extension check and kernel
+argument validation.

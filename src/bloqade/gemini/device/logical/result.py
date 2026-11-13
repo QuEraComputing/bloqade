@@ -9,6 +9,7 @@ import numpy as np
 from bloqade.core.device import Result
 
 from bloqade.gemini import logical
+from bloqade.gemini.device.logical import utils
 
 if TYPE_CHECKING:
     from bloqade.lanes.analysis.atom.analysis import PostProcessing
@@ -82,15 +83,10 @@ class GeminiLogicalResult(Result, Generic[RetType]):
         int,
         tuple[Callable[..., list[list[bool]]], PostProcessing[RetType]],
     ]:
-        # Import lazily: the mapping helper imports the Lanes transform stack.
-        # This result class is imported while the public Gemini package is
-        # initialized, which can itself happen during Lanes analysis imports.
-        from bloqade.gemini.device.logical.utils import get_slm_mapping_postprocessing
-
         postprocessing_functions = {}
         for idx, kernel_json in self._program_contents_by_index().items():
             kernel_mt = logical.kernel.decode_json(kernel_json)  # type: ignore[attr-defined]
-            slm_to_raw, postprocessing_function = get_slm_mapping_postprocessing(
+            slm_to_raw, postprocessing_function = utils.get_slm_mapping_postprocessing(
                 kernel_mt,
             )
             # NOTE: what if err in postproc fn generation/errors here??

@@ -154,9 +154,4 @@ def build_post_processing(
             for measurement_shot in measurements
         )
 
-    # Imported here, not at module scope: ``bloqade.lanes.dialects.move``
-    # imports ``bloqade.gemini``, so an atom-first import reaches this module
-    # while ``bloqade.lanes.analysis.atom`` is still initialising. Same
-    # lazy-import treatment as #985.
-
     return PostProcessing(emit_return, emit_detectors, emit_observables)

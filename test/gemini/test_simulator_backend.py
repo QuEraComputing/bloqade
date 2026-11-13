@@ -410,7 +410,10 @@ def _fake_ppvm(monkeypatch, *, samples):
 def test_ppvm_missing_dependency_has_installation_guidance(monkeypatch):
     monkeypatch.setitem(sys.modules, "ppvm", None)
 
-    with pytest.raises(ImportError, match=r"bloqade-ppvm.*bloqade\[sim\]"):
+    with pytest.raises(
+        ImportError,
+        match=r"bloqade-ppvm.*required dependency of `bloqade`.*Reinstall `bloqade-ppvm`",
+    ):
         _ppvm()
 
 

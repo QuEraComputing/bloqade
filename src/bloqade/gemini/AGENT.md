@@ -9,6 +9,11 @@ policies, simulation, and decoding here. A deferred lanes import must have a
 comment explaining a real optional-dependency or type-only requirement;
 working around a lanes-to-Gemini cycle is not acceptable.
 
-Gemini owns its frontend method tables, including validation implementations.
-Import them before constructing kernel groups. Validation passes/analyses remain
-in lanes; generic lanes move/place and arch evaluation tables stay there.
+Lanes owns and registers the shared compiler method tables, including validation,
+qubit-address analysis, Steane type inference, and measurement analysis. Compiler
+callers do not need to import Gemini to register them, and Gemini must not
+register duplicate implementations.
+
+Gemini retains its Cirq emission tables (`emit.cirq`) and the device-only
+extension-rejection table (`lanes.validate.no_extensions`). These belong to
+Gemini's conversion and device policies, not the shared compiler registration.
