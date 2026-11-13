@@ -5,6 +5,7 @@ from typing import (
     Any,
     Generic,
     TypeVar,
+    ParamSpec,
 )
 from functools import cache, cached_property
 from dataclasses import field, dataclass
@@ -20,6 +21,7 @@ from bloqade.decoders.dialects.annotate.stmts import SetDetector, SetObservable
 
 from bloqade import qubit
 from bloqade.gemini.post_processing import build_post_processing
+from bloqade.gemini.device._arguments import bind_task_arguments
 from bloqade.gemini.device._task_runtime import (
     Result as Result,
     DetectorResult as DetectorResult,
@@ -37,6 +39,7 @@ if TYPE_CHECKING:
     from bloqade.lanes.rewrite.move2squin.noise import NoiseModelABC
 
 RetType = TypeVar("RetType")
+CallArgs = ParamSpec("CallArgs")
 PhysicalResult = Result
 
 
@@ -221,19 +224,34 @@ class GeminiPhysicalSimulator:
 
     def task(
         self,
-        physical_kernel: ir.Method[[], RetType],
+        physical_kernel: ir.Method[CallArgs, RetType],
+        *args: CallArgs.args,
+        **kernel_args: CallArgs.kwargs,
     ) -> PhysicalSimulatorTask[RetType]:
         """Compile a physical-pipeline-compatible ``ir.Method`` into a task.
 
         The method must already contain terminal physical measurement and any
         desired annotations; no conversion or insertion is performed.
+
+        Positional and keyword kernel arguments are bound as compile-time
+        constants in an owned copy before physical compilation. Values must
+        be bool, int, float, str, None, or recursively nested tuples/ILists of
+        these types. IList backing storage is copied during binding.
+        Python signature defaults are applied when omitted.
+        Create a new task to use different argument values.
+
+        For parameter-dependent validation, define the source kernel with
+        ``@physical.kernel(verify=False)``. Physical compilation validates the
+        bound program during task creation.
         """
         if not isinstance(physical_kernel, ir.Method):
             raise TypeError("GeminiPhysicalSimulator.task() requires a Squin ir.Method")
 
         # Physical compilation mutates its input. Keep the method supplied by
         # the caller reusable.
-        source_squin_kernel = physical_kernel.similar()
+        source_squin_kernel = bind_task_arguments(
+            physical_kernel, *args, **kernel_args
+        ).similar()
 
         place_opt_type = self.place_opt_type or SequentialPlacePass
 
