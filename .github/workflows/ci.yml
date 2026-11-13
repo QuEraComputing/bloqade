@@ -19,7 +19,7 @@ jobs:
         python-version: ["3.11", "3.12", "3.13", "3.14"]
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
@@ -29,8 +29,33 @@ jobs:
           cache-dependency-glob: "uv.lock"
       - name: Set up Python ${{ matrix.python-version }}
         run: uv python install ${{ matrix.python-version }}
+      # `pyqrack-accel` is excluded: it installs pyqrack 2.x over the
+      # pyqrack-cpu 1.x that bloqade-circuit's simulator targets, which breaks
+      # every PyQrack-backed test (`unexpected keyword argument 'qubitCount'`).
       - name: Install the project
-        run: uv sync --all-extras --dev
+        run: uv sync --all-extras --no-extra pyqrack-accel --dev
       - name: Run tests
-        # For example, using `pytest`
-        run: uv run --locked --all-extras pytest
+        run: uv run --locked --all-extras --no-extra pyqrack-accel pytest
+
+  # Long, environment-specific numerical regression; deselected from the main
+  # test run by pytest `addopts`. Needs `clifft`, which requires Python >= 3.12.
+  msd-numerical-regression:
+    name: MSD numerical regression (optional)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.13.5"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+      - name: Set up Python 3.12
+        run: |
+          uv python install 3.12
+          uv python pin 3.12
+      - name: Install the numerical-regression environment
+        run: uv sync --locked --dev --extra sim --extra decoding
+      - name: Run long MSD numerical regression
+        run: uv run --locked --extra sim --extra decoding pytest -m msd_numerical_regression -v

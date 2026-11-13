@@ -32,7 +32,7 @@ jobs:
     steps:
       # This privileged workflow never checks out or executes an unmerged PR.
       # Do not execute repository scripts after the action cherry-picks changes.
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: main
           token: ${{ secrets.BACKPORT_TOKEN || github.token }}

@@ -21,26 +21,35 @@ classifiers = [
 ]
 requires-python = ">=3.11"
 dependencies = [
-    "bloqade-circuit[cirq,qasm2,qasm3,qbraid,vis,stim]~=0.15.5",
+    "bloqade-circuit[cirq,qasm2,qasm3,qbraid,vis,stim]~=0.15.6",
     "bloqade-analog~=0.16.9",
-    "bloqade-lanes~=0.11.9",
-    "bloqade-tsim~=0.1.5",
-    "bloqade-core~=0.6.13",
-    "bloqade-decoders~=0.6.1",
-    "bloqade-ppvm~=0.1.1"
+    "bloqade-lanes>=0.12.2,<0.13",
+    "bloqade-tsim~=1.1.0",
+    "bloqade-core~=0.6.15",
+    "bloqade-decoders>=0.7.0",
+    "bloqade-ppvm~=0.3.0",
+    "kirin-toolchain~=0.22.21",
+    "numpy>=2.2.6",
+    "scipy>=1.15.3",
+    "typing-extensions>=4.12"
 ]
 
 [project.optional-dependencies]
+# Requirements for code that moved here from bloqade-lanes are listed
+# explicitly: lanes >= 0.12.2 no longer defines the `cudaq`, `clifft`, or
+# `decoding` extras, and a missing extra is only a warning, not an error.
 cudaq = [
-    "bloqade-lanes[cudaq]"
+    "cudaq>=0.13.0; sys_platform != 'win32'",
+    "qbraid-qir[squin]>=0.5.1; sys_platform != 'win32'",
 ]
 sim = [
     "bloqade-lanes[sim]",
-    "bloqade-lanes[clifft]; python_version >= '3.12'"
+    "clifft; python_version >= '3.12'",
 ]
 decoding = [
-    "bloqade-lanes[decoding]",
-    "bloqade-decoders[mwpf, mle, mld, sinter]",
+    "bloqade-decoders[mwpf, mle, milp, mld, sinter]",
+    # MILPDecoder 0.7 works with PuLP 2.9 and 3.x; keep this tested range.
+    "pulp>=2.9,<4",
     "bloqade-decoders[tesseract]; python_version >= '3.12'"
 ]
 atom-vis = [
@@ -57,6 +66,27 @@ pyqrack-accel = [
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.uv]
+constraint-dependencies = [
+    # Ported from bloqade-lanes with the `cudaq` extra.
+    #
+    # cuda-quantum-cu13 0.16.0.post1 (2026-09-17) shipped without the
+    # macosx_13_0_arm64 wheels that 0.14.0 through 0.16.0 all published, so
+    # resolving it breaks `uv sync --all-extras` on macOS:
+    #
+    #   error: Distribution `cuda-quantum-cu13==0.16.0.post1` can't be
+    #   installed because it doesn't have a source distribution or wheel for
+    #   the current platform
+    #
+    # This is an upstream packaging gap in the .post1 re-release, not a dropped
+    # platform. `cudaq` requires cuda-quantum-cu13 with no version specifier,
+    # so the exclusion has to sit on the transitive package rather than on
+    # `cudaq` itself.
+    #
+    # Drop this once a release later than 0.16.0.post1 restores the macOS wheel.
+    "cuda-quantum-cu13!=0.16.0.post1",
+]
+
 [tool.hatch.metadata]
 allow-direct-references = true
 
@@ -66,7 +96,7 @@ packages = ["src/bloqade"]
 [dependency-groups]
 dev = [
     "black>=24.10.0",
-    "bloqade-tsim>=0.1.0",
+    "bloqade-tsim>=1.1.0",
     "coverage>=7.6.4",
     "ipython>=8.29.0",
     "isort>=5.13.2",
@@ -75,6 +105,7 @@ dev = [
     "pre-commit>=4.0.1",
     "pyright>=1.1.388",
     "pytest>=8.3.3",
+    "pytest-mock>=3.15.1",
     "ruff>=0.7.3",
     "rust-just>=1.36.0",
     "tomlkit>=0.13.2",
@@ -132,6 +163,8 @@ exclude = [
 ]
 
 [tool.ruff.lint]
+# Preserve explicit typed re-exports; import formatting is handled by isort.
+ignore = ["I001", "PLC0414", "PLR0402"]
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.coverage.run]
@@ -140,3 +173,11 @@ include = ["src/bloqade/*"]
 [tool.ruff.lint.per-file-ignores]
 "docs/digital/tutorials/*.py" = ["E402", "F401"]  # ignore import not at top and unused
 "docs/digital/examples/*.py" = ["E402"]  # ignore imports not at top
+
+[tool.pytest.ini_options]
+# The MSD numerical regression is long-running and needs `clifft` (Python
+# >= 3.12 only); run it explicitly with `pytest -m msd_numerical_regression`.
+addopts = "-m 'not msd_numerical_regression'"
+markers = [
+    "msd_numerical_regression: optional long-running, environment-specific MSD numerical regression",
+]

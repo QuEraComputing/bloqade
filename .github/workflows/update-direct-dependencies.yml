@@ -17,7 +17,7 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: main
       - uses: actions/setup-python@v6
@@ -35,8 +35,9 @@ jobs:
       - name: Install and test proposed update
         if: steps.bump.outputs.changed == 'true'
         run: |
-          uv sync --locked --all-extras --dev
-          uv run --locked --all-extras pytest
+          # Same extras as ci.yml (pyqrack-accel breaks the PyQrack tests).
+          uv sync --locked --all-extras --no-extra pyqrack-accel --dev
+          uv run --locked --all-extras --no-extra pyqrack-accel pytest
       - name: Create or update dependency PR
         if: steps.bump.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v8
