@@ -5,10 +5,14 @@ extend-ignore-identifiers-re = [
 ]
 
 [default.extend-identifiers]
+# Placement strategy abbreviation.
+strat = "strat"
 # *sigh* this just isn't worth the cost of fixing
 AttributeIDSupressMenu = "AttributeIDSupressMenu"
 
 [default.extend-words]
+# Ancilla abbreviation in qubit names and decoding variables.
+anc = "anc"
 Braket = "Braket"
 mch = "mch"
 IY = "IY"
