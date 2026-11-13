@@ -1,5 +1,5 @@
 version = 1
-revision = 5
+revision = 3
 requires-python = ">=3.11"
 resolution-markers = [
     "python_full_version >= '3.15' and sys_platform == 'darwin'",
@@ -282,8 +282,8 @@ resolution-markers = [
     "python_full_version >= '3.11.5' and python_full_version < '3.12' and sys_platform != 'darwin' and sys_platform != 'linux'",
 ]
 dependencies = [
-    { name = "soupsieve" },
-    { name = "typing-extensions" },
+    { name = "soupsieve", marker = "python_full_version >= '3.11.5'" },
+    { name = "typing-extensions", marker = "python_full_version >= '3.11.5'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/43/65/318323f98dbee45d42dff61d8f047181bc6f2268a9068cfad035a46be5af/beautifulsoup4-4.15.0.tar.gz", hash = "sha256:288e3ca7d54b06f2ac191970bc275c1939cb46d450b255bf6718b04aa37ab4f7", size = 632571, upload-time = "2026-06-07T16:44:20.453Z" }
 wheels = [
@@ -374,7 +374,7 @@ css = [
 
 [[package]]
 name = "bloqade"
-version = "0.37.0.dev0"
+version = "0.38.0.dev0"
 source = { editable = "." }
 dependencies = [
     { name = "bloqade-analog" },
@@ -635,7 +635,7 @@ sinter = [
     { name = "sinter" },
 ]
 tesseract = [
-    { name = "tesseract-decoder" },
+    { name = "tesseract-decoder", marker = "python_full_version >= '3.12'" },
 ]
 
 [[package]]
@@ -1010,7 +1010,7 @@ name = "clifft"
 version = "0.13.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "numpy" },
+    { name = "numpy", marker = "python_full_version >= '3.12'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/9c/10/d7f7e3fa5f715ca3aaa4a6bd728f3979a796206e825b044b4b5c61922baf/clifft-0.13.0.tar.gz", hash = "sha256:e49270eb685cd2ebb9fb2f167e54cf462712fa36966eb0f6d203ad3f0733d4b2", size = 4369343, upload-time = "2026-11-04T20:05:27.848Z" }
 wheels = [
@@ -1373,7 +1373,7 @@ wheels = [
 
 [package.optional-dependencies]
 cu13 = [
-    { name = "cuda-quantum-cu13" },
+    { name = "cuda-quantum-cu13", marker = "sys_platform == 'linux'" },
 ]
 
 [[package]]
@@ -1381,8 +1381,8 @@ name = "cudensitymat-cu13"
 version = "0.6.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "cutensor-cu13" },
-    { name = "cutensornet-cu13" },
+    { name = "cutensor-cu13", marker = "sys_platform != 'darwin'" },
+    { name = "cutensornet-cu13", marker = "sys_platform != 'darwin'" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b5/ca/23b382158370b89753035b0f15dd453b69595da0c4faa07ad0cbf724bb14/cudensitymat_cu13-0.6.0-py3-none-manylinux2014_aarch64.whl", hash = "sha256:4d346da09a53ca5be572811df0d962ebf7d3815a8fdc68fbec594a68f2522050", size = 30399721, upload-time = "2026-06-29T20:38:17.413Z" },
@@ -1404,8 +1404,8 @@ resolution-markers = [
     "python_full_version < '3.11.5' and sys_platform != 'darwin' and sys_platform != 'linux'",
 ]
 dependencies = [
-    { name = "fastrlock" },
-    { name = "numpy" },
+    { name = "fastrlock", marker = "python_full_version < '3.14' and sys_platform != 'darwin'" },
+    { name = "numpy", marker = "python_full_version < '3.14' and sys_platform != 'darwin'" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2e/b4/5c0895ebcb2ea73fd3e783c5ed605fb930b08edc91f823b3f05400995579/cupy_cuda13x-13.6.0-cp311-cp311-manylinux2014_aarch64.whl", hash = "sha256:81948cb0d21da5f0a56aef75bb6b0801486f5898276de2e53d171949422b7c4e", size = 67022616, upload-time = "2025-08-18T08:32:20.301Z" },
@@ -1427,8 +1427,8 @@ resolution-markers = [
     "python_full_version == '3.14.*' and sys_platform != 'darwin' and sys_platform != 'linux'",
 ]
 dependencies = [
-    { name = "cuda-pathfinder" },
-    { name = "numpy" },
+    { name = "cuda-pathfinder", marker = "python_full_version >= '3.14' and sys_platform != 'darwin'" },
+    { name = "numpy", marker = "python_full_version >= '3.14' and sys_platform != 'darwin'" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/8d/3c/4716e285f8459a5707ef39d84e9a7547bf16f87c583ac4789c0763d6d986/cupy_cuda13x-14.2.0-cp311-cp311-manylinux2014_aarch64.whl", hash = "sha256:a22e2f17c97940cd566f351f186d8fe04285280d052ca1512ff223febbe9979c", size = 74074375, upload-time = "2026-08-20T02:41:04.327Z" },
@@ -1466,7 +1466,7 @@ name = "cutensornet-cu13"
 version = "2.13.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "cutensor-cu13" },
+    { name = "cutensor-cu13", marker = "sys_platform != 'darwin'" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/fd/63/c8a9f65cebec4db71818c06afd99e3a696cf892825da81bf235dc3304e8f/cutensornet_cu13-2.13.0-py3-none-manylinux2014_aarch64.whl", hash = "sha256:c57906ea213188bef0dd87fc31cae9689214e9194baf5c9445783c9730ff086e", size = 3048405, upload-time = "2026-06-29T20:35:57.385Z" },
@@ -3662,7 +3662,7 @@ name = "nvidia-cublas"
 version = "13.10.0.20"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-cuda-nvrtc" },
+    { name = "nvidia-cuda-nvrtc", marker = "sys_platform != 'darwin'" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b4/12/16628161ed8c109c8c73b38167df50cbc630a8a6e6548e2534d461526c3c/nvidia_cublas-13.10.0.20-py3-none-manylinux1_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:dcc6d63884c53d07e267ce7e6feac17b2538cebaafec5db865736c3e28e4dc84", size = 444289903, upload-time = "2026-11-04T23:27:26.095Z" },
@@ -3701,9 +3701,9 @@ name = "nvidia-cusolver"
 version = "12.4.1.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-cublas" },
-    { name = "nvidia-cusparse" },
-    { name = "nvidia-nvjitlink" },
+    { name = "nvidia-cublas", marker = "sys_platform != 'darwin'" },
+    { name = "nvidia-cusparse", marker = "sys_platform != 'darwin'" },
+    { name = "nvidia-nvjitlink", marker = "sys_platform != 'darwin'" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/80/38/566a08a71dac1eebb21fa439970eab971d372c94633c3b16b851b415a13d/nvidia_cusolver-12.4.1.2-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:1f54c8e0d5b1ebd183b4c5a79f0709fa90241e8254da381ca5b969ee97c8de32", size = 304822178, upload-time = "2026-11-04T23:29:37.266Z" },
@@ -3715,7 +3715,7 @@ name = "nvidia-cusparse"
 version = "12.9.4.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-nvjitlink" },
+    { name = "nvidia-nvjitlink", marker = "sys_platform != 'darwin'" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1b/71/9cf160aff268332d07b1d46e9009c5f28d626d36bd17d9cdc462a0668384/nvidia_cusparse-12.9.4.2-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:e2ce97f185c9c4b285e4a8fbf02cb96dd1b8dd66736ebe2f0a8da5f6012a4fb7", size = 230296529, upload-time = "2026-11-04T23:31:18.146Z" },
@@ -4517,7 +4517,7 @@ name = "pyobjc-framework-cocoa"
 version = "13.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "pyobjc-core" },
+    { name = "pyobjc-core", marker = "sys_platform == 'darwin'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/30/50/55a8779d35f1f86d795264cbd6fe62e35b2cf4fb8343fc888e99268c988a/pyobjc_framework_cocoa-13.0.tar.gz", hash = "sha256:bb7a23941fc8d7866578dbc84e56140efd343a1d28510f530dd1dbf80807daf4", size = 3135308, upload-time = "2026-10-30T10:46:03.982Z" }
 wheels = [
@@ -4536,8 +4536,8 @@ name = "pyobjc-framework-metal"
 version = "13.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "pyobjc-core" },
-    { name = "pyobjc-framework-cocoa" },
+    { name = "pyobjc-core", marker = "sys_platform == 'darwin'" },
+    { name = "pyobjc-framework-cocoa", marker = "sys_platform == 'darwin'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/27/e6/f6efb0f951df22e8571facc26e7bfde7f1b06cb59bf682737c0bbbbc4593/pyobjc_framework_metal-13.0.tar.gz", hash = "sha256:be798a872021520701183f015f1b0fdadbc5ca74e4aee80d0c4952b890c90a7a", size = 244348, upload-time = "2026-10-30T10:47:02.567Z" }
 wheels = [
@@ -4641,8 +4641,8 @@ name = "pyqt5"
 version = "5.15.11"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "pyqt5-qt5" },
-    { name = "pyqt5-sip" },
+    { name = "pyqt5-qt5", marker = "sys_platform == 'darwin' or sys_platform == 'linux'" },
+    { name = "pyqt5-sip", marker = "sys_platform == 'darwin' or sys_platform == 'linux'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/0e/07/c9ed0bd428df6f87183fca565a79fee19fa7c88c7f00a7f011ab4379e77a/PyQt5-5.15.11.tar.gz", hash = "sha256:fda45743ebb4a27b4b1a51c6d8ef455c4c1b5d610c90d2934c7802b5c1557c52", size = 3216775, upload-time = "2024-07-19T08:39:57.756Z" }
 wheels = [
@@ -5605,10 +5605,10 @@ name = "tesseract-decoder"
 version = "0.1.1.dev20261013012529"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "numpy" },
-    { name = "scipy" },
-    { name = "sinter" },
-    { name = "stim" },
+    { name = "numpy", marker = "python_full_version >= '3.12'" },
+    { name = "scipy", marker = "python_full_version >= '3.12'" },
+    { name = "sinter", marker = "python_full_version >= '3.12'" },
+    { name = "stim", marker = "python_full_version >= '3.12'" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/29/8b/b7ab014a27ab99bc27f90e72c73303fa30d92a320bb780352925a6afedf1/tesseract_decoder-0.1.1.dev20261013012529-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:ae0489b8c3506bcf39e7e82716c5fc19e00b2a27c190b627a5241798137d2d35", size = 2958076, upload-time = "2026-10-13T01:31:21.558Z" },
