@@ -26,6 +26,7 @@ from bloqade.gemini.device import (
     GeminiPhysicalSimulator as GeminiPhysicalSimulator,
     AbstractSimulatorBackend as AbstractSimulatorBackend,
     GeminiLogicalSimulatorTask as GeminiLogicalSimulatorTask,
+    GeminiLogicalSimulatorDevice as GeminiLogicalSimulatorDevice,
 )
 
 __all__ = [
@@ -34,6 +35,7 @@ __all__ = [
     "CliffTSimulatorBackend",
     "DetectorResult",
     "GeminiLogicalDevice",
+    "GeminiLogicalSimulatorDevice",
     "GeminiLogicalFuture",
     "GeminiLogicalResult",
     "GeminiLogicalSimulator",
