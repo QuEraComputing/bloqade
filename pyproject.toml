@@ -21,14 +21,14 @@ classifiers = [
 ]
 requires-python = ">=3.11"
 dependencies = [
-    "bloqade-circuit[cirq,qasm2,qasm3,qbraid,vis,stim]~=0.15.5",
+    "bloqade-circuit[cirq,qasm2,qasm3,qbraid,vis,stim]~=0.15.6",
     "bloqade-analog~=0.16.9",
     "bloqade-lanes>=0.12.2,<0.13",
-    "bloqade-tsim~=0.1.5",
+    "bloqade-tsim~=1.1.0",
     "bloqade-core~=0.6.15",
     "bloqade-decoders>=0.7.0",
-    "bloqade-ppvm~=0.1.1",
-    "kirin-toolchain~=0.22.14",
+    "bloqade-ppvm~=0.3.0",
+    "kirin-toolchain~=0.22.21",
     "numpy>=2.2.6",
     "scipy>=1.15.3",
     "typing-extensions>=4.12"
@@ -66,6 +66,27 @@ pyqrack-accel = [
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.uv]
+constraint-dependencies = [
+    # Ported from bloqade-lanes with the `cudaq` extra.
+    #
+    # cuda-quantum-cu13 0.16.0.post1 (2026-09-17) shipped without the
+    # macosx_13_0_arm64 wheels that 0.14.0 through 0.16.0 all published, so
+    # resolving it breaks `uv sync --all-extras` on macOS:
+    #
+    #   error: Distribution `cuda-quantum-cu13==0.16.0.post1` can't be
+    #   installed because it doesn't have a source distribution or wheel for
+    #   the current platform
+    #
+    # This is an upstream packaging gap in the .post1 re-release, not a dropped
+    # platform. `cudaq` requires cuda-quantum-cu13 with no version specifier,
+    # so the exclusion has to sit on the transitive package rather than on
+    # `cudaq` itself.
+    #
+    # Drop this once a release later than 0.16.0.post1 restores the macOS wheel.
+    "cuda-quantum-cu13!=0.16.0.post1",
+]
+
 [tool.hatch.metadata]
 allow-direct-references = true
 
@@ -75,7 +96,7 @@ packages = ["src/bloqade"]
 [dependency-groups]
 dev = [
     "black>=24.10.0",
-    "bloqade-tsim>=0.1.0",
+    "bloqade-tsim>=1.1.0",
     "coverage>=7.6.4",
     "ipython>=8.29.0",
     "isort>=5.13.2",
