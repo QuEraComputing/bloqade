@@ -1,0 +1,25 @@
+name: Backport workflow tests
+
+on:
+  pull_request:
+    paths:
+      - .github/scripts/backport-*.cjs
+      - .github/workflows/backport*.yml
+  push:
+    branches: [main]
+    paths:
+      - .github/scripts/backport-*.cjs
+      - .github/workflows/backport*.yml
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      - run: node --test .github/scripts/backport-targets.test.cjs
