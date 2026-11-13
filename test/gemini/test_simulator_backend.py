@@ -550,9 +550,9 @@ def test_clifft_backend_reframes_missing_tsim_dependency(monkeypatch):
     tsim_backend._detector_error_model.side_effect = ImportError("missing tsim")
     backend = CliffTSimulatorBackend(_tsim_backend=tsim_backend)
 
-    with pytest.raises(ImportError, match=r"CliffT.*bloqade\[sim\]"):
+    with pytest.raises(ImportError, match=r"CliffT.*bloqade-tsim.*required dependency"):
         backend.sample(_physical_kernel, shots=1)
-    with pytest.raises(ImportError, match=r"CliffT.*bloqade\[sim\]"):
+    with pytest.raises(ImportError, match=r"CliffT.*bloqade-tsim.*required dependency"):
         backend._detector_error_model(_physical_kernel)
 
 
@@ -747,9 +747,13 @@ def test_pyqrack_backend_reframes_missing_tsim_dependency():
     tsim_backend._detector_error_model.side_effect = ImportError("missing tsim")
     backend = _PyQrackSimulatorBackend(_tsim_backend=tsim_backend)
 
-    with pytest.raises(ImportError, match=r"PyQrack.*bloqade\[sim\]"):
+    with pytest.raises(
+        ImportError, match=r"PyQrack.*bloqade-tsim.*required dependency"
+    ):
         _get_tsim_circuit(backend, _physical_kernel)
-    with pytest.raises(ImportError, match=r"PyQrack.*bloqade\[sim\]"):
+    with pytest.raises(
+        ImportError, match=r"PyQrack.*bloqade-tsim.*required dependency"
+    ):
         backend._detector_error_model(_physical_kernel)
 
 

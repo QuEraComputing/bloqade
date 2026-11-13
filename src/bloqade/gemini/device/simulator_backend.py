@@ -98,8 +98,9 @@ def _tsim() -> Any:
         from bloqade import tsim
     except ImportError as exc:
         raise ImportError(
-            "Tsim simulation requires the optional `sim` extra. "
-            "Install it with `bloqade[sim]` or `uv sync --extra sim`."
+            "Tsim simulation could not load the Tsim integration. "
+            "`bloqade-tsim` is a required dependency of `bloqade`. "
+            "Reinstall `bloqade-tsim` in your environment."
         ) from exc
 
     return tsim
@@ -265,17 +266,19 @@ def _ppvm() -> Any:
 
 def _clifft_tsim_import_error(exc: ImportError) -> ImportError:
     return ImportError(
-        "CliffT simulation also requires `bloqade[sim]`: Tsim performs "
-        "physical SQuIn conversion and detector error model generation even "
-        "when CliffT is selected for sampling."
+        "CliffT simulation requires Tsim for physical SQuIn conversion and "
+        "detector error model generation, even when CliffT is selected for "
+        "sampling. `bloqade-tsim` is a required dependency of `bloqade`. "
+        "Reinstall `bloqade-tsim` in your environment."
     )
 
 
 def _ppvm_tsim_import_error(exc: ImportError) -> ImportError:
     return ImportError(
-        "PPVM simulation also requires `bloqade[sim]`: Tsim performs "
-        "physical SQuIn conversion and detector error model generation even "
-        "when CliffT is selected for sampling."
+        "PPVM simulation requires Tsim for physical SQuIn conversion and "
+        "detector error model generation, even when PPVM is selected for "
+        "sampling. `bloqade-tsim` is a required dependency of `bloqade`. "
+        "Reinstall `bloqade-tsim` in your environment."
     )
 
 
@@ -350,9 +353,10 @@ class CliffTSimulatorBackend(AbstractSimulatorBackend):
 
 def _pyqrack_tsim_import_error(exc: ImportError) -> ImportError:
     return ImportError(
-        "PyQrack simulation also requires `bloqade[sim]`: Tsim provides "
-        "the guaranteed detector error model even when PyQrack is selected "
-        "for sampling."
+        "PyQrack simulation requires Tsim for detector error model generation, "
+        "even when PyQrack is selected for sampling. `bloqade-tsim` is a "
+        "required dependency of `bloqade`. Reinstall `bloqade-tsim` in your "
+        "environment."
     )
 
 

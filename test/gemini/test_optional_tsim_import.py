@@ -113,11 +113,14 @@ def test_composed_backends_fail_before_sampling_with_specific_tsim_guidance():
 
         sys.meta_path.insert(0, BlockTsim())
 
-        from bloqade.gemini import CliffTSimulatorBackend, GeminiLogicalSimulatorTask
+        from bloqade.gemini import (
+            CliffTSimulatorBackend, GeminiLogicalSimulatorTask, PPVMSimulatorBackend,
+        )
         from bloqade.gemini.device.simulator_backend import _PyQrackSimulatorBackend
 
         for backend_type, label in (
             (CliffTSimulatorBackend, "CliffT"),
+            (PPVMSimulatorBackend, "PPVM"),
             (_PyQrackSimulatorBackend, "PyQrack"),
         ):
             backend = backend_type()
@@ -135,7 +138,9 @@ def test_composed_backends_fail_before_sampling_with_specific_tsim_guidance():
             except ImportError as exc:
                 message = str(exc)
                 assert label in message
-                assert "bloqade[sim]" in message
+                assert "`bloqade-tsim` is a required dependency" in message
+                assert "Reinstall `bloqade-tsim`" in message
+                assert exc.__cause__ is not None
             else:
                 raise AssertionError("expected missing-Tsim failure")
             backend.sample.assert_not_called()
