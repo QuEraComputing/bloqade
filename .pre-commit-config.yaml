@@ -8,6 +8,12 @@ repos:
       args: ['--unsafe']
     - id: end-of-file-fixer
     - id: trailing-whitespace
+- repo: https://github.com/pycqa/isort
+  # Match the development version in uv.lock; scope matches isort CI.
+  rev: 8.0.1
+  hooks:
+    - id: isort
+      files: ^src/
 - repo: https://github.com/psf/black
   # Match the black that CI's `psf/black@stable` installs.
   rev: 26.10.1

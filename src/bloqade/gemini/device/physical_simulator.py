@@ -26,6 +26,7 @@ from bloqade.gemini.device._task_runtime import (
     _SimulatorTaskBase,
 )
 from bloqade.gemini.device.simulator_backend import (
+    PPVMSimulatorBackend,
     TsimSimulatorBackend,
     AbstractSimulatorBackend,
 )
@@ -212,8 +213,8 @@ class GeminiPhysicalSimulator:
     """The physical noise model used for simulation."""
     arch_spec: ArchSpec = field(default_factory=_default_arch_spec)
     """The physical architecture specification used for compilation."""
-    backend: AbstractSimulatorBackend = field(default_factory=TsimSimulatorBackend)
-    """Sampling and detector-model backend used by created tasks."""
+    backend: AbstractSimulatorBackend = field(default_factory=PPVMSimulatorBackend)
+    """Backend for created tasks; defaults to PPVM sampling with Tsim DEMs."""
     place_opt_type: type[passes.Pass] | None = None
     """Optional placement pass used for compilation."""
     placement_strategy: PlacementStrategyABC | None = None

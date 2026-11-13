@@ -19,6 +19,7 @@ from bloqade.gemini.device._task_runtime import (
     _SimulatorTaskBase,
 )
 from bloqade.gemini.device.simulator_backend import (
+    PPVMSimulatorBackend,
     TsimSimulatorBackend,
     AbstractSimulatorBackend,
 )
@@ -99,8 +100,8 @@ class GeminiLogicalSimulator:
 
     noise_model: LogicalNoiseModelABC = field(default_factory=_default_noise_model)
     """The noise model used for simulation. Defaults to :func:`generate_logical_noise_model`."""
-    backend: AbstractSimulatorBackend = field(default_factory=TsimSimulatorBackend)
-    """Sampling backend for tasks created by this simulator."""
+    backend: AbstractSimulatorBackend = field(default_factory=PPVMSimulatorBackend)
+    """Sampling backend for created tasks; defaults to PPVM."""
 
     def task(
         self,
