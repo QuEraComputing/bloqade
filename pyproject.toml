@@ -1,6 +1,6 @@
 [project]
 name = "bloqade"
-version = "0.37.0-dev"
+version = "0.38.0-dev"
 description = "The software development toolkit for neutral atom arrays."
 readme = "README.md"
 authors = [
@@ -21,13 +21,13 @@ classifiers = [
 ]
 requires-python = ">=3.11"
 dependencies = [
-    "bloqade-circuit[cirq,qasm2,qasm3,qbraid,vis,stim]~=0.15.5",
+    "bloqade-circuit[cirq,qasm2,qasm3,qbraid,vis,stim]~=0.15.6",
     "bloqade-analog~=0.16.9",
-    "bloqade-lanes~=0.11.9",
+    "bloqade-lanes~=0.12.2",
     "bloqade-tsim~=0.1.5",
-    "bloqade-core~=0.6.13",
-    "bloqade-decoders~=0.6.1",
-    "bloqade-ppvm~=0.1.1"
+    "bloqade-core~=0.6.15",
+    "bloqade-decoders~=0.7.0",
+    "bloqade-ppvm~=0.3.0"
 ]
 
 [project.optional-dependencies]
