@@ -24,7 +24,7 @@ constraints = [{ name = "cuda-quantum-cu13", specifier = "!=0.16.0.post1" }]
 
 [[package]]
 name = "amazon-braket-default-simulator"
-version = "1.39.4"
+version = "1.43.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "amazon-braket-schemas" },
@@ -34,25 +34,23 @@ dependencies = [
     { name = "opt-einsum" },
     { name = "pydantic" },
     { name = "scipy" },
-    { name = "setuptools" },
     { name = "sympy" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/69/4e/27b09a5a1eb649fbc60761191c459a850b8b1e29cf81ef7b6d882a0e9bf5/amazon_braket_default_simulator-1.39.4.tar.gz", hash = "sha256:778b808875057ef78c6ae46932a53f458bd562968f8b986bbb548e71b29b64f1", size = 203994, upload-time = "2026-06-04T16:14:43.888Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d5/d3/cc01786a85aa064fa6af1e41fefc29007334c141145a7431397b8bfc9699/amazon_braket_default_simulator-1.43.1.tar.gz", hash = "sha256:7565778144e3fbcfd991fd91dcb93474b858f8da04d88a5c7a6ca3aee5acce32", size = 223922, upload-time = "2026-11-03T17:15:02.037Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/17/f2/32ddaacfc8297c0eeee6c0f3e08fd4ce7031d65de891f911035b7e19370a/amazon_braket_default_simulator-1.39.4-py3-none-any.whl", hash = "sha256:3d15583809aaed34a68ee6eb32a637137727b301bafb1f4422feb45e04882ac7", size = 246128, upload-time = "2026-06-04T16:14:42.222Z" },
+    { url = "https://files.pythonhosted.org/packages/d2/9b/7436489dbc31cc33f985d80d437f5f71a4971245e09fab000ea4660baefc/amazon_braket_default_simulator-1.43.1-py3-none-any.whl", hash = "sha256:c9bc90feabe7ab36c013f85455da5c17d16f7aca2970a1e68c452f6a059a8634", size = 260455, upload-time = "2026-11-03T17:14:59.885Z" },
 ]
 
 [[package]]
 name = "amazon-braket-schemas"
-version = "1.30.0"
+version = "1.32.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
-    { name = "setuptools" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e5/df/ffeb8e8c7e0e72c9b8f3e52f2c2019b25b0b216d5242303a06fdac297412/amazon_braket_schemas-1.30.0.tar.gz", hash = "sha256:aaf34a195e98d9e3085cfbe284a45c6bca5acd28360f218b89bd430b37ff026f", size = 60222, upload-time = "2026-06-09T16:19:15.747Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/90/ff/f28abfc293af02c351988d6c9ef3fb53d16f9908530839fc9d40e211bc9d/amazon_braket_schemas-1.32.2.tar.gz", hash = "sha256:4650e1dbae26de787130e19a31cea29a081d7eedebbddc03e812a217229bbe7e", size = 62275, upload-time = "2026-11-09T22:39:16.127Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8a/7a/c22b8974743ef73c6d68ff4f459b6f134462be41616bb3361dfbaf643750/amazon_braket_schemas-1.30.0-py3-none-any.whl", hash = "sha256:6af78556891e9c8202435d5ff88fdb2e6ba06c47fa5249f584b5cdef52d196f2", size = 152844, upload-time = "2026-06-09T16:19:14.38Z" },
+    { url = "https://files.pythonhosted.org/packages/f0/20/8f6f99b2e65a3eeae42cdd57b7f8525ebde5d94414f6599697570936dfec/amazon_braket_schemas-1.32.2-py3-none-any.whl", hash = "sha256:eba6ed50f8fb008e26b157b68ee082197775127204403674f0df50397ff7a484", size = 153741, upload-time = "2026-11-09T22:39:14.67Z" },
 ]
 
 [[package]]
@@ -5371,15 +5369,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/92/f5/e1dfe8e1d91c54ce212fd93916eb01fd1c590f413be0a0978c39a97aa1bb/semver-3.1.0.tar.gz", hash = "sha256:14bc073439513d7773662a338f4db9829cf16c12b74b9568e2d2689975fbd7fc", size = 304162, upload-time = "2026-09-12T18:38:14.045Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/be/02/bce7a1d70e9d0f6ea8623c16386138c251b5855af6cd3a11433d3fba4e66/semver-3.1.0-py3-none-any.whl", hash = "sha256:6e4998f8b4762acdfea85f9bfd5b4032e0bb50038dc04bf82011b42d5d1145c5", size = 18783, upload-time = "2026-09-12T18:38:12.457Z" },
-]
-
-[[package]]
-name = "setuptools"
-version = "81.0.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/0d/1c/73e719955c59b8e424d015ab450f51c0af856ae46ea2da83eba51cc88de1/setuptools-81.0.0.tar.gz", hash = "sha256:487b53915f52501f0a79ccfd0c02c165ffe06631443a886740b91af4b7a5845a", size = 1198299, upload-time = "2026-02-06T21:10:39.601Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/e1/e3/c164c88b2e5ce7b24d667b9bd83589cf4f3520d97cad01534cd3c4f55fdb/setuptools-81.0.0-py3-none-any.whl", hash = "sha256:fdd925d5c5d9f62e4b74b30d6dd7828ce236fd6ed998a08d81de62ce5a6310d6", size = 1062021, upload-time = "2026-02-06T21:10:37.175Z" },
 ]
 
 [[package]]
