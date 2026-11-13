@@ -5,6 +5,7 @@ from typing import (
     Any,
     Generic,
     TypeVar,
+    ParamSpec,
 )
 from functools import cached_property
 from dataclasses import field, dataclass
@@ -13,6 +14,7 @@ from kirin import ir
 from bloqade.lanes.transform import MoveToSquinLogical
 from bloqade.lanes.noise_model import generate_logical_noise_model
 
+from bloqade.gemini.device._arguments import bind_task_arguments
 from bloqade.gemini.device._task_runtime import (
     Result as Result,
     DetectorResult as DetectorResult,
@@ -29,6 +31,7 @@ if TYPE_CHECKING:
     from bloqade.lanes.rewrite.move2squin.noise import LogicalNoiseModelABC
 
 RetType = TypeVar("RetType")
+CallArgs = ParamSpec("CallArgs")
 
 
 def _default_noise_model() -> LogicalNoiseModelABC:
@@ -104,7 +107,9 @@ class GeminiLogicalSimulator:
 
     def task(
         self,
-        logical_kernel: ir.Method[[], RetType],
+        kernel: ir.Method[CallArgs, RetType],
+        *args: CallArgs.args,
+        **kernel_args: CallArgs.kwargs,
     ) -> GeminiLogicalSimulatorTask[RetType]:
         """Create a simulation task for the given kernel.
 
@@ -115,24 +120,36 @@ class GeminiLogicalSimulator:
         CUDA-Q conversion and any desired detector/observable annotations must be
         completed externally.
 
+        Arguments are bound as compile-time constants in an owned kernel copy.
+        Create a new task for different values; run() does not rebind arguments.
+        For parameter-dependent logical validation, define the source kernel
+        with ``@logical.kernel(verify=False)``. The bound program is validated
+        during task creation regardless of that decorator setting.
+
         Args:
-            logical_kernel (ir.Method[[], RetType]): The logical
+            kernel (ir.Method[CallArgs, RetType]): The logical
                 squin kernel to compile and run.
+            *args: Positional kernel arguments.
+            **kernel_args: Keyword kernel arguments. Values must be bool, int, float,
+                str, None, or recursively nested tuples/ILists of these types.
+                IList backing storage is copied during binding.
 
         Returns:
             GeminiLogicalSimulatorTask[RetType]: The compiled simulation task.
         """
-        if not isinstance(logical_kernel, ir.Method):
+        if not isinstance(kernel, ir.Method):
             raise TypeError("GeminiLogicalSimulator.task() requires a Squin ir.Method")
 
         from bloqade.gemini.compile import compile_task
+
+        bound_kernel = bind_task_arguments(kernel, *args, **kernel_args)
 
         (
             logical_squin_kernel,
             physical_arch_spec,
             physical_move_kernel,
             post_processing,
-        ) = compile_task(logical_kernel)
+        ) = compile_task(bound_kernel)
         return GeminiLogicalSimulatorTask(
             logical_squin_kernel,
             self.noise_model,
