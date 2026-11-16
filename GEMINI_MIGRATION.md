@@ -37,6 +37,21 @@ Compiler consumers should import statements, the dialect object, and other
 implementation details directly from `bloqade.lanes.dialects.arch` or
 `bloqade.lanes.dialects.arrange`.
 
+## Move-program debuggers
+
+The step-by-step debuggers for compiled move programs are owned by Gemini:
+import `debugger`, `animated_debugger` and `plotly_debugger` from
+`bloqade.gemini.visualize` instead of `bloqade.lanes.visualize`.
+`task.visualize()` uses them. Architecture drawing (`ArchVisualizer`) and the
+entropy-tree search viewer remain in `bloqade.lanes.visualize`.
+
+Each debugger accepts an `initialize_kernel`. When given, a
+`move.PhysicalInitialize` is stepped through instead of shown as one step: the
+kernel's gates, and for every CZ one move bringing the paired atoms together,
+the pulse, and one move back. The controls of a CZ are taken to be the atoms
+that move. Logical simulator tasks pass the noisy initialization kernel of
+their noise model, which names the movers first.
+
 ## Method-table registration
 
 Lanes 0.12.2 owns and registers the shared compiler method tables, including
