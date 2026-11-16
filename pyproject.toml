@@ -31,6 +31,7 @@ dependencies = [
     "kirin-toolchain~=0.22.21",
     "numpy>=2.2.6",
     "scipy>=1.15.3",
+    "rustworkx>=0.17.1",
     "typing-extensions>=4.12"
 ]
 

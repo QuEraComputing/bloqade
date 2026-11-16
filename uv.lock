@@ -386,6 +386,7 @@ dependencies = [
     { name = "bloqade-tsim" },
     { name = "kirin-toolchain" },
     { name = "numpy" },
+    { name = "rustworkx" },
     { name = "scipy" },
     { name = "typing-extensions" },
 ]
@@ -469,6 +470,7 @@ requires-dist = [
     { name = "numpy", specifier = ">=2.2.6" },
     { name = "pulp", marker = "extra == 'decoding'", specifier = ">=2.9,<4" },
     { name = "qbraid-qir", extras = ["squin"], marker = "sys_platform != 'win32' and extra == 'cudaq'", specifier = ">=0.5.1" },
+    { name = "rustworkx", specifier = ">=0.17.1" },
     { name = "scipy", specifier = ">=1.15.3" },
     { name = "typing-extensions", specifier = ">=4.12" },
 ]

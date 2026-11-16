@@ -52,6 +52,21 @@ the pulse, and one move back. The controls of a CZ are taken to be the atoms
 that move. Logical simulator tasks pass the noisy initialization kernel of
 their noise model, which names the movers first.
 
+## Architecture builder
+
+The architecture builders are owned by Gemini: import `ArchBuilder`,
+`ZoneBuilder`, `build_arch`, `ArchBlueprint`, `ZoneSpec`, `DeviceLayout` and
+the topologies from `bloqade.gemini.arch` instead of `bloqade.lanes.arch`, and
+their modules from `bloqade.gemini.arch.build` (including the spec-shaped
+`bloqade.gemini.arch.build.v2.ArchBuilder`) instead of
+`bloqade.lanes.arch.build`. The three-zone example architectures moved with
+them: `bloqade.gemini.arch.gemini_full` and `bloqade.gemini.arch.generic_full`.
+
+The builders still produce `bloqade.lanes.arch.spec.ArchSpec`, which lanes
+compiles against; `ArchSpec`, `ArchSpecGeometry`, `PathFinder` and
+`MoveMetricCalculator` remain in `bloqade.lanes.arch`. The bundled Gemini
+logical and physical specs (`bloqade.lanes.arch.gemini`) are unchanged.
+
 ## Method-table registration
 
 Lanes 0.12.2 owns and registers the shared compiler method tables, including

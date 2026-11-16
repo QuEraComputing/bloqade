@@ -43,6 +43,9 @@ nav:
       - Magic state distillation: digital/examples/tsim/magic_state_distillation.py
     - Gemini Logical dialect examples:
       - Demonstration of Simulator Device: digital/examples/gemini_logical/simulator_device_demo.py
+    - Architecture examples:
+      - Customizing and visualizing an architecture: digital/examples/arch/arch_cust_vis_demo.py
+      - Extending the Gemini site buses: digital/examples/arch/extend_gemini_site_buses.py
     - Integration with other SDKs:
       - Noisy GHZ states with cirq: "digital/examples/interop/noisy_ghz.py"
   - Bloqade Analog:
