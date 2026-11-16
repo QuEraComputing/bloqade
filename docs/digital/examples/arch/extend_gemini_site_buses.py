@@ -30,10 +30,10 @@
 # architecture must leave every one of those paths byte-for-byte intact and
 # route only the bus we just added.
 
+# %%
 from bloqade.lanes.bytecode.encoding import MoveType, Direction
 from bloqade.lanes.arch.gemini.physical import get_arch_spec
 
-# %%
 from bloqade.gemini.arch.build.v2 import ArchBuilder
 
 spec = get_arch_spec()
