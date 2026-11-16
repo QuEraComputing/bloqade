@@ -502,7 +502,7 @@ def test_move_path_and_site_preview_name_a_bus_identically(
     """
     import json
 
-    from bloqade.lanes.visualize.arch import ArchVisualizer
+    from bloqade.gemini.visualize.arch import ArchVisualizer
 
     payload = ArchVisualizer(small_arch_spec).plot_interactive().to_json()
     assert payload is not None

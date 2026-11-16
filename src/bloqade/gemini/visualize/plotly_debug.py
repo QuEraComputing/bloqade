@@ -10,9 +10,9 @@ from kirin import ir
 from bloqade.lanes.dialects import move
 from bloqade.lanes.arch.spec import ArchSpec
 from bloqade.lanes.analysis.atom import AtomState
-from bloqade.lanes.visualize.arch import ArchVisualizer, bus_preview_label
 from bloqade.lanes.bytecode.encoding import MoveType, LaneAddress, LocationAddress
 
+from bloqade.gemini.visualize.arch import ArchVisualizer, bus_preview_label
 from bloqade.gemini.visualize.artist import MovePath, DebugStep, collect_debug_steps
 from bloqade.gemini.visualize.plotly_circuit import (
     CIRCUIT_X_AXIS,

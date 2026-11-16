@@ -26,9 +26,9 @@ from bloqade.lanes.analysis.atom import (
     MoveExecution,
     AtomInterpreter,
 )
-from bloqade.lanes.visualize.arch import ArchVisualizer
 from bloqade.lanes.bytecode.encoding import ZoneAddress, LocationAddress
 
+from bloqade.gemini.visualize.arch import ArchVisualizer
 from bloqade.gemini.visualize.initialize import (
     InitializeR,
     InitializeCZ,

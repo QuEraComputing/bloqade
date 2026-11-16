@@ -37,13 +37,19 @@ Compiler consumers should import statements, the dialect object, and other
 implementation details directly from `bloqade.lanes.dialects.arch` or
 `bloqade.lanes.dialects.arrange`.
 
-## Move-program debuggers
+## Move-program debuggers and architecture drawing
 
-The step-by-step debuggers for compiled move programs are owned by Gemini:
-import `debugger`, `animated_debugger` and `plotly_debugger` from
-`bloqade.gemini.visualize` instead of `bloqade.lanes.visualize`.
-`task.visualize()` uses them. Architecture drawing (`ArchVisualizer`) and the
-entropy-tree search viewer remain in `bloqade.lanes.visualize`.
+The step-by-step debuggers for compiled move programs and the architecture
+visualizer are owned by Gemini:
+
+- import `debugger`, `animated_debugger` and `plotly_debugger` from
+  `bloqade.gemini.visualize` instead of `bloqade.lanes.visualize`;
+- import `ArchVisualizer` and `bus_preview_label` from
+  `bloqade.gemini.visualize.arch` instead of `bloqade.lanes.visualize.arch`.
+
+`task.visualize()` uses them. Install the `atom-vis` extra for plotly and
+matplotlib. The entropy-tree search viewer and the matplotlib stepper it builds
+on (`bloqade.lanes.visualize.app.DebuggerController`) remain in lanes.
 
 Each debugger accepts an `initialize_kernel`. When given, a
 `move.PhysicalInitialize` is stepped through instead of shown as one step: the

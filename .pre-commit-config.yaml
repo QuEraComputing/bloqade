@@ -28,3 +28,11 @@ repos:
   rev: v1.29.4
   hooks:
     - id: typos
+- repo: local
+  hooks:
+    - id: arch-interactive-js-check
+      name: arch-interactive-js-check
+      entry: just check-visualization-js
+      language: system
+      files: ^(src/bloqade/gemini/visualize/_arch_interactive\.js|test/gemini/visualize/test_arch_interactive\.cjs|justfile)$
+      pass_filenames: false

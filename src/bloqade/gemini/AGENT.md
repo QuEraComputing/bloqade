@@ -5,7 +5,7 @@
 Gemini uses lanes to implement those; lanes owns the infrastructure that makes it possible.
 
 Import compiler definitions from lanes. Keep product kernel decorators, device
-policies, simulation, decoding, the move-program debuggers (`visualize`), and
+policies, simulation, decoding, the move-program debuggers and architecture visualizer (`visualize`), and
 the architecture builders (`arch`) here. A deferred lanes import must have a
 comment explaining a real optional-dependency or type-only requirement;
 working around a lanes-to-Gemini cycle is not acceptable.

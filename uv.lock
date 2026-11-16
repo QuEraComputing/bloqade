@@ -394,6 +394,7 @@ dependencies = [
 [package.optional-dependencies]
 atom-vis = [
     { name = "bloqade-lanes", extra = ["visualization"] },
+    { name = "plotly" },
 ]
 circ-opt = [
     { name = "bloqade-circuit", extra = ["cirq-parallelize"] },
@@ -468,6 +469,7 @@ requires-dist = [
     { name = "cudaq", marker = "sys_platform != 'win32' and extra == 'cudaq'", specifier = ">=0.13.0" },
     { name = "kirin-toolchain", specifier = "~=0.22.21" },
     { name = "numpy", specifier = ">=2.2.6" },
+    { name = "plotly", marker = "extra == 'atom-vis'", specifier = ">=5.24.0,<8" },
     { name = "pulp", marker = "extra == 'decoding'", specifier = ">=2.9,<4" },
     { name = "qbraid-qir", extras = ["squin"], marker = "sys_platform != 'win32' and extra == 'cudaq'", specifier = ">=0.5.1" },
     { name = "rustworkx", specifier = ">=0.17.1" },

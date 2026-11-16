@@ -6,10 +6,10 @@ from matplotlib import pyplot as plt
 from bloqade.lanes.dialects import move
 from bloqade.lanes.arch.spec import ArchSpec
 from bloqade.lanes.analysis.atom import AtomState, AtomStateData
-from bloqade.lanes.visualize.arch import ArchVisualizer
 from bloqade.lanes.bytecode.encoding import LocationAddress, SiteLaneAddress
 
 from bloqade.gemini.visualize import artist
+from bloqade.gemini.visualize.arch import ArchVisualizer
 
 
 def make_word():

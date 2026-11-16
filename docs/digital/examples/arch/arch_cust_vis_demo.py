@@ -20,10 +20,9 @@
 # ## Defining Architecture Layout
 # First, we define a custom architecture where each word is an SLM site in the architecture. For the purposes of this tutorial, we can treat each SLM site as having an integer ID which we can later address.
 
-from bloqade.lanes.visualize.arch import ArchVisualizer
-
 # %%
 from bloqade.gemini.arch.build.v2 import ArchBuilder
+from bloqade.gemini.visualize.arch import ArchVisualizer
 
 # %% [markdown]
 # We can define some constants for the architecture layout and spacing for the generated lane paths.
