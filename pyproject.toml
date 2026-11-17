@@ -31,6 +31,7 @@ dependencies = [
     "kirin-toolchain~=0.22.21",
     "numpy>=2.2.6",
     "scipy>=1.15.3",
+    "rustworkx>=0.17.1",
     "typing-extensions>=4.12"
 ]
 
@@ -53,7 +54,10 @@ decoding = [
     "bloqade-decoders[tesseract]; python_version >= '3.12'"
 ]
 atom-vis = [
-    "bloqade-lanes[visualization]"
+    "bloqade-lanes[visualization]",
+    # The interactive architecture controller uses plotly.js overlay internals.
+    # Test a new major release in a browser before relaxing this upper bound.
+    "plotly>=5.24.0,<8",
 ]
 circ-opt = [
     "bloqade-circuit[cirq-parallelize]"

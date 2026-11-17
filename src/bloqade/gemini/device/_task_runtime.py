@@ -335,10 +335,22 @@ class _SimulatorTaskBase(Generic[RetType]):
         """Return ``(loss_replace, loss)`` for backend sample conversion."""
         return (None, None)
 
+    @property
+    def _initialize_kernel(self) -> ir.Method | None:
+        """Kernel the debuggers step through for ``move.PhysicalInitialize``.
+
+        ``None`` shows each ``move.PhysicalInitialize`` as a single step.
+        """
+        return None
+
     def visualize(
         self, animated: bool = False, interactive: bool = True, arch_vis=False
     ):
         """Visualize the physical move kernel using the built-in debugger.
+
+        A logical task steps through the state preparation of each logical
+        qubit: its gates, and for every CZ one move bringing the paired atoms
+        together, the pulse, and one move back.
 
         Args:
             animated (bool): Whether to use the animated debugger. Defaults to False.
@@ -347,27 +359,25 @@ class _SimulatorTaskBase(Generic[RetType]):
 
         """
         # Visualization dependencies are optional; load them only on demand.
-        from bloqade.lanes.visualize import debugger, plotly_debugger, animated_debugger
+        from bloqade.gemini.visualize import (
+            debugger,
+            plotly_debugger,
+            animated_debugger,
+        )
 
         if arch_vis:
-            plotly_debugger(
-                self.physical_move_kernel,
-                self.physical_arch_spec,
-                interactive=interactive,
-            )
+            show = plotly_debugger
+        elif animated:
+            show = animated_debugger
         else:
-            if animated:
-                animated_debugger(
-                    self.physical_move_kernel,
-                    self.physical_arch_spec,
-                    interactive=interactive,
-                )
-            else:
-                debugger(
-                    self.physical_move_kernel,
-                    self.physical_arch_spec,
-                    interactive=interactive,
-                )
+            show = debugger
+
+        show(
+            self.physical_move_kernel,
+            self.physical_arch_spec,
+            interactive=interactive,
+            initialize_kernel=self._initialize_kernel,
+        )
 
     def fidelity_bounds(self) -> tuple[float, float]:
         """Compute the fidelity bounds for the physical squin kernel.
