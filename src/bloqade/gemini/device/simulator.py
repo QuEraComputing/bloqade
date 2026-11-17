@@ -87,6 +87,13 @@ class GeminiLogicalSimulatorTask(_SimulatorTaskBase[RetType], Generic[RetType]):
         """Replaces `loss` values (None) with `loss_replace` (True)."""
         return (True, None)
 
+    @property
+    def _initialize_kernel(self) -> ir.Method | None:
+        # The debuggers move the controls of each CZ. The noisy kernel names
+        # the movers first in every CZ; the clean one only pairs the qubits.
+        _, noisy = self.noise_model.get_logical_initialize()
+        return noisy
+
 
 @dataclass
 class GeminiLogicalSimulator:
