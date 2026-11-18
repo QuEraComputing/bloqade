@@ -2,18 +2,17 @@ from __future__ import annotations
 
 import numpy as np
 import matplotlib
-from bloqade.decoders import BaseDecoder
+from bloqade.decoders import BaseDecoder, TableDecoder
+from bloqade.analysis.tomography import TomographyResult
 
-from bloqade.gemini.decoding import (
-    TomographyResult,
-    PostselectionCurveData,
-    TableDecoder,
-    empty_logical_circuit,
-    single_qubit_state_tomography,
+from bloqade.gemini.logical.utils import plot_decoder_curves
+from bloqade.gemini.logical.kernels import (
+    PostselectionExperimentKernels,
+    build_singleq_tomo,
+    compose_tomography_kernels,
+    build_empty_logical_circuit,
 )
-from bloqade.gemini.decoding.msd import _build_decoder_kernel_bundle
-from bloqade.gemini.decoding.kernels import _DecoderPrimitiveSet
-from bloqade.gemini.decoding.workflow import _plot_decoder_curves
+from bloqade.gemini.logical.experiments import PostselectionCurveData
 
 matplotlib.use("Agg")
 
@@ -31,11 +30,11 @@ def test_public_facade_exports_simplified_decoder_and_tomography_types():
 
 
 def test_build_decoder_kernel_bundle_contains_basis_tomography_kernels():
-    tomography_kernels = single_qubit_state_tomography()
-    kernels = _build_decoder_kernel_bundle(
-        _DecoderPrimitiveSet(
-            state_injection_circuit=empty_logical_circuit(),
-            logical_circuit=empty_logical_circuit(),
+    tomography_kernels = build_singleq_tomo()
+    kernels = compose_tomography_kernels(
+        PostselectionExperimentKernels(
+            state_injection_circuit=build_empty_logical_circuit(),
+            logical_circuit=build_empty_logical_circuit(),
         ),
         num_logical_qubits=1,
         tomography_kernels=tomography_kernels,
@@ -45,7 +44,7 @@ def test_build_decoder_kernel_bundle_contains_basis_tomography_kernels():
 
 
 def test_plot_decoder_curves_handles_curves_without_uncertainty_bands():
-    fig, ax = _plot_decoder_curves(
+    fig, ax = plot_decoder_curves(
         {
             "decoder": PostselectionCurveData(
                 accepted_fraction=np.array([0.05, 0.1]),

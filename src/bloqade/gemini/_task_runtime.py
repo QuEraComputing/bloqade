@@ -21,7 +21,7 @@ from bloqade.lanes.dialects import move
 from bloqade.analysis.fidelity import FidelityAnalysis
 from bloqade.lanes.arch.metrics import MoveMetricCalculator
 
-from bloqade.gemini.device.simulator_backend import (
+from bloqade.simulation.backends import (
     AbstractSimulatorBackend,
     _get_tsim_circuit,
 )

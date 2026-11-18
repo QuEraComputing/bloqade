@@ -4,20 +4,22 @@ import stim
 import numpy as np
 import pytest
 from bloqade.decoders import BaseDecoder, TableDecoder
+from bloqade.analysis.tomography import TomographyResult
 
-from bloqade.gemini.decoding import experiments as experiments_module
-from bloqade.gemini.decoding.sampling import _BasisDataset
-from bloqade.gemini.decoding.tomography import TomographyResult
-from bloqade.gemini.decoding.experiments import (
-    PostSelectionExperiment,
-    _PostSelectionExperimentCache,
+from bloqade.gemini.logical.experiments import (
+    postselection_experiment as experiments_module,
 )
-from bloqade.gemini.decoding.postselection import (
+from bloqade.gemini.logical.experiments.sampling import _BasisDataset
+from bloqade.gemini.logical.experiments.postselection import (
     PostselectionCurveData,
     _DecodedPostselectionResult,
     _shots_at_accepted_fraction,
     _build_generic_threshold_tables,
     _evaluate_cached_threshold_curve,
+)
+from bloqade.gemini.logical.experiments.postselection_experiment import (
+    PostSelectionExperiment,
+    _PostSelectionExperimentCache,
 )
 
 

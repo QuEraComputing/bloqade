@@ -18,12 +18,12 @@ from bloqade.lanes.validation.terminal_measurement import (
 )
 
 from bloqade.gemini.logical.group import kernel as logical_kernel
-from bloqade.gemini.device.logical.task import (
+from bloqade.gemini.logical.device.task import (
     GeminiKernelBatchTask,
     GeminiSingleKernelTask,
     GeminiParameterScanTask,
 )
-from bloqade.gemini.device.logical.future import GeminiLogicalFuture
+from bloqade.gemini.logical.device.future import GeminiLogicalFuture
 from bloqade.gemini.logical.validation.arguments import GeminiLogicalArgumentValidation
 from bloqade.gemini.logical.validation.extensions.analysis import (
     NoLogicalExtensionsValidation,

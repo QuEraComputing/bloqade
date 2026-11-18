@@ -5,13 +5,16 @@ from collections.abc import Mapping, Sequence
 
 import numpy as np
 from bloqade.decoders import BaseDecoder
+from bloqade.analysis.tomography import TomographyResult
 
-from bloqade.gemini.decoding.layout import _DEFAULT_SYNDROME_LAYOUT, _split_factory_bits
-from bloqade.gemini.decoding.sampling import _BasisDataset
-from bloqade.gemini.decoding.tomography import TomographyResult
+from bloqade.gemini.logical.utils import MSD_TARGET_BLOCH
+from bloqade.gemini.logical.experiments.layout import (
+    _DEFAULT_SYNDROME_LAYOUT,
+    _split_factory_bits,
+)
+from bloqade.gemini.logical.experiments.sampling import _BasisDataset
 
 _DEFAULT_BASIS_LABELS = ("X", "Y", "Z")
-_DEFAULT_TARGET_BLOCH = np.ones(3, dtype=np.float64) / np.sqrt(3.0)
 _ProgressLabel = str | bool
 
 
@@ -298,7 +301,7 @@ def _evaluate_cached_threshold_curve(
     *,
     total_shots: int,
     threshold_points: int = 64,
-    target_bloch: np.ndarray = _DEFAULT_TARGET_BLOCH,
+    target_bloch: np.ndarray = MSD_TARGET_BLOCH,
     basis_labels: Sequence[str] = _DEFAULT_BASIS_LABELS,
     min_accepted_per_basis: int = 50,
 ) -> PostselectionCurveData:

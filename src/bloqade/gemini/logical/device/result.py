@@ -9,7 +9,7 @@ import numpy as np
 from bloqade.core.device import Result
 
 from bloqade.gemini import logical
-from bloqade.gemini.device.logical import utils
+from bloqade.gemini.logical.device import utils
 
 if TYPE_CHECKING:
     from bloqade.lanes.analysis.atom.analysis import PostProcessing

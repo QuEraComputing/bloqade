@@ -15,7 +15,7 @@ from bloqade.lanes.dialects.steane713.stmts import TerminalLogicalMeasurement
 
 from bloqade import qubit, squin
 from bloqade.gemini import logical, physical
-from bloqade.gemini.device import GeminiLogicalSimulator
+from bloqade.gemini.logical.simulation import GeminiLogicalSimulator
 from bloqade.gemini.common.cirq_conversion import (
     GeminiQubit,
     GeminiCirqLowerer,

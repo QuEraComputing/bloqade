@@ -6,7 +6,11 @@ Gemini uses lanes to implement those; lanes owns the infrastructure that makes i
 
 Import compiler definitions from lanes. Keep product kernel decorators, device
 policies, simulation, decoding, the move-program debuggers and architecture visualizer (`visualize`), and
-the architecture builders (`arch`) here. A deferred lanes import must have a
+the architecture builders (`arch`) here. Logical devices, simulators, kernels and
+experiments live under `bloqade.gemini.logical` (`device`, `simulation`,
+`kernels`, `utils`, `experiments`), physical simulators under
+`bloqade.gemini.physical.simulation`, and the simulator backends in
+`bloqade.simulation`. A deferred lanes import must have a
 comment explaining a real optional-dependency or type-only requirement;
 working around a lanes-to-Gemini cycle is not acceptable.
 

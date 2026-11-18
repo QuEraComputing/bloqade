@@ -5,27 +5,32 @@ from bloqade.gemini import (
     common as common,
     arrange as arrange,
     logical as logical,
-    decoding as decoding,
     physical as physical,
 )
-from bloqade.gemini.device import (
-    Result as Result,
+from bloqade.simulation import (
     BackendSample as BackendSample,
-    DetectorResult as DetectorResult,
-    PhysicalResult as PhysicalResult,
-    SimulatorResult as SimulatorResult,
-    PhysicalSimulator as PhysicalSimulator,
+    PPVMSimulatorBackend as PPVMSimulatorBackend,
+    TsimSimulatorBackend as TsimSimulatorBackend,
+    CliffTSimulatorBackend as CliffTSimulatorBackend,
+    AbstractSimulatorBackend as AbstractSimulatorBackend,
+)
+from bloqade.gemini.logical.device import (
     GeminiLogicalDevice as GeminiLogicalDevice,
     GeminiLogicalFuture as GeminiLogicalFuture,
     GeminiLogicalResult as GeminiLogicalResult,
-    PPVMSimulatorBackend as PPVMSimulatorBackend,
-    TsimSimulatorBackend as TsimSimulatorBackend,
-    PhysicalSimulatorTask as PhysicalSimulatorTask,
-    CliffTSimulatorBackend as CliffTSimulatorBackend,
+)
+from bloqade.gemini.logical.simulation import (
+    Result as Result,
+    DetectorResult as DetectorResult,
+    SimulatorResult as SimulatorResult,
     GeminiLogicalSimulator as GeminiLogicalSimulator,
-    GeminiPhysicalSimulator as GeminiPhysicalSimulator,
-    AbstractSimulatorBackend as AbstractSimulatorBackend,
     GeminiLogicalSimulatorTask as GeminiLogicalSimulatorTask,
+)
+from bloqade.gemini.physical.simulation import (
+    PhysicalResult as PhysicalResult,
+    PhysicalSimulator as PhysicalSimulator,
+    PhysicalSimulatorTask as PhysicalSimulatorTask,
+    GeminiPhysicalSimulator as GeminiPhysicalSimulator,
 )
 
 __all__ = [
@@ -48,7 +53,6 @@ __all__ = [
     "TsimSimulatorBackend",
     "arrange",
     "common",
-    "decoding",
     "logical",
     "move_to",
     "new_at",

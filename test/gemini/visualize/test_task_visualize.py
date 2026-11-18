@@ -7,7 +7,8 @@ from bloqade.lanes.noise_model import generate_logical_noise_model
 from bloqade.lanes.arch.gemini.physical import get_arch_spec
 
 import bloqade.gemini.visualize as gemini_visualize
-from bloqade.gemini.device import PhysicalSimulatorTask, GeminiLogicalSimulatorTask
+from bloqade.gemini.logical.simulation import GeminiLogicalSimulatorTask
+from bloqade.gemini.physical.simulation import PhysicalSimulatorTask
 from bloqade.gemini.visualize.initialize import InitializeCZ, initialize_operations
 
 

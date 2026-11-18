@@ -19,17 +19,17 @@ from bloqade.lanes.arch.gemini.physical import get_arch_spec
 from bloqade.decoders.dialects.annotate.stmts import SetDetector, SetObservable
 
 from bloqade import qubit
-from bloqade.gemini.post_processing import build_post_processing
-from bloqade.gemini.device._task_runtime import (
-    Result as Result,
-    DetectorResult as DetectorResult,
-    _SimulatorTaskBase,
-)
-from bloqade.gemini.device.simulator_backend import (
+from bloqade.simulation.backends import (
     PPVMSimulatorBackend,
     TsimSimulatorBackend,
     AbstractSimulatorBackend,
 )
+from bloqade.gemini._task_runtime import (
+    Result as Result,
+    DetectorResult as DetectorResult,
+    _SimulatorTaskBase,
+)
+from bloqade.gemini.post_processing import build_post_processing
 
 if TYPE_CHECKING:
     from bloqade.lanes.analysis import atom

@@ -9,16 +9,19 @@ from __future__ import annotations
 
 import numpy as np
 import pytest
+from bloqade.decoders import TableDecoder
 
-from bloqade.gemini.device import CliffTSimulatorBackend, GeminiLogicalSimulator
-from bloqade.gemini.decoding import (
-    PostSelectionExperiment,
-    TableDecoder,
-    empty_logical_circuit,
-    magic_state_dist_steane,
-    single_qubit_state_tomography,
+from bloqade.simulation import CliffTSimulatorBackend
+from bloqade.gemini.logical.kernels import (
+    build_msd_steane,
+    build_singleq_tomo,
+    build_empty_logical_circuit,
 )
-from bloqade.gemini.decoding.experiments import _basis_dataset_from_task_result
+from bloqade.gemini.logical.simulation import GeminiLogicalSimulator
+from bloqade.gemini.logical.experiments import PostSelectionExperiment
+from bloqade.gemini.logical.experiments.postselection_experiment import (
+    _basis_dataset_from_task_result,
+)
 
 _TARGET_BLOCH = np.ones(3, dtype=np.float64) / np.sqrt(3.0)
 _SEED = 10
@@ -56,11 +59,11 @@ def _sample_tasks_sequentially(
 
 
 def _run_distilled_msd() -> float:
-    nonclifford_prefix, clifford_circuit = magic_state_dist_steane(theta_offset=0.30)
+    nonclifford_prefix, clifford_circuit = build_msd_steane(theta_offset=0.30)
     experiment = PostSelectionExperiment(
         nonclifford_prefix,
         clifford_circuit,
-        single_qubit_state_tomography(),
+        build_singleq_tomo(),
         TableDecoder,
         decoder_init_args={"num_shots": 0},
     )
@@ -77,11 +80,11 @@ def _run_distilled_msd() -> float:
 
 
 def _run_injected_msd() -> float:
-    nonclifford_prefix, _ = magic_state_dist_steane(theta_offset=0.30)
+    nonclifford_prefix, _ = build_msd_steane(theta_offset=0.30)
     experiment = PostSelectionExperiment(
         nonclifford_prefix,
-        empty_logical_circuit(),
-        single_qubit_state_tomography(),
+        build_empty_logical_circuit(),
+        build_singleq_tomo(),
         TableDecoder,
         decoder_init_args={"num_shots": 0},
     )

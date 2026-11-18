@@ -1,10 +1,10 @@
-from bloqade.gemini.device.logical.device import (
+from bloqade.gemini.logical.device.device import (
     GeminiLogicalDevice as GeminiLogicalDevice,
 )
-from bloqade.gemini.device.logical.future import (
+from bloqade.gemini.logical.device.future import (
     GeminiLogicalFuture as GeminiLogicalFuture,
 )
-from bloqade.gemini.device.logical.result import (
+from bloqade.gemini.logical.device.result import (
     GeminiLogicalResult as GeminiLogicalResult,
 )
 
