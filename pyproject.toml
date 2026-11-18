@@ -57,7 +57,10 @@ atom-vis = [
     "bloqade-lanes[visualization]",
     # The interactive architecture controller uses plotly.js overlay internals.
     # Test a new major release in a browser before relaxing this upper bound.
-    "plotly>=5.24.0,<8",
+    # Kaleido v1 image export requires Plotly 6.1.1 or newer. MP4 export
+    # still needs Chrome/Chromium and FFmpeg installed separately.
+    "plotly>=6.1.1,<8",
+    "kaleido>=1.0.0,<2",
 ]
 circ-opt = [
     "bloqade-circuit[cirq-parallelize]"
