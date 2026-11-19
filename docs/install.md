@@ -1,52 +1,36 @@
 # Installation
 
 Bloqade is compatible with Python 3.11+ and available on [PyPI](https://pypi.org/project/bloqade/).
-You can install it via [`pip`](https://pypi.org/project/pip/) into your environment:
-
+Install it into your Python environment with:
 
 ```bash
 pip install bloqade
 ```
 
+## What the default install includes
 
-## Bloqade and its friends
+The `bloqade` distribution ships the Gemini SDK. Use
+`from bloqade.gemini import logical, physical` to access the kernel APIs.
+The same installation brings in the circuit and analog programming packages,
+the Lanes compiler, and simulation and decoding packages. QASM2, QASM3, Cirq,
+qBraid, circuit visualization, and Stim support are enabled through
+`bloqade-circuit`. See the [full list of direct dependencies](https://github.com/QuEraComputing/bloqade/blob/release-0-37/src/bloqade/README.md#what-gets-installed).
 
-Bloqade is a Python namespace package, we officially provide several sub-packages, each of which is an eDSL for neutral atom quantum computing. The following is a list of the sub-packages in Bloqade:
+## Optional extras
 
-!!! note
+| Extra | What it adds |
+| --- | --- |
+| `cudaq` | CUDA-Q and QIR integration on supported platforms. |
+| `sim` | Additional simulation backends, including CliffT on Python 3.12 and later. |
+| `decoding` | Additional decoding solvers, including Tesseract on Python 3.12 and later. |
+| `atom-vis` | Atom movement and architecture visualization tools. |
+| `circ-opt` | Circuit parallelization with Cirq. |
+| `pyqrack-accel` | OpenCL and CUDA acceleration support for PyQrack. |
 
-    If you have already installed Bloqade via the instructions above, all the following subpackages are already installed with the exception of the `stim` eDSL which is currently experimental.
-
-### `bloqade.qasm2`
-
-QASM2 and its extensions support for neutral atom quantum computing. Available via:
-
-```bash
-pip install bloqade[qasm2]
-```
-
-### `bloqade.analog`
-
-Analog quantum computing eDSL for neutral atom quantum computing (previously `bloqade-python`). Available via:
-
-```bash
-pip install bloqade-analog
-```
-
-### `bloqade.qbraid`
-
-Support of the qBraid cloud service as a runtime backend for retrieving noise models and running circuits.
+For example, to install the atom visualization tools:
 
 ```bash
-pip install bloqade[qbraid]
-```
-
-### `bloqade.stim` (Experimental)
-
-Stim and its extensions support for neutral atom quantum computing. Available via:
-
-```bash
-pip install bloqade[stim]
+pip install 'bloqade[atom-vis]'
 ```
 
 ## Development
