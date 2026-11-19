@@ -20,7 +20,7 @@ simulator interfaces, and decoding workflows live here. Import the SDK with
 | `bloqade-ppvm` | Pauli propagation and stabilizer-tableau simulation. |
 
 The other direct dependencies are `kirin-toolchain`, `numpy`, `scipy`,
-`rustworkx`, and `typing-extensions`. Version requirements are in
+and `typing-extensions`. Version requirements are in
 [pyproject.toml](../../pyproject.toml).
 
 ## Optional extras

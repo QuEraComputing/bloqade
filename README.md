@@ -8,7 +8,7 @@
 
 
 Bloqade is QuEra's Python SDK for neutral atom quantum computing. This
-repository contains the [Gemini SDK](https://github.com/QuEraComputing/bloqade/tree/main/src/bloqade/gemini),
+repository contains the [Gemini SDK](https://github.com/QuEraComputing/bloqade/tree/release-0-37/src/bloqade/gemini),
 which provides logical and physical kernels, device and simulator interfaces,
 and decoding workflows. Installing `bloqade` also installs the companion
 packages for circuit and analog programming, compilation, simulation, and decoding.
@@ -26,7 +26,7 @@ uv add bloqade
 ```
 
 Import the Gemini SDK with `from bloqade import gemini`. For the default
-dependencies and optional extras, see the [package overview](https://github.com/QuEraComputing/bloqade/blob/main/src/bloqade/README.md).
+dependencies and optional extras, see the [package overview](https://github.com/QuEraComputing/bloqade/blob/release-0-37/src/bloqade/README.md).
 The [Gemini migration notes](GEMINI_MIGRATION.md) describe which APIs moved
 from `bloqade-lanes` and which versions work together.
 

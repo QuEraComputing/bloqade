@@ -14,7 +14,7 @@ The `bloqade` distribution ships the Gemini SDK. Use
 The same installation brings in the circuit and analog programming packages,
 the Lanes compiler, and simulation and decoding packages. QASM2, QASM3, Cirq,
 qBraid, circuit visualization, and Stim support are enabled through
-`bloqade-circuit`. See the [full list of direct dependencies](https://github.com/QuEraComputing/bloqade/blob/main/src/bloqade/README.md#what-gets-installed).
+`bloqade-circuit`. See the [full list of direct dependencies](https://github.com/QuEraComputing/bloqade/blob/release-0-37/src/bloqade/README.md#what-gets-installed).
 
 ## Optional extras
 
