@@ -7,7 +7,11 @@
 [![DOI](https://zenodo.org/badge/629628885.svg)](https://zenodo.org/doi/10.5281/zenodo.11114109)
 
 
-Bloqade is a Python SDK for neutral atom quantum computing. It provides a set of embedded domain-specific languages (eDSLs) for programming neutral atom quantum computers. Bloqade is designed to be a high-level, user-friendly SDK that abstracts away the complexities of neutral atom quantum computing, allowing users to focus on developing quantum algorithms and compilation strategies for neutral atom quantum computers.
+Bloqade is QuEra's Python SDK for neutral atom quantum computing. This
+repository contains the [Gemini SDK](https://github.com/QuEraComputing/bloqade/tree/main/src/bloqade/gemini),
+which provides logical and physical kernels, device and simulator interfaces,
+and decoding workflows. Installing `bloqade` also installs the companion
+packages for circuit and analog programming, compilation, simulation, and decoding.
 
 > [!IMPORTANT]
 >
@@ -17,15 +21,14 @@ Bloqade is a Python SDK for neutral atom quantum computing. It provides a set of
 
 ### Install via `uv` (Recommended)
 
-```py
+```bash
 uv add bloqade
 ```
 
-This distribution includes `bloqade.gemini`: logical and physical kernel
-decorators, device/simulator interfaces, and decoding workflows. Compiler
-infrastructure is provided by the `bloqade-lanes` dependency. See
-[Gemini migration notes](GEMINI_MIGRATION.md) for the coordinated release
-requirements and compatibility details.
+Import the Gemini SDK with `from bloqade import gemini`. For the default
+dependencies and optional extras, see the [package overview](https://github.com/QuEraComputing/bloqade/blob/main/src/bloqade/README.md).
+The [Gemini migration notes](GEMINI_MIGRATION.md) describe which APIs moved
+from `bloqade-lanes` and which versions work together.
 
 ## Documentation
 
