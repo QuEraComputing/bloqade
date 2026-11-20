@@ -344,8 +344,12 @@ class _SimulatorTaskBase(Generic[RetType]):
         return None
 
     def visualize(
-        self, animated: bool = False, interactive: bool = True, arch_vis=False
-    ):
+        self,
+        animated: bool = False,
+        interactive: bool = True,
+        arch_vis: bool = False,
+        to_mp4: str | None = None,
+    ) -> None:
         """Visualize the physical move kernel using the built-in debugger.
 
         A logical task steps through the state preparation of each logical
@@ -356,8 +360,32 @@ class _SimulatorTaskBase(Generic[RetType]):
             animated (bool): Whether to use the animated debugger. Defaults to False.
             interactive (bool): Whether to enable interactive mode. Defaults to True.
             arch_vis (bool): Whether to use the interactive plotly debugger to visualize the architecture. Defaults to False.
+            to_mp4 (str | None): MP4 output path. When set, export instead of
+                displaying the debugger. Existing files are not overwritten.
 
         """
+        self._visualize_move_kernel(
+            self.physical_move_kernel,
+            self.physical_arch_spec,
+            animated=animated,
+            interactive=interactive,
+            arch_vis=arch_vis,
+            to_mp4=to_mp4,
+            initialize_kernel=self._initialize_kernel,
+        )
+
+    @staticmethod
+    def _visualize_move_kernel(
+        move_kernel: ir.Method,
+        arch_spec: ArchSpec,
+        *,
+        animated: bool,
+        interactive: bool,
+        arch_vis: bool,
+        to_mp4: str | None,
+        initialize_kernel: ir.Method | None = None,
+    ) -> None:
+        """Dispatch a move kernel to the requested debugger."""
         # Visualization dependencies are optional; load them only on demand.
         from bloqade.gemini.visualize import (
             debugger,
@@ -373,10 +401,11 @@ class _SimulatorTaskBase(Generic[RetType]):
             show = debugger
 
         show(
-            self.physical_move_kernel,
-            self.physical_arch_spec,
+            move_kernel,
+            arch_spec,
             interactive=interactive,
-            initialize_kernel=self._initialize_kernel,
+            initialize_kernel=initialize_kernel,
+            to_mp4=to_mp4,
         )
 
     def fidelity_bounds(self) -> tuple[float, float]:

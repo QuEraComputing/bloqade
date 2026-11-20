@@ -44,8 +44,9 @@ def test_visualize_calls_the_selected_debugger(monkeypatch, options, debugger_na
     (mt, arch_spec), kwargs = debuggers[debugger_name].call_args
     assert mt is task.physical_move_kernel
     assert arch_spec is task.physical_arch_spec
-    # A physical program has no ``move.PhysicalInitialize`` to step through.
-    assert kwargs == {"interactive": False, "initialize_kernel": None}
+    # A physical program has no ``move.PhysicalInitialize`` to step through,
+    # and nothing is exported unless ``to_mp4`` is given.
+    assert kwargs == {"interactive": False, "initialize_kernel": None, "to_mp4": None}
 
 
 def test_logical_task_steps_through_its_state_preparation(monkeypatch):

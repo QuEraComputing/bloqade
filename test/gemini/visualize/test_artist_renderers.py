@@ -13,8 +13,11 @@ frame by frame), and steps that are neither.
 
 from __future__ import annotations
 
+from contextlib import nullcontext
+from unittest.mock import Mock
+
 import pytest
-from matplotlib import pyplot as plt
+from matplotlib import pyplot as plt, animation
 from bloqade.lanes.prelude import kernel
 from bloqade.lanes.dialects import move
 from bloqade.lanes.arch.spec import ArchSpec
@@ -28,6 +31,8 @@ from bloqade.lanes.bytecode._native import (
 )
 from bloqade.lanes.bytecode.encoding import Direction, SiteLaneAddress
 
+from bloqade.gemini.visualize import debug as debug_module
+from bloqade.gemini.visualize.debug import debugger, animated_debugger
 from bloqade.gemini.visualize.artist import (
     get_drawer,
     render_generator,
@@ -112,6 +117,83 @@ def test_kernel_reaches_every_renderer_branch(transport_arch_spec: ArchSpec) -> 
         "Move",
         "EndMeasure",
     ]
+
+
+def test_static_debugger_exports_mp4(transport_arch_spec: ArchSpec, tmp_path) -> None:
+    if not animation.writers.is_available("ffmpeg"):
+        pytest.skip("FFmpeg is not installed")
+    output = tmp_path / "static.mp4"
+    debugger(
+        _gate_then_move_kernel,
+        transport_arch_spec,
+        pause_time=0,
+        to_mp4=output,
+    )
+    assert output.read_bytes()[4:8] == b"ftyp"
+
+    with pytest.raises(FileExistsError, match="already exists"):
+        debugger(
+            _gate_then_move_kernel,
+            transport_arch_spec,
+            pause_time=0,
+            to_mp4=output,
+        )
+    assert output.read_bytes()[4:8] == b"ftyp"
+
+
+def test_animated_debugger_exports_mp4(transport_arch_spec: ArchSpec, tmp_path) -> None:
+    if not animation.writers.is_available("ffmpeg"):
+        pytest.skip("FFmpeg is not installed")
+    output = tmp_path / "animated.mp4"
+    animated_debugger(
+        _gate_then_move_kernel,
+        transport_arch_spec,
+        fps=2,
+        to_mp4=output,
+    )
+    assert output.read_bytes()[4:8] == b"ftyp"
+
+
+@pytest.mark.parametrize("exporter", [debugger, animated_debugger])
+def test_mp4_export_records_one_frame_without_steps(
+    exporter, transport_arch_spec: ArchSpec, tmp_path, monkeypatch
+) -> None:
+    writer = Mock()
+    writer.saving.return_value = nullcontext()
+    monkeypatch.setattr(
+        debug_module,
+        "mp4_writer",
+        lambda path, *, fps: (str(path), writer),
+    )
+
+    exporter(_no_atom_state_kernel, transport_arch_spec, to_mp4=tmp_path / "empty.mp4")
+
+    writer.grab_frame.assert_called_once_with()
+
+
+@pytest.mark.parametrize("exporter", [debugger, animated_debugger])
+def test_mp4_export_removes_partial_file_on_failure(
+    exporter, transport_arch_spec: ArchSpec, tmp_path, monkeypatch
+) -> None:
+    output = tmp_path / "partial.mp4"
+    writer = Mock()
+
+    def saving(*_args, **_kwargs):
+        output.write_bytes(b"partial")
+        return nullcontext()
+
+    writer.saving.side_effect = saving
+    writer.grab_frame.side_effect = RuntimeError("encoding failed")
+    monkeypatch.setattr(
+        debug_module,
+        "mp4_writer",
+        lambda path, *, fps: (str(path), writer),
+    )
+
+    with pytest.raises(RuntimeError, match="encoding failed"):
+        exporter(_gate_then_move_kernel, transport_arch_spec, to_mp4=output)
+
+    assert not output.exists()
 
 
 # ── get_drawer ───────────────────────────────────────────────────
