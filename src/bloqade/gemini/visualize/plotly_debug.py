@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import math
 import itertools
+from io import BytesIO
 from typing import TYPE_CHECKING, Any, Literal, cast
+from pathlib import Path
 from dataclasses import dataclass
 from collections.abc import Sequence
 
@@ -12,6 +14,7 @@ from bloqade.lanes.arch.spec import ArchSpec
 from bloqade.lanes.analysis.atom import AtomState
 from bloqade.lanes.bytecode.encoding import MoveType, LaneAddress, LocationAddress
 
+from bloqade.gemini.visualize._mp4 import mp4_writer, hold_frames
 from bloqade.gemini.visualize.arch import ArchVisualizer, bus_preview_label
 from bloqade.gemini.visualize.artist import MovePath, DebugStep, collect_debug_steps
 from bloqade.gemini.visualize.plotly_circuit import (
@@ -841,6 +844,54 @@ def _show_plotly_debugger(
     )
 
 
+def _export_plotly_mp4(figure: Figure, path: str | Path, pause_time: float) -> None:
+    """Record each Plotly debugger step as a still frame in an MP4."""
+    from matplotlib import pyplot as plt
+
+    fps = 30
+    frames_per_step = hold_frames(pause_time, fps)
+    output, writer = mp4_writer(path, fps=fps)
+    snapshot = _plotly().Figure(figure)
+    snapshot.frames = ()
+    # Kaleido rasterizes static figures: it does not run Plotly.animate(),
+    # which normally advances the visible step slider in the browser.
+
+    width = snapshot.layout.width or 700
+    height = snapshot.layout.height or 450
+    video_figure = plt.figure(figsize=(width / 100, height / 100), dpi=100)
+    ax = video_figure.add_axes((0, 0, 1, 1))
+    ax.axis("off")
+    try:
+        with writer.saving(video_figure, output, dpi=100):
+            for step_index, frame in enumerate(figure.frames or (None,)):
+                if frame is not None:
+                    # Plotly animation merges frame attributes into existing
+                    # traces; reproduce that merge for each rasterized step.
+                    for index, trace in zip(frame.traces, frame.data):
+                        snapshot.data[index].update(trace.to_plotly_json())
+                    if frame.layout is not None:
+                        snapshot.update_layout(frame.layout)
+                if snapshot.layout.sliders:
+                    snapshot.layout.sliders[0].active = step_index
+                try:
+                    png = snapshot.to_image(format="png")
+                except (ImportError, RuntimeError, ValueError) as exc:
+                    raise RuntimeError(
+                        "Plotly MP4 export requires Kaleido and a compatible "
+                        "Chrome installation"
+                    ) from exc
+                ax.clear()
+                ax.imshow(plt.imread(BytesIO(png), format="png"))
+                ax.axis("off")
+                for _ in range(frames_per_step):
+                    writer.grab_frame()
+    except Exception:
+        Path(output).unlink(missing_ok=True)
+        raise
+    finally:
+        plt.close(video_figure)
+
+
 def plotly_debugger(
     mt: ir.Method,
     arch_spec: ArchSpec,
@@ -855,6 +906,7 @@ def plotly_debugger(
     show_circuit: bool = True,
     circuit_window: int = 24,
     initialize_kernel: ir.Method | None = None,
+    to_mp4: str | Path | None = None,
 ) -> Figure | None:
     """Display a browser-native, discrete-step move-program debugger.
 
@@ -889,6 +941,9 @@ def plotly_debugger(
             When given, each such statement is stepped through instead of
             shown as one step; see
             :func:`~bloqade.gemini.visualize.artist.collect_debug_steps`.
+        to_mp4: Export the discrete debugger steps to this MP4 path instead of
+            opening the interactive view. Requires FFmpeg, Kaleido, and Chrome.
+            An existing file is never overwritten.
 
     Returns:
         The constructed Plotly figure when ``show=False``; otherwise ``None``.
@@ -905,6 +960,9 @@ def plotly_debugger(
         circuit_window=circuit_window,
         initialize_kernel=initialize_kernel,
     )
+    if to_mp4 is not None:
+        _export_plotly_mp4(figure, to_mp4, pause_time)
+        return None if show else figure
     if show:
         _show_plotly_debugger(
             figure,

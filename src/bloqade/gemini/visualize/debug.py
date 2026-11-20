@@ -1,12 +1,16 @@
+from typing import cast
+from pathlib import Path
 from dataclasses import field, dataclass
 from collections.abc import Callable
 
 from kirin import ir
 from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 from bloqade.lanes.arch.spec import ArchSpec
 from bloqade.lanes.visualize.app import DebuggerController
 
+from bloqade.gemini.visualize._mp4 import mp4_writer, hold_frames
 from bloqade.gemini.visualize.artist import get_drawer, render_generator
 
 
@@ -162,24 +166,52 @@ def debugger(
     atom_marker: str = "o",
     ax: Axes | None = None,
     initialize_kernel: ir.Method | None = None,
+    *,
+    to_mp4: str | Path | None = None,
 ):
-    """Step through a move program, one statement at a time.
+    """Step through a move program, one statement at a time, or export the
+    steps as still frames in an MP4.
 
     ``initialize_kernel`` is the kernel that ``move.PhysicalInitialize`` stands
     for. When given, each such statement is stepped through instead of shown as
     one step; see :func:`~bloqade.gemini.visualize.artist.collect_debug_steps`.
+
+    ``to_mp4`` suppresses the interactive view and never overwrites a file.
+    FFmpeg must be available on ``PATH``.
     """
     # set up matplotlib figure with buttons
+    owns_figure = ax is None
     if ax is None:
         fig, ax = plt.subplots(figsize=(14, 8))
     else:
-        fig = ax.figure
+        fig = cast(Figure, ax.figure)
 
     fig.subplots_adjust(bottom=0.2)
 
     draw, num_steps = get_drawer(
         mt, arch_spec, ax, atom_marker, initialize_kernel=initialize_kernel
     )
+    if to_mp4 is not None:
+        fps = 30
+        output: str | None = None
+        try:
+            output, writer = mp4_writer(to_mp4, fps=fps)
+            with writer.saving(fig, output, dpi=fig.dpi):
+                for step_index in range(num_steps):
+                    ax.cla()
+                    draw(step_index)
+                    for _ in range(hold_frames(pause_time, fps)):
+                        writer.grab_frame()
+                if num_steps == 0:
+                    writer.grab_frame()
+        except Exception:
+            if output is not None:
+                Path(output).unlink(missing_ok=True)
+            raise
+        finally:
+            if owns_figure:
+                plt.close(fig)
+        return
     if interactive:
         controller = StaticDebuggerController(ax, num_steps, draw)
         controller.run_mpl_event_loop(ax, fig)
@@ -198,23 +230,51 @@ def animated_debugger(
     ax: Axes | None = None,
     fps: int = 30,
     initialize_kernel: ir.Method | None = None,
+    *,
+    to_mp4: str | Path | None = None,
 ):
-    """Step through a move program, animating each move.
+    """Step through a move program, animating each move, or export the
+    animation as an MP4.
 
     ``initialize_kernel`` is the kernel that ``move.PhysicalInitialize`` stands
     for. When given, each such statement is stepped through instead of shown as
     one step; see :func:`~bloqade.gemini.visualize.artist.collect_debug_steps`.
+
+    ``to_mp4`` suppresses the interactive view and never overwrites a file.
+    FFmpeg must be available on ``PATH``.
     """
+    owns_figure = ax is None
     if ax is None:
         fig, ax = plt.subplots(figsize=(14, 8))
     else:
-        fig = ax.figure
+        fig = cast(Figure, ax.figure)
 
     fig.subplots_adjust(bottom=0.2)
 
     get_renderer, num_steps = render_generator(
         mt, arch_spec, ax, atom_marker, fps, initialize_kernel=initialize_kernel
     )
+    if to_mp4 is not None:
+        output = None
+        try:
+            output, writer = mp4_writer(to_mp4, fps=fps)
+            with writer.saving(fig, output, dpi=fig.dpi):
+                for step_index in range(num_steps):
+                    ax.cla()
+                    num_frames, renderer = get_renderer(step_index)
+                    for frame_index in range(num_frames + 1):
+                        renderer(frame_index)
+                        writer.grab_frame()
+                if num_steps == 0:
+                    writer.grab_frame()
+        except Exception:
+            if output is not None:
+                Path(output).unlink(missing_ok=True)
+            raise
+        finally:
+            if owns_figure:
+                plt.close(fig)
+        return
     if interactive:
         controller = AnimatorController(ax, num_steps, get_renderer)
         controller.run_mpl_event_loop(ax, fig)

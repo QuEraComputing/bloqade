@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import sys
+from io import BytesIO
 from typing import Any, cast
 from unittest.mock import MagicMock, patch
 
+import numpy as np
 import pytest
 from kirin import ir
+from matplotlib import pyplot as plt, animation
 from kirin.dialects import py
 from bloqade.lanes.prelude import kernel
 from bloqade.lanes.dialects import move
@@ -473,6 +476,91 @@ def test_plotly_debugger_can_return_figure_without_displaying(
 
     assert result is figure
     show_figure.assert_not_called()
+
+
+def test_plotly_debugger_exports_mp4_without_displaying(
+    monkeypatch, small_arch_spec: ArchSpec, tmp_path
+) -> None:
+    figure = MagicMock()
+    export = MagicMock()
+    show_figure = MagicMock()
+    monkeypatch.setattr(
+        plotly_debug, "build_plotly_debugger_figure", lambda *_args, **_kwargs: figure
+    )
+    monkeypatch.setattr(plotly_debug, "_export_plotly_mp4", export)
+    monkeypatch.setattr(plotly_debug, "_show_plotly_debugger", show_figure)
+    output = tmp_path / "plotly.mp4"
+
+    assert (
+        plotly_debug.plotly_debugger(
+            MagicMock(), small_arch_spec, to_mp4=output, show=False
+        )
+        is figure
+    )
+    export.assert_called_once_with(figure, output, 1.0)
+    show_figure.assert_not_called()
+
+
+def test_plotly_mp4_export_applies_each_frame(plotly, monkeypatch, tmp_path) -> None:
+    if not animation.writers.is_available("ffmpeg"):
+        pytest.skip("FFmpeg is not installed")
+    go = plotly_debug._plotly()
+    figure = go.Figure(
+        data=[go.Scatter(x=[0], y=[0])],
+        frames=[
+            go.Frame(data=[go.Scatter(x=[1], y=[0])], traces=[0]),
+            go.Frame(data=[go.Scatter(x=[2], y=[0])], traces=[0]),
+        ],
+    )
+    figure.update_layout(
+        width=32,
+        height=32,
+        sliders=[
+            {
+                "active": 0,
+                "currentvalue": {"prefix": "Step: "},
+                "steps": [
+                    {"label": "1", "method": "animate", "args": [["step-0"]]},
+                    {"label": "2", "method": "animate", "args": [["step-1"]]},
+                ],
+            }
+        ],
+    )
+    observed: list[tuple[list[int], int]] = []
+
+    def fake_to_image(self, *, format: str) -> bytes:
+        assert format == "png"
+        observed.append((list(self.data[0].x), self.layout.sliders[0].active))
+        image = BytesIO()
+        plt.imsave(image, np.zeros((8, 8, 3)), format="png")
+        return image.getvalue()
+
+    monkeypatch.setattr(go.Figure, "to_image", fake_to_image)
+    output = tmp_path / "plotly.mp4"
+    plotly_debug._export_plotly_mp4(figure, output, pause_time=0)
+
+    assert observed == [([1], 0), ([2], 1)]
+    assert figure.layout.sliders[0].active == 0
+    assert output.read_bytes()[4:8] == b"ftyp"
+
+
+def test_plotly_mp4_reports_missing_image_renderer_and_removes_partial_file(
+    plotly, monkeypatch, tmp_path
+) -> None:
+    if not animation.writers.is_available("ffmpeg"):
+        pytest.skip("FFmpeg is not installed")
+    go = plotly_debug._plotly()
+    figure = go.Figure(data=[go.Scatter(x=[0], y=[0])])
+    figure.update_layout(width=32, height=32)
+
+    def missing_kaleido(self, *, format: str) -> bytes:
+        raise ValueError("Image export using the kaleido engine requires kaleido")
+
+    monkeypatch.setattr(go.Figure, "to_image", missing_kaleido)
+    output = tmp_path / "missing-kaleido.mp4"
+    with pytest.raises(RuntimeError, match="Kaleido"):
+        plotly_debug._export_plotly_mp4(figure, output, pause_time=0)
+    assert not output.exists()
 
 
 def test_plotly_debugger_argument_validation(small_arch_spec: ArchSpec) -> None:

@@ -63,6 +63,51 @@ class GeminiLogicalSimulatorTask(_SimulatorTaskBase[RetType], Generic[RetType]):
     )
 
     @cached_property
+    def logical_arch_spec(self) -> ArchSpec:
+        """The architecture used to compile the logical move kernel."""
+        from bloqade.lanes.arch.gemini.logical import get_arch_spec
+
+        return get_arch_spec()
+
+    @cached_property
+    def logical_move_kernel(self) -> ir.Method[[], RetType]:
+        """The move program before transversal expansion to physical atoms."""
+        from bloqade.lanes.transform import LogicalPipeline
+
+        return LogicalPipeline(arch_spec=self.logical_arch_spec).emit(
+            self.logical_squin_kernel
+        )
+
+    def visualize_logical(
+        self,
+        animated: bool = False,
+        interactive: bool = True,
+        arch_vis: bool = False,
+        to_mp4: str | None = None,
+    ) -> None:
+        """Visualize the logical move program using the built-in debugger.
+
+        The logical move program is compiled lazily on first use and cached.
+        Unlike :meth:`visualize`, this view uses the logical architecture and
+        shows logical qubits before transversal expansion to physical atoms.
+
+        Args:
+            animated: Use the animated Matplotlib debugger.
+            interactive: Enable interactive debugger controls.
+            arch_vis: Use the interactive Plotly architecture debugger.
+            to_mp4: MP4 output path. When set, export instead of displaying
+                the debugger. Existing files are not overwritten.
+        """
+        self._visualize_move_kernel(
+            self.logical_move_kernel,
+            self.logical_arch_spec,
+            animated=animated,
+            interactive=interactive,
+            arch_vis=arch_vis,
+            to_mp4=to_mp4,
+        )
+
+    @cached_property
     def physical_squin_kernel(self) -> ir.Method[[], RetType]:
         """The physical squin kernel with noise channels."""
 
