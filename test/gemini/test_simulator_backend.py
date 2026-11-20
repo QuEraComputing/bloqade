@@ -14,14 +14,14 @@ from kirin import ir
 from kirin.dialects import func
 
 from bloqade import squin
-from bloqade.gemini.device import (
+from bloqade.simulation import (
     BackendSample,
     PPVMSimulatorBackend,
     TsimSimulatorBackend,
     CliffTSimulatorBackend,
     AbstractSimulatorBackend,
 )
-from bloqade.gemini.device.simulator_backend import (
+from bloqade.simulation.backends import (
     _ppvm,
     _get_tsim_circuit,
     _PyQrackSimulatorBackend,
@@ -140,7 +140,7 @@ def test_tsim_circuit_cache_reuses_live_kernel_and_drops_dead_kernel(monkeypatch
 
     circuit_factory = MagicMock(side_effect=lambda _: object())
     monkeypatch.setattr(
-        "bloqade.gemini.device.simulator_backend._tsim",
+        "bloqade.simulation.backends._tsim",
         lambda: SimpleNamespace(Circuit=circuit_factory),
     )
     backend = TsimSimulatorBackend()
@@ -164,7 +164,7 @@ def test_tsim_circuit_cache_reuses_live_kernel_and_drops_dead_kernel(monkeypatch
 def test_tsim_conversion_removes_return_from_owned_kernel(monkeypatch):
     converted = []
     monkeypatch.setattr(
-        "bloqade.gemini.device.simulator_backend._tsim",
+        "bloqade.simulation.backends._tsim",
         lambda: SimpleNamespace(
             Circuit=lambda kernel: converted.append(kernel) or object()
         ),
@@ -708,7 +708,7 @@ def test_pyqrack_backend_seed_advances_persistent_seed_stream(monkeypatch):
 def test_pyqrack_backend_prepares_owned_annotation_free_kernel_once(monkeypatch):
     from bloqade.decoders.dialects.annotate.stmts import SetDetector
 
-    from bloqade.gemini.device.physical_simulator import (
+    from bloqade.gemini.physical.simulation.simulator import (
         append_measurements_and_annotations_physical,
     )
 

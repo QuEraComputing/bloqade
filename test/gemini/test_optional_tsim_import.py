@@ -60,14 +60,14 @@ def test_simulator_backend_imports_are_lazy():
         import sys
 
         import bloqade.gemini as gemini
-        import bloqade.gemini.device as device
+        import bloqade.simulation as simulation
         from bloqade.gemini import (
             AbstractSimulatorBackend,
             BackendSample,
             CliffTSimulatorBackend,
             TsimSimulatorBackend,
         )
-        from bloqade.gemini.device.simulator_backend import _PyQrackSimulatorBackend
+        from bloqade.simulation.backends import _PyQrackSimulatorBackend
 
         assert AbstractSimulatorBackend.__name__ == "AbstractSimulatorBackend"
         assert BackendSample.__name__ == "BackendSample"
@@ -75,7 +75,7 @@ def test_simulator_backend_imports_are_lazy():
         assert CliffTSimulatorBackend.__name__ == "CliffTSimulatorBackend"
         assert _PyQrackSimulatorBackend.__name__ == "_PyQrackSimulatorBackend"
         assert not hasattr(gemini, "_PyQrackSimulatorBackend")
-        assert not hasattr(device, "_PyQrackSimulatorBackend")
+        assert not hasattr(simulation, "_PyQrackSimulatorBackend")
         """)
 
 
@@ -83,7 +83,8 @@ def test_simulator_runtime_does_not_import_test_modules():
     _run_import_guard("""
         import sys
 
-        import bloqade.gemini.device
+        import bloqade.gemini.logical.simulation
+        import bloqade.gemini.physical.simulation
 
         loaded_test_modules = sorted(
             name
@@ -116,7 +117,7 @@ def test_composed_backends_fail_before_sampling_with_specific_tsim_guidance():
         from bloqade.gemini import (
             CliffTSimulatorBackend, GeminiLogicalSimulatorTask, PPVMSimulatorBackend,
         )
-        from bloqade.gemini.device.simulator_backend import _PyQrackSimulatorBackend
+        from bloqade.simulation.backends import _PyQrackSimulatorBackend
 
         for backend_type, label in (
             (CliffTSimulatorBackend, "CliffT"),

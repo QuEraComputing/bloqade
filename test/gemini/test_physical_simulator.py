@@ -20,22 +20,24 @@ from bloqade.lanes.arch.gemini.physical import get_arch_spec
 from bloqade.decoders.dialects.annotate.stmts import SetDetector, SetObservable
 
 from bloqade import squin, types as bloqade_types
-from bloqade.gemini.device import (
-    Result,
+from bloqade.simulation import (
     BackendSample,
+    PPVMSimulatorBackend,
+    TsimSimulatorBackend,
+    CliffTSimulatorBackend,
+)
+from bloqade.gemini.compile.task import _find_qubit_ssas
+from bloqade.simulation.backends import _PyQrackSimulatorBackend
+from bloqade.gemini._task_runtime import _SimulatorTaskBase
+from bloqade.gemini.post_processing import build_post_processing
+from bloqade.gemini.logical.simulation import (
+    Result,
     DetectorResult,
     SimulatorResult,
-    TsimSimulatorBackend,
-    PPVMSimulatorBackend,
-    CliffTSimulatorBackend,
     GeminiLogicalSimulator,
     GeminiLogicalSimulatorTask,
 )
-from bloqade.gemini.compile.task import _find_qubit_ssas
-from bloqade.gemini.post_processing import build_post_processing
-from bloqade.gemini.device._task_runtime import _SimulatorTaskBase
-from bloqade.gemini.device.simulator_backend import _PyQrackSimulatorBackend
-from bloqade.gemini.device.physical_simulator import (
+from bloqade.gemini.physical.simulation.simulator import (
     DetectorResult as PhysicalDetectorResult,
     PhysicalResult,
     PhysicalSimulator,
@@ -125,7 +127,9 @@ def test_physical_task_run_routes_through_backend():
 
 def test_physical_simulator_exports_from_gemini_namespace():
     from bloqade.gemini import PhysicalSimulator, GeminiPhysicalSimulator
-    from bloqade.gemini.device import PhysicalSimulator as DevicePhysicalSimulator
+    from bloqade.gemini.physical.simulation import (
+        PhysicalSimulator as DevicePhysicalSimulator,
+    )
 
     assert PhysicalSimulator is DevicePhysicalSimulator
     assert PhysicalSimulator is GeminiPhysicalSimulator
@@ -289,7 +293,7 @@ def test_task_base_does_not_expose_cached_samplers(attribute):
 
 
 def test_physical_simulator_task_passes_placement_strategy(monkeypatch):
-    import bloqade.gemini.device.physical_simulator as pipeline_module
+    import bloqade.gemini.physical.simulation.simulator as pipeline_module
 
     captured = {}
     move_kernel = MagicMock()
@@ -471,7 +475,7 @@ def test_physical_simulator_constructor_rejects_measurement_matrices(kwargs):
 
 
 def test_physical_simulator_task_rejects_non_squin_before_pipeline(monkeypatch):
-    import bloqade.gemini.device.physical_simulator as pipeline_module
+    import bloqade.gemini.physical.simulation.simulator as pipeline_module
 
     physical_pipeline = MagicMock()
     monkeypatch.setattr(pipeline_module, "PhysicalPipeline", physical_pipeline)

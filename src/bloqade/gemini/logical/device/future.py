@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from bloqade.core.device import Future
 
-from bloqade.gemini.device.logical.result import GeminiLogicalResult
+from bloqade.gemini.logical.device.result import GeminiLogicalResult
 
 
 @dataclass(kw_only=True)

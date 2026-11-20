@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import math
 from typing import TYPE_CHECKING
 from collections.abc import Mapping
 
@@ -8,95 +7,36 @@ import stim
 import numpy as np
 from kirin import ir
 from bloqade.decoders import BaseDecoder
+from bloqade.analysis.tomography import TomographyResult
 
-from bloqade.gemini.device import (
-    SimulatorResult,
-    TsimSimulatorBackend,
+from bloqade.simulation import TsimSimulatorBackend
+from bloqade.gemini._task_runtime import SimulatorResult
+from bloqade.gemini.logical.utils import MSD_TARGET_BLOCH, plot_decoder_curves
+from bloqade.gemini.logical.kernels import (
+    PostselectionExperimentKernels,
+    _LogicalTomographyReturn,
+    compose_tomography_kernels,
+)
+from bloqade.gemini.logical.simulation import (
     GeminiLogicalSimulator,
     GeminiLogicalSimulatorTask,
 )
-from bloqade.gemini.decoding.dem import _sub_detector_error_model
-from bloqade.gemini.decoding.msd import (
-    _build_msd_primitives,
-    _build_decoder_kernel_bundle,
-)
-from bloqade.gemini.decoding.layout import _DEFAULT_SYNDROME_LAYOUT
-from bloqade.gemini.decoding.kernels import (
-    _DecoderPrimitiveSet,
-    _LogicalTomographyReturn,
-    _build_tomography_primitives,
-)
-from bloqade.gemini.decoding.sampling import _BasisDataset
-from bloqade.gemini.decoding.workflow import _plot_decoder_curves
-from bloqade.gemini.decoding.tomography import TomographyResult
-from bloqade.gemini.decoding.postselection import (
-    _DEFAULT_TARGET_BLOCH,
+from bloqade.gemini.logical.experiments.dem import _sub_detector_error_model
+from bloqade.gemini.logical.experiments.layout import _DEFAULT_SYNDROME_LAYOUT
+from bloqade.gemini.logical.experiments.sampling import _BasisDataset
+from bloqade.gemini.logical.experiments.postselection import (
     PostselectionCurveData,
     _DecodedPostselectionResult,
     _shots_at_accepted_fraction,
     _build_generic_threshold_tables,
     _evaluate_cached_threshold_curve,
 )
-from bloqade.gemini.decoding.special_tasks import _apply_special_tsim_circuit_strategy
+from bloqade.gemini.logical.experiments.special_tasks import (
+    _apply_special_tsim_circuit_strategy,
+)
 
 if TYPE_CHECKING:
     import tsim as tsim_backend  # type: ignore[reportMissingImports]
-
-
-def magic_state_dist_steane(
-    *,
-    theta_offset: float = 0.0,
-    phi_offset: float = 0.0,
-    lam_offset: float = 0.0,
-) -> tuple[ir.Method[..., None], ir.Method[..., None]]:
-    """
-    Returns the nonclifford prefix circuit and clifford logical circuit
-    used for magic state distillation. Note that the kernels take in the qubit register 'reg' as input.
-    This means that the kernels are technically agnostic to the number of input qubits.
-
-    Args:
-        theta_offset (float): An optional offset to theta to manually introduce rotation error in the nonclifford prefix. Defaults to 0.0.
-        phi_offset (float): An optional offset to phi to manually introduce rotation error in the nonclifford prefix. Defaults to 0.0.
-        lan_offset (float): An optional offset to lam to manually introduce rotation error in the nonclifford prefix. Defaults to 0.0.
-
-    Returns:
-        tuple[ir.Method[..., None], ir.Method[..., None]]: The (nonclifford_prefix, logical_circuit) pair.
-    """
-    ideal_theta = math.acos(1 / math.sqrt(3))
-    ideal_phi = 0.25 * math.pi
-    ideal_lam = 0.0
-
-    theta = ideal_theta + theta_offset
-    phi = ideal_phi + phi_offset
-    lam = ideal_lam + lam_offset
-
-    primitive_set = _build_msd_primitives(theta, phi, lam)
-
-    return primitive_set.state_injection_circuit, primitive_set.logical_circuit
-
-
-def single_qubit_state_tomography() -> dict[str, ir.Method[..., None]]:
-    """
-    Returns X, Y, and Z basis kernels used to perform single-qubit tomography. Note that the kernels take in the register as the input.
-
-    Returns:
-        dict[str, ir.Method[..., None]]: A dictionary mapping "X", "Y", and "Z" to the respective tomography kernels.
-    """
-    # return a list?
-    # should return (X, Y, Z) in order, but can check this.
-    return _build_tomography_primitives(output_qubit=0)
-
-
-def empty_logical_circuit() -> ir.Method[..., None]:
-    """Return a no-op logical Squin kernel for injected-state tomography."""
-
-    from bloqade import squin
-
-    @squin.kernel
-    def empty_logical(reg):
-        return
-
-    return empty_logical
 
 
 # TODO: make this "cache" class abstract as well?
@@ -153,6 +93,8 @@ class PostSelectionExperiment:
             From these circuits in each basis, a DEM will be extracted to initialize decoders in each basis.
         decoder (type[BaseDecoder]): A type of BaseDecoder used to initialize decoders.
         decoder_init_args (Mapping[str, object] | None): Optional arguments that can be passed in to initialize the decoder. Defaults to None.
+        device (GeminiLogicalSimulator | None): The device that ``make_tasks`` builds tasks for and ``get_samples`` samples from.
+            Defaults to a ``GeminiLogicalSimulator()``.
     """
 
     def __init__(
@@ -162,6 +104,7 @@ class PostSelectionExperiment:
         tomography_circuits: Mapping[str, ir.Method[..., None]],
         decoder: type[BaseDecoder],
         decoder_init_args: Mapping[str, object] | None = None,
+        device: GeminiLogicalSimulator | None = None,
     ):
         self.nonclifford_prefix = nonclifford_prefix
         self.clifford_circuit = clifford_circuit
@@ -170,6 +113,8 @@ class PostSelectionExperiment:
         self.decoder_init_args = (
             {} if decoder_init_args is None else dict(decoder_init_args)
         )
+
+        self.device = GeminiLogicalSimulator() if device is None else device
 
         self._postselection_exp_cache = _PostSelectionExperimentCache()
         # NOTE: hardcoding this for now (I guess) to support having some
@@ -195,12 +140,11 @@ class PostSelectionExperiment:
         Returns:
             dict[str, ir.Method[..., _LogicalTomographyReturn]]: A dictionary mapping the tomography basis labels to the respective kernel used for tomography.
         """
-        # TODO: change the name of _DecoderPrimitiveSet --> whole_circuit
-        decoder_primitive_set = _DecoderPrimitiveSet(
+        decoder_primitive_set = PostselectionExperimentKernels(
             state_injection_circuit=self.nonclifford_prefix,
             logical_circuit=self.clifford_circuit,
         )
-        dem_kernels = _build_decoder_kernel_bundle(
+        dem_kernels = compose_tomography_kernels(
             decoder_primitive_set,
             num_logical_qubits,
             tomography_kernels=self.tomography_circuits,
@@ -318,12 +262,17 @@ class PostSelectionExperiment:
         # TODO: Ideally, we don't want to make the type of the device GeminiLogicalSimulator (this should be flexible to support the type representing
         # the hardware). However, because GeminiLogicalSimulator currently doesn't obey any interface/inheritance for a generic hardware object,
         # we can't really replace this with a more specific type without changing the design of GeminiLogicalSimulator.
-        device: GeminiLogicalSimulator,
+        device: GeminiLogicalSimulator | None = None,
         # TODO: the return type of make_tasks of what we want to run on hardware should not be GeminiLogicalSimulatorTask. It should be
         # TaskABC[GeminiLogicalFuture]. However, currently, GeminiLogicalSimulatorTask does not inherit from the abstract "task" types in
         # bloqade-core.
     ) -> dict[str, GeminiLogicalSimulatorTask[_LogicalTomographyReturn]]:
-        """Prepares tasks for submission to the hardware device."""
+        """Prepares tasks for submission to the hardware device.
+
+        Uses the experiment's ``device`` unless ``device`` is given.
+        """
+        if device is None:
+            device = self.device
         dem_kernels = self._postselection_exp_cache.dem_kernels
         if dem_kernels is None:
             raise RuntimeError("kernels must be called before make_tasks.")
@@ -409,7 +358,7 @@ class PostSelectionExperiment:
     def analysis_f_vs_fraction(
         self,
         *,
-        target_bloch: np.ndarray = _DEFAULT_TARGET_BLOCH,
+        target_bloch: np.ndarray = MSD_TARGET_BLOCH,
         threshold_points: int = 64,
         min_accepted_per_basis: int = 50,
     ) -> PostselectionCurveData:
@@ -523,7 +472,7 @@ class PostSelectionExperiment:
             raise RuntimeError(
                 "analysis_f_vs_fraction must be called before visualization."
             )
-        return _plot_decoder_curves(
+        return plot_decoder_curves(
             {"decoder": self._postselection_exp_cache.thresholded_data},
             min_accepted_fraction=min_accepted_fraction,
             title=title,

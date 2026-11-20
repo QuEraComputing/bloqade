@@ -20,8 +20,8 @@ from qlam_core.plugins.tasks.api.tasks_models import (
 
 from bloqade import squin
 from bloqade.gemini import GeminiLogicalResult, logical
-from bloqade.gemini.device.logical import utils as utils_module, result as result_module
-from bloqade.gemini.device.logical.utils import (
+from bloqade.gemini.logical.device import utils as utils_module, result as result_module
+from bloqade.gemini.logical.device.utils import (
     ShotRemappingException,
     get_slm_mapping_postprocessing,
 )

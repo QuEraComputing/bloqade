@@ -24,7 +24,7 @@ from qlam_core.plugins.tasks.api.tasks_models import (
 
 from bloqade import squin
 from bloqade.gemini import GeminiLogicalFuture, logical
-from bloqade.gemini.device.logical.task import (
+from bloqade.gemini.logical.device.task import (
     GeminiKernelBatchTask,
     GeminiSingleKernelTask,
     GeminiParameterScanTask,

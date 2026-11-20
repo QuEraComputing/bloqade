@@ -10,21 +10,24 @@ import numpy as np
 import pytest
 from stim import DetectorErrorModel
 from kirin.dialects import py, func
-from bloqade.decoders import BaseDecoder
+from bloqade.decoders import BaseDecoder, MILPDecoder, TableDecoder
 from bloqade.squin.gate import stmts as gate_stmts
+from bloqade.analysis.tomography import TomographyResult
 
-from bloqade.gemini.device import DetectorResult, GeminiLogicalSimulator
-from bloqade.gemini.decoding import (
-    GurobiDecoder,
-    TomographyResult,
-    PostSelectionExperiment,
-    TableDecoder,
-    empty_logical_circuit,
-    magic_state_dist_steane,
-    single_qubit_state_tomography,
+from bloqade.gemini.logical.kernels import (
+    build_msd_steane,
+    build_singleq_tomo,
+    build_empty_logical_circuit,
 )
-from bloqade.gemini.decoding.sampling import _BasisDataset
-from bloqade.gemini.decoding.experiments import _basis_dataset_from_task_result
+from bloqade.gemini.logical.simulation import (
+    DetectorResult,
+    GeminiLogicalSimulator,
+)
+from bloqade.gemini.logical.experiments import PostSelectionExperiment
+from bloqade.gemini.logical.experiments.sampling import _BasisDataset
+from bloqade.gemini.logical.experiments.postselection_experiment import (
+    _basis_dataset_from_task_result,
+)
 
 
 def _invoke_names(kernel) -> list[str]:
@@ -65,12 +68,12 @@ def _u3_angles(kernel) -> tuple[float, float, float]:
 
 @pytest.fixture(scope="module")
 def msd_circuits():
-    return magic_state_dist_steane(theta_offset=0.30)
+    return build_msd_steane(theta_offset=0.30)
 
 
 @pytest.fixture(scope="module")
 def tomography_circuits():
-    return single_qubit_state_tomography()
+    return build_singleq_tomo()
 
 
 @pytest.fixture(scope="module")
@@ -127,7 +130,7 @@ def msd_mld_decoded(msd_mld_exp, msd_mld_decoders, msd_mld_samples):
 
 
 def test_magic_state_dist_steane_default_angles_in_ir():
-    nonclifford_prefix, _ = magic_state_dist_steane()
+    nonclifford_prefix, _ = build_msd_steane()
 
     expected_angles = [
         math.acos(1 / math.sqrt(3)),
@@ -139,13 +142,13 @@ def test_magic_state_dist_steane_default_angles_in_ir():
 
 
 def test_magic_state_dist_steane_clifford_has_three_cz_invokes():
-    _, clifford_circuit = magic_state_dist_steane()
+    _, clifford_circuit = build_msd_steane()
 
     assert _invoke_names(clifford_circuit).count("cz") == 3
 
 
 def test_magic_state_dist_steane_offset_angles_in_ir():
-    nonclifford_prefix, _ = magic_state_dist_steane(
+    nonclifford_prefix, _ = build_msd_steane(
         theta_offset=0.1,
         phi_offset=0.2,
         lam_offset=0.3,
@@ -171,7 +174,7 @@ def test_single_qubit_state_tomography_ir(tomography_circuits):
 
 
 def test_empty_logical_circuit_has_no_non_return_ir():
-    statements = list(empty_logical_circuit().callable_region.walk())
+    statements = list(build_empty_logical_circuit().callable_region.walk())
 
     assert [type(stmt) for stmt in statements] == [func.ConstantNone, func.Return]
 
@@ -407,7 +410,8 @@ def test_postselection_experiment_initialize_mle_decoders_validate_width(
         nonclifford_prefix,
         clifford_circuit,
         tomography_circuits,
-        GurobiDecoder,
+        MILPDecoder,
+        decoder_init_args={"solver": "GUROBI"},
     )
     exp._postselection_exp_cache.dems = msd_mld_dems
 
@@ -419,6 +423,38 @@ def test_postselection_experiment_make_tasks_sets_cache(msd_mld_exp, msd_mld_ker
     tasks = msd_mld_exp.make_tasks(GeminiLogicalSimulator())
 
     assert msd_mld_exp._postselection_exp_cache.hardware_tasks is tasks
+
+
+def test_postselection_experiment_make_tasks_uses_the_experiment_device(
+    msd_circuits, tomography_circuits
+):
+    nonclifford_prefix, clifford_circuit = msd_circuits
+    device = Mock()
+    exp = PostSelectionExperiment(
+        nonclifford_prefix,
+        clifford_circuit,
+        tomography_circuits,
+        TableDecoder,
+        device=device,
+    )
+    kernel = Mock()
+    exp._postselection_exp_cache.dem_kernels = {"Z": kernel}
+
+    tasks = exp.make_tasks()
+
+    device.task.assert_called_once_with(kernel.similar.return_value)
+    assert tasks == {"Z": device.task.return_value}
+
+
+def test_postselection_experiment_defaults_to_a_logical_simulator(
+    msd_circuits, tomography_circuits
+):
+    nonclifford_prefix, clifford_circuit = msd_circuits
+    exp = PostSelectionExperiment(
+        nonclifford_prefix, clifford_circuit, tomography_circuits, TableDecoder
+    )
+
+    assert isinstance(exp.device, GeminiLogicalSimulator)
 
 
 @dataclass
@@ -519,7 +555,9 @@ def test_postselection_experiment_tomography_result_matches_full_curve_point(
     msd_mld_exp,
     monkeypatch,
 ):
-    from bloqade.gemini.decoding.postselection import _DecodedPostselectionResult
+    from bloqade.gemini.logical.experiments.postselection import (
+        _DecodedPostselectionResult,
+    )
 
     # Compare estimates with known basis coverage rather than relying on a
     # small random sample surviving postselection in every basis.

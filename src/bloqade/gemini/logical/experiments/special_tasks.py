@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, TypeVar
 from collections.abc import Mapping
 
-from bloqade.gemini.device import GeminiLogicalSimulatorTask
+from bloqade.gemini.logical.simulation import GeminiLogicalSimulatorTask
 
 if TYPE_CHECKING:
     import tsim as tsim_backend  # type: ignore[reportMissingImports]
