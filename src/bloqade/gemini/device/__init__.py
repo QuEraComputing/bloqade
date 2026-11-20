@@ -2,6 +2,7 @@ from bloqade.gemini.device.logical import (
     GeminiLogicalDevice as GeminiLogicalDevice,
     GeminiLogicalFuture as GeminiLogicalFuture,
     GeminiLogicalResult as GeminiLogicalResult,
+    GeminiLogicalSimulatorDevice as GeminiLogicalSimulatorDevice,
 )
 from bloqade.gemini.device.simulator import (
     GeminiLogicalSimulator as GeminiLogicalSimulator,
@@ -32,6 +33,7 @@ __all__ = [
     "CliffTSimulatorBackend",
     "DetectorResult",
     "GeminiLogicalDevice",
+    "GeminiLogicalSimulatorDevice",
     "GeminiLogicalFuture",
     "GeminiLogicalResult",
     "GeminiLogicalSimulator",
