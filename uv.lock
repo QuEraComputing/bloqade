@@ -460,7 +460,7 @@ requires-dist = [
     { name = "bloqade-decoders", specifier = ">=0.7.0" },
     { name = "bloqade-decoders", extras = ["mwpf", "mle", "milp", "mld", "sinter"], marker = "extra == 'decoding'" },
     { name = "bloqade-decoders", extras = ["tesseract"], marker = "python_full_version >= '3.12' and extra == 'decoding'" },
-    { name = "bloqade-lanes", specifier = ">=0.12.2,<0.13" },
+    { name = "bloqade-lanes", specifier = ">=0.13.0" },
     { name = "bloqade-lanes", extras = ["sim"], marker = "extra == 'sim'" },
     { name = "bloqade-lanes", extras = ["visualization"], marker = "extra == 'atom-vis'" },
     { name = "bloqade-ppvm", specifier = "~=0.3.0" },
@@ -644,7 +644,7 @@ tesseract = [
 
 [[package]]
 name = "bloqade-lanes"
-version = "0.12.2"
+version = "0.13.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "bloqade-circuit", extra = ["qasm2"] },
@@ -656,13 +656,13 @@ dependencies = [
     { name = "rustworkx" },
     { name = "scipy" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/70/ff/16c21a716fca8358ab98e8d762ea583799f6d2b6051968311aee47f43dd1/bloqade_lanes-0.12.2.tar.gz", hash = "sha256:b6b6293e77fcf929860d0921cb3703911bdf58f78e160e66dd6f1108e9859e9c", size = 1059332, upload-time = "2026-11-12T18:06:55.624Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f9/f2/591ab2917aa6c04822ffa8b86c05b742c2f7ed85010b308baff43e759954/bloqade_lanes-0.13.0.tar.gz", hash = "sha256:9bf8f108718542c95f7f3c1f7370dcfdb9ddece1f9991ed7d1d30fe5e2757deb", size = 991945, upload-time = "2026-11-20T14:45:12.03Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/35/5b/d9bd7103c83c6c9e59a60df173048a13995f7c028121dab971e8ec511872/bloqade_lanes-0.12.2-cp311-abi3-macosx_10_12_x86_64.whl", hash = "sha256:9a23290b6b7a4227b43d9bb7526342317a8d8391642c61a9dbb80121c4ad3dd2", size = 26393187, upload-time = "2026-11-12T18:06:42.517Z" },
-    { url = "https://files.pythonhosted.org/packages/78/ae/4940ffefb53c82c3878d31da78b64ade283555ce2a3bb187e286a434dde1/bloqade_lanes-0.12.2-cp311-abi3-macosx_11_0_arm64.whl", hash = "sha256:9847398a2db35e35261adc25ec42d0b656676650d30374587102845982a47217", size = 26285911, upload-time = "2026-11-12T18:06:45.483Z" },
-    { url = "https://files.pythonhosted.org/packages/58/35/51d2c7f037c56305bd7d7260ea0dcc73f384d34c8df6e67ea22e1fa4e836/bloqade_lanes-0.12.2-cp311-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:93172fcdaec41952d512ef81101751b7b1e2391e7ac8fc7dfb7b8689d78268a2", size = 29900811, upload-time = "2026-11-12T18:06:48.067Z" },
-    { url = "https://files.pythonhosted.org/packages/93/43/5106655af094e54c95ce6dc4c481056c421d55de8378080d40ddae3fd021/bloqade_lanes-0.12.2-cp311-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:8049535294526e1d28e04eb8904e44f6b2ba1563c2aa70a5b11f9726e4802db7", size = 28950898, upload-time = "2026-11-12T18:06:50.683Z" },
-    { url = "https://files.pythonhosted.org/packages/fc/78/7d4802a6336f064195a76b1dc0022082efb34cf566acd5900e662c65535c/bloqade_lanes-0.12.2-cp311-abi3-win_amd64.whl", hash = "sha256:1ced3ef5a3490b26926478b8282fc2a9c6c127ecb27f892c8d14a0c0d459ca08", size = 26672428, upload-time = "2026-11-12T18:06:53.307Z" },
+    { url = "https://files.pythonhosted.org/packages/9c/7f/360a2788d761497047d3da1c23414c6c2b0248de36a6dc597ee18258269f/bloqade_lanes-0.13.0-cp311-abi3-macosx_10_12_x86_64.whl", hash = "sha256:ed66b4dcf9bee82433cca96b77ab9e610c8b8f3806f3e013d7e7649f00be73ff", size = 26522227, upload-time = "2026-11-20T14:44:49.383Z" },
+    { url = "https://files.pythonhosted.org/packages/77/43/d03e28f3c6f9434eb8d0518717ca5663ac211a516756774ad8868445eeb5/bloqade_lanes-0.13.0-cp311-abi3-macosx_11_0_arm64.whl", hash = "sha256:89287349eeaff12f417af2fd79721cd2a96fb9f1e769db78439f0dcdf37c6876", size = 26416107, upload-time = "2026-11-20T14:44:54.041Z" },
+    { url = "https://files.pythonhosted.org/packages/6f/99/bc554dae2262408a19d335a49da16777d78ef31e93e88408a1318e299ef1/bloqade_lanes-0.13.0-cp311-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:59698a147ab00b74dded024632db166c18171a09caa6e57984beaddac46f08f5", size = 30004228, upload-time = "2026-11-20T14:44:58.843Z" },
+    { url = "https://files.pythonhosted.org/packages/ad/ea/4598ade37ee88274d75d2e80f058aa71a67ff33b24325c7771f2266dbe7b/bloqade_lanes-0.13.0-cp311-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:8ae30d2233034e7e5ad5e2438e3be99933f4562080bf4680ad4e9697adaf22b8", size = 29104160, upload-time = "2026-11-20T14:45:04.085Z" },
+    { url = "https://files.pythonhosted.org/packages/68/44/2d55384767ae2f7d629fe8eb690e9955ffdf3e2ce289017f64c955fa868d/bloqade_lanes-0.13.0-cp311-abi3-win_amd64.whl", hash = "sha256:465e9aedf79b6fc710a7c9df88571021eda639a3851bfaed749d3fed78ca5473", size = 26780739, upload-time = "2026-11-20T14:45:08.95Z" },
 ]
 
 [package.optional-dependencies]
@@ -671,7 +671,6 @@ sim = [
 ]
 visualization = [
     { name = "matplotlib" },
-    { name = "plotly" },
     { name = "pyqt5", marker = "sys_platform == 'darwin' or sys_platform == 'linux'" },
 ]
 

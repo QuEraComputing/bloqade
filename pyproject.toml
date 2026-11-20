@@ -23,7 +23,7 @@ requires-python = ">=3.11"
 dependencies = [
     "bloqade-circuit[cirq,qasm2,qasm3,qbraid,vis,stim]~=0.15.6",
     "bloqade-analog~=0.16.9",
-    "bloqade-lanes>=0.12.3,<0.13",
+    "bloqade-lanes>=0.13.0",
     "bloqade-tsim~=1.1.0",
     "bloqade-core~=0.6.15",
     "bloqade-decoders>=0.7.0",
