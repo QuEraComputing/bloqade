@@ -19,7 +19,7 @@ legal non-uniform bus is accepted here and simply lands unrouted.
 
 from __future__ import annotations
 
-from collections.abc import Collection, Sequence
+from collections.abc import Sequence, Collection
 
 from bloqade.gemini.arch.build._geometry import NM_PER_UM
 

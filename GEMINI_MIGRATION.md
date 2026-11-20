@@ -60,18 +60,35 @@ their noise model, which names the movers first.
 
 ## Architecture builder
 
-The architecture builders are owned by Gemini: import `ArchBuilder`,
-`ZoneBuilder`, `build_arch`, `ArchBlueprint`, `ZoneSpec`, `DeviceLayout` and
-the topologies from `bloqade.gemini.arch` instead of `bloqade.lanes.arch`, and
-their modules from `bloqade.gemini.arch.build` (including the spec-shaped
-`bloqade.gemini.arch.build.v2.ArchBuilder`) instead of
-`bloqade.lanes.arch.build`. The three-zone example architectures moved with
-them: `bloqade.gemini.arch.gemini_full` and `bloqade.gemini.arch.generic_full`.
+Import the spec-shaped builder with `from bloqade.gemini.arch import ArchBuilder`.
+Update imports from `bloqade.gemini.arch.build.v2` to this public path.
 
-The builders still produce `bloqade.lanes.arch.spec.ArchSpec`, which lanes
-compiles against; `ArchSpec`, `ArchSpecGeometry`, `PathFinder` and
-`MoveMetricCalculator` remain in `bloqade.lanes.arch`. The bundled Gemini
-logical and physical specs (`bloqade.lanes.arch.gemini`) are unchanged.
+**Breaking change.** Callers using `ZoneBuilder`, the zero-argument
+`ArchBuilder()`, or `build_arch(ArchBlueprint(...))` must migrate to the
+shared word template. Define words once in **(row, column)** order, then add
+each zone's physical coordinates and configure its buses by zone name.
+
+```python
+from bloqade.gemini.arch import ArchBuilder
+
+builder = ArchBuilder(grid_shape=(1, 2), word_shape=(1, 1))
+builder.add_word(rows=0, columns=0)
+builder.add_word(rows=0, columns=1)
+builder.add_zone(
+    "storage", rows=[0.0], columns=[0.0, 10.0],
+    x_clearance=1.0, y_clearance=1.0,
+)
+builder.add_word_bus("storage", src=[0], dst=[1])
+spec = builder.build()
+```
+
+Use `ArchBuilder.from_spec(spec)` to edit an existing Lanes `ArchSpec`.
+The `gemini_full` and `generic_full` example factories still return an
+`ArchResult` containing the spec and zone metadata. For a rectangular
+grid of interleaved words, pass `num_rows`, `num_cols`, and `sites_per_word`
+as keywords to `create_zone_words` in place of `ZoneSpec` and `DeviceLayout`.
+See the [architecture example](docs/digital/examples/arch/arch_cust_vis_demo.py)
+for a complete walkthrough.
 
 ## Method-table registration
 

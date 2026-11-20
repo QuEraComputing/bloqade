@@ -11,15 +11,13 @@ grid indices that map to distinct positions within the zone grid.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import TYPE_CHECKING
+from dataclasses import dataclass
 
 from bloqade.lanes.bytecode.word import Word
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
-
-    from .blueprint import DeviceLayout, ZoneSpec
 
 
 @dataclass(frozen=True)
@@ -56,8 +54,10 @@ class WordGrid:
 
 
 def create_zone_words(
-    zone_spec: ZoneSpec,
-    layout: DeviceLayout,
+    *,
+    num_rows: int,
+    num_cols: int,
+    sites_per_word: int,
 ) -> WordGrid:
     """Create all words for a zone in a 2D grid layout.
 
@@ -68,27 +68,22 @@ def create_zone_words(
 
     Words in different rows use different y_idx values.
     """
-    n = layout.sites_per_word
-    num_cols = zone_spec.num_cols
+    if num_rows < 1 or sites_per_word < 1:
+        raise ValueError("num_rows and sites_per_word must be positive")
+    if num_cols < 2 or num_cols % 2:
+        raise ValueError("num_cols must be a positive even number")
 
     words: list[Word] = []
 
-    for row in range(zone_spec.num_rows):
+    for row in range(num_rows):
         for col in range(num_cols):
-            pair_idx = col // 2
-            is_odd = col % 2
-            # Number of x positions per pair: 2*n (interleaved)
-            x_base = pair_idx * 2 * n
-            if is_odd:
-                # Odd column: sites at odd x indices
-                sites = tuple((x_base + 2 * i + 1, row) for i in range(n))
-            else:
-                # Even column: sites at even x indices
-                sites = tuple((x_base + 2 * i, row) for i in range(n))
+            pair, parity = divmod(col, 2)
+            first_column = pair * 2 * sites_per_word + parity
+            sites = tuple((first_column + 2 * i, row) for i in range(sites_per_word))
             words.append(Word(sites))
 
     return WordGrid(
         words=tuple(words),
-        num_rows=zone_spec.num_rows,
-        num_cols=zone_spec.num_cols,
+        num_rows=num_rows,
+        num_cols=num_cols,
     )

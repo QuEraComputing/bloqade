@@ -8,14 +8,11 @@ from bloqade.gemini.arch.build.topology import (
     HypercubeSiteTopology,
     HypercubeWordTopology,
 )
-from bloqade.gemini.arch.build.blueprint import ZoneSpec, DeviceLayout
 from bloqade.gemini.arch.build.word_factory import WordGrid, create_zone_words
 
 
 def _make_grid(num_rows: int = 2, num_cols: int = 4) -> WordGrid:
-    spec = ZoneSpec(num_rows=num_rows, num_cols=num_cols, entangling=True)
-    layout = DeviceLayout(sites_per_word=4)
-    return create_zone_words(spec, layout)
+    return create_zone_words(num_rows=num_rows, num_cols=num_cols, sites_per_word=4)
 
 
 # ── Site topologies ──
@@ -176,24 +173,3 @@ class TestMatchingTopology:
         topo = MatchingTopology()
         with pytest.raises(ValueError, match="Grid dimensions must match"):
             topo.generate_word_buses(grid_a, grid_b)
-
-
-# ── ZoneSpec with topologies ──
-
-
-class TestZoneSpecTopology:
-    def test_default_no_topology(self) -> None:
-        spec = ZoneSpec(num_rows=2, num_cols=4)
-        assert spec.word_topology is None
-        assert spec.site_topology is None
-
-    def test_with_topologies(self) -> None:
-        spec = ZoneSpec(
-            num_rows=2,
-            num_cols=4,
-            entangling=True,
-            word_topology=HypercubeWordTopology(),
-            site_topology=HypercubeSiteTopology(),
-        )
-        assert isinstance(spec.word_topology, HypercubeWordTopology)
-        assert isinstance(spec.site_topology, HypercubeSiteTopology)

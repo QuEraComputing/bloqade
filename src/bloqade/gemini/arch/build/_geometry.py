@@ -1,11 +1,4 @@
-"""Shared geometry primitives for architecture construction.
-
-This module holds the parts of zone construction that are *geometry*
-rather than *building*: unit conversion, AOD transport path search, and
-blockade-pair derivation.  It is deliberately free of builder state — every
-entry point takes a :class:`ZoneGeometry` value and returns a result — so
-that both the legacy ``ZoneBuilder`` and the redesigned builder in
-:mod:`bloqade.gemini.arch.build.v2` can share one implementation.
+"""Geometry for architecture construction, including transport paths and blockade pairs.
 
 All internal geometry is stored as nm-integer values so that set
 membership, tuple equality, and candidate hashing are exact.  User-facing
@@ -17,14 +10,13 @@ from __future__ import annotations
 import math
 import warnings
 from bisect import bisect_left, bisect_right
-from collections import defaultdict
-from collections.abc import Callable, Sequence
-from dataclasses import dataclass
 from itertools import pairwise
+from collections import defaultdict
+from dataclasses import dataclass
+from collections.abc import Callable, Sequence
 
 import rustworkx as rx
-
-from bloqade.lanes.bytecode.encoding import Direction, LaneAddress, MoveType
+from bloqade.lanes.bytecode.encoding import MoveType, Direction, LaneAddress
 
 # Internal length unit: 1 nm.  All user-facing lengths are in µm;
 # internally we convert to nm integers so that path search (hashing,
