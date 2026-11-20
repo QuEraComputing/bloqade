@@ -71,14 +71,27 @@ each zone's physical coordinates and configure its buses by zone name.
 ```python
 from bloqade.gemini.arch import ArchBuilder
 
-builder = ArchBuilder(grid_shape=(1, 2), word_shape=(1, 1))
-builder.add_word(rows=0, columns=0)
-builder.add_word(rows=0, columns=1)
+builder = ArchBuilder(grid_shape=(1, 4), word_shape=(1, 2))
+builder.add_word(rows=0, columns=[0, 1])
+builder.add_word(rows=0, columns=[2, 3])
 builder.add_zone(
-    "storage", rows=[0.0], columns=[0.0, 10.0],
+    "storage", rows=[0.0], columns=[0.0, 10.0, 20.0, 30.0],
     x_clearance=1.0, y_clearance=1.0,
 )
 builder.add_word_bus("storage", src=[0], dst=[1])
+spec = builder.build()
+```
+
+By default, a word bus preserves the site index. To move between sites,
+pass a Lanes `SiteBus` as `site_map`. This second bus moves site 1 of word 0
+to site 0 of word 1. Both sites must
+belong to the zone's `sites_with_word_buses`. The same map applies to every
+word pair on the bus.
+
+```python
+from bloqade.lanes.bytecode import SiteBus
+
+builder.add_word_bus("storage", src=[0], dst=[1], site_map=SiteBus(src=[1], dst=[0]))
 spec = builder.build()
 ```
 
