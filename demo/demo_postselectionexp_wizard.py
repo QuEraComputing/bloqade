@@ -122,15 +122,15 @@ import numpy as np  # noqa: E402
 
 from bloqade.gemini.logical.simulation import GeminiLogicalSimulator  # noqa: E402
 from bloqade.gemini.logical.kernels import (  # noqa: E402
-    build_msd_steane,
-    # build_empty_logical_circuit,
-    build_singleq_tomo,
+    build_msd_kernels,
+    build_tomography_kernels,
 )
 from bloqade.gemini.logical.experiments import PostSelectionExperiment  # noqa: E402
 from bloqade.gemini.logical.utils import (  # noqa: E402
     plot_decoder_curves,  # noqa: E402
     msd_postselection_obs,  # noqa: E402
     MSD_TARGET_BLOCH,  # noqa: E402
+    bloch_to_u3,
 )
 from bloqade.simulation import TsimSimulatorBackend  # noqa: E402
 
@@ -140,11 +140,15 @@ NUM_LOGICAL_QUBITS = 5
 NUM_SHOTS = 100_000
 
 # %%
-# TODO: get the linter to do some type checking here.
-nonclifford_prefix, clifford_circuit = build_msd_steane(theta_offset=0.30)
+theta, phi, lam = bloch_to_u3(MSD_TARGET_BLOCH)
+primitive_kernels = build_msd_kernels(theta, phi, lam)
+nonclifford_prefix, clifford_circuit = (
+    primitive_kernels.state_injection_circuit,
+    primitive_kernels.logical_circuit,
+)
 
 # %%
-tomography_circuits = build_singleq_tomo()
+tomography_kernels = build_tomography_kernels(output_qubit=0)
 
 # %%
 # GeminiLogicalDevice
@@ -154,7 +158,7 @@ tsim_simulator = GeminiLogicalSimulator(backend=TsimSimulatorBackend(seed=10))
 msd_mld_exp = PostSelectionExperiment(
     nonclifford_prefix,
     clifford_circuit,
-    tomography_circuits,
+    tomography_kernels,
     TableDecoder,
     decoder_init_args={"seed": 10, "num_shots": NUM_SHOTS},
     device=tsim_simulator,
