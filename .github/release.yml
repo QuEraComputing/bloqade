@@ -1,0 +1,42 @@
+# Configuration for GitHub's automatically generated release notes.
+# Consumed by the generate-notes API in .github/workflows/release.yml.
+# Categories are matched top-to-bottom; each
+# PR lands in the first section whose labels it carries.
+# https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes
+changelog:
+  exclude:
+    labels:
+      - "status: duplicate"
+      - "status: invalid"
+      - "category: wont fix"
+  categories:
+    - title: ⚠️ Breaking Changes
+      labels:
+        - "category: breaking change"
+    - title: 🚀 Features
+      labels:
+        - "category: enhancement"
+    - title: 🐛 Bug Fixes
+      labels:
+        - "category: bug"
+    - title: ⚡ Performance
+      labels:
+        - "performance: optimization"
+    - title: 📖 Documentation
+      labels:
+        - "category: documentation"
+    - title: 🎨 Visualization
+      labels:
+        - "area: visualization"
+    - title: ⬆️ Dependencies
+      labels:
+        - "category: dependencies"
+        - "dependencies"
+    - title: 🛠️ DevOps & CI
+      labels:
+        - "devops"
+        - "github_actions"
+    # Catch-all for anything not matched above.
+    - title: Other Changes
+      labels:
+        - "*"

@@ -14,6 +14,8 @@ from bloqade.gemini.visualize.debug import (
 @pytest.fixture
 def dummy_ax():
     ax = MagicMock(spec=mpl_axes.Axes)
+    # In Matplotlib 3.9, figure is an instance attribute, absent from this spec.
+    ax.figure = MagicMock()
     ax.cla = MagicMock()
     return ax
 
@@ -344,3 +346,46 @@ def test_animated_debugger_noninteractive(monkeypatch, dummy_ax):
         ax=dummy_ax,
         fps=30,
     )
+
+
+@pytest.mark.parametrize("export", [False, True])
+@pytest.mark.parametrize("animated", [False, True])
+def test_debugger_accepts_axes_with_matplotlib_39_api(
+    monkeypatch, tmp_path, animated, export
+):
+    fig, ax = plt.subplots()
+    # Matplotlib 3.9 has get_figure(), but no root keyword. Keep this
+    # compatibility regression covered even when CI installs newer Matplotlib.
+    legacy_ax = MagicMock(spec=mpl_axes.Axes, wraps=ax)
+    legacy_ax.figure = fig
+    legacy_ax.get_figure.side_effect = lambda: fig
+    draw = MagicMock()
+    # bloqade's drawers also take ``initialize_kernel=`` (state-prep stepping).
+    monkeypatch.setattr(debug_mod, "get_drawer", lambda *args, **kwargs: (draw, 1))
+    monkeypatch.setattr(
+        debug_mod,
+        "render_generator",
+        lambda *args, **kwargs: (lambda step: (1, draw), 1),
+    )
+    monkeypatch.setattr(plt, "pause", lambda _: None)
+    writer = MagicMock()
+    output = str(tmp_path / "provided-axes.mp4")
+    monkeypatch.setattr(
+        debug_mod, "mp4_writer", lambda *args, **kwargs: (output, writer)
+    )
+    debugger = debug_mod.animated_debugger if animated else debug_mod.debugger
+    try:
+        debugger(
+            MagicMock(),
+            MagicMock(),
+            ax=legacy_ax,
+            interactive=False,
+            to_mp4=output if export else None,
+        )
+        assert draw.called
+        assert plt.fignum_exists(fig.number)
+        if export:
+            writer.saving.assert_called_once_with(fig, output, dpi=fig.dpi)
+            assert writer.grab_frame.called
+    finally:
+        plt.close(fig)
