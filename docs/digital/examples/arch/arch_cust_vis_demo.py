@@ -21,7 +21,7 @@
 # First, we define a custom architecture where each word is an SLM site in the architecture. For the purposes of this tutorial, we can treat each SLM site as having an integer ID which we can later address.
 
 # %%
-from bloqade.gemini.arch.build.v2 import ArchBuilder
+from bloqade.gemini.arch import ArchBuilder
 from bloqade.gemini.visualize.arch import ArchVisualizer
 
 # %% [markdown]

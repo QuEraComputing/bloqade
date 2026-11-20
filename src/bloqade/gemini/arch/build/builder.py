@@ -22,37 +22,35 @@ decidable at the call that raises it:
    rather than deferred to build time.
 4. **Spec scope.**  Blockade radius, modes, capabilities, then ``build``.
 
-See ``docs/superpowers/specs/2026-09-15-arch-builder-redesign-design.md``
-for why the previous ``ZoneBuilder`` / ``ArchBuilder`` split could not be
-made consistent.
 """
 
 from __future__ import annotations
 
 import operator
 from collections import Counter
+from dataclasses import field, dataclass
 from collections.abc import Sequence
-from dataclasses import dataclass, field
 
+from bloqade.lanes.arch.spec import ArchSpec
+from bloqade.lanes.bytecode.word import Word
 from bloqade.lanes.bytecode._native import (
     Grid as _RustGrid,
-    LocationAddress as _RustLocAddr,
     Mode as _RustMode,
+    Zone as _RustZone,
     SiteBus as _RustSiteBus,
     WordBus as _RustWordBus,
-    Zone as _RustZone,
     ZoneBus as _RustZoneBus,
+    LocationAddress as _RustLocAddr,
 )
+from bloqade.lanes.bytecode.encoding import MoveType, LaneAddress
+
+from bloqade.gemini.arch.build._aod import check_aod_transport
 from bloqade.gemini.arch.build._geometry import (
     ZoneGeometry,
-    compute_transport_paths,
-    scan_blockade_pairs,
     to_nm,
+    scan_blockade_pairs,
+    compute_transport_paths,
 )
-from bloqade.gemini.arch.build.v2._aod import check_aod_transport
-from bloqade.lanes.arch.spec import ArchSpec
-from bloqade.lanes.bytecode.encoding import LaneAddress, MoveType
-from bloqade.lanes.bytecode.word import Word
 
 Index = slice | int | Sequence[int]
 

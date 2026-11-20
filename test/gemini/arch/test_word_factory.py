@@ -1,15 +1,12 @@
 """Tests for word creation helpers."""
 
-from bloqade.gemini.arch.build.blueprint import ZoneSpec, DeviceLayout
 from bloqade.gemini.arch.build.word_factory import WordGrid, create_zone_words
 
 
 class TestWordGrid:
     def _make_grid(self) -> WordGrid:
         """Create a 2x4 entangling grid with zone-local word IDs."""
-        spec = ZoneSpec(num_rows=2, num_cols=4, entangling=True)
-        layout = DeviceLayout(sites_per_word=3)
-        return create_zone_words(spec, layout)
+        return create_zone_words(num_rows=2, num_cols=4, sites_per_word=3)
 
     def test_word_count(self) -> None:
         grid = self._make_grid()
@@ -40,28 +37,16 @@ class TestWordGrid:
 
 class TestCreateZoneWords:
     def test_entangling_zone_cz_pairing(self) -> None:
-        spec = ZoneSpec(num_rows=1, num_cols=2, entangling=True)
-        layout = DeviceLayout(sites_per_word=3)
-        grid = create_zone_words(spec, layout)
+        grid = create_zone_words(num_rows=1, num_cols=2, sites_per_word=3)
 
         assert len(grid.words) == 2
         # CZ pairing is now at the architecture level via cz_pairs()
         pairs = list(grid.cz_pairs())
         assert pairs == [(0, 1)]
 
-    def test_non_entangling_zone_words_created(self) -> None:
-        spec = ZoneSpec(num_rows=1, num_cols=2, entangling=False)
-        layout = DeviceLayout(sites_per_word=3)
-        grid = create_zone_words(spec, layout)
-
-        # Words are created; CZ pairing is decided at the architecture level
-        assert len(grid.words) == 2
-
     def test_word_has_correct_site_count(self) -> None:
         """Words have the correct number of sites."""
-        spec = ZoneSpec(num_rows=1, num_cols=2, entangling=False)
-        layout = DeviceLayout(sites_per_word=5)
-        grid = create_zone_words(spec, layout)
+        grid = create_zone_words(num_rows=1, num_cols=2, sites_per_word=5)
 
         for word in grid.words:
             assert len(word.site_indices) == 5
