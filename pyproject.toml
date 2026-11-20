@@ -23,8 +23,7 @@ requires-python = ">=3.11"
 dependencies = [
     "bloqade-circuit[cirq,qasm2,qasm3,qbraid,vis,stim]~=0.15.6",
     "bloqade-analog~=0.16.9",
-    # Temporary until the 0.12 release containing bloqade-lanes#1172 is on PyPI.
-    "bloqade-lanes @ git+https://github.com/QuEraComputing/bloqade-lanes.git@96d445f8381fb6cdb28819c9e6cba9956991ec92",
+    "bloqade-lanes>=0.12.3,<0.13",
     "bloqade-tsim~=1.1.0",
     "bloqade-core~=0.6.15",
     "bloqade-decoders>=0.7.0",
