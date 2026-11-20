@@ -61,7 +61,7 @@ jobs:
       - name: Create backport PRs
         id: backport
         if: steps.targets.outputs.targets != ''
-        uses: korthout/backport-action@8560fb503c275d433c56f05a2f64850093baa9f7 # v4
+        uses: korthout/backport-action@ad272ff24e4a8593bf18a951a154ae6af93b26b8 # v4
         with:
           github_token: ${{ secrets.BACKPORT_TOKEN || github.token }}
           source_pr_number: ${{ steps.targets.outputs.pull_number }}

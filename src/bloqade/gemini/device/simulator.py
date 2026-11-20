@@ -19,6 +19,7 @@ from bloqade.gemini.device._task_runtime import (
     _SimulatorTaskBase,
 )
 from bloqade.gemini.device.simulator_backend import (
+    PPVMSimulatorBackend,
     TsimSimulatorBackend,
     AbstractSimulatorBackend,
 )
@@ -86,6 +87,13 @@ class GeminiLogicalSimulatorTask(_SimulatorTaskBase[RetType], Generic[RetType]):
         """Replaces `loss` values (None) with `loss_replace` (True)."""
         return (True, None)
 
+    @property
+    def _initialize_kernel(self) -> ir.Method | None:
+        # The debuggers move the controls of each CZ. The noisy kernel names
+        # the movers first in every CZ; the clean one only pairs the qubits.
+        _, noisy = self.noise_model.get_logical_initialize()
+        return noisy
+
 
 @dataclass
 class GeminiLogicalSimulator:
@@ -99,8 +107,8 @@ class GeminiLogicalSimulator:
 
     noise_model: LogicalNoiseModelABC = field(default_factory=_default_noise_model)
     """The noise model used for simulation. Defaults to :func:`generate_logical_noise_model`."""
-    backend: AbstractSimulatorBackend = field(default_factory=TsimSimulatorBackend)
-    """Sampling backend for tasks created by this simulator."""
+    backend: AbstractSimulatorBackend = field(default_factory=PPVMSimulatorBackend)
+    """Sampling backend for created tasks; defaults to PPVM."""
 
     def task(
         self,

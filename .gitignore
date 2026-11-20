@@ -19,6 +19,9 @@ __kirincache__/
 # Distribution / packaging
 .Python
 build/
+# ...but a ``build/`` directory inside src/ is a real source subpackage,
+# not a build artefact (e.g. bloqade.gemini.arch.build):
+!src/**/build/
 develop-eggs/
 dist/
 downloads/
