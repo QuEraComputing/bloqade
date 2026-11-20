@@ -1969,34 +1969,6 @@
          <lastmod>2026-11-20</lastmod>
     </url>
     <url>
-         <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/arch/build/</loc>
-         <lastmod>2026-11-20</lastmod>
-    </url>
-    <url>
-         <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/arch/build/blueprint/</loc>
-         <lastmod>2026-11-20</lastmod>
-    </url>
-    <url>
-         <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/arch/build/imperative/</loc>
-         <lastmod>2026-11-20</lastmod>
-    </url>
-    <url>
-         <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/arch/build/topology/</loc>
-         <lastmod>2026-11-20</lastmod>
-    </url>
-    <url>
-         <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/arch/build/word_factory/</loc>
-         <lastmod>2026-11-20</lastmod>
-    </url>
-    <url>
-         <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/arch/build/v2/</loc>
-         <lastmod>2026-11-20</lastmod>
-    </url>
-    <url>
-         <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/arch/build/v2/builder/</loc>
-         <lastmod>2026-11-20</lastmod>
-    </url>
-    <url>
          <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/arch/gemini/</loc>
          <lastmod>2026-11-20</lastmod>
     </url>
@@ -2034,22 +2006,6 @@
     </url>
     <url>
          <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/arch/gemini/physical/spec/</loc>
-         <lastmod>2026-11-20</lastmod>
-    </url>
-    <url>
-         <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/arch/gemini_full/</loc>
-         <lastmod>2026-11-20</lastmod>
-    </url>
-    <url>
-         <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/arch/gemini_full/spec/</loc>
-         <lastmod>2026-11-20</lastmod>
-    </url>
-    <url>
-         <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/arch/generic_full/</loc>
-         <lastmod>2026-11-20</lastmod>
-    </url>
-    <url>
-         <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/arch/generic_full/spec/</loc>
          <lastmod>2026-11-20</lastmod>
     </url>
     <url>
@@ -2426,26 +2382,6 @@
     </url>
     <url>
          <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/visualize/app/</loc>
-         <lastmod>2026-11-20</lastmod>
-    </url>
-    <url>
-         <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/visualize/arch/</loc>
-         <lastmod>2026-11-20</lastmod>
-    </url>
-    <url>
-         <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/visualize/artist/</loc>
-         <lastmod>2026-11-20</lastmod>
-    </url>
-    <url>
-         <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/visualize/debug/</loc>
-         <lastmod>2026-11-20</lastmod>
-    </url>
-    <url>
-         <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/visualize/plotly_circuit/</loc>
-         <lastmod>2026-11-20</lastmod>
-    </url>
-    <url>
-         <loc>https://queracomputing.github.io/bloqade/reference/bloqade-lanes/python/bloqade/lanes/visualize/plotly_debug/</loc>
          <lastmod>2026-11-20</lastmod>
     </url>
     <url>
