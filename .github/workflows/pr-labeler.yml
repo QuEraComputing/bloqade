@@ -1,0 +1,106 @@
+name: PR Conventional Labeler
+
+# Add labels inferred from PR metadata for the categories in .github/release.yml.
+on:
+  pull_request_target:
+    types: [opened, edited, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  label:
+    name: Apply category labels from PR title
+    runs-on: ubuntu-latest
+    steps:
+      # pull_request_target is used (not pull_request) so fork PRs still get a
+      # write-capable token. This is safe here: the PR head is never checked out
+      # and no PR-provided code runs — the title/body are read only as strings
+      # for regex matching, never interpolated into a shell.
+      - name: Label from Conventional Commit title
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const title = pr.title || "";
+            const body = pr.body || "";
+            const author = (pr.user && pr.user.login || "").toLowerCase();
+
+            // type(scope)!: description  — https://www.conventionalcommits.org
+            const m = title.match(/^(?<type>[a-z]+)(?:\((?<scope>[^)]*)\))?(?<breaking>!)?:/i);
+
+            const TYPE_TO_LABEL = {
+              feat: "category: enhancement",
+              fix: "category: bug",
+              perf: "performance: optimization",
+              docs: "category: documentation",
+              build: "devops",
+              ci: "devops",
+              chore: "devops",
+            };
+
+            const add = new Set();
+
+            if (m) {
+              const type = m.groups.type.toLowerCase();
+              const scope = (m.groups.scope || "").toLowerCase();
+              // A `deps` scope (e.g. build(deps), chore(deps)) is a dependency
+              // bump regardless of the leading type.
+              if (scope.includes("deps") || author === "dependabot[bot]") {
+                add.add("category: dependencies");
+              } else if (Object.hasOwn(TYPE_TO_LABEL, type)) {
+                add.add(TYPE_TO_LABEL[type]);
+              }
+              // `feat!:` / `fix!:` — add both the type label and breaking; the
+              // release.yml order (Breaking first) resolves which section wins.
+              if (m.groups.breaking) add.add("category: breaking change");
+            }
+
+            if (author === "dependabot[bot]") add.add("category: dependencies");
+
+            // Conventional Commits also signals breaking via a body footer.
+            if (/(^|\n)BREAKING[ -]CHANGE/i.test(body) || /BREAKING[ -]CHANGE/i.test(title)) {
+              add.add("category: breaking change");
+            }
+
+            if (add.size === 0) {
+              core.info("No category label inferred.");
+              return;
+            }
+
+            // Only add labels not already present, to avoid needless label events.
+            const existing = new Set((pr.labels || []).map((l) => l.name));
+            const missing = [...add].filter((l) => !existing.has(l));
+
+            if (missing.length === 0) {
+              core.info("All inferred labels already present.");
+              return;
+            }
+
+            // Bloqade already has the other labels. Create the Lanes performance
+            // label on first use, including when two PRs request it concurrently.
+            const performance = TYPE_TO_LABEL.perf;
+            if (missing.includes(performance)) {
+              try {
+                await github.rest.issues.getLabel({ ...context.repo, name: performance });
+              } catch (error) {
+                if (error.status !== 404) throw error;
+                try {
+                  await github.rest.issues.createLabel({
+                    ...context.repo, name: performance, color: "1d76db",
+                  });
+                } catch (createError) {
+                  const errors = createError.response?.data?.errors || [];
+                  if (!errors.some(e => e.code === "already_exists")) throw createError;
+                }
+              }
+            }
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              labels: missing,
+            });
+            core.info(`Added labels: ${missing.join(", ")}`);
