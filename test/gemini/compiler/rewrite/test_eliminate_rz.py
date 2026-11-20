@@ -501,6 +501,7 @@ REGISTERED_STATEMENTS = {
     "bloqade.decoders.dialects.annotate.stmts.SetDetector",
     "bloqade.decoders.dialects.annotate.stmts.SetObservable",
     "bloqade.lanes.dialects.arch.stmts.NewAt",
+    "bloqade.lanes.dialects.steane713.extensions.stmts.StarR",
     "bloqade.lanes.dialects.steane713.extensions.stmts.StarRz",
     "bloqade.lanes.dialects.steane713.stmts.Initialize",
     "bloqade.lanes.dialects.steane713.stmts.TerminalLogicalMeasurement",
@@ -678,6 +679,24 @@ def test_drained_frame_is_not_reapplied_to_later_gates():
     rewrite.Walk(EliminateRz(no_raise=True)).rewrite(block)
 
     assert later.axis_angle is axis.result
+
+
+def test_star_r_axis_shifts_by_the_pending_frame():
+    q = squin_qubit.stmts.New()
+    reg = ilist.New(values=(q.result,), elem_type=QUBIT)
+    axis = py.Constant(0.0)
+    theta = py.Constant(0.03)
+    frame = py.Constant(0.25)
+    rz = native_gate.stmts.Rz(frame.result, reg.result)
+    star = extensions.StarR(axis.result, theta.result, reg.result)
+    block = ir.Block([q, reg, axis, theta, frame, rz, star])
+
+    rewrite.Walk(EliminateRz()).rewrite(block)
+
+    assert rz not in list(block.stmts)
+    (shifted,) = (stmt for stmt in block.stmts if isinstance(stmt, extensions.StarR))
+    assert shifted.axis_angle.owner.value.data == -0.25
+    assert shifted.rotation_angle is theta.result
 
 
 def test_star_rz_is_left_alone_silently(recwarn):

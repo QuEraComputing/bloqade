@@ -486,7 +486,7 @@ class ArchVisualizer:
                 if lane_id >= len(zone.word_buses):
                     continue
                 lane = zone.word_buses[lane_id]
-                for site_id in zone.sites_with_word_buses:
+                for site_id, _ in zone.word_bus_site_pairs(lane_id):
                     for start_word_id in lane.src:
                         lane_addr = WordLaneAddress(
                             zone_id=zone_id,

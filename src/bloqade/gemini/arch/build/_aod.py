@@ -2,8 +2,8 @@
 
 An AOD is a crossed pair of deflectors: its traps sit at the Cartesian
 product of the x-tones and y-tones, and each tone is swept independently.
-A transport is realizable exactly when it is **separable and
-order-preserving**:
+A transport must cover every source tone crossing and be separable and
+order-preserving:
 
 * every atom's x-displacement depends only on which column it is in, and
   its y-displacement only on its row — an atom cannot leave its own tone;
@@ -19,7 +19,7 @@ legal non-uniform bus is accepted here and simply lands unrouted.
 
 from __future__ import annotations
 
-from collections.abc import Sequence, Collection
+from collections.abc import Sequence
 
 from bloqade.gemini.arch.build._geometry import NM_PER_UM
 
@@ -35,7 +35,6 @@ def _um(p: Position) -> tuple[float, float]:
 def check_aod_transport(
     pairs: Sequence[Pair],
     *,
-    occupied: Collection[Position],
     label: str,
 ) -> None:
     """Reject a bus no AOD operation can perform.
@@ -43,15 +42,11 @@ def check_aod_transport(
     Args:
         pairs: ``(src_position, dst_position)`` in nm, one entry per atom
             the bus carries.  Must be non-empty.
-        occupied: Every atom position in the zone, in nm.  Used to detect
-            a non-participating atom sitting on one of the bus's tone
-            intersections, which the AOD would carry along.
         label: Prefix identifying the bus, for error messages.
 
     Raises:
         ValueError: If the transport is not separable, not
-            order-preserving, changes its tone count, or would pick up an
-            atom that does not belong to it.
+            order-preserving, changes its tone count, or skips a source crossing.
     """
     if not pairs:
         raise ValueError(f"{label}: a bus must carry at least one atom")
@@ -84,24 +79,6 @@ def check_aod_transport(
                 "its own."
             )
 
-    # Stowaways: the AOD traps at every intersection of its tones, so an
-    # atom sitting at an intersection is carried whether or not it belongs
-    # to this bus.  An intersection that no atom occupies is harmless —
-    # the trap simply arrives empty — so the test is occupancy, not
-    # completeness.
-    carried = {p[0] for p in pairs}
-    intruders = sorted(
-        (x, y)
-        for x in src_x
-        for y in src_y
-        if (x, y) in occupied and (x, y) not in carried
-    )
-    if intruders:
-        listed = [_um(p) for p in intruders]
-        raise ValueError(
-            f"{label}: {listed} µm "
-            f"{'is a site' if len(listed) == 1 else 'are sites'} that this "
-            "bus does not carry, but the AOD traps at every intersection of "
-            "its tones, so whatever sits there would be carried along too. "
-            "Exclude the atom from the bus's tone grid, or add it to the bus."
-        )
+    carried = {src for src, _ in pairs}
+    if len(carried) != len(src_x) * len(src_y):
+        raise ValueError(f"{label}: bus sources must form a complete grid of tones")

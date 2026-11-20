@@ -31,13 +31,13 @@ from collections import Counter
 from dataclasses import field, dataclass
 from collections.abc import Sequence
 
+from bloqade.lanes.bytecode import SiteBus, ArchSpecError
 from bloqade.lanes.arch.spec import ArchSpec
 from bloqade.lanes.bytecode.word import Word
 from bloqade.lanes.bytecode._native import (
     Grid as _RustGrid,
     Mode as _RustMode,
     Zone as _RustZone,
-    SiteBus as _RustSiteBus,
     WordBus as _RustWordBus,
     ZoneBus as _RustZoneBus,
     LocationAddress as _RustLocAddr,
@@ -198,8 +198,8 @@ class _Zone:
     y_clearance_nm: int | None
     words_with_site_buses: tuple[int, ...]
     sites_with_word_buses: tuple[int, ...]
-    site_buses: list[tuple[list[int], list[int]]] = field(default_factory=list)
-    word_buses: list[tuple[list[int], list[int]]] = field(default_factory=list)
+    site_buses: list[SiteBus] = field(default_factory=list)
+    word_buses: list[_RustWordBus] = field(default_factory=list)
     entangling_pairs: list[tuple[int, int]] = field(default_factory=list)
     blockade_radius_nm: int | None = None
 
@@ -528,9 +528,8 @@ class ArchBuilder:
                 "on add_zone."
             )
         bus_id = len(z.site_buses)
-        self._reject_duplicate_bus(
-            z.site_buses, src, dst, "site", f"site bus {bus_id} on zone '{zone}'"
-        )
+        bus = SiteBus(src=list(src), dst=list(dst))
+        self._reject_duplicate_bus(z.site_buses, bus, "site", zone)
         geom = self._geometry(z)
         check_aod_transport(
             [
@@ -539,42 +538,41 @@ class ArchBuilder:
                 for s, d in zip(src, dst)
             ]
             or [],
-            occupied=self._occupied(geom),
             label=f"site bus {bus_id} on zone '{zone}'",
         )
-        z.site_buses.append((list(src), list(dst)))
+        z.site_buses.append(bus)
 
     def _reject_duplicate_bus(
         self,
-        existing: Sequence[tuple[list[int], list[int]]],
+        existing: Sequence[SiteBus | _RustWordBus],
+        bus: SiteBus | _RustWordBus,
+        kind: str,
+        zone: str,
+    ) -> None:
+        if bus in existing:
+            raise ValueError(
+                f"{kind} bus {len(existing)} on zone '{zone}': {kind} bus "
+                f"{existing.index(bus)} already has this exact ordered mapping"
+            )
+
+    def add_word_bus(
+        self,
+        zone: str,
         src: Sequence[int],
         dst: Sequence[int],
-        kind: str,
-        label: str,
+        *,
+        site_map: SiteBus | None = None,
     ) -> None:
-        """Reject a bus that repeats an existing ordered mapping.
-
-        A bus's index is its ``bus_id`` and every lane address is built
-        from it, so a duplicate adds a second set of lanes that move the
-        same atoms along the same route — wasted lanes that also make
-        ``bus_id`` ambiguous to anything reasoning about the spec.
-        """
-        pair = (list(src), list(dst))
-        for i, (e_src, e_dst) in enumerate(existing):
-            if [list(e_src), list(e_dst)] == list(pair):
-                raise ValueError(
-                    f"{label}: {kind} bus {i} already has this exact ordered "
-                    "src/dst mapping. Buses are addressed by index, so a "
-                    "duplicate only adds redundant lanes."
-                )
-
-    def add_word_bus(self, zone: str, src: Sequence[int], dst: Sequence[int]) -> None:
         """Add a word bus (intra-zone movement) to one zone.
 
         Args:
             zone: Zone name.
             src: Source word IDs.
             dst: Destination word IDs, parallel to ``src``.
+            site_map: Optional ``bloqade.lanes.bytecode.SiteBus`` mapping source
+                sites to destination sites on every word pair. Both ends must
+                belong to the zone's ``sites_with_word_buses``. Omitting the
+                map carries all participating sites to the same site IDs.
 
         Raises:
             ValueError: On mismatched or empty sequences, an out-of-range
@@ -588,21 +586,31 @@ class ArchBuilder:
                 "there would carry nothing. Declare the participating sites "
                 "on add_zone."
             )
-        bus_id = len(z.word_buses)
-        self._reject_duplicate_bus(
-            z.word_buses, src, dst, "word", f"word bus {bus_id} on zone '{zone}'"
+        bus = _RustWordBus(src=list(src), dst=list(dst), site_map=site_map)
+        self._reject_duplicate_bus(z.word_buses, bus, "word", zone)
+
+        # Validate just the proposed bus against the shared template. Rust
+        # resolves its site map and checks its relation and AOD geometry. No
+        # existing bus needs revalidation, and failure leaves the builder intact.
+        candidate = _RustZone(
+            name=zone,
+            grid=z.grid,
+            site_buses=[],
+            word_buses=[bus],
+            words_with_site_buses=[],
+            sites_with_word_buses=list(z.sites_with_word_buses),
         )
-        geom = self._geometry(z)
-        check_aod_transport(
-            [
-                (geom.site_nm(sw, s), geom.site_nm(dw, s))
-                for sw, dw in zip(src, dst)
-                for s in z.sites_with_word_buses
-            ],
-            occupied=self._occupied(geom),
-            label=f"word bus {bus_id} on zone '{zone}'",
-        )
-        z.word_buses.append((list(src), list(dst)))
+        try:
+            ArchSpec.from_components(
+                words=tuple(Word(tuple(sites)) for sites in self._words),
+                zones=(candidate,),
+                modes=[],
+            )
+        except ArchSpecError as exc:
+            raise ValueError(
+                f"word bus {len(z.word_buses)} on zone '{zone}': {exc}"
+            ) from exc
+        z.word_buses.append(bus)
 
     def connect(
         self,
@@ -640,7 +648,6 @@ class ArchBuilder:
                 for sw, dw in zip(src_words, dst_words)
                 for s in range(self.sites_per_word)
             ],
-            occupied=self._occupied(src_geom),
             label=f"zone bus {bus_id} from '{src_name}' to '{dst_name}'",
         )
         self._connections.append(
@@ -769,10 +776,8 @@ class ArchBuilder:
             _RustZone(
                 name=z.name,
                 grid=z.grid,
-                site_buses=[_RustSiteBus(src=s, dst=d) for s, d in z.site_buses],
-                word_buses=[
-                    _RustWordBus(src=list(s), dst=list(d)) for s, d in z.word_buses
-                ],
+                site_buses=z.site_buses,
+                word_buses=z.word_buses,
                 words_with_site_buses=(
                     list(z.words_with_site_buses) if z.site_buses else []
                 ),
@@ -829,9 +834,7 @@ class ArchBuilder:
                 continue
             computed = compute_transport_paths(
                 self._routing_geometry(z),
-                site_buses=z.site_buses,
-                word_buses=z.word_buses,
-                site_bus_words=z.words_with_site_buses,
+                zone=rust_zones[zone_id],
                 zone_id=zone_id,
                 warn_stacklevel=3,
             )
@@ -1022,7 +1025,7 @@ class ArchBuilder:
             for bus in zone.site_buses:
                 builder.add_site_bus(zone.name, list(bus.src), list(bus.dst))
             for bus in zone.word_buses:
-                builder.add_word_bus(zone.name, list(bus.src), list(bus.dst))
+                builder.add_word_bus(zone.name, bus.src, bus.dst, site_map=bus.site_map)
             if zone.entangling_pairs:
                 pairs = [tuple(p) for p in zone.entangling_pairs]
                 builder.add_entangling_pairs(
@@ -1142,15 +1145,6 @@ class ArchBuilder:
             elif word_ok and lane.bus_id < word_cap:
                 out[lane] = path
         return out
-
-    @staticmethod
-    def _occupied(geom: ZoneGeometry) -> frozenset[tuple[int, int]]:
-        """Every atom position in a zone, in nm."""
-        return frozenset(
-            geom.site_nm(w, s)
-            for w in range(geom.num_words)
-            for s in range(geom.sites_per_word)
-        )
 
     def _check_bus_endpoints(
         self,

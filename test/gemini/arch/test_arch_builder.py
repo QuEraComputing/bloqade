@@ -192,7 +192,7 @@ class TestBusRealizability:
 
     def test_tone_count_must_match(self):
         b = self._rows(cols=3)
-        with pytest.raises(ValueError, match="add or drop a tone"):
+        with pytest.raises(ValueError, match="grid of tones"):
             b.add_word_bus("z", src=[0, 1], dst=[3, 3])
 
     def test_non_uniform_but_separable_is_accepted(self):
@@ -238,8 +238,7 @@ class TestBusRealizability:
 class TestStowaways:
     """The AOD traps at every intersection of its tones.
 
-    An intersection occupied by an atom the bus does not carry would be
-    picked up too; an intersection no atom occupies is harmless.
+    Every crossing must participate, including crossings without a site.
     """
 
     def _l_shape(self, **zone_kwargs) -> ArchBuilder:
@@ -249,10 +248,10 @@ class TestStowaways:
         b.add_word(rows=[1], columns=[0, 1])
         return with_zone(b, **zone_kwargs)
 
-    def test_empty_intersection_is_allowed(self):
-        """No word sits at the open crossing, so nothing rides along."""
+    def test_empty_intersection_is_rejected(self):
         b = self._l_shape()
-        b.add_site_bus("z", src=[0], dst=[1])
+        with pytest.raises(ValueError, match="complete grid"):
+            b.add_site_bus("z", src=[0], dst=[1])
 
     def test_occupied_intersection_is_rejected(self):
         """A fourth word fills the crossing but sits out the bus."""
@@ -261,7 +260,7 @@ class TestStowaways:
             for x0 in (0, 2):
                 b.add_word(rows=[y], columns=[x0, x0 + 1])
         with_zone(b, words_with_site_buses=[0, 1, 2])  # word 3 opts out
-        with pytest.raises(ValueError, match="would be carried along"):
+        with pytest.raises(ValueError, match="complete grid"):
             b.add_site_bus("z", src=[0], dst=[1])
 
     def test_including_the_intruder_makes_it_legal(self):
@@ -387,13 +386,12 @@ class TestFromSpec:
         assert searched.paths != spec.paths
         assert set(searched.paths) == set(spec.paths)
 
-    def test_editing_a_bus_without_clearances_raises(self, getter):
+    def test_self_loop_is_rejected_on_add(self, getter):
         spec = getter()
         b = ArchBuilder.from_spec(spec)
         name = spec._inner.zones[0].name
-        b.add_word_bus(name, src=b.words[0, 0], dst=b.words[0, 0])
-        with pytest.raises(ValueError, match="no clearances"):
-            b.build()
+        with pytest.raises(ValueError, match="cycle"):
+            b.add_word_bus(name, src=b.words[0, 0], dst=b.words[0, 0])
 
 
 def test_only_participating_words_get_site_bus_paths():
