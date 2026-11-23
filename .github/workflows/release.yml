@@ -59,13 +59,17 @@ jobs:
       id-token: write  # IMPORTANT: mandatory for sigstore
 
     steps:
+    - uses: actions/checkout@v7
+      with:
+        fetch-depth: 0
+        persist-credentials: false
     - name: Download all the dists
       uses: actions/download-artifact@v8
       with:
         name: python-package-distributions
         path: dist/
     - name: Sign the dists with Sigstore
-      uses: sigstore/gh-action-sigstore-python@v3.3.0
+      uses: sigstore/gh-action-sigstore-python@v3.5.0
       with:
         inputs: >-
           ./dist/*.tar.gz
@@ -73,11 +77,22 @@ jobs:
     - name: Create GitHub Release
       env:
         GITHUB_TOKEN: ${{ github.token }}
-      run: >-
-        gh release create
-        '${{ github.ref_name }}'
-        --repo '${{ github.repository }}'
-        --notes ""
+      shell: bash
+      run: |
+        set -euo pipefail
+        # Bloqade cuts releases on separate maintenance branches, so the
+        # preceding version can be on a sibling branch. Skip docs archive tags.
+        previous=$(git tag --list 'v[0-9]*' --sort=-v:refname |
+          awk -v tag="$GITHUB_REF_NAME" 'take {print; take=0} $0 == tag {take=1}')
+        args=(-f "tag_name=$GITHUB_REF_NAME" -f configuration_file_path=.github/release.yml)
+        if [[ -n "$previous" ]]; then
+          args+=(-f "previous_tag_name=$previous")
+        fi
+        gh api --method POST "repos/$GITHUB_REPOSITORY/releases/generate-notes" \
+          "${args[@]}" --jq '.body' |
+          python3 .github/scripts/clean_release_notes.py > "$RUNNER_TEMP/release-notes.md"
+        gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" \
+          --verify-tag --title "$GITHUB_REF_NAME" --notes-file "$RUNNER_TEMP/release-notes.md"
     - name: Upload artifact signatures to GitHub Release
       env:
         GITHUB_TOKEN: ${{ github.token }}
@@ -86,5 +101,5 @@ jobs:
       # sigstore-produced signatures and certificates.
       run: >-
         gh release upload
-        '${{ github.ref_name }}' dist/**
-        --repo '${{ github.repository }}'
+        "$GITHUB_REF_NAME" dist/**
+        --repo "$GITHUB_REPOSITORY"

@@ -335,39 +335,78 @@ class _SimulatorTaskBase(Generic[RetType]):
         """Return ``(loss_replace, loss)`` for backend sample conversion."""
         return (None, None)
 
+    @property
+    def _initialize_kernel(self) -> ir.Method | None:
+        """Kernel the debuggers step through for ``move.PhysicalInitialize``.
+
+        ``None`` shows each ``move.PhysicalInitialize`` as a single step.
+        """
+        return None
+
     def visualize(
-        self, animated: bool = False, interactive: bool = True, arch_vis=False
-    ):
+        self,
+        animated: bool = False,
+        interactive: bool = True,
+        arch_vis: bool = False,
+        to_mp4: str | None = None,
+    ) -> None:
         """Visualize the physical move kernel using the built-in debugger.
+
+        A logical task steps through the state preparation of each logical
+        qubit: its gates, and for every CZ one move bringing the paired atoms
+        together, the pulse, and one move back.
 
         Args:
             animated (bool): Whether to use the animated debugger. Defaults to False.
             interactive (bool): Whether to enable interactive mode. Defaults to True.
             arch_vis (bool): Whether to use the interactive plotly debugger to visualize the architecture. Defaults to False.
+            to_mp4 (str | None): MP4 output path. When set, export instead of
+                displaying the debugger. Existing files are not overwritten.
 
         """
+        self._visualize_move_kernel(
+            self.physical_move_kernel,
+            self.physical_arch_spec,
+            animated=animated,
+            interactive=interactive,
+            arch_vis=arch_vis,
+            to_mp4=to_mp4,
+            initialize_kernel=self._initialize_kernel,
+        )
+
+    @staticmethod
+    def _visualize_move_kernel(
+        move_kernel: ir.Method,
+        arch_spec: ArchSpec,
+        *,
+        animated: bool,
+        interactive: bool,
+        arch_vis: bool,
+        to_mp4: str | None,
+        initialize_kernel: ir.Method | None = None,
+    ) -> None:
+        """Dispatch a move kernel to the requested debugger."""
         # Visualization dependencies are optional; load them only on demand.
-        from bloqade.lanes.visualize import debugger, plotly_debugger, animated_debugger
+        from bloqade.gemini.visualize import (
+            debugger,
+            plotly_debugger,
+            animated_debugger,
+        )
 
         if arch_vis:
-            plotly_debugger(
-                self.physical_move_kernel,
-                self.physical_arch_spec,
-                interactive=interactive,
-            )
+            show = plotly_debugger
+        elif animated:
+            show = animated_debugger
         else:
-            if animated:
-                animated_debugger(
-                    self.physical_move_kernel,
-                    self.physical_arch_spec,
-                    interactive=interactive,
-                )
-            else:
-                debugger(
-                    self.physical_move_kernel,
-                    self.physical_arch_spec,
-                    interactive=interactive,
-                )
+            show = debugger
+
+        show(
+            move_kernel,
+            arch_spec,
+            interactive=interactive,
+            initialize_kernel=initialize_kernel,
+            to_mp4=to_mp4,
+        )
 
     def fidelity_bounds(self) -> tuple[float, float]:
         """Compute the fidelity bounds for the physical squin kernel.

@@ -19,6 +19,7 @@ from bloqade.gemini.device._task_runtime import (
     _SimulatorTaskBase,
 )
 from bloqade.gemini.device.simulator_backend import (
+    PPVMSimulatorBackend,
     TsimSimulatorBackend,
     AbstractSimulatorBackend,
 )
@@ -62,6 +63,51 @@ class GeminiLogicalSimulatorTask(_SimulatorTaskBase[RetType], Generic[RetType]):
     )
 
     @cached_property
+    def logical_arch_spec(self) -> ArchSpec:
+        """The architecture used to compile the logical move kernel."""
+        from bloqade.lanes.arch.gemini.logical import get_arch_spec
+
+        return get_arch_spec()
+
+    @cached_property
+    def logical_move_kernel(self) -> ir.Method[[], RetType]:
+        """The move program before transversal expansion to physical atoms."""
+        from bloqade.lanes.transform import LogicalPipeline
+
+        return LogicalPipeline(arch_spec=self.logical_arch_spec).emit(
+            self.logical_squin_kernel
+        )
+
+    def visualize_logical(
+        self,
+        animated: bool = False,
+        interactive: bool = True,
+        arch_vis: bool = False,
+        to_mp4: str | None = None,
+    ) -> None:
+        """Visualize the logical move program using the built-in debugger.
+
+        The logical move program is compiled lazily on first use and cached.
+        Unlike :meth:`visualize`, this view uses the logical architecture and
+        shows logical qubits before transversal expansion to physical atoms.
+
+        Args:
+            animated: Use the animated Matplotlib debugger.
+            interactive: Enable interactive debugger controls.
+            arch_vis: Use the interactive Plotly architecture debugger.
+            to_mp4: MP4 output path. When set, export instead of displaying
+                the debugger. Existing files are not overwritten.
+        """
+        self._visualize_move_kernel(
+            self.logical_move_kernel,
+            self.logical_arch_spec,
+            animated=animated,
+            interactive=interactive,
+            arch_vis=arch_vis,
+            to_mp4=to_mp4,
+        )
+
+    @cached_property
     def physical_squin_kernel(self) -> ir.Method[[], RetType]:
         """The physical squin kernel with noise channels."""
 
@@ -86,6 +132,13 @@ class GeminiLogicalSimulatorTask(_SimulatorTaskBase[RetType], Generic[RetType]):
         """Replaces `loss` values (None) with `loss_replace` (True)."""
         return (True, None)
 
+    @property
+    def _initialize_kernel(self) -> ir.Method | None:
+        # The debuggers move the controls of each CZ. The noisy kernel names
+        # the movers first in every CZ; the clean one only pairs the qubits.
+        _, noisy = self.noise_model.get_logical_initialize()
+        return noisy
+
 
 @dataclass
 class GeminiLogicalSimulator:
@@ -99,8 +152,8 @@ class GeminiLogicalSimulator:
 
     noise_model: LogicalNoiseModelABC = field(default_factory=_default_noise_model)
     """The noise model used for simulation. Defaults to :func:`generate_logical_noise_model`."""
-    backend: AbstractSimulatorBackend = field(default_factory=TsimSimulatorBackend)
-    """Sampling backend for tasks created by this simulator."""
+    backend: AbstractSimulatorBackend = field(default_factory=PPVMSimulatorBackend)
+    """Sampling backend for created tasks; defaults to PPVM."""
 
     def task(
         self,

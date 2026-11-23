@@ -1,6 +1,6 @@
 [project]
 name = "bloqade"
-version = "0.37.0-dev"
+version = "0.39.0-dev"
 description = "The software development toolkit for neutral atom arrays."
 readme = "README.md"
 authors = [
@@ -23,7 +23,7 @@ requires-python = ">=3.11"
 dependencies = [
     "bloqade-circuit[cirq,qasm2,qasm3,qbraid,vis,stim]~=0.15.6",
     "bloqade-analog~=0.16.9",
-    "bloqade-lanes>=0.12.2,<0.13",
+    "bloqade-lanes>=0.13.0",
     "bloqade-tsim~=1.1.0",
     "bloqade-core~=0.6.15",
     "bloqade-decoders>=0.7.0",
@@ -31,6 +31,7 @@ dependencies = [
     "kirin-toolchain~=0.22.21",
     "numpy>=2.2.6",
     "scipy>=1.15.3",
+    "rustworkx>=0.17.1",
     "typing-extensions>=4.12"
 ]
 
@@ -53,7 +54,13 @@ decoding = [
     "bloqade-decoders[tesseract]; python_version >= '3.12'"
 ]
 atom-vis = [
-    "bloqade-lanes[visualization]"
+    "bloqade-lanes[visualization]",
+    # The interactive architecture controller uses plotly.js overlay internals.
+    # Test a new major release in a browser before relaxing this upper bound.
+    # Kaleido v1 image export requires Plotly 6.1.1 or newer. MP4 export
+    # still needs Chrome/Chromium and FFmpeg installed separately.
+    "plotly>=6.1.1,<8",
+    "kaleido>=1.0.0,<2",
 ]
 circ-opt = [
     "bloqade-circuit[cirq-parallelize]"

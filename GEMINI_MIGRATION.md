@@ -37,6 +37,72 @@ Compiler consumers should import statements, the dialect object, and other
 implementation details directly from `bloqade.lanes.dialects.arch` or
 `bloqade.lanes.dialects.arrange`.
 
+## Move-program debuggers and architecture drawing
+
+The step-by-step debuggers for compiled move programs and the architecture
+visualizer are owned by Gemini:
+
+- import `debugger`, `animated_debugger` and `plotly_debugger` from
+  `bloqade.gemini.visualize` instead of `bloqade.lanes.visualize`;
+- import `ArchVisualizer` and `bus_preview_label` from
+  `bloqade.gemini.visualize.arch` instead of `bloqade.lanes.visualize.arch`.
+
+`task.visualize()` uses them. Install the `atom-vis` extra for plotly and
+matplotlib. The entropy-tree search viewer and the matplotlib stepper it builds
+on (`bloqade.lanes.visualize.app.DebuggerController`) remain in lanes.
+
+Each debugger accepts an `initialize_kernel`. When given, a
+`move.PhysicalInitialize` is stepped through instead of shown as one step: the
+kernel's gates, and for every CZ one move bringing the paired atoms together,
+the pulse, and one move back. The controls of a CZ are taken to be the atoms
+that move. Logical simulator tasks pass the noisy initialization kernel of
+their noise model, which names the movers first.
+
+## Architecture builder
+
+Import the spec-shaped builder with `from bloqade.gemini.arch import ArchBuilder`.
+Update imports from `bloqade.gemini.arch.build.v2` to this public path.
+
+**Breaking change.** Callers using `ZoneBuilder`, the zero-argument
+`ArchBuilder()`, or `build_arch(ArchBlueprint(...))` must migrate to the
+shared word template. Define words once in **(row, column)** order, then add
+each zone's physical coordinates and configure its buses by zone name.
+
+```python
+from bloqade.gemini.arch import ArchBuilder
+
+builder = ArchBuilder(grid_shape=(1, 4), word_shape=(1, 2))
+builder.add_word(rows=0, columns=[0, 1])
+builder.add_word(rows=0, columns=[2, 3])
+builder.add_zone(
+    "storage", rows=[0.0], columns=[0.0, 10.0, 20.0, 30.0],
+    x_clearance=1.0, y_clearance=1.0,
+)
+builder.add_word_bus("storage", src=[0], dst=[1])
+spec = builder.build()
+```
+
+By default, a word bus preserves the site index. To move between sites,
+pass a Lanes `SiteBus` as `site_map`. This second bus moves site 1 of word 0
+to site 0 of word 1. Both sites must
+belong to the zone's `sites_with_word_buses`. The same map applies to every
+word pair on the bus.
+
+```python
+from bloqade.lanes.bytecode import SiteBus
+
+builder.add_word_bus("storage", src=[0], dst=[1], site_map=SiteBus(src=[1], dst=[0]))
+spec = builder.build()
+```
+
+Use `ArchBuilder.from_spec(spec)` to edit an existing Lanes `ArchSpec`.
+The `gemini_full` and `generic_full` example factories still return an
+`ArchResult` containing the spec and zone metadata. For a rectangular
+grid of interleaved words, pass `num_rows`, `num_cols`, and `sites_per_word`
+as keywords to `create_zone_words` in place of `ZoneSpec` and `DeviceLayout`.
+See the [architecture example](docs/digital/examples/arch/arch_cust_vis_demo.py)
+for a complete walkthrough.
+
 ## Method-table registration
 
 Lanes 0.12.2 owns and registers the shared compiler method tables, including

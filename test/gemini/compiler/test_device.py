@@ -11,6 +11,7 @@ from stim import DetectorErrorModel
 from kirin.dialects import ilist
 from typing_extensions import assert_type
 from bloqade.decoders.dialects import annotate
+from bloqade.cirq_utils.noise.model import GeminiOneZoneNoiseModel
 from bloqade.lanes.noise_model import generate_logical_noise_model
 
 from bloqade import qubit, squin, types
@@ -25,6 +26,7 @@ from bloqade.gemini.device import (
     DetectorResult,
     SimulatorResult,
     TsimSimulatorBackend,
+    PPVMSimulatorBackend,
     CliffTSimulatorBackend,
     GeminiLogicalSimulator,
     GeminiLogicalSimulatorTask,
@@ -36,6 +38,7 @@ from bloqade.gemini.device.simulator import (
     DetectorResult as SimulatorDetectorResult,
 )
 from bloqade.gemini.device.simulator_backend import _PyQrackSimulatorBackend
+from bloqade.gemini.logical.stdlib import default_post_processing
 
 _HAS_CLIFFT = importlib.util.find_spec("clifft") is not None
 """clifft is an optional dependency gated to Python >= 3.12 (see the
@@ -278,6 +281,33 @@ def test_logical_simulator_result_aliases_are_public():
     assert SimulatorDetectorResult is DetectorResult
 
 
+def test_logical_simulator_defaults_to_ppvm_backend():
+    simulator = GeminiLogicalSimulator()
+
+    assert isinstance(simulator.backend, PPVMSimulatorBackend)
+    assert simulator.task(small_backend_kernel)._backend is simulator.backend
+
+
+def test_ppvm_atom_loss_is_measured_as_one_in_logical_zero():
+    @gemini_logical.kernel(aggressive_unroll=True)
+    def logical_zero():
+        reg = qubit.qalloc(1)
+        return default_post_processing(reg)
+
+    noise_model = generate_logical_noise_model(
+        GeminiOneZoneNoiseModel(scaling_factor=0.0, local_loss_prob=1.0)
+    )
+    task = GeminiLogicalSimulator(
+        noise_model=noise_model, backend=PPVMSimulatorBackend(seed=17)
+    ).task(logical_zero)
+
+    noiseless = task.run(shots=32, with_noise=False)
+    noisy = task.run(shots=32, with_noise=True)
+
+    assert noiseless.observables == [[False]] * 32
+    assert any(shot == [True] for shot in noisy.observables)
+
+
 def test_noiseless_tsim_circuit_compiles_samplers():
     sim = GeminiLogicalSimulator()
     task = sim.task(main)
@@ -300,6 +330,7 @@ def test_noiseless_tsim_circuit_compiles_samplers():
             ),
         ),
         pytest.param(_PyQrackSimulatorBackend(seed=17), id="pyqrack"),
+        pytest.param(PPVMSimulatorBackend(seed=17), id="ppvm"),
     ],
 )
 def test_builtin_backends_run_logical_workflow_with_guaranteed_dem(backend):
