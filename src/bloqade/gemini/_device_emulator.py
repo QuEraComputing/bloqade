@@ -1,14 +1,16 @@
-"""Local TaskBuilder execution with hardware-compatible Gemini logical results."""
+"""Local TaskBuilder execution with hardware-compatible Gemini results."""
 
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
 from uuid import UUID, uuid4
-from typing import TYPE_CHECKING, Any, Literal, overload
+from typing import TYPE_CHECKING, Generic, Literal, TypeVar, ClassVar, overload
 from datetime import datetime, timezone
 from contextlib import nullcontext
 from dataclasses import field, dataclass
 from collections.abc import Callable
 from concurrent.futures import Future, ThreadPoolExecutor
+from importlib.metadata import version
 
 import numpy as np
 from kirin import ir
@@ -16,10 +18,8 @@ from kirin.validation import ValidationSuite
 from bloqade.core.device import ShotFilter, ShotResult, DictStorage
 from kirin.serialization import JSONSerializer
 from bloqade.lanes.dialects import move
-from bloqade.lanes.transform import LogicalPipeline, MoveToSquinLogical
 from bloqade.core.device.task import KernelSerializer
 from bloqade.lanes.arch.gemini import physical
-from bloqade.lanes.noise_model import generate_logical_noise_model
 from bloqade.core.device.future import DEFAULT_FETCH_OPTIONS, ApiFetchOptions
 from bloqade.lanes.analysis.atom import AtomInterpreter
 from bloqade.lanes.bytecode.encoding import ZoneAddress
@@ -28,13 +28,8 @@ from bloqade.core.device.local_storage import SQLiteStorage, StorageBackend
 from qlam_core.plugins.tasks.api.tasks_models import TaskDefinition
 from bloqade.lanes.analysis.atom._shot_remapping import ShotRemappingErr
 
-from bloqade.gemini.logical.group import kernel as logical_kernel
-from bloqade.gemini.device.logical.utils import ShotRemappingException
-from bloqade.gemini.device.logical.device import (
-    _bloqade_version,
-    _default_validation_suite,
-)
-from bloqade.gemini.device.logical.result import GeminiLogicalResult
+from bloqade.gemini.result import GeminiResult
+from bloqade.gemini.utils.slm import ShotRemappingException
 from bloqade.gemini.device.simulator_backend import (
     PPVMSimulatorBackend,
     TsimSimulatorBackend,
@@ -45,9 +40,12 @@ from bloqade.gemini.device.simulator_backend import (
 
 if TYPE_CHECKING:
     from bloqade.lanes.arch.spec import ArchSpec
-    from bloqade.lanes.rewrite.move2squin.noise import LogicalNoiseModelABC
 
     from bloqade.gemini.device.simulator_backend import AbstractSimulatorBackend
+
+
+_ResultT = TypeVar("_ResultT", bound=GeminiResult)
+_Prepare = Callable[[ir.Method, "ArchSpec"], tuple[ir.Method, ir.Method]]
 
 
 def _slm_layout(move_kernel: ir.Method, arch: ArchSpec) -> tuple[list[int], np.ndarray]:
@@ -136,12 +134,13 @@ def _sqlite_connection_factory(storage: SQLiteStorage) -> Callable[[], SQLiteSto
 def _run_task(
     definition: TaskDefinition,
     backend: AbstractSimulatorBackend,
-    with_noise: bool,
-    noise_model: LogicalNoiseModelABC | None,
+    prepare: _Prepare,
+    dialects: ir.DialectGroup,
+    result_type: type[_ResultT],
     batch_shots: int | None,
     storage: StorageBackend,
     connection_factory: Callable[[], SQLiteStorage] | None = None,
-) -> GeminiLogicalResult[Any]:
+) -> _ResultT:
     # Open, use and close a SQLite writer on the worker thread. Merely retain
     # the caller's storage for the returned view; never query its connection.
     context = (
@@ -149,43 +148,34 @@ def _run_task(
     )
     with context as writer:
         result = _simulate_task(
-            definition, backend, with_noise, noise_model, batch_shots, writer
+            definition, backend, prepare, dialects, result_type, batch_shots, writer
         )
-    return GeminiLogicalResult(storage=storage, shot_filter=result.shot_filter)
+    return result_type(storage=storage, shot_filter=result.shot_filter)
 
 
 def _simulate_task(
     definition: TaskDefinition,
     backend: AbstractSimulatorBackend,
-    with_noise: bool,
-    noise_model: LogicalNoiseModelABC | None,
+    prepare: _Prepare,
+    dialects: ir.DialectGroup,
+    result_type: type[_ResultT],
     batch_shots: int | None,
     storage: StorageBackend,
-) -> GeminiLogicalResult[Any]:
-    resolved_noise_model = (
-        noise_model if noise_model is not None else generate_logical_noise_model()
-    )
+) -> _ResultT:
     arch_spec = physical.get_arch_spec()
     serializer = JSONSerializer()
     prepared = []
     for program in definition.programs:
-        kernel = logical_kernel.decode(serializer.decode(program.content))
+        kernel = dialects.decode(serializer.decode(program.content))
         if kernel.args:
             raise ValueError("Simulator device programs must have no runtime arguments")
         # Kirin JSON omits analysis hints needed by explicitly pinned qalloc_at.
-        run_pass = logical_kernel.run_pass
+        run_pass = dialects.run_pass
         if run_pass is None:
-            raise RuntimeError("Gemini logical kernel has no pass pipeline")
+            raise RuntimeError("Gemini kernel has no pass pipeline")
         run_pass(kernel, aggressive_unroll=True, verify=True)
-        move_kernel = LogicalPipeline(transversal_rewrite=True, simulation=True).emit(
-            kernel
-        )
+        move_kernel, physical_kernel = prepare(kernel, arch_spec)
         mapping, sorted_frame = _slm_layout(move_kernel, arch_spec)
-        physical_kernel = MoveToSquinLogical(
-            arch_spec=arch_spec,
-            noise_model=resolved_noise_model,
-            add_noise=with_noise,
-        ).emit(move_kernel)
         prepared.append((physical_kernel, mapping, sorted_frame))
 
     task_id = str(uuid4())
@@ -239,19 +229,19 @@ def _simulate_task(
                 }
             ],
         )
-    return GeminiLogicalResult(
+    return result_type(
         storage=storage,
         shot_filter=ShotFilter(task_ids=(task_id,), frame_type="DETECTED"),
     )
 
 
 @dataclass(kw_only=True)
-class GeminiLogicalSimulatorDevice:
-    """Run TaskBuilder workloads locally and return GeminiLogicalResult views.
+class GeminiDeviceEmulator(Generic[_ResultT], ABC):
+    """Run TaskBuilder workloads locally and return Gemini result views.
 
-    Uses the same builder finalization and validation as GeminiLogicalDevice.
+    Finalizes each builder with the dialect group and validation suite of the device.
     Each submission returns a standard concurrent.futures.Future; its result is
-    an existing GeminiLogicalResult backed by the supplied storage or a fresh
+    a Gemini result backed by the supplied storage or a fresh
     DictStorage. No QLAM server, authentication, context manager, or explicit
     close is required.
     One single-worker executor is shared by submissions on this device. Its
@@ -271,31 +261,32 @@ class GeminiLogicalSimulatorDevice:
         seed: Optional root seed. Submissions receive successive child seeds;
             replay requires the same submission order and batching.
         with_noise: Insert circuit noise, default True. Sorting remains ideal.
-        noise_model: Optional custom logical noise model. None uses the same
-            default model as GeminiLogicalSimulator.
+        noise_model: Optional custom noise model. None uses the corresponding simulator's default.
         batch_shots: Maximum shots per sampling batch. The default, None, samples
             all shots of each subtask in one batch.
         program_language: Language name recorded in task metadata, default "squin".
         language_version: Language version used for serialization and metadata.
         kernel_serializer: Kernel encoder, default JSONSerializer. Local execution
             requires compatible Kirin JSON output.
-        dialect_group: Allowed dialects for builder finalization, default logical.kernel.
+        dialect_group: Allowed dialects for builder finalization, defaults to the device’s kernel dialect group.
         validation_suite: Submission validation, using the Gemini hardware defaults.
     """
 
+    _result_type: ClassVar[type]
+    _thread_prefix: ClassVar[str]
     program_language: str = "squin"
-    language_version: str = _bloqade_version
+    language_version: str = field(default_factory=lambda: version("bloqade-circuit"))
     kernel_serializer: KernelSerializer = field(default_factory=JSONSerializer)
-    dialect_group: ir.DialectGroup | None = field(
-        default_factory=lambda: logical_kernel
-    )
-    validation_suite: ValidationSuite | None = field(
-        default_factory=_default_validation_suite
-    )
+    dialect_group: ir.DialectGroup
+    validation_suite: ValidationSuite | None
+
+    @abstractmethod
+    def _compiler(self) -> _Prepare:
+        """Capture the submission settings for lowering to Move and sampling IR."""
+
     backend: Literal["tsim", "ppvm", "clifft"] = "ppvm"
     seed: int | None = None
     with_noise: bool = True
-    noise_model: LogicalNoiseModelABC | None = None
     batch_shots: int | None = None
     _seed_rng: np.random.Generator = field(init=False, repr=False)
     _executor: ThreadPoolExecutor = field(init=False, repr=False)
@@ -314,7 +305,7 @@ class GeminiLogicalSimulatorDevice:
             raise ValueError("batch_shots must be None or a positive integer")
         self._seed_rng = np.random.default_rng(self.seed)
         self._executor = ThreadPoolExecutor(
-            max_workers=1, thread_name_prefix="gemini-logical-simulator"
+            max_workers=1, thread_name_prefix=self._thread_prefix
         )
 
     def _finalize_context(self) -> FinalizeContext:
@@ -345,12 +336,12 @@ class GeminiLogicalSimulatorDevice:
         self,
         task_builder: TaskBuilder,
         *,
-        dry_run: Literal[False],
+        dry_run: Literal[False] = False,
         group: str | None = None,
         profile_id: str | UUID | None = None,
         storage: StorageBackend | None = None,
         fetch_options: ApiFetchOptions = DEFAULT_FETCH_OPTIONS,
-    ) -> Future[GeminiLogicalResult[Any]]: ...
+    ) -> Future[_ResultT]: ...
 
     @overload
     def run_async(
@@ -374,21 +365,21 @@ class GeminiLogicalSimulatorDevice:
         profile_id: str | UUID | None = None,
         storage: StorageBackend | None = None,
         fetch_options: ApiFetchOptions = DEFAULT_FETCH_OPTIONS,
-    ) -> Future[GeminiLogicalResult[Any]] | None: ...
+    ) -> Future[_ResultT] | None: ...
 
     def run_async(
         self,
         task_builder: TaskBuilder,
         *,
-        dry_run: bool,
+        dry_run: bool = False,
         group: str | None = None,
         profile_id: str | UUID | None = None,
         storage: StorageBackend | None = None,
         fetch_options: ApiFetchOptions = DEFAULT_FETCH_OPTIONS,
-    ) -> Future[GeminiLogicalResult[Any]] | None:
+    ) -> Future[_ResultT] | None:
         """Finalize a builder and execute a snapshot in a background thread.
 
-        A dry run validates, serializes, and prints the builder without starting
+        A local run is the default. A dry run validates, serializes, and prints the builder without starting
         an executor or consuming a seed. Builder edits after submission do not
         affect the submitted task. Validation errors are raised immediately;
         compilation and sampling errors are raised by ``future.result()``.
@@ -429,7 +420,7 @@ class GeminiLogicalSimulatorDevice:
         fetch_options: ApiFetchOptions = DEFAULT_FETCH_OPTIONS,
         group: str | None = None,
         profile_id: str | UUID | None = None,
-    ) -> Future[GeminiLogicalResult[Any]]:
+    ) -> Future[_ResultT]:
         """Submit a prepared definition to local simulation.
 
         Validates its structure and snapshots it before starting a worker.
@@ -466,7 +457,7 @@ class GeminiLogicalSimulatorDevice:
                 # short-lived executor thread.
                 _ppvm()
             except ImportError as exc:
-                failed: Future[GeminiLogicalResult[Any]] = Future()
+                failed: Future[_ResultT] = Future()
                 failed.set_exception(exc)
                 return failed
 
@@ -481,8 +472,9 @@ class GeminiLogicalSimulatorDevice:
             _run_task,
             definition,
             backend,
-            self.with_noise,
-            self.noise_model,
+            self._compiler(),
+            self.dialect_group,
+            self._result_type,
             self.batch_shots,
             storage,
             connection_factory,

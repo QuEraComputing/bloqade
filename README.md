@@ -34,12 +34,12 @@ from `bloqade-lanes` and which versions work together.
 
 Install Bloqade with `pip install bloqade`. For the optional CliffT backend,
 use `pip install 'bloqade[sim]'` (Python 3.12 or later).
-Use `GeminiLogicalSimulatorDevice` to execute a `TaskBuilder` locally:
+Use `logical.GeminiLogicalDeviceEmulator` to execute a `TaskBuilder` locally:
 
 ```python
 from bloqade import squin
 from bloqade.core.device.task_builder import TaskBuilder
-from bloqade.gemini import GeminiLogicalSimulatorDevice, logical
+from bloqade.gemini import logical
 
 @logical.kernel
 def bell():
@@ -51,13 +51,16 @@ def bell():
 builder = TaskBuilder()
 builder.add_subtask(bell, num_shots=100)
 
-device = GeminiLogicalSimulatorDevice(backend="tsim", seed=1234, with_noise=False)
+device = logical.GeminiLogicalDeviceEmulator(backend="tsim", seed=1234, with_noise=False)
 future = device.run_async(builder, dry_run=False)
 result = future.result(timeout=80)
 print(result.return_values)
 ```
 
-The standard Python future returns the existing `GeminiLogicalResult`, including
+For a physical SQUIN kernel, submit the same builder API through
+`physical.GeminiPhysicalDeviceEmulator` to obtain a `GeminiPhysicalResult`.
+
+The logical emulator’s standard Python future returns a `GeminiLogicalResult`, including
 raw 160-site SLM shots, metadata, and sorting postselection. Each submission uses
 fresh in-memory storage unless `storage=` is supplied. Sorting is ideal, and
 circuit noise defaults to on; set `with_noise=False` for ideal simulation.

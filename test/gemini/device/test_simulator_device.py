@@ -25,14 +25,13 @@ from bloqade.gemini import (
     GeminiLogicalDevice,
     GeminiLogicalResult,
     GeminiLogicalSimulator,
-    GeminiLogicalSimulatorDevice,
     logical,
+    _device_emulator as device_module,
 )
 from bloqade.gemini.device import (
-    logical as device_logical,
     simulator_backend as backend_module,
 )
-from bloqade.gemini.device.logical import simulator_device as device_module
+from bloqade.gemini.logical import GeminiLogicalDeviceEmulator
 from bloqade.gemini.device.simulator_backend import (
     BackendSample,
     PPVMSimulatorBackend,
@@ -84,19 +83,19 @@ def builder_for(kernel: ir.Method = pinned, shots: int = 3) -> TaskBuilder:
 
 
 def test_public_exports_are_the_same_class():
-    assert device_logical.GeminiLogicalSimulatorDevice is GeminiLogicalSimulatorDevice
+    assert logical.GeminiLogicalDeviceEmulator is GeminiLogicalDeviceEmulator
 
 
 def test_noise_is_enabled_by_default():
-    assert GeminiLogicalSimulatorDevice().with_noise is True
+    assert GeminiLogicalDeviceEmulator().with_noise is True
 
 
 def test_ppvm_is_the_default_backend():
-    assert GeminiLogicalSimulatorDevice().backend == "ppvm"
+    assert GeminiLogicalDeviceEmulator().backend == "ppvm"
 
 
 def test_batch_shots_defaults_to_none():
-    assert GeminiLogicalSimulatorDevice().batch_shots is None
+    assert GeminiLogicalDeviceEmulator().batch_shots is None
 
 
 @pytest.mark.parametrize(
@@ -122,7 +121,7 @@ def test_sampling_batches_follow_each_subtask_shot_count(
     for shots in subtask_shots:
         builder.add_subtask(pinned, shots)
     result = (
-        GeminiLogicalSimulatorDevice(seed=12, batch_shots=batch_shots)
+        GeminiLogicalDeviceEmulator(seed=12, batch_shots=batch_shots)
         .run_async(builder, dry_run=False)
         .result(60)
     )
@@ -141,7 +140,7 @@ def test_sampling_batches_follow_each_subtask_shot_count(
 
 def test_default_backend_reports_missing_ppvm_dependency(monkeypatch):
     monkeypatch.setitem(sys.modules, "ppvm", None)
-    future = GeminiLogicalSimulatorDevice().run_async(
+    future = GeminiLogicalDeviceEmulator().run_async(
         builder_for(shots=1), dry_run=False
     )
     with pytest.raises(
@@ -160,7 +159,7 @@ def test_default_backend_initializes_ppvm_on_the_caller_thread(monkeypatch):
 
     monkeypatch.setattr(device_module, "_ppvm", record_import)
     monkeypatch.setattr(backend_module, "_ppvm", record_import)
-    future = GeminiLogicalSimulatorDevice().run_async(
+    future = GeminiLogicalDeviceEmulator().run_async(
         builder_for(shots=1), dry_run=False
     )
     assert future.result(60).shot_results()[0].shape == (1, 160)
@@ -168,7 +167,7 @@ def test_default_backend_initializes_ppvm_on_the_caller_thread(monkeypatch):
 
 
 def test_finalize_context_defaults_match_hardware_device():
-    device = GeminiLogicalSimulatorDevice()
+    device = GeminiLogicalDeviceEmulator()
     context = device._finalize_context()
     hardware = GeminiLogicalDevice()._finalize_context()
     assert context.program_language == hardware.program_language
@@ -182,7 +181,7 @@ def test_finalize_context_defaults_match_hardware_device():
 
 
 def test_create_task_definition_has_no_submission_side_effects(monkeypatch, capsys):
-    device = GeminiLogicalSimulatorDevice(seed=12)
+    device = GeminiLogicalDeviceEmulator(seed=12)
     builder = builder_for(shots=2)
     state = json.dumps(device._seed_rng.bit_generator.state)
 
@@ -205,7 +204,7 @@ def test_create_task_definition_has_no_submission_side_effects(monkeypatch, caps
 
 @pytest.mark.parametrize("dry_run", [False, True])
 def test_run_async_delegates_to_public_definition_methods(monkeypatch, dry_run, capsys):
-    device = GeminiLogicalSimulatorDevice()
+    device = GeminiLogicalDeviceEmulator()
     builder = builder_for(shots=2)
     definition = builder._finalize(device._finalize_context())
     storage = DictStorage()
@@ -252,7 +251,7 @@ def test_run_async_delegates_to_public_definition_methods(monkeypatch, dry_run, 
 
 @pytest.mark.parametrize("sqlite", [False, True])
 def test_submit_task_definition_uses_existing_result_and_metadata(tmp_path, sqlite):
-    device = GeminiLogicalSimulatorDevice(seed=12)
+    device = GeminiLogicalDeviceEmulator(seed=12)
     definition = device.create_task_definition(builder_for(shots=2))
     profile = uuid4()
     storage = (
@@ -279,7 +278,7 @@ def test_submit_task_definition_uses_existing_result_and_metadata(tmp_path, sqli
 
 
 def test_submit_task_definition_snapshots_input(monkeypatch):
-    device = GeminiLogicalSimulatorDevice()
+    device = GeminiLogicalDeviceEmulator()
     definition = device.create_task_definition(builder_for(shots=2))
     entered, proceed = Event(), Event()
     run_task = device_module._run_task
@@ -303,7 +302,7 @@ def test_submit_task_definition_snapshots_input(monkeypatch):
 def test_submit_task_definition_rejects_invalid_definition_before_worker(
     monkeypatch, kind
 ):
-    device = GeminiLogicalSimulatorDevice(seed=12)
+    device = GeminiLogicalDeviceEmulator(seed=12)
     definition = device.create_task_definition(builder_for(shots=2))
     if kind == "empty":
         definition = definition.model_copy(update={"subtasks": []})
@@ -332,7 +331,7 @@ def test_submit_task_definition_rejects_invalid_definition_before_worker(
 def test_custom_finalize_context_is_used_by_submission(monkeypatch):
     serializer = JSONSerializer()
     suite = ValidationSuite([])
-    device = GeminiLogicalSimulatorDevice(
+    device = GeminiLogicalDeviceEmulator(
         program_language="custom-squin",
         language_version="1.2.3",
         kernel_serializer=serializer,
@@ -371,7 +370,7 @@ def test_submission_uses_supplied_storage_and_profile_metadata(as_string):
     profile = uuid4()
     profile_arg = str(profile) if as_string else profile
     result = (
-        GeminiLogicalSimulatorDevice(seed=12)
+        GeminiLogicalDeviceEmulator(seed=12)
         .run_async(
             builder_for(shots=1), dry_run=False, storage=storage, profile_id=profile_arg
         )
@@ -392,7 +391,7 @@ def test_definition_profile_takes_precedence_over_submission_profile(monkeypatch
 
     monkeypatch.setattr(TaskBuilder, "_finalize", with_profile)
     result = (
-        GeminiLogicalSimulatorDevice()
+        GeminiLogicalDeviceEmulator()
         .run_async(builder_for(shots=1), dry_run=False, profile_id=uuid4())
         .result(60)
     )
@@ -407,7 +406,7 @@ def test_remote_submission_options_are_accepted_and_ignored(monkeypatch):
     monkeypatch.setattr(GeminiLogicalDevice, "_resolve_group_id", forbidden)
     monkeypatch.setattr(GeminiLogicalDevice, "authenticate", forbidden)
     result = (
-        GeminiLogicalSimulatorDevice(seed=12)
+        GeminiLogicalDeviceEmulator(seed=12)
         .run_async(
             builder_for(shots=1),
             dry_run=False,
@@ -423,7 +422,7 @@ def test_remote_submission_options_are_accepted_and_ignored(monkeypatch):
 
 def test_device_signature_requires_explicit_dry_run():
     assert (
-        signature(GeminiLogicalSimulatorDevice.run_async).parameters["dry_run"].default
+        signature(GeminiLogicalDeviceEmulator.run_async).parameters["dry_run"].default
         is Parameter.empty
     )
 
@@ -432,7 +431,7 @@ def test_dry_run_with_submission_options_does_not_write_storage(monkeypatch):
     def forbidden(*args, **kwargs):
         pytest.fail("dry-run must not start a worker or write storage")
 
-    device = GeminiLogicalSimulatorDevice(seed=12)
+    device = GeminiLogicalDeviceEmulator(seed=12)
     storage = DictStorage()
     state = json.dumps(device._seed_rng.bit_generator.state)
     monkeypatch.setattr(device._executor, "submit", forbidden)
@@ -458,7 +457,7 @@ def test_private_sqlite_storage_rejected_before_starting_worker(monkeypatch, db_
     def forbidden(*args, **kwargs):
         pytest.fail("unsupported storage must be rejected before starting a worker")
 
-    device = GeminiLogicalSimulatorDevice(seed=12)
+    device = GeminiLogicalDeviceEmulator(seed=12)
     state = json.dumps(device._seed_rng.bit_generator.state)
     monkeypatch.setattr(device._executor, "submit", forbidden)
     with SQLiteStorage(db_file) as storage:
@@ -490,7 +489,7 @@ def test_sqlite_results_use_caller_storage_and_close_worker_connection(
         monkeypatch.setattr(storage, "add_task_definition", forbidden)
         monkeypatch.setattr(storage, "add_shots", forbidden)
         monkeypatch.setattr(storage, "update_subtasks_completed_date", forbidden)
-        future = GeminiLogicalSimulatorDevice(
+        future = GeminiLogicalDeviceEmulator(
             seed=12, batch_shots=2, with_noise=False
         ).run_async(builder_for(shots=3), dry_run=False, storage=storage)
         assert type(future) is Future
@@ -514,7 +513,7 @@ def test_sqlite_results_use_caller_storage_and_close_worker_connection(
 
 def test_queued_simulations_write_to_same_sqlite_database(tmp_path):
     with SQLiteStorage(str(tmp_path / "concurrent.sqlite")) as storage:
-        device = GeminiLogicalSimulatorDevice(seed=12, batch_shots=2)
+        device = GeminiLogicalDeviceEmulator(seed=12, batch_shots=2)
         first = device.run_async(builder_for(shots=5), dry_run=False, storage=storage)
         second = device.run_async(builder_for(shots=5), dry_run=False, storage=storage)
         results = [first.result(60), second.result(60)]
@@ -578,7 +577,7 @@ def test_sqlite_worker_waits_for_writer_to_commit(tmp_path, monkeypatch):
 
     monkeypatch.setattr(PPVMSimulatorBackend, "sample", blocked)
     with SQLiteStorage(str(tmp_path / "contention.sqlite")) as storage:
-        future = GeminiLogicalSimulatorDevice().run_async(
+        future = GeminiLogicalDeviceEmulator().run_async(
             builder_for(shots=1), dry_run=False, storage=storage
         )
         try:
@@ -607,7 +606,7 @@ def test_sqlite_worker_connection_closes_on_backend_failure(tmp_path, monkeypatc
     monkeypatch.setattr(SQLiteStorage, "close", record_close)
     monkeypatch.setattr(PPVMSimulatorBackend, "sample", fail)
     with SQLiteStorage(str(tmp_path / "failure.sqlite")) as storage:
-        future = GeminiLogicalSimulatorDevice().run_async(
+        future = GeminiLogicalDeviceEmulator().run_async(
             builder_for(shots=1), dry_run=False, storage=storage
         )
         with pytest.raises(RuntimeError, match="sample failed"):
@@ -622,7 +621,7 @@ def test_dry_run_accepts_sqlite_storage_without_accessing_it(monkeypatch):
     def forbidden(*args, **kwargs):
         pytest.fail("dry-run must not access storage or start a worker")
 
-    device = GeminiLogicalSimulatorDevice()
+    device = GeminiLogicalDeviceEmulator()
     monkeypatch.setattr(device._executor, "submit", forbidden)
     with SQLiteStorage(":memory:") as storage:
         monkeypatch.setattr(storage, "add_task_definition", forbidden)
@@ -638,7 +637,7 @@ def test_real_backend_result_frames_and_postprocessing(backend):
         pytest.importorskip("ppvm")
     if backend == "clifft":
         pytest.importorskip("clifft")
-    future = GeminiLogicalSimulatorDevice(
+    future = GeminiLogicalDeviceEmulator(
         backend=backend, seed=1234, with_noise=False
     ).run_async(builder_for(), dry_run=False)
     assert type(future) is Future
@@ -668,7 +667,7 @@ def test_real_backend_result_frames_and_postprocessing(backend):
 
 def test_detectors_observables_and_structured_returns_use_existing_result():
     result = (
-        GeminiLogicalSimulatorDevice(seed=123)
+        GeminiLogicalDeviceEmulator(seed=123)
         .run_async(builder_for(annotated, 3), dry_run=False)
         .result(60)
     )
@@ -694,7 +693,7 @@ def test_multiple_programs_repeated_subtasks_and_metadata(monkeypatch):
     builder.add_subtask(bell, 5, metadata={"name": "bell"})
     builder.add_subtask(pinned, 2, metadata={"name": "repeat"})
     result = (
-        GeminiLogicalSimulatorDevice(seed=12, batch_shots=2, with_noise=False)
+        GeminiLogicalDeviceEmulator(seed=12, batch_shots=2, with_noise=False)
         .run_async(builder, dry_run=False)
         .result(60)
     )
@@ -728,7 +727,7 @@ def test_local_execution_verifies_deserialized_kernel(monkeypatch):
 
     monkeypatch.setattr(logical.kernel, "run_pass", record)
     result = (
-        GeminiLogicalSimulatorDevice(seed=12)
+        GeminiLogicalDeviceEmulator(seed=12)
         .run_async(builder, dry_run=False)
         .result(60)
     )
@@ -742,7 +741,7 @@ def test_local_execution_uses_pipelines_without_simulator_tasks(monkeypatch):
 
     monkeypatch.setattr(GeminiLogicalSimulator, "task", forbidden)
     result = (
-        GeminiLogicalSimulatorDevice(seed=12, with_noise=False)
+        GeminiLogicalDeviceEmulator(seed=12, with_noise=False)
         .run_async(builder_for(shots=2), dry_run=False)
         .result(60)
     )
@@ -769,11 +768,9 @@ def test_direct_pipeline_preserves_physical_kernel(with_noise, monkeypatch):
 
     monkeypatch.setattr(PPVMSimulatorBackend, "sample", record)
     if with_noise is None:
-        device = GeminiLogicalSimulatorDevice(
-            seed=12, noise_model=simulator.noise_model
-        )
+        device = GeminiLogicalDeviceEmulator(seed=12, noise_model=simulator.noise_model)
     else:
-        device = GeminiLogicalSimulatorDevice(
+        device = GeminiLogicalDeviceEmulator(
             seed=12, with_noise=with_noise, noise_model=simulator.noise_model
         )
     result = device.run_async(builder_for(shots=1), dry_run=False).result(60)
@@ -784,7 +781,7 @@ def test_direct_pipeline_preserves_physical_kernel(with_noise, monkeypatch):
 
 def test_all_logical_slots_have_the_correct_physical_filling():
     result = (
-        GeminiLogicalSimulatorDevice(seed=123)
+        GeminiLogicalDeviceEmulator(seed=123)
         .run_async(builder_for(all_slots, 1), dry_run=False)
         .result(60)
     )
@@ -801,7 +798,7 @@ def test_dry_run_has_no_worker_and_does_not_consume_seed(monkeypatch, capsys):
     def forbidden(*args, **kwargs):
         pytest.fail("dry-run must not start a worker or sample")
 
-    device = GeminiLogicalSimulatorDevice(seed=12)
+    device = GeminiLogicalDeviceEmulator(seed=12)
     state = json.dumps(device._seed_rng.bit_generator.state)
     monkeypatch.setattr(device._executor, "submit", forbidden)
     assert device.run_async(builder_for(), dry_run=True) is None
@@ -815,7 +812,7 @@ def test_simulation_does_not_authenticate(monkeypatch):
 
     monkeypatch.setattr(GeminiLogicalDevice, "authenticate", forbidden)
     result = (
-        GeminiLogicalSimulatorDevice(seed=12)
+        GeminiLogicalDeviceEmulator(seed=12)
         .run_async(builder_for(shots=1), dry_run=False)
         .result(60)
     )
@@ -845,7 +842,7 @@ def test_submissions_reuse_one_worker_and_do_not_overlap(monkeypatch):
 
     monkeypatch.setattr(device_module, "ThreadPoolExecutor", make_executor)
     monkeypatch.setattr(device_module, "_run_task", blocked)
-    device = GeminiLogicalSimulatorDevice(seed=12)
+    device = GeminiLogicalDeviceEmulator(seed=12)
     definition = device.create_task_definition(builder_for(shots=1))
     first = device.submit_task_definition(task_definition=definition)
     second = None
@@ -873,7 +870,7 @@ def test_submission_snapshots_mutable_builder(monkeypatch):
 
     monkeypatch.setattr(device_module, "_run_task", blocked)
     builder = builder_for(shots=1)
-    device = GeminiLogicalSimulatorDevice(seed=1)
+    device = GeminiLogicalDeviceEmulator(seed=1)
     future = device.run_async(builder, dry_run=False)
     try:
         assert entered.wait(60)
@@ -894,8 +891,8 @@ def test_submission_snapshots_mutable_builder(monkeypatch):
 def test_seeded_devices_replay_the_same_submission_sequence(backend):
     if backend == "clifft":
         pytest.importorskip("clifft")
-    a = GeminiLogicalSimulatorDevice(backend=backend, seed=123, batch_shots=2)
-    b = GeminiLogicalSimulatorDevice(backend=backend, seed=123, batch_shots=2)
+    a = GeminiLogicalDeviceEmulator(backend=backend, seed=123, batch_shots=2)
+    b = GeminiLogicalDeviceEmulator(backend=backend, seed=123, batch_shots=2)
     builder = builder_for(bell, 5)
     for _ in range(2):
         ra = a.run_async(builder, dry_run=False).result(60)
@@ -916,7 +913,7 @@ def test_clifft_receives_submission_seed(seed, monkeypatch):
 
     monkeypatch.setattr(CliffTSimulatorBackend, "sample", record)
     result = (
-        GeminiLogicalSimulatorDevice(backend="clifft", seed=seed)
+        GeminiLogicalDeviceEmulator(backend="clifft", seed=seed)
         .run_async(builder_for(shots=1), dry_run=False)
         .result(60)
     )
@@ -934,7 +931,7 @@ def test_backend_failure_is_raised_by_the_standard_future(monkeypatch):
         raise RuntimeError("sample failed")
 
     monkeypatch.setattr(PPVMSimulatorBackend, "sample", fail)
-    future = GeminiLogicalSimulatorDevice().run_async(
+    future = GeminiLogicalDeviceEmulator().run_async(
         builder_for(shots=1), dry_run=False
     )
     with pytest.raises(RuntimeError, match="sample failed"):
@@ -949,7 +946,7 @@ def test_invalid_sample_shapes_are_not_stored(monkeypatch, payload):
         "sample",
         lambda *args, **kwargs: BackendSample(measurements=payload),
     )
-    future = GeminiLogicalSimulatorDevice().run_async(
+    future = GeminiLogicalDeviceEmulator().run_async(
         builder_for(shots=1), dry_run=False
     )
     with pytest.raises(ValueError, match="measurements|Measurement shape"):
@@ -962,7 +959,7 @@ def test_ppvm_loss_becomes_absence_in_detected_frame(monkeypatch):
 
     monkeypatch.setattr(PPVMSimulatorBackend, "sample", all_lost)
     result = (
-        GeminiLogicalSimulatorDevice(backend="ppvm")
+        GeminiLogicalDeviceEmulator(backend="ppvm")
         .run_async(builder_for(), dry_run=False)
         .result(60)
     )
@@ -975,7 +972,7 @@ def test_noisy_ppvm_sampling_uses_existing_noise_model():
     pytest.importorskip("ppvm")
     pytest.importorskip("bloqade.tsim")
     result = (
-        GeminiLogicalSimulatorDevice(backend="ppvm", seed=123, with_noise=True)
+        GeminiLogicalDeviceEmulator(backend="ppvm", seed=123, with_noise=True)
         .run_async(builder_for(shots=3), dry_run=False)
         .result(60)
     )
@@ -1000,12 +997,12 @@ def test_noisy_ppvm_sampling_uses_existing_noise_model():
 )
 def test_invalid_device_configuration(change):
     with pytest.raises((ValueError, TypeError)):
-        GeminiLogicalSimulatorDevice(**change)
+        GeminiLogicalDeviceEmulator(**change)
 
 
 def test_empty_builder_rejected():
     with pytest.raises(ValueError, match="programs|subtasks"):
-        GeminiLogicalSimulatorDevice().run_async(TaskBuilder(), dry_run=False)
+        GeminiLogicalDeviceEmulator().run_async(TaskBuilder(), dry_run=False)
 
 
 def test_runtime_arguments_rejected_before_submission():
@@ -1014,4 +1011,4 @@ def test_runtime_arguments_rejected_before_submission():
     with pytest.raises(
         (TaskFinalizeError, ValueError), match="argument|parameter|validation"
     ):
-        GeminiLogicalSimulatorDevice().run_async(builder, dry_run=False)
+        GeminiLogicalDeviceEmulator().run_async(builder, dry_run=False)

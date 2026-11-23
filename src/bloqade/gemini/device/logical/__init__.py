@@ -7,13 +7,9 @@ from bloqade.gemini.device.logical.future import (
 from bloqade.gemini.device.logical.result import (
     GeminiLogicalResult as GeminiLogicalResult,
 )
-from bloqade.gemini.device.logical.simulator_device import (
-    GeminiLogicalSimulatorDevice as GeminiLogicalSimulatorDevice,
-)
 
 __all__ = [
     "GeminiLogicalDevice",
     "GeminiLogicalFuture",
     "GeminiLogicalResult",
-    "GeminiLogicalSimulatorDevice",
 ]

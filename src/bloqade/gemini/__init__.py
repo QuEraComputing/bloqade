@@ -26,16 +26,18 @@ from bloqade.gemini.device import (
     GeminiPhysicalSimulator as GeminiPhysicalSimulator,
     AbstractSimulatorBackend as AbstractSimulatorBackend,
     GeminiLogicalSimulatorTask as GeminiLogicalSimulatorTask,
-    GeminiLogicalSimulatorDevice as GeminiLogicalSimulatorDevice,
 )
+from bloqade.gemini.result import GeminiResult as GeminiResult
+from bloqade.gemini.physical.device import GeminiPhysicalResult as GeminiPhysicalResult
 
 __all__ = [
+    "GeminiResult",
+    "GeminiPhysicalResult",
     "AbstractSimulatorBackend",
     "BackendSample",
     "CliffTSimulatorBackend",
     "DetectorResult",
     "GeminiLogicalDevice",
-    "GeminiLogicalSimulatorDevice",
     "GeminiLogicalFuture",
     "GeminiLogicalResult",
     "GeminiLogicalSimulator",
