@@ -293,7 +293,7 @@ from bloqade.gemini.steane_defaults import steane7_m2dets, steane7_m2obs
 
 # %%
 from kirin.dialects import ilist
-from bloqade.lanes.arch.gemini.logical.upstream import steane7_initialize_broadcast
+from bloqade.gemini.state_prep import steane7_initialize_broadcast
 
 
 @physical.kernel(verify=False)
@@ -330,8 +330,7 @@ task.add_subtask(test_physical_kernel, 100)
 future_physical = GeminiPhysicalDeviceEmulator().run_async(task)
 result_physical = future_physical.result()
 
-# Each shot returns (detectors, observables) in matrix-column order.
-detector_rows, observable_rows = zip(*result_physical.return_values[0])
-detectors = np.asarray(detector_rows, dtype=bool)
-observables = np.asarray(observable_rows, dtype=bool)
+# Subtask 0 contains one row per shot, with columns in annotation order.
+detectors = np.asarray(result_physical.detectors[0], dtype=bool)
+observables = np.asarray(result_physical.observables[0], dtype=bool)
 decoded_obs_physical = TableDecoder(dem).decode(detectors) ^ observables
