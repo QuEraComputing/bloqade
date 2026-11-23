@@ -196,12 +196,9 @@ def _simulate_task(
                 raise ValueError(
                     f"Measurement shape {raw.shape} != {(count, len(mapping))}"
                 )
-            # PPVM represents atom loss as None. Like |1>, loss means absence
-            # in DETECTED; normalize it before inverting measurement bits.
-            lost = np.equal(raw, None)
-            measurements = np.asarray(np.where(lost, True, raw), dtype=bool)
+            # Only |0> indicates a detected atom. Both |1> and PPVM loss (None) are absent.
             detected = np.zeros((count, len(sorted_frame)), dtype=bool)
-            detected[:, mapping] = ~measurements
+            detected[:, mapping] = raw == 0
             rows = []
             for offset, detected_frame in enumerate(detected):
                 for frame_type, bitstring in (

@@ -5,15 +5,12 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.19.1
+#       jupytext_version: 1.19.6
 #   kernelspec:
 #     display_name: bloqade (3.13.12)
 #     language: python
 #     name: python3
 # ---
-
-# Keep each notebook example runnable from its own section.
-# ruff: noqa: E402
 
 # %% [markdown]
 # # Running A Simple Postselection Experiment
@@ -22,6 +19,7 @@
 # ## Without Postselection Wizard
 
 # %%
+# ruff: noqa: E402
 # from bloqade.gemini.logical import algorithms
 
 # from bloqade.gemini.logical.device import GeminiLogicalDeviceEmulator
@@ -47,7 +45,7 @@ from bloqade.analysis.tomography import TomographyResult
 # import math
 import numpy as np
 
-from bloqade.decoders import GurobiDecoder
+from bloqade.decoders import TableDecoder
 
 # nonclifford
 # clifford
@@ -64,7 +62,7 @@ from bloqade.decoders import GurobiDecoder
 # from bloqade.gemini.logical import ..
 # from bloqade.gemini.physical import ..
 
-decoder_cls = GurobiDecoder
+decoder_cls = TableDecoder
 
 # %%
 # NOTE: this should be moved to a stdlib in bloqade
@@ -115,29 +113,45 @@ decoded_obs = {
 }
 
 # %%
-tomography_res = TomographyResult(decoded_obs)
+decoded_obs["X"]
+
+# %%
+pattern = [1, 0, 1, 1]
+
+masks = {
+    basis: (shots[:, -4:] == pattern).all(axis=1)
+    for basis, shots in decoded_obs.items()
+}
+
+# %%
+postselected_obs = {
+    basis: shots[masks[basis], 0] for basis, shots in decoded_obs.items()
+}
+
+# %%
+tomography_res = TomographyResult(postselected_obs)
 
 # %% [markdown]
 # ## With Postselection Wizard
 
 # %%
-import numpy as np  # noqa: E402
+import numpy as np
 
-from bloqade.gemini.logical.simulation import GeminiLogicalSimulator  # noqa: E402
-from bloqade.gemini.logical.kernels import (  # noqa: E402
+from bloqade.gemini.logical.simulation import GeminiLogicalSimulator
+from bloqade.gemini.logical.kernels import (
     build_msd_kernels,
     build_tomography_kernels,
 )
-from bloqade.gemini.logical.experiments import PostSelectionExperiment  # noqa: E402
-from bloqade.gemini.logical.utils import (  # noqa: E402
-    plot_decoder_curves,  # noqa: E402
-    msd_postselection_obs,  # noqa: E402
-    MSD_TARGET_BLOCH,  # noqa: E402
+from bloqade.gemini.logical.experiments import PostSelectionExperiment
+from bloqade.gemini.logical.utils import (
+    plot_decoder_curves,
+    msd_postselection_obs,
+    MSD_TARGET_BLOCH,
     bloch_to_u3,
 )
-from bloqade.simulation import TsimSimulatorBackend  # noqa: E402
+from bloqade.simulation import TsimSimulatorBackend
 
-from bloqade.decoders import TableDecoder  # , MILPDecoder # noqa: E402
+from bloqade.decoders import TableDecoder  # , MILPDecoder
 
 NUM_LOGICAL_QUBITS = 5
 NUM_SHOTS = 100_000
