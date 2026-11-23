@@ -31,8 +31,6 @@ from bloqade.gemini.result import GeminiResult as GeminiResult
 from bloqade.gemini.physical.device import GeminiPhysicalResult as GeminiPhysicalResult
 
 __all__ = [
-    "GeminiResult",
-    "GeminiPhysicalResult",
     "AbstractSimulatorBackend",
     "BackendSample",
     "CliffTSimulatorBackend",
@@ -42,7 +40,9 @@ __all__ = [
     "GeminiLogicalResult",
     "GeminiLogicalSimulator",
     "GeminiLogicalSimulatorTask",
+    "GeminiPhysicalResult",
     "GeminiPhysicalSimulator",
+    "GeminiResult",
     "PPVMSimulatorBackend",
     "PhysicalResult",
     "PhysicalSimulator",

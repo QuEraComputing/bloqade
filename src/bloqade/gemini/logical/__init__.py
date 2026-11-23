@@ -61,8 +61,8 @@ def _get_cirq_loader():
 _register_cirq_loader(dialects=kernel, factory=_get_cirq_loader)
 
 __all__ = [
-    "GeminiLogicalResult",
     "GeminiLogicalDeviceEmulator",
+    "GeminiLogicalResult",
     "_register_cirq_loader",
     "broadcast",
     "cnot",

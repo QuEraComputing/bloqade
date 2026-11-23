@@ -20,8 +20,8 @@ def _get_cirq_loader():
 _register_cirq_loader(dialects=kernel, factory=_get_cirq_loader)
 
 __all__ = [
-    "GeminiPhysicalResult",
     "GeminiPhysicalDeviceEmulator",
+    "GeminiPhysicalResult",
     "_register_cirq_loader",
     "kernel",
 ]
