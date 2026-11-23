@@ -21,6 +21,17 @@ from bloqade.lanes.validation.duplicate_address import DuplicateAddressValidatio
 from bloqade.analysis.validation.simple_nocloning import FlatKernelNoCloningValidation
 
 
+def physical_validation_suite() -> ValidationSuite:
+    return ValidationSuite(
+        [
+            FlatKernelNoCloningValidation,
+            ConstAddressValidation,
+            DuplicateAddressValidation,
+            PhysicalTerminalMeasurementValidation,
+        ]
+    )
+
+
 @ir.dialect_group(
     structural_no_opt.union(
         [
@@ -100,14 +111,7 @@ def kernel(self):
         check_call_graph(mt)
 
         if verify:
-            validator = ValidationSuite(
-                [
-                    FlatKernelNoCloningValidation,
-                    ConstAddressValidation,
-                    DuplicateAddressValidation,
-                    PhysicalTerminalMeasurementValidation,
-                ]
-            )
+            validator = physical_validation_suite()
             origins.snapshot(mt)
             validation_result = origins.annotate(
                 mt, validator.validate(mt), aggressive_unroll=aggressive_unroll
