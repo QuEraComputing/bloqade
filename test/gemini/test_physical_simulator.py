@@ -58,6 +58,11 @@ def small_physical_kernel():
 
 
 @squin.kernel
+def small_kernel_for_annotations():
+    small_physical_kernel()
+
+
+@squin.kernel
 def physical_kernel_with_moves_and_gates():
     reg = squin.qalloc(2)
     squin.h(reg[0])
@@ -345,11 +350,10 @@ def test_physical_task_preserves_source_kernel_across_repeated_compilation():
     @squin.kernel
     def kernel():
         reg = squin.qalloc(2)
-        return squin.broadcast.measure(reg)
+        squin.broadcast.measure(reg)
 
-    prepared_kernel = kernel.similar()
-    append_measurements_and_annotations_physical(
-        prepared_kernel,
+    prepared_kernel = append_measurements_and_annotations_physical(
+        kernel,
         m2dets=[[1], [1]],
         m2obs=[[1], [0]],
     )
@@ -413,9 +417,8 @@ def test_builtin_backends_run_physical_workflow_with_guaranteed_dem(
 
 
 def test_tsim_physical_detector_backend_returns_detector_result():
-    prepared_kernel = small_physical_kernel.similar()
-    append_measurements_and_annotations_physical(
-        prepared_kernel,
+    prepared_kernel = append_measurements_and_annotations_physical(
+        small_kernel_for_annotations,
         m2dets=[[1]],
         m2obs=[[1]],
     )
@@ -432,9 +435,8 @@ def test_tsim_physical_detector_backend_returns_detector_result():
 
 
 def test_pyqrack_physical_returns_measurement_backed_result():
-    prepared_kernel = small_physical_kernel.similar()
-    append_measurements_and_annotations_physical(
-        prepared_kernel,
+    prepared_kernel = append_measurements_and_annotations_physical(
+        small_kernel_for_annotations,
         m2dets=[[1]],
         m2obs=[[1]],
     )
@@ -503,62 +505,36 @@ def test_physical_simulator_task_uses_source_kernel_post_processing(monkeypatch)
     assert task._post_processing is not None
 
 
-def test_append_measurements_and_annotations_physical_preserves_kernel_return():
+def test_physical_annotation_returns_parities_for_whole_circuit():
     @squin.kernel
     def kernel():
         reg = squin.qalloc(4)
-        measurements = squin.broadcast.measure(reg)
-        return measurements
-
-    append_measurements_and_annotations_physical(
-        kernel,
-        m2dets=[[1], [1]],
-        m2obs=[[1], [0]],
-    )
-
-    assert sum(isinstance(s, SetDetector) for s in kernel.callable_region.walk()) == 2
-    assert sum(isinstance(s, SetObservable) for s in kernel.callable_region.walk()) == 2
-
-    post_processing = build_post_processing(kernel)
-
-    raw_shots = [[True, False, False, True]]
-
-    return_values = list(post_processing.emit_return(raw_shots))
-    assert len(return_values) == 1
-    assert list(return_values[0]) == raw_shots[0]
-    assert list(post_processing.emit_detectors(raw_shots)) == [[True, True]]
-    assert list(post_processing.emit_observables(raw_shots)) == [[True, False]]
-
-
-def test_append_measurements_and_annotations_physical_uses_logical_mvp_helpers(
-    monkeypatch,
-):
-    import bloqade.gemini.compile.task as compile_task_module
-
-    find_qubit_ssas = MagicMock(wraps=compile_task_module._find_qubit_ssas)
-    find_return_stmt = MagicMock(wraps=compile_task_module._find_return_stmt)
-    insert_before = MagicMock(wraps=compile_task_module._insert_before)
-    monkeypatch.setattr(compile_task_module, "_find_qubit_ssas", find_qubit_ssas)
-    monkeypatch.setattr(compile_task_module, "_find_return_stmt", find_return_stmt)
-    monkeypatch.setattr(compile_task_module, "_insert_before", insert_before)
-
-    @squin.kernel
-    def kernel():
-        reg = squin.qalloc(2)
         squin.broadcast.measure(reg)
 
-    append_measurements_and_annotations_physical(
+    prepared = append_measurements_and_annotations_physical(
         kernel,
-        m2dets=[[1], [1]],
-        m2obs=None,
+        m2dets=[[1, 1], [0, 1], [0, 0], [1, 0]],
+        m2obs=[[0], [0], [1], [1]],
+    )
+    raw_shots = [[True, False, False, True]]
+    post_processing = build_post_processing(prepared)
+    dets, obs = next(iter(post_processing.emit_return(raw_shots)))
+    assert list(dets) == [False, True]
+    assert list(obs) == [True]
+    assert list(post_processing.emit_detectors(raw_shots)) == [list(dets)]
+    assert list(post_processing.emit_observables(raw_shots)) == [list(obs)]
+
+
+def test_physical_simulator_reexports_annotation_helper():
+    from bloqade.gemini import utils
+
+    assert (
+        append_measurements_and_annotations_physical
+        is utils.append_measurements_and_annotations_physical
     )
 
-    find_qubit_ssas.assert_called_once_with(kernel)
-    find_return_stmt.assert_called_once_with(kernel)
-    assert insert_before.call_count > 0
 
-
-def test_append_measurements_and_annotations_physical_validates_block_size():
+def test_physical_annotation_requires_one_matrix_row_per_measurement():
     @squin.kernel
     def kernel():
         reg = squin.qalloc(3)
@@ -566,7 +542,7 @@ def test_append_measurements_and_annotations_physical_validates_block_size():
 
     with pytest.raises(
         ValueError,
-        match="physical qubits must be divisible",
+        match="m2dets must have 3 rows",
     ):
         append_measurements_and_annotations_physical(
             kernel,
@@ -585,19 +561,15 @@ def test_append_measurements_and_annotations_physical_accepts_new_at_allocations
         q1 = gemini_qubit.new_at(0, 1, 0)
         squin.broadcast.measure(ilist.IList([q0, q1]))
 
-    append_measurements_and_annotations_physical(
+    prepared = append_measurements_and_annotations_physical(
         pinned_kernel,
         m2dets=[[1], [1]],
         m2obs=[[1], [0]],
     )
 
+    assert sum(isinstance(s, SetDetector) for s in prepared.callable_region.walk()) == 1
     assert (
-        sum(isinstance(s, SetDetector) for s in pinned_kernel.callable_region.walk())
-        == 1
-    )
-    assert (
-        sum(isinstance(s, SetObservable) for s in pinned_kernel.callable_region.walk())
-        == 1
+        sum(isinstance(s, SetObservable) for s in prepared.callable_region.walk()) == 1
     )
 
 

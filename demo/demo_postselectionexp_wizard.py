@@ -12,6 +12,9 @@
 #     name: python3
 # ---
 
+# Keep each notebook example runnable from its own section.
+# ruff: noqa: E402
+
 # %% [markdown]
 # # Running A Simple Postselection Experiment
 
@@ -212,4 +215,109 @@ ax.set_xlabel("Total accepted fraction")
 ax.set_ylabel("Magic state fidelity")
 ax.legend()
 
+# %% [markdown]
+# # Gemini Submission API
+#
+# Both examples submit a `TaskBuilder` to a local PPVM emulator. The input kernels use `verify=False` so the annotation helper can insert the terminal measurement. Each matrix has 14 rows, one for each measured physical qubit across the two Steane blocks. Each column selects the measurements to XOR for one detector or observable. For example, `(m2obs[:, 0] ^ m2obs[:, 1])[:, None]` gives a single joint observable across both blocks.
+
+# %% [markdown]
+# ## Gemini Logical
+
 # %%
+from bloqade.gemini import logical
+from bloqade.gemini.utils import append_measurements_and_annotations
+
+# %%
+import numpy as np
+from bloqade.gemini.steane_defaults import steane7_m2dets, steane7_m2obs
+
+
+# %%
+@logical.kernel(verify=False)
+def test_logical_kernel():
+    reg = logical.qalloc(2)
+    logical.cx(reg[0], reg[1])
+
+
+# %%
+# Six detectors and two observables over the full 14-measurement record.
+m2dets = np.asarray(steane7_m2dets(2))
+m2obs = np.asarray(steane7_m2obs(2))
+
+# %%
+test_logical_kernel = append_measurements_and_annotations(
+    test_logical_kernel, m2dets, m2obs
+)
+
+# %%
+from bloqade.gemini.logical import GeminiLogicalDeviceEmulator, GeminiLogicalSimulator
+from bloqade.core.device import TaskBuilder
+from bloqade.decoders import TableDecoder
+
+dem = GeminiLogicalSimulator().task(test_logical_kernel).detector_error_model
+
+task = TaskBuilder()
+task.add_subtask(test_logical_kernel, 100)
+future_logical = GeminiLogicalDeviceEmulator().run_async(task)
+result_logical = future_logical.result()
+
+# Each subtask has its own (shots, detectors) and (shots, observables) arrays.
+detectors = np.asarray(result_logical.detectors[0])
+observables = np.asarray(result_logical.observables[0])
+decoded_obs_logical = TableDecoder(dem).decode(detectors) ^ observables
+
+# %% [markdown]
+# ## Gemini Physical
+
+# %%
+from bloqade.gemini import physical
+from bloqade.gemini.utils import append_measurements_and_annotations_physical
+
+# %%
+import numpy as np
+from bloqade.gemini.steane_defaults import steane7_m2dets, steane7_m2obs
+
+# %%
+from kirin.dialects import ilist
+from bloqade.lanes.arch.gemini.logical.upstream import steane7_initialize_broadcast
+
+
+@physical.kernel(verify=False)
+def test_physical_kernel():
+    reg = physical.qalloc(14)
+    blocks = ilist.IList([reg[:7], reg[7:]])
+    zeros = ilist.IList([0.0, 0.0])
+    steane7_initialize_broadcast(zeros, zeros, zeros, blocks)
+    physical.broadcast.cx(reg[:7], reg[7:])
+
+
+# %%
+# The terminal measurement reads the two seven-qubit blocks in allocation order.
+m2dets = np.asarray(steane7_m2dets(2))
+m2obs = np.asarray(steane7_m2obs(2))
+
+# %%
+test_physical_kernel = append_measurements_and_annotations_physical(
+    test_physical_kernel, m2dets, m2obs
+)
+
+# %%
+from bloqade.gemini.physical import (
+    GeminiPhysicalDeviceEmulator,
+    GeminiPhysicalSimulator,
+)
+from bloqade.core.device import TaskBuilder
+from bloqade.decoders import TableDecoder
+
+dem = GeminiPhysicalSimulator().task(test_physical_kernel).detector_error_model
+
+task = TaskBuilder()
+task.add_subtask(test_physical_kernel, 100)
+future_physical = GeminiPhysicalDeviceEmulator().run_async(task)
+result_physical = future_physical.result()
+
+# Each shot returns (detectors, observables) in matrix-column order.
+detector_rows, observable_rows = zip(*result_physical.return_values[0])
+detectors = np.asarray(detector_rows, dtype=bool)
+observables = np.asarray(observable_rows, dtype=bool)
+decoded_obs_physical = TableDecoder(dem).decode(detectors) ^ observables

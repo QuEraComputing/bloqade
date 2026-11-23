@@ -705,15 +705,20 @@ def test_pyqrack_backend_seed_advances_persistent_seed_stream(monkeypatch):
     assert recorded_seeds == first_persistent + second_persistent
 
 
-def test_pyqrack_backend_prepares_owned_annotation_free_kernel_once(monkeypatch):
+def test_pyqrack_backend_samples_annotated_kernel_without_mutating_source(monkeypatch):
     from bloqade.decoders.dialects.annotate.stmts import SetDetector
 
     from bloqade.gemini.physical.simulation.simulator import (
         append_measurements_and_annotations_physical,
     )
 
-    annotated = _physical_kernel.similar()
-    append_measurements_and_annotations_physical(annotated, m2dets=[[1]], m2obs=None)
+    @squin.kernel
+    def source_kernel():
+        _physical_kernel()
+
+    annotated = append_measurements_and_annotations_physical(
+        source_kernel, m2dets=[[1]], m2obs=None
+    )
     source_ir = annotated.print_str()
     similar = MagicMock(wraps=annotated.similar)
     monkeypatch.setattr(annotated, "similar", similar)

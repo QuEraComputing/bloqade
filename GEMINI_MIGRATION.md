@@ -163,8 +163,8 @@ Kernel argument validation and device policy also remain in Gemini.
 
 ## Coordinated release
 
-This change requires `bloqade-lanes>=0.12.2,<0.13` and
-`bloqade-circuit~=0.15.6`. The committed `uv.lock` resolves lanes 0.12.2,
+This branch requires `bloqade-lanes>=0.13.0` and
+`bloqade-circuit~=0.15.6`. The committed `uv.lock` resolves lanes 0.13.0,
 circuit 0.15.6, and decoders 0.7.0 from published packages; no prerequisite
 release or deferred lockfile regeneration remains for this migration.
 Lanes 0.12.2 supplies the compiler-owned method-table registrations. Lanes 0.11

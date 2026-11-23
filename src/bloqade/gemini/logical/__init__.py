@@ -43,6 +43,9 @@ from bloqade.gemini.logical.stdlib import (
 )
 from bloqade.gemini.logical.studio import to_studio_url as to_studio_url
 from bloqade.gemini.logical.extensions import star_rz as star_rz
+from bloqade.gemini.logical.simulation import (
+    GeminiLogicalSimulator as GeminiLogicalSimulator,
+)
 from bloqade.gemini.logical.device.result import (
     GeminiLogicalResult as GeminiLogicalResult,
 )
@@ -61,6 +64,7 @@ def _get_cirq_loader():
 _register_cirq_loader(dialects=kernel, factory=_get_cirq_loader)
 
 __all__ = [
+    "GeminiLogicalSimulator",
     "GeminiLogicalResult",
     "GeminiLogicalDeviceEmulator",
     "_register_cirq_loader",
