@@ -4,7 +4,6 @@ import sys
 import json
 import sqlite3
 from uuid import UUID, uuid4
-from inspect import Parameter, signature
 from threading import Event, get_ident
 from concurrent.futures import Future, TimeoutError as FutureTimeoutError
 
@@ -420,11 +419,11 @@ def test_remote_submission_options_are_accepted_and_ignored(monkeypatch):
     assert result.shot_results()[0].shape == (1, 160)
 
 
-def test_device_signature_requires_explicit_dry_run():
-    assert (
-        signature(GeminiLogicalDeviceEmulator.run_async).parameters["dry_run"].default
-        is Parameter.empty
+def test_run_async_executes_by_default():
+    future = GeminiLogicalDeviceEmulator(with_noise=False).run_async(
+        builder_for(shots=1)
     )
+    assert future.result(timeout=60).shot_results()[0].shape == (1, 160)
 
 
 def test_dry_run_with_submission_options_does_not_write_storage(monkeypatch):
