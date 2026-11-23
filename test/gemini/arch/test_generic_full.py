@@ -6,7 +6,6 @@ import pytest
 
 from bloqade.gemini.arch.generic_full import get_arch
 from bloqade.gemini.arch.build.topology import DiagonalWordTopology
-from bloqade.gemini.arch.build.blueprint import ZoneSpec, DeviceLayout
 from bloqade.gemini.arch.build.word_factory import WordGrid, create_zone_words
 
 # ── DiagonalWordTopology: multi-column support ──
@@ -14,9 +13,7 @@ from bloqade.gemini.arch.build.word_factory import WordGrid, create_zone_words
 
 class TestDiagonalWordTopologyMultiColumn:
     def _make_grid(self, num_rows: int, num_cols: int) -> WordGrid:
-        spec = ZoneSpec(num_rows=num_rows, num_cols=num_cols)
-        layout = DeviceLayout(sites_per_word=2)
-        return create_zone_words(spec, layout)
+        return create_zone_words(num_rows=num_rows, num_cols=num_cols, sites_per_word=2)
 
     def test_2_cols_unchanged(self):
         """2-column grid still produces 2*N-1 buses."""

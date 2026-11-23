@@ -14,11 +14,13 @@ from bloqade.simulation import (
     CliffTSimulatorBackend as CliffTSimulatorBackend,
     AbstractSimulatorBackend as AbstractSimulatorBackend,
 )
+from bloqade.gemini.result import GeminiResult as GeminiResult
 from bloqade.gemini.logical.device import (
     GeminiLogicalDevice as GeminiLogicalDevice,
     GeminiLogicalFuture as GeminiLogicalFuture,
     GeminiLogicalResult as GeminiLogicalResult,
 )
+from bloqade.gemini.physical.device import GeminiPhysicalResult as GeminiPhysicalResult
 from bloqade.gemini.logical.simulation import (
     Result as Result,
     DetectorResult as DetectorResult,
@@ -34,6 +36,8 @@ from bloqade.gemini.physical.simulation import (
 )
 
 __all__ = [
+    "GeminiResult",
+    "GeminiPhysicalResult",
     "AbstractSimulatorBackend",
     "BackendSample",
     "CliffTSimulatorBackend",

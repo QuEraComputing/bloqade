@@ -34,7 +34,7 @@
 from bloqade.lanes.bytecode.encoding import MoveType, Direction
 from bloqade.lanes.arch.gemini.physical import get_arch_spec
 
-from bloqade.gemini.arch.build.v2 import ArchBuilder
+from bloqade.gemini.arch import ArchBuilder
 
 spec = get_arch_spec()
 zone = spec.zones[0]

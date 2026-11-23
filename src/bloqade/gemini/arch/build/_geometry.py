@@ -1,11 +1,4 @@
-"""Shared geometry primitives for architecture construction.
-
-This module holds the parts of zone construction that are *geometry*
-rather than *building*: unit conversion, AOD transport path search, and
-blockade-pair derivation.  It is deliberately free of builder state — every
-entry point takes a :class:`ZoneGeometry` value and returns a result — so
-that both the legacy ``ZoneBuilder`` and the redesigned builder in
-:mod:`bloqade.gemini.arch.build.v2` can share one implementation.
+"""Geometry for architecture construction, including transport paths and blockade pairs.
 
 All internal geometry is stored as nm-integer values so that set
 membership, tuple equality, and candidate hashing are exact.  User-facing
@@ -17,14 +10,14 @@ from __future__ import annotations
 import math
 import warnings
 from bisect import bisect_left, bisect_right
-from collections import defaultdict
-from collections.abc import Callable, Sequence
-from dataclasses import dataclass
 from itertools import pairwise
+from collections import defaultdict
+from dataclasses import dataclass
+from collections.abc import Callable, Sequence
 
 import rustworkx as rx
-
-from bloqade.lanes.bytecode.encoding import Direction, LaneAddress, MoveType
+from bloqade.lanes.bytecode import Zone
+from bloqade.lanes.bytecode.encoding import MoveType, Direction, LaneAddress
 
 # Internal length unit: 1 nm.  All user-facing lengths are in µm;
 # internally we convert to nm integers so that path search (hashing,
@@ -365,9 +358,7 @@ def search_path(
 def compute_transport_paths(
     geom: ZoneGeometry,
     *,
-    site_buses: Sequence[tuple[Sequence[int], Sequence[int]]],
-    word_buses: Sequence[tuple[Sequence[int], Sequence[int]]],
-    site_bus_words: Sequence[int],
+    zone: Zone,
     zone_id: int,
     warn_stacklevel: int = 2,
 ) -> dict[LaneAddress, tuple[tuple[float, float], ...]]:
@@ -379,7 +370,7 @@ def compute_transport_paths(
     buses are not included — inter-zone routing is separate.
 
     The reference atom, the obstacle set, and the emitted lanes are all
-    drawn from ``site_bus_words`` rather than from every word in the
+    drawn from ``zone.words_with_site_buses`` rather than from every word in the
     template.  Only those words appear in the zone's
     ``words_with_site_buses``, so only they are carried when a site bus
     fires; taking the reference from a non-participating word would apply
@@ -388,9 +379,7 @@ def compute_transport_paths(
 
     Args:
         geom: The zone's resolved geometry.
-        site_buses: ``(src_sites, dst_sites)`` per site bus.
-        word_buses: ``(src_words, dst_words)`` per word bus.
-        site_bus_words: Words that take part in site-bus transport.
+        zone: Native zone supplying the buses and their participating sites and words.
         zone_id: Zone index, for the emitted ``LaneAddress`` values.
         warn_stacklevel: ``stacklevel`` for the skip warnings, so they
             point at the caller's caller rather than at this module.
@@ -400,10 +389,11 @@ def compute_transport_paths(
         both directions.
     """
     paths: dict[LaneAddress, tuple[tuple[float, float], ...]] = {}
-    movers = list(site_bus_words)
+    movers = zone.words_with_site_buses
 
     # ── Site bus paths (intra-word) ──
-    for bus_id, (src_sites, dst_sites) in enumerate(site_buses):
+    for bus_id, bus in enumerate(zone.site_buses):
+        src_sites, dst_sites = bus.src, bus.dst
         if not movers or not src_sites:
             continue
 
@@ -468,22 +458,18 @@ def compute_transport_paths(
                     )
 
     # ── Word bus paths (intra-zone) ──
-    spw = range(geom.sites_per_word)
-    for bus_id, (src_words, dst_words) in enumerate(word_buses):
-        if not src_words:
+    for bus_id, word_bus in enumerate(zone.word_buses):
+        src_words, dst_words = word_bus.src, word_bus.dst
+        sites = zone.word_bus_site_pairs(bus_id)
+        if not src_words or not sites:
             continue
 
-        # As above: rigid translations only.  Every site is compared, not
-        # just site 0 — words differing in internal geometry can agree on
-        # site 0 and disagree elsewhere.
-        displacements = {
-            (
-                geom.site_nm(dw, s)[0] - geom.site_nm(sw, s)[0],
-                geom.site_nm(dw, s)[1] - geom.site_nm(sw, s)[1],
-            )
+        transports = [
+            (geom.site_nm(sw, ss), geom.site_nm(dw, ds))
             for sw, dw in zip(src_words, dst_words)
-            for s in spw
-        }
+            for ss, ds in sites
+        ]
+        displacements = {(dx - sx, dy - sy) for (sx, sy), (dx, dy) in transports}
         if len(displacements) > 1:
             warnings.warn(
                 f"Zone '{geom.name}' word bus {bus_id}: inconsistent "
@@ -494,10 +480,8 @@ def compute_transport_paths(
             )
             continue
 
-        bus_src_atoms = [geom.site_nm(w, s) for w in src_words for s in spw]
-
-        ref_src = geom.site_nm(src_words[0], 0)
-        ref_dst = geom.site_nm(dst_words[0], 0)
+        bus_src_atoms = [src for src, _ in transports]
+        ref_src, ref_dst = transports[0]
 
         if ref_src == ref_dst:
             ref_waypoints = (ref_src, ref_dst)
@@ -515,7 +499,7 @@ def compute_transport_paths(
             ref_waypoints = result
 
         for src_w in src_words:
-            for site_id in spw:
+            for site_id, _ in sites:
                 lane_src = geom.site_nm(src_w, site_id)
                 lane_path = path_nm_to_um(apply_deltas(lane_src, ref_waypoints))
                 for direction in (Direction.FORWARD, Direction.BACKWARD):
