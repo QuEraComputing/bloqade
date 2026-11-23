@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Generic, TypeVar
+from typing import TYPE_CHECKING, Self, Generic, TypeVar
 from functools import cached_property
 from dataclasses import replace, dataclass
 from collections.abc import Callable, Sequence
 
 import numpy as np
-from typing_extensions import Self
 from bloqade.core.device import Result
 
 if TYPE_CHECKING:
@@ -17,7 +16,7 @@ RetType = TypeVar("RetType")
 
 
 @dataclass(kw_only=True)
-class GeminiResult(Result, Generic[RetType], ABC):
+class GeminiResult(Result, ABC, Generic[RetType]):
     """Result view over stored Gemini shots.
 
     Merge-oriented methods assume each selected task ID has the same subtask

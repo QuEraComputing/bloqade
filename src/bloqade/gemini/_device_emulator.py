@@ -5,7 +5,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from uuid import UUID, uuid4
 from typing import TYPE_CHECKING, Generic, Literal, TypeVar, ClassVar, overload
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from contextlib import nullcontext
 from dataclasses import field, dataclass
 from collections.abc import Callable
@@ -179,7 +179,7 @@ def _simulate_task(
         prepared.append((physical_kernel, mapping, sorted_frame))
 
     task_id = str(uuid4())
-    storage.add_task_definition(task_id, definition, datetime.now(timezone.utc))
+    storage.add_task_definition(task_id, definition, datetime.now(UTC))
     shot_index = 0
     for subtask_index, subtask in enumerate(definition.subtasks):
         physical_kernel, mapping, sorted_frame = prepared[subtask.program_index]
@@ -198,7 +198,7 @@ def _simulate_task(
                 )
             # PPVM represents atom loss as None. Like |1>, loss means absence
             # in DETECTED; normalize it before inverting measurement bits.
-            lost = raw == None  # noqa: E711 - elementwise comparison for NumPy arrays
+            lost = np.equal(raw, None)
             measurements = np.asarray(np.where(lost, True, raw), dtype=bool)
             detected = np.zeros((count, len(sorted_frame)), dtype=bool)
             detected[:, mapping] = ~measurements
@@ -224,7 +224,7 @@ def _simulate_task(
             task_id,
             [
                 {
-                    "completed_date": datetime.now(timezone.utc),
+                    "completed_date": datetime.now(UTC),
                     "shot_results": [{"subtask_index": subtask_index}],
                 }
             ],
@@ -236,7 +236,7 @@ def _simulate_task(
 
 
 @dataclass(kw_only=True)
-class GeminiDeviceEmulator(Generic[_ResultT], ABC):
+class GeminiDeviceEmulator(ABC, Generic[_ResultT]):
     """Run TaskBuilder workloads locally and return Gemini result views.
 
     Finalizes each builder with the dialect group and validation suite of the device.
