@@ -2,8 +2,10 @@
 
 `bloqade.gemini` is now shipped by the `bloqade` distribution, from
 `src/bloqade/gemini`. Install `bloqade` to use `@logical.kernel`, physical
-kernels, devices, simulators, and decoding. The kernel and device Python import paths remain
-unchanged. Lanes itself can be imported and used without installing Gemini.
+kernels, devices, simulators, and decoding. Kernel import paths are unchanged;
+devices, simulators and the decoding workflow moved under `bloqade.gemini.logical`
+and `bloqade.gemini.physical` (see "Devices, simulators and experiments" below).
+Lanes itself can be imported and used without installing Gemini.
 
 Compiler definitions belong to `bloqade.lanes`:
 
@@ -36,6 +38,46 @@ including its `qubit` and `arrange` subpackages.
 Compiler consumers should import statements, the dialect object, and other
 implementation details directly from `bloqade.lanes.dialects.arch` or
 `bloqade.lanes.dialects.arrange`.
+
+## Devices, simulators and experiments
+
+The `bloqade.gemini.device` and `bloqade.gemini.decoding` packages are removed.
+Their contents are grouped by the kind of kernel they run:
+
+| Previous import | New import |
+| --- | --- |
+| `bloqade.gemini.device.GeminiLogicalDevice` (also `GeminiLogicalFuture`, `GeminiLogicalResult`) | `bloqade.gemini.logical.device` |
+| `bloqade.gemini.device.GeminiLogicalSimulator` (also `GeminiLogicalSimulatorTask`, `Result`, `DetectorResult`, `SimulatorResult`) | `bloqade.gemini.logical.simulation` |
+| `bloqade.gemini.device.GeminiPhysicalSimulator` (also `PhysicalSimulator`, `PhysicalSimulatorTask`, `PhysicalResult`) | `bloqade.gemini.physical.simulation` |
+| `bloqade.gemini.device.TsimSimulatorBackend` (also `PPVMSimulatorBackend`, `CliffTSimulatorBackend`, `AbstractSimulatorBackend`, `BackendSample`) | `bloqade.simulation` |
+| `bloqade.gemini.decoding.PostSelectionExperiment` (also `PostselectionCurveData`) | `bloqade.gemini.logical.experiments` |
+| `bloqade.gemini.decoding.magic_state_dist_steane` | `bloqade.gemini.logical.kernels.build_msd_steane` |
+| `bloqade.gemini.decoding.single_qubit_state_tomography` | `bloqade.gemini.logical.kernels.build_singleq_tomo` |
+| `bloqade.gemini.decoding.empty_logical_circuit` | `bloqade.gemini.logical.kernels.build_empty_logical_circuit` |
+| `bloqade.gemini.decoding.TableDecoder` | `bloqade.decoders.TableDecoder` |
+| `bloqade.gemini.decoding.TomographyResult` | `bloqade.analysis.tomography.TomographyResult` |
+| `bloqade.gemini.decoding.GurobiDecoder` | removed; use `bloqade.decoders.MILPDecoder(dem, solver="GUROBI")` |
+
+The top-level re-exports (`bloqade.gemini.GeminiLogicalSimulator`,
+`bloqade.gemini.TsimSimulatorBackend` and the rest) still work.
+
+The lower-level MSD helpers are now public:
+
+- `bloqade.gemini.logical.kernels`: `build_msd_kernels` (was
+  `_build_msd_primitives`), `build_tomography_kernels` (was
+  `_build_tomography_primitives`), `compose_tomography_kernels` (was
+  `_build_decoder_kernel_bundle`) and `PostselectionExperimentKernels` (was
+  `_DecoderPrimitiveSet`), plus new kernel builders for a 10-qubit GHZ state
+  (`build_bell_state_kernels`), a logical Toffoli (`build_logical_toffoli`)
+  and two-level MSD (`build_concatenated_msd_kernels`, which needs 25 logical
+  qubits and so exceeds the current 10-qubit Gemini limit);
+- `bloqade.gemini.logical.utils`: `MSD_TARGET_BLOCH`, `bloch_to_u3`,
+  `msd_postselection_obs` (the ancilla pattern to pass to
+  `decode_and_postselect`) and `plot_decoder_curves`.
+
+`PostSelectionExperiment` takes the device to sample from as `device=`
+(default: `GeminiLogicalSimulator()`), so `make_tasks()` needs no argument.
+Passing a device to `make_tasks(device)` still overrides it.
 
 ## Move-program debuggers and architecture drawing
 
@@ -121,8 +163,8 @@ Kernel argument validation and device policy also remain in Gemini.
 
 ## Coordinated release
 
-This change requires `bloqade-lanes>=0.12.2,<0.13` and
-`bloqade-circuit~=0.15.6`. The committed `uv.lock` resolves lanes 0.12.2,
+This branch requires `bloqade-lanes>=0.13.0` and
+`bloqade-circuit~=0.15.6`. The committed `uv.lock` resolves lanes 0.13.0,
 circuit 0.15.6, and decoders 0.7.0 from published packages; no prerequisite
 release or deferred lockfile regeneration remains for this migration.
 Lanes 0.12.2 supplies the compiler-owned method-table registrations. Lanes 0.11
@@ -153,15 +195,15 @@ Decoding requires `bloqade-decoders>=0.7.0`. Use its `BaseDecoder` interface
 instead of the removed Gemini `ConfidenceDecoder` interface, and call
 `decode_confidence(bits)` instead of `decode_with_confidence(bits)`.
 
-`bloqade.gemini.decoding.GurobiDecoder` replaces `GurobiDecoderWithConfidence`.
-It is a thin `MILPDecoder` subclass selecting `solver="GUROBI"`, including when
-constructed through `instantiate(dem)`. Install `bloqade[decoding]` for the
-optional solver dependencies. Confidence now follows the upstream normalized
-logical-gap score, `tanh(max(gap, 0) / 2)`, rather than returning the raw gap;
-update any absolute postselection thresholds accordingly.
+`GurobiDecoderWithConfidence` and Gemini's own `GurobiDecoder` are removed.
+For MILP decoding with Gurobi, use `bloqade.decoders.MILPDecoder(dem,
+solver="GUROBI")`; install `bloqade[decoding]` for the optional solver
+dependencies. (`bloqade.decoders.GurobiDecoder` is upstream's deprecated
+direct-gurobipy decoder, not a drop-in replacement.) MILP confidence follows the
+upstream normalized logical-gap score, `tanh(max(gap, 0) / 2)`, rather than the
+raw gap; update any absolute postselection thresholds accordingly.
 
-`bloqade.gemini.decoding.TableDecoder` (also available from `table_decoders`)
-now directly re-exports `bloqade.decoders.TableDecoder`. The local
+Use `bloqade.decoders.TableDecoder` directly. The local
 `TableDecoderWithConfidence` subclass is removed. Upstream 0.7 defaults to
 10,000 training shots and reports zero confidence for unseen syndromes. It does
 not implement the old `seed` or `step_size` training options. For reproducible
@@ -170,8 +212,8 @@ training, construct with `num_shots=0` and pass seeded DEM samples to
 
 ## Tomography API
 
-`bloqade.gemini.decoding.TomographyResult`, including the `tomography` module
-export, is now the class from `bloqade.analysis.tomography`. Pass one-dimensional
+Use `bloqade.analysis.tomography.TomographyResult`; the
+`bloqade.gemini.decoding` re-export is removed. Pass one-dimensional
 shot arrays per basis. Gemini's experiment helpers convert their internal shot
 arrays and reject confidence cuts that leave a tomography basis empty.
 

@@ -7,9 +7,9 @@ from bloqade.lanes.dialects import move
 
 from bloqade import squin
 from bloqade.gemini import logical
-from bloqade.gemini.device import GeminiLogicalSimulator
 from bloqade.gemini.visualize import plotly_debugger
 from bloqade.gemini.visualize.artist import collect_debug_steps
+from bloqade.gemini.logical.simulation import GeminiLogicalSimulator
 
 
 @logical.kernel(aggressive_unroll=True)

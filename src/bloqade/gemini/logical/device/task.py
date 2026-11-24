@@ -7,7 +7,7 @@ from bloqade.core.device.task import (
     ParameterScanTask,
 )
 
-from bloqade.gemini.device.logical.future import GeminiLogicalFuture
+from bloqade.gemini.logical.device.future import GeminiLogicalFuture
 
 _bloqade_version = version("bloqade-circuit")
 

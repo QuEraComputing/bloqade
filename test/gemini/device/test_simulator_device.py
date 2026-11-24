@@ -27,11 +27,9 @@ from bloqade.gemini import (
     logical,
     _device_emulator as device_module,
 )
-from bloqade.gemini.device import (
-    simulator_backend as backend_module,
-)
+from bloqade.simulation import backends as backend_module
 from bloqade.gemini.logical import GeminiLogicalDeviceEmulator
-from bloqade.gemini.device.simulator_backend import (
+from bloqade.simulation.backends import (
     BackendSample,
     PPVMSimulatorBackend,
     CliffTSimulatorBackend,

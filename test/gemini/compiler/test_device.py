@@ -11,34 +11,36 @@ from stim import DetectorErrorModel
 from kirin.dialects import ilist
 from typing_extensions import assert_type
 from bloqade.decoders.dialects import annotate
-from bloqade.cirq_utils.noise.model import GeminiOneZoneNoiseModel
 from bloqade.lanes.noise_model import generate_logical_noise_model
+from bloqade.cirq_utils.noise.model import GeminiOneZoneNoiseModel
 
 from bloqade import qubit, squin, types
 from bloqade.gemini import (
     SimulatorResult as GeminiSimulatorResult,
     logical as gemini_logical,
 )
-from bloqade.gemini.cudaq import cudaq_to_squin
-from bloqade.gemini.device import (
-    Result,
+from bloqade.simulation import (
     BackendSample,
+    PPVMSimulatorBackend,
+    TsimSimulatorBackend,
+    CliffTSimulatorBackend,
+)
+from bloqade.gemini.cudaq import cudaq_to_squin
+from bloqade.gemini.compile import append_measurements_and_annotations
+from bloqade.simulation.backends import _PyQrackSimulatorBackend
+from bloqade.gemini.logical.stdlib import default_post_processing
+from bloqade.gemini.steane_defaults import steane7_m2obs, steane7_m2dets
+from bloqade.gemini.logical.simulation import (
+    Result,
     DetectorResult,
     SimulatorResult,
-    TsimSimulatorBackend,
-    PPVMSimulatorBackend,
-    CliffTSimulatorBackend,
     GeminiLogicalSimulator,
     GeminiLogicalSimulatorTask,
 )
-from bloqade.gemini.compile import append_measurements_and_annotations
-from bloqade.gemini.steane_defaults import steane7_m2obs, steane7_m2dets
-from bloqade.gemini.device.simulator import (
+from bloqade.gemini.logical.simulation.simulator import (
     Result as SimulatorResultImplementation,
     DetectorResult as SimulatorDetectorResult,
 )
-from bloqade.gemini.device.simulator_backend import _PyQrackSimulatorBackend
-from bloqade.gemini.logical.stdlib import default_post_processing
 
 _HAS_CLIFFT = importlib.util.find_spec("clifft") is not None
 """clifft is an optional dependency gated to Python >= 3.12 (see the

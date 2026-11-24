@@ -3,15 +3,11 @@ from __future__ import annotations
 import stim
 import numpy as np
 import pytest
-from bloqade.decoders import BaseDecoder
+from bloqade.decoders import BaseDecoder, TableDecoder
+from bloqade.analysis.tomography import TomographyResult
 from bloqade.decoders._decoders.mld.utils import shots_to_counts, pack_boolean_array
 
-from bloqade.gemini.decoding.dem import _sub_detector_error_model
-from bloqade.gemini.decoding.confidence import (
-    GurobiDecoder,
-)
-from bloqade.gemini.decoding.tomography import TomographyResult
-from bloqade.gemini.decoding.table_decoders import TableDecoder
+from bloqade.gemini.logical.experiments.dem import _sub_detector_error_model
 
 
 def test_tomography_result_builds_density_matrix_and_point_fidelity():
@@ -132,73 +128,6 @@ def test_table_decoder_reports_zero_confidence_for_unseen_syndromes():
     correction, confidence = decoder.decode_confidence(np.array([True]))
     np.testing.assert_array_equal(correction, [False])
     assert confidence == 0.0
-
-
-@pytest.mark.parametrize("untrained", [False, True])
-def test_gurobi_decoder_reports_normalized_logical_gap(untrained: bool):
-    pytest.importorskip("gurobipy")
-    dem = stim.DetectorErrorModel("""
-        error(0.1) D0
-        error(0.01) D0 L0
-        """)
-    decoder = GurobiDecoder.instantiate(dem) if untrained else GurobiDecoder(dem)
-    assert decoder._solver_name == "GUROBI"
-
-    correction, logical_gap = decoder.decode_confidence(np.array([1], dtype=np.bool_))
-
-    np.testing.assert_array_equal(correction, np.array([False]))
-    expected_gap = np.log(0.1 / 0.9) - np.log(0.01 / 0.99)
-    assert logical_gap == pytest.approx(np.tanh(expected_gap / 2))
-
-    corrections, confidences = decoder.decode_confidence(
-        np.ones((2, 1), dtype=np.bool_)
-    )
-    np.testing.assert_array_equal(corrections, [[False], [False]])
-    np.testing.assert_allclose(confidences, np.tanh(expected_gap / 2))
-
-    corrections, confidences = decoder.decode_confidence(
-        np.empty((0, 1), dtype=np.bool_)
-    )
-    assert corrections.shape == (0, 1)
-    assert np.asarray(confidences).shape == (0,)
-
-
-@pytest.mark.parametrize(
-    "detector_bits",
-    [
-        np.zeros(0, dtype=np.bool_),
-        np.zeros(2, dtype=np.bool_),
-    ],
-    ids=["too_short", "too_long"],
-)
-def test_gurobi_decoder_validates_decode_confidence_width(
-    detector_bits: np.ndarray,
-):
-    pytest.importorskip("gurobipy")
-    decoder = GurobiDecoder(stim.DetectorErrorModel("error(0.1) D0 L0"))
-
-    with pytest.raises(ValueError, match="detector bits"):
-        decoder.decode_confidence(detector_bits)
-
-
-@pytest.mark.parametrize(
-    "detector_bits",
-    [
-        np.zeros(0, dtype=np.bool_),
-        np.zeros(2, dtype=np.bool_),
-        np.zeros((2, 0), dtype=np.bool_),
-        np.zeros((2, 2), dtype=np.bool_),
-    ],
-    ids=["single_too_short", "single_too_long", "batch_too_short", "batch_too_long"],
-)
-def test_gurobi_decoder_validates_decode_width(
-    detector_bits: np.ndarray,
-):
-    pytest.importorskip("gurobipy")
-    decoder = GurobiDecoder(stim.DetectorErrorModel("error(0.1) D0 L0"))
-
-    with pytest.raises(ValueError, match="detector bits"):
-        decoder.decode(detector_bits)
 
 
 def test_shots_to_counts_uses_little_endian_packing():

@@ -10,7 +10,6 @@ from dataclasses import field, dataclass
 
 import numpy as np
 from kirin import ir, rewrite
-from kirin.rewrite.abc import RewriteRule, RewriteResult
 from bloqade.lanes.rewrite.squin2stim import RemoveReturn
 
 if TYPE_CHECKING:
@@ -453,19 +452,6 @@ class PPVMSimulatorBackend(AbstractSimulatorBackend):
         return shots_arr.astype(bool)
 
 
-class _RemovePyQrackAnnotations(RewriteRule):
-    def rewrite_Statement(self, node: ir.Statement) -> RewriteResult:
-        from bloqade.decoders.dialects.annotate.stmts import (
-            SetDetector,
-            SetObservable,
-        )
-
-        if isinstance(node, (SetDetector, SetObservable)):
-            node.delete()
-            return RewriteResult(has_done_something=True)
-        return RewriteResult()
-
-
 @dataclass
 class _PyQrackSimulatorBackend(AbstractSimulatorBackend):
     """Backend using PyQrack for sampling and Tsim for guaranteed DEM generation.
@@ -540,10 +526,10 @@ class _PyQrackSimulatorBackend(AbstractSimulatorBackend):
                     pyqrack_interp=interpreter,
                 )
 
-        # Annotation removal mutates its input, so prepare one owned kernel for
-        # this sampling request and reuse it only to construct fresh shot tasks.
+        # Record raw measurements here. The result evaluates the user's return
+        # and parities separately. PyQrack already ignores annotation statements.
         owned_kernel = physical_squin_kernel.similar()
-        rewrite.Walk(_RemovePyQrackAnnotations()).rewrite(owned_kernel.code)
+        rewrite.Walk(RemoveReturn()).rewrite(owned_kernel.code)
         simulator = _RecordingStackMemorySimulator(
             options=cast(Any, self.options or {}),
             rng_state=rng_state,

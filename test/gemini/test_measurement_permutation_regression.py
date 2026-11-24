@@ -20,11 +20,9 @@ from kirin.dialects import ilist
 
 from bloqade import qubit, squin
 from bloqade.gemini import logical
-from bloqade.gemini.device import (
-    PhysicalSimulator,
-    TsimSimulatorBackend,
-    GeminiLogicalSimulator,
-)
+from bloqade.simulation import TsimSimulatorBackend
+from bloqade.gemini.logical.simulation import GeminiLogicalSimulator
+from bloqade.gemini.physical.simulation import PhysicalSimulator
 
 SHOTS = 20
 

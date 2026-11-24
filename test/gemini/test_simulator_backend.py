@@ -14,14 +14,14 @@ from kirin import ir
 from kirin.dialects import func
 
 from bloqade import squin
-from bloqade.gemini.device import (
+from bloqade.simulation import (
     BackendSample,
     PPVMSimulatorBackend,
     TsimSimulatorBackend,
     CliffTSimulatorBackend,
     AbstractSimulatorBackend,
 )
-from bloqade.gemini.device.simulator_backend import (
+from bloqade.simulation.backends import (
     _ppvm,
     _get_tsim_circuit,
     _PyQrackSimulatorBackend,
@@ -140,7 +140,7 @@ def test_tsim_circuit_cache_reuses_live_kernel_and_drops_dead_kernel(monkeypatch
 
     circuit_factory = MagicMock(side_effect=lambda _: object())
     monkeypatch.setattr(
-        "bloqade.gemini.device.simulator_backend._tsim",
+        "bloqade.simulation.backends._tsim",
         lambda: SimpleNamespace(Circuit=circuit_factory),
     )
     backend = TsimSimulatorBackend()
@@ -164,7 +164,7 @@ def test_tsim_circuit_cache_reuses_live_kernel_and_drops_dead_kernel(monkeypatch
 def test_tsim_conversion_removes_return_from_owned_kernel(monkeypatch):
     converted = []
     monkeypatch.setattr(
-        "bloqade.gemini.device.simulator_backend._tsim",
+        "bloqade.simulation.backends._tsim",
         lambda: SimpleNamespace(
             Circuit=lambda kernel: converted.append(kernel) or object()
         ),
@@ -705,15 +705,20 @@ def test_pyqrack_backend_seed_advances_persistent_seed_stream(monkeypatch):
     assert recorded_seeds == first_persistent + second_persistent
 
 
-def test_pyqrack_backend_prepares_owned_annotation_free_kernel_once(monkeypatch):
+def test_pyqrack_backend_samples_annotated_kernel_without_mutating_source(monkeypatch):
     from bloqade.decoders.dialects.annotate.stmts import SetDetector
 
-    from bloqade.gemini.device.physical_simulator import (
+    from bloqade.gemini.physical.simulation.simulator import (
         append_measurements_and_annotations_physical,
     )
 
-    annotated = _physical_kernel.similar()
-    append_measurements_and_annotations_physical(annotated, m2dets=[[1]], m2obs=None)
+    @squin.kernel
+    def source_kernel():
+        _physical_kernel()
+
+    annotated = append_measurements_and_annotations_physical(
+        source_kernel, m2dets=[[1]], m2obs=None
+    )
     source_ir = annotated.print_str()
     similar = MagicMock(wraps=annotated.similar)
     monkeypatch.setattr(annotated, "similar", similar)

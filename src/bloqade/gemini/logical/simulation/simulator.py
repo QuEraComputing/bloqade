@@ -13,15 +13,15 @@ from kirin import ir
 from bloqade.lanes.transform import MoveToSquinLogical
 from bloqade.lanes.noise_model import generate_logical_noise_model
 
-from bloqade.gemini.device._task_runtime import (
-    Result as Result,
-    DetectorResult as DetectorResult,
-    _SimulatorTaskBase,
-)
-from bloqade.gemini.device.simulator_backend import (
+from bloqade.simulation.backends import (
     PPVMSimulatorBackend,
     TsimSimulatorBackend,
     AbstractSimulatorBackend,
+)
+from bloqade.gemini._task_runtime import (
+    Result as Result,
+    DetectorResult as DetectorResult,
+    _SimulatorTaskBase,
 )
 
 if TYPE_CHECKING:

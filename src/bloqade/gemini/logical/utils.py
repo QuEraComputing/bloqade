@@ -1,14 +1,37 @@
+"""Helpers for logical magic-state-distillation experiments."""
+
 from __future__ import annotations
 
-from typing import cast
+import math
+from typing import TYPE_CHECKING, cast
 from collections.abc import Mapping
 
 import numpy as np
+from numpy.typing import NDArray
 
-from bloqade.gemini.decoding.postselection import PostselectionCurveData
+if TYPE_CHECKING:
+    from bloqade.gemini.logical.experiments.postselection import (
+        PostselectionCurveData,
+    )
+
+MSD_TARGET_BLOCH: NDArray[np.float64] = np.ones(3, dtype=np.float64) / np.sqrt(3.0)
+"""Bloch vector of the magic state that the MSD circuits distill."""
+
+msd_postselection_obs: NDArray[np.uint8] = np.array([[1, 0, 1, 1]], dtype=np.uint8)
+"""Accepted ancilla pattern for 5-to-1 MSD, for
+``PostSelectionExperiment.decode_and_postselect``."""
 
 
-def _plot_decoder_curves(
+def bloch_to_u3(bloch: NDArray) -> tuple[float, float, float]:
+    """Return U3 angles ``(theta, phi, lam)`` that prepare ``bloch`` from ``|0>``."""
+    x, y, z = bloch[0], bloch[1], bloch[2]
+    theta = math.atan2(math.hypot(x, y), z)
+    phi = math.atan2(y, x)
+    lam = 0.0
+    return (theta, phi, lam)
+
+
+def plot_decoder_curves(
     curves: Mapping[str, PostselectionCurveData],
     *,
     injected_summary: float | None = None,
@@ -54,3 +77,11 @@ def _plot_decoder_curves(
     ax.grid(True, which="both", alpha=0.25)
     ax.legend()
     return fig, ax
+
+
+__all__ = [
+    "MSD_TARGET_BLOCH",
+    "bloch_to_u3",
+    "msd_postselection_obs",
+    "plot_decoder_curves",
+]

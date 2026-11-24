@@ -10,10 +10,10 @@ from bloqade.lanes.rewrite.move2squin.noise import LogicalNoiseModelABC as Noise
 
 from bloqade.gemini.logical.group import kernel
 from bloqade.gemini._device_emulator import GeminiDeviceEmulator, _Prepare
-from bloqade.gemini.device.logical.device import (
+from bloqade.gemini.logical.device.device import (
     _default_validation_suite as validation_suite,
 )
-from bloqade.gemini.device.logical.result import GeminiLogicalResult
+from bloqade.gemini.logical.device.result import GeminiLogicalResult
 
 
 @dataclass(kw_only=True)

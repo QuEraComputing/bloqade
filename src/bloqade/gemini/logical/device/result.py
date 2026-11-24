@@ -1,6 +1,6 @@
 from bloqade.gemini import logical
 from bloqade.gemini.result import RetType, GeminiResult
-from bloqade.gemini.device.logical import utils
+from bloqade.gemini.logical.device import utils
 
 
 class GeminiLogicalResult(GeminiResult[RetType]):

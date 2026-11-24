@@ -7,7 +7,7 @@ from bloqade.lanes.bytecode.encoding import LocationAddress
 from bloqade.lanes.heuristics.logical.placement import LogicalPlacementStrategyNoHome
 
 import bloqade.gemini as gemini
-from bloqade.gemini.device import GeminiLogicalSimulator
+from bloqade.gemini.logical.simulation import GeminiLogicalSimulator
 
 
 def test_qalloc_at_mixes_pinned_and_unpinned_allocations():
