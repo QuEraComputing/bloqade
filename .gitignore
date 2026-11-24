@@ -6,6 +6,7 @@ tests/data/jobs/
 main.html
 debug/
 .idea/
+scratch
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
