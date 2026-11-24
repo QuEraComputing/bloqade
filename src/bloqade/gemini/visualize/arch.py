@@ -478,10 +478,20 @@ class ArchVisualizer:
     # ── Bus-path iterators ───────────────────────────────────────
 
     def iter_word_bus_paths(
-        self, show_word_bus: Sequence[int]
+        self,
+        show_word_bus: Sequence[int],
+        zone_id: int | None = None,
     ) -> Iterator[tuple[tuple[float, float], ...]]:
+        """Yield selected word-bus paths.
+
+        When ``zone_id`` is provided, only buses in that zone are yielded.
+        Otherwise buses from all zones are considered.
+        """
         arch = self.arch_spec
-        for zone_id, zone in enumerate(arch.zones):
+        zone_ids = range(len(arch.zones)) if zone_id is None else (zone_id,)
+
+        for current_zone_id in zone_ids:
+            zone = arch.zones[current_zone_id]
             for lane_id in show_word_bus:
                 if lane_id >= len(zone.word_buses):
                     continue
@@ -489,7 +499,7 @@ class ArchVisualizer:
                 for site_id, _ in zone.word_bus_site_pairs(lane_id):
                     for start_word_id in lane.src:
                         lane_addr = WordLaneAddress(
-                            zone_id=zone_id,
+                            zone_id=current_zone_id,
                             word_id=start_word_id,
                             site_id=site_id,
                             bus_id=lane_id,
@@ -501,9 +511,18 @@ class ArchVisualizer:
         self,
         show_words: Sequence[int],
         show_site_bus: Sequence[int],
+        zone_id: int | None = None,
     ) -> Iterator[tuple[tuple[float, float], ...]]:
+        """Yield selected site-bus paths.
+
+        When ``zone_id`` is provided, only buses in that zone are yielded.
+        Otherwise buses from all zones are considered.
+        """
         arch = self.arch_spec
-        for zone_id, zone in enumerate(arch.zones):
+        zone_ids = range(len(arch.zones)) if zone_id is None else (zone_id,)
+
+        for current_zone_id in zone_ids:
+            zone = arch.zones[current_zone_id]
             words_with_site_buses = set(zone.words_with_site_buses)
             for word_id in show_words:
                 if word_id not in words_with_site_buses:
@@ -514,7 +533,7 @@ class ArchVisualizer:
                     lane = zone.site_buses[lane_id]
                     for i in range(len(lane.src)):
                         lane_addr = SiteLaneAddress(
-                            zone_id=zone_id,
+                            zone_id=current_zone_id,
                             word_id=word_id,
                             site_id=lane.src[i],
                             bus_id=lane_id,
@@ -638,12 +657,27 @@ class ArchVisualizer:
         show_words: Sequence[int] = (),
         show_site_bus: Sequence[int] = (),
         show_word_bus: Sequence[int] = (),
+        zone_id: int | None = None,
+        label_sites: bool = False,
         **scatter_kwargs,
     ) -> Axes:
         """Render the architecture onto a matplotlib axes.
 
-        Returns the ``ax`` argument (or the auto-resolved current axes)
-        so callers can chain or further customise the plot.
+        Args:
+            ax: Matplotlib axes to render onto. Uses the current axes when
+                omitted.
+            show_words: Word IDs whose sites should be rendered.
+            show_site_bus: Site-bus IDs whose paths should be rendered.
+            show_word_bus: Word-bus IDs whose paths should be rendered.
+            zone_id: Restrict site and bus rendering to this zone. When
+                ``None``, preserve the existing default behavior.
+            label_sites: Label rendered sites with their
+                ``(zone_id, word_id, site_id)`` addresses.
+            **scatter_kwargs: Additional keyword arguments forwarded to
+                ``Axes.scatter``.
+
+        Returns:
+            The supplied axes, or the auto-resolved current axes.
         """
         import matplotlib.pyplot as plt  # type: ignore[import-untyped]
 
@@ -651,28 +685,53 @@ class ArchVisualizer:
             ax = plt.gca()
 
         arch = self.arch_spec
+        zones_to_plot = range(len(arch.zones)) if zone_id is None else (zone_id,)
+
         for word_id in show_words:
             word = arch.words[word_id]
             positions: list[tuple[float, float]] = []
-            for zone_id in range(len(arch.zones)):
+            site_labels: list[tuple[float, float, str]] = []
+
+            for current_zone_id in zones_to_plot:
                 for site_id in range(len(word.site_indices)):
-                    pos = _location_position(arch, word_id, site_id, zone_id)
+                    pos = _location_position(arch, word_id, site_id, current_zone_id)
                     if pos is not None:
                         positions.append(pos)
+                        if label_sites:
+                            site_labels.append(
+                                (
+                                    pos[0],
+                                    pos[1],
+                                    f"({current_zone_id}, {word_id}, {site_id})",
+                                )
+                            )
                 if positions:
                     break
+
             if positions:
                 x_positions = [p[0] for p in positions]
                 y_positions = [p[1] for p in positions]
                 ax.scatter(x_positions, y_positions, **scatter_kwargs)
 
-        for path in self.iter_site_bus_paths(show_words, show_site_bus):
+                if label_sites:
+                    for x, y, label in site_labels:
+                        ax.text(x, y, label)
+
+        for path in self.iter_site_bus_paths(
+            show_words,
+            show_site_bus,
+            zone_id=zone_id,
+        ):
             x_vals, y_vals = zip(*path)
             ax.plot(x_vals, y_vals, linestyle="--")
 
-        for path in self.iter_word_bus_paths(show_word_bus):
+        for path in self.iter_word_bus_paths(
+            show_word_bus,
+            zone_id=zone_id,
+        ):
             x_vals, y_vals = zip(*path)
             ax.plot(x_vals, y_vals, linestyle="-")
+
         return ax
 
     def plot_interactive(
@@ -1215,9 +1274,14 @@ class ArchVisualizer:
         show_words: Sequence[int] = (),
         show_intra: Sequence[int] = (),
         show_inter: Sequence[int] = (),
+        zone_id: int | None = None,
+        label_sites: bool = False,
         **scatter_kwargs,
     ) -> None:
         """Render and immediately call ``plt.show()``.
+
+        ``zone_id`` and ``label_sites`` have the same meaning as in
+        :meth:`plot`.
 
         Convenience for interactive sessions; programmatic callers
         should prefer :meth:`plot`.
@@ -1229,6 +1293,8 @@ class ArchVisualizer:
             show_words=show_words,
             show_site_bus=show_intra,
             show_word_bus=show_inter,
+            zone_id=zone_id,
+            label_sites=label_sites,
             **scatter_kwargs,
         )
         plt.show()
