@@ -1,6 +1,12 @@
 from bloqade.cirq_registry import register_cirq_loader as _register_cirq_loader
 
 from bloqade.gemini.physical.group import kernel as kernel
+from bloqade.gemini.physical.device.result import (
+    GeminiPhysicalResult as GeminiPhysicalResult,
+)
+from bloqade.gemini.physical.device.emulator import (
+    GeminiPhysicalDeviceEmulator as GeminiPhysicalDeviceEmulator,
+)
 
 
 def _get_cirq_loader():
@@ -13,4 +19,9 @@ def _get_cirq_loader():
 # ``new_at`` emitter for physical kernels.
 _register_cirq_loader(dialects=kernel, factory=_get_cirq_loader)
 
-__all__ = ["_register_cirq_loader", "kernel"]
+__all__ = [
+    "GeminiPhysicalDeviceEmulator",
+    "GeminiPhysicalResult",
+    "_register_cirq_loader",
+    "kernel",
+]

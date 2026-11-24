@@ -27,6 +27,8 @@ from bloqade.gemini.device import (
     AbstractSimulatorBackend as AbstractSimulatorBackend,
     GeminiLogicalSimulatorTask as GeminiLogicalSimulatorTask,
 )
+from bloqade.gemini.result import GeminiResult as GeminiResult
+from bloqade.gemini.physical.device import GeminiPhysicalResult as GeminiPhysicalResult
 
 __all__ = [
     "AbstractSimulatorBackend",
@@ -38,7 +40,9 @@ __all__ = [
     "GeminiLogicalResult",
     "GeminiLogicalSimulator",
     "GeminiLogicalSimulatorTask",
+    "GeminiPhysicalResult",
     "GeminiPhysicalSimulator",
+    "GeminiResult",
     "PPVMSimulatorBackend",
     "PhysicalResult",
     "PhysicalSimulator",
